@@ -1,0 +1,125 @@
+name: iflow-ts-autoloop
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: iflow-autoflow-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  run-ts-5h:
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    env:
+      RUN_HOURS: 5
+      WORK_BRANCH: main
+      RELEASE_MARKER_FILE: .git/typus_release_tag
+
+      IFLOW_API_KEY: ${{ secrets.IFLOW_API_KEY }}
+      IFLOW_BASE_URL: https://apis.iflow.cn/v1
+      IFLOW_MODEL_NAME: glm-4.6
+
+      GH_TOKEN: ${{ github.token }}
+
+      # Gitee 镜像推送（可选）
+      GITEE_REMOTE_URL: ${{ secrets.GITEE_REMOTE_URL }}
+
+    steps:
+      - name: Checkout with PAT
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.IFLOW_PAT }}
+          fetch-depth: 0
+
+      - name: Ensure branch and git identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          BRANCH="${WORK_BRANCH:-main}"
+          git fetch origin "${BRANCH}" --prune
+          git checkout -B "${BRANCH}" "origin/${BRANCH}"
+          git config user.name "iflow-bot"
+          git config user.email "iflow-bot@users.noreply.github.com"
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20' # 或你项目指定的 LTS 版本
+          cache: 'npm' # 自动缓存 node_modules
+
+      - name: Install iFlow CLI
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm i -g @iflow-ai/iflow-cli@latest
+          iflow --version
+
+      - name: Verify IFLOW_API_KEY
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "${IFLOW_API_KEY:-}" || { echo "Missing IFLOW_API_KEY secret"; exit 1; }
+
+      # 移除了 Cabal/Haskell 相关的 Setup 和 Configure 步骤
+      # 替换为标准的 npm install
+      - name: Install Project Dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm ci # 或者 npm install，取决于你是否使用 lockfile
+
+      - name: Make loop script executable
+        shell: bash
+        run: |
+          set -euo pipefail
+          chmod +x scripts/typus_ts_loop.sh
+
+      - name: Run for ${{ env.RUN_HOURS }} hours
+        shell: bash
+        run: |
+          set -euo pipefail
+          timeout --signal=TERM $(( RUN_HOURS * 3600 )) bash scripts/typus_ts_loop.sh || true
+
+      - name: Commit & push once (GitHub + Gitee)
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          BRANCH="${WORK_BRANCH:-main}"
+
+          # 确保 gitee 远端存在
+          if git remote get-url gitee >/dev/null 2>&1; then
+            git remote set-url gitee "${GITEE_REMOTE_URL}"
+          else
+            git remote add gitee "${GITEE_REMOTE_URL}"
+          fi
+
+          # 最后统一提交一次
+          git add -A
+          if ! git diff --cached --quiet; then
+            git commit -m "ci: ${RUN_HOURS}h batch update (run $GITHUB_RUN_ID)" || true
+          fi
+
+          # 检查 release marker
+          MARKER_FILE="${RELEASE_MARKER_FILE}"
+          if [[ ! -f "${MARKER_FILE}" ]]; then
+            GIT_DIR_REAL="$(git rev-parse --git-dir 2>/dev/null || echo ".git")"
+            MARKER_FILE="${GIT_DIR_REAL%/}/typus_release_tag"
+          fi
+          if [[ -f "${MARKER_FILE}" ]]; then
+            echo "Release tag prepared: $(cat "${MARKER_FILE}")"
+          fi
+
+          # 推送
+          git push origin "HEAD:${BRANCH}" --follow-tags --force
+          # 如果配置了 Gitee
+          if [[ -n "${GITEE_REMOTE_URL:-}" ]]; then
+            git push gitee "HEAD:${BRANCH}" --follow-tags --force
+          fi
