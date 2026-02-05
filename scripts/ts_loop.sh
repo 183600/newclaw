@@ -3,8 +3,7 @@ set -u
 set -o pipefail
 
 RELEASE_WINDOW_SECONDS=604800
-# 日志文件名已更新为通用名称
-NPM_LOG="/tmp/iflow_npm_last.log"
+PNPM_LOG="/tmp/iflow_pnpm_last.log"
 
 WORK_BRANCH="${WORK_BRANCH:-main}"
 
@@ -17,7 +16,6 @@ extract_package_version() {
   if [[ ! -f "package.json" ]]; then
     return 1
   fi
-  # 使用 node 提取，比 sed 更可靠
   local ver
   ver="$(node -p "require('./package.json').version" 2>/dev/null || true)"
   [[ -n "${ver:-}" ]] || return 1
@@ -27,7 +25,6 @@ extract_package_version() {
 has_error_in_log() {
   local log="$1"
   [[ -f "$log" ]] || return 1
-  # npm/jest 的错误通常包含 Error, FAIL, 或 exit code 非0
   grep -Eiq '(^|[^[:alpha:]])(error:|fatal:|panic:|exception:|segmentation fault|FAIL|Error:)([^[:alpha:]]|$)' "$log"
 }
 
@@ -114,38 +111,37 @@ attempt_bump_and_tag() {
 
   mkdir -p "$(dirname -- "$RELEASE_MARKER_FILE")"
   printf '%s\n' "${tag}" > "$RELEASE_MARKER_FILE"
-  echo "✅ 已准备发布：${tag}（等待 workflow push tag 触发发布工作流）"
+  echo "✅ 已准备发布：${tag}（等待后续 push tag 触发发布工作流）"
 }
 
 trap 'echo; echo "已终止."; exit 0' INT TERM
 
 while true; do
   echo "===================="
-  echo "$(date '+%F %T') 运行测试：npm test"
+  echo "$(date '+%F %T') 运行测试：pnpm test"
   echo "===================="
 
-  : > "$NPM_LOG"
+  : > "$PNPM_LOG"
 
-  # 关键：如果 AI 修改了 package.json 添加了新依赖，必须先 install
-  if git diff --name-only | grep -q 'package.json'; then
-    echo "📦 检测到 package.json 变更，正在安装依赖..."
-    npm install
-    git add package.json package-lock.json
+  # 如果 AI 修改了任何 package.json / pnpm-lock.yaml，必须重新安装依赖
+  if git diff --name-only | grep -Eq '(^|/)(package\.json|pnpm-lock\.yaml|pnpm-workspace\.yaml)$'; then
+    echo "📦 检测到依赖相关文件变更，正在 pnpm install..."
+    pnpm install
+    git add -A
   fi
 
-  # 使用 npm test 替代 moon test
-  npm test 2>&1 | tee "$NPM_LOG"
+  pnpm test 2>&1 | tee "$PNPM_LOG"
   ps=("${PIPESTATUS[@]}")
-  NPM_STATUS="${ps[0]:-255}"
+  PNPM_STATUS="${ps[0]:-255}"
 
   HAS_ERROR=0
-  if has_error_in_log "$NPM_LOG"; then
+  if has_error_in_log "$PNPM_LOG"; then
     HAS_ERROR=1
   fi
 
-  if [[ "$NPM_STATUS" -eq 0 ]]; then
-    # 请求增加测试用例
-    iflow "给这个项目增加一些 npm test 测试用例，不要超过10个，使用标准的 Jest/Vitest/Mocha 测试语法 think:high" --yolo || true
+  if [[ "$PNPM_STATUS" -eq 0 ]]; then
+    # 请求增加测试用例（依然用 npm test 语义，但执行器是 pnpm test）
+    iflow "给这个项目增加一些 pnpm test 测试用例，不要超过10个，使用标准的 Jest/Vitest/Mocha 测试语法 think:high" --yolo || true
 
     git add -A
     if git diff --cached --quiet; then
@@ -157,11 +153,11 @@ while true; do
     if [[ "$HAS_ERROR" -eq 0 ]]; then
       attempt_bump_and_tag || true
     else
-      echo "ℹ️ npm test 退出码为 0，但日志检测到 error 关键词，跳过发布准备。"
+      echo "ℹ️ pnpm test 退出码为 0，但日志检测到 error 关键词，跳过发布准备。"
     fi
   else
     echo "调用 iflow 修复..."
-    iflow '解决 npm test 显示的所有问题（除了warning），除非测试用例本身有编译错误，否则只修改测试用例以外的代码。如果报错提示缺少模块（Cannot find module），请在 package.json 的 dependencies 或 devDependencies 中添加相应的包，然后代码中使用 import/require 引入。debug时可通过加日志和打断点，一定不要消耗大量CPU/内存资源 think:high' --yolo || true
+    iflow '解决 pnpm test 显示的所有问题（除了warning），除非测试用例本身有编译错误，否则只修改测试用例以外的代码。如果报错提示缺少模块（Cannot find module），请在 package.json 的 dependencies 或 devDependencies 中添加相应的包，然后代码中使用 import/require 引入。debug时可通过加日志和打断点，一定不要消耗大量CPU/内存资源 think:high' --yolo || true
   fi
 
   echo "🔁 回到第 1 步..."
