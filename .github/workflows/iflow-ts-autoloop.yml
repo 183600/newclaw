@@ -20,7 +20,9 @@ jobs:
     env:
       RUN_HOURS: 5
       WORK_BRANCH: main
-      RELEASE_MARKER_FILE: .git/typus_release_tag
+
+      # 去掉 typus：marker 文件改名
+      RELEASE_MARKER_FILE: .git/iflow_release_tag
 
       IFLOW_API_KEY: ${{ secrets.IFLOW_API_KEY }}
       IFLOW_BASE_URL: https://apis.iflow.cn/v1
@@ -51,14 +53,24 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20' # 或你项目指定的 LTS 版本
-          cache: 'npm' # 自动缓存 node_modules
+          # 建议与项目要求对齐（你仓库 README 写的是 Node >= 22）
+          node-version: "22"
+          # pnpm 缓存：要求仓库里存在 pnpm-lock.yaml（必须提交）
+          cache: "pnpm"
+          cache-dependency-path: "pnpm-lock.yaml"
+
+      - name: Enable Corepack (pnpm)
+        shell: bash
+        run: |
+          set -euo pipefail
+          corepack enable
+          pnpm --version
 
       - name: Install iFlow CLI
         shell: bash
         run: |
           set -euo pipefail
-          npm i -g @iflow-ai/iflow-cli@latest
+          pnpm add -g @iflow-ai/iflow-cli@latest
           iflow --version
 
       - name: Verify IFLOW_API_KEY
@@ -67,25 +79,23 @@ jobs:
           set -euo pipefail
           test -n "${IFLOW_API_KEY:-}" || { echo "Missing IFLOW_API_KEY secret"; exit 1; }
 
-      # 移除了 Cabal/Haskell 相关的 Setup 和 Configure 步骤
-      # 替换为标准的 npm install
-      - name: Install Project Dependencies
+      - name: Install Project Dependencies (pnpm)
         shell: bash
         run: |
           set -euo pipefail
-          npm ci # 或者 npm install，取决于你是否使用 lockfile
+          pnpm install --frozen-lockfile
 
       - name: Make loop script executable
         shell: bash
         run: |
           set -euo pipefail
-          chmod +x scripts/typus_ts_loop.sh
+          chmod +x scripts/ts_loop.sh
 
       - name: Run for ${{ env.RUN_HOURS }} hours
         shell: bash
         run: |
           set -euo pipefail
-          timeout --signal=TERM $(( RUN_HOURS * 3600 )) bash scripts/typus_ts_loop.sh || true
+          timeout --signal=TERM $(( RUN_HOURS * 3600 )) bash scripts/ts_loop.sh || true
 
       - name: Commit & push once (GitHub + Gitee)
         if: always()
@@ -107,11 +117,11 @@ jobs:
             git commit -m "ci: ${RUN_HOURS}h batch update (run $GITHUB_RUN_ID)" || true
           fi
 
-          # 检查 release marker
+          # 检查 release marker（去掉 typus）
           MARKER_FILE="${RELEASE_MARKER_FILE}"
           if [[ ! -f "${MARKER_FILE}" ]]; then
             GIT_DIR_REAL="$(git rev-parse --git-dir 2>/dev/null || echo ".git")"
-            MARKER_FILE="${GIT_DIR_REAL%/}/typus_release_tag"
+            MARKER_FILE="${GIT_DIR_REAL%/}/iflow_release_tag"
           fi
           if [[ -f "${MARKER_FILE}" ]]; then
             echo "Release tag prepared: $(cat "${MARKER_FILE}")"
