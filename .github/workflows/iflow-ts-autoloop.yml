@@ -53,9 +53,10 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          # 建议与项目要求对齐（你仓库 README 写的是 Node >= 22）
           node-version: "22"
-          # pnpm 缓存：要求仓库里存在 pnpm-lock.yaml（必须提交）
+          # 👇 添加这一行。它会自动启用 Corepack 并准备好 pnpm，确保后续 cache 步骤能找到 pnpm
+          package-manager: "pnpm@latest" 
+          # 👇 保持原有的缓存配置
           cache: "pnpm"
           cache-dependency-path: "pnpm-lock.yaml"
 
