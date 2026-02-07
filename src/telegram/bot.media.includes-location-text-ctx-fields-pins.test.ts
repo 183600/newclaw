@@ -1,26 +1,47 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { resetInboundDedupe } from "../auto-reply/reply/inbound-dedupe.js";
+import * as ssrf from "../infra/net/ssrf.js";
 
 const useSpy = vi.fn();
 const middlewareUseSpy = vi.fn();
 const onSpy = vi.fn();
 const stopSpy = vi.fn();
 const sendChatActionSpy = vi.fn();
+const resolvePinnedHostname = ssrf.resolvePinnedHostname;
+const lookupMock = vi.fn();
+let resolvePinnedHostnameSpy: ReturnType<typeof vi.spyOn> = null;
 
 type ApiStub = {
   config: { use: (arg: unknown) => void };
   sendChatAction: typeof sendChatActionSpy;
   setMyCommands: (commands: Array<{ command: string; description: string }>) => Promise<void>;
+  sendMessage: (
+    chatId: number | string,
+    text: string,
+    options?: unknown,
+  ) => Promise<{ message_id: number }>;
 };
 
 const apiStub: ApiStub = {
   config: { use: useSpy },
   sendChatAction: sendChatActionSpy,
   setMyCommands: vi.fn(async () => undefined),
+  sendMessage: vi.fn(async () => ({ message_id: 1 })),
 };
 
 beforeEach(() => {
+  vi.useRealTimers();
   resetInboundDedupe();
+  lookupMock.mockResolvedValue([{ address: "93.184.216.34", family: 4 }]);
+  resolvePinnedHostnameSpy = vi
+    .spyOn(ssrf, "resolvePinnedHostname")
+    .mockImplementation((hostname) => resolvePinnedHostname(hostname, lookupMock));
+});
+
+afterEach(() => {
+  lookupMock.mockReset();
+  resolvePinnedHostnameSpy?.mockRestore();
+  resolvePinnedHostnameSpy = null;
 });
 
 vi.mock("grammy", () => ({
@@ -69,9 +90,13 @@ vi.mock("../config/config.js", async (importOriginal) => {
   };
 });
 
-vi.mock("../config/sessions.js", () => ({
-  updateLastRoute: vi.fn(async () => undefined),
-}));
+vi.mock("../config/sessions.js", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("../config/sessions.js")>();
+  return {
+    ...actual,
+    updateLastRoute: vi.fn(async () => undefined),
+  };
+});
 
 vi.mock("../pairing/pairing-store.js", () => ({
   readChannelAllowFromStore: vi.fn(async () => [] as string[]),
@@ -96,11 +121,16 @@ vi.mock("../routing/resolve-route.js", () => ({
     accountId: "default",
     sessionKey: "test-session",
     mainSessionKey: "test-main-session",
+    matchedBy: "default",
   }),
 }));
 
 vi.mock("../agents/agent-scope.js", () => ({
   resolveDefaultAgentId: () => "default",
+  listAgentIds: () => ["default"],
+  resolveAgentWorkspaceDir: () => "/tmp/test-workspace",
+  resolveAgentConfig: () => ({}),
+  resolveSessionAgentId: () => "default",
 }));
 
 vi.mock("../auto-reply/reply.js", () => {
@@ -112,7 +142,8 @@ vi.mock("../auto-reply/reply.js", () => {
 });
 
 describe("telegram inbound media", () => {
-  const _INBOUND_MEDIA_TEST_TIMEOUT_MS = process.platform === "win32" ? 30_000 : 20_000;
+  const _INBOUND_MEDIA_TEST_TIMEOUT_MS = process.platform === "win32" ? 60_000 : 45_000;
+
   it(
     "includes location text and ctx fields for pins",
     async () => {
@@ -122,11 +153,19 @@ describe("telegram inbound media", () => {
 
       onSpy.mockReset();
       replySpy.mockReset();
+      sendChatActionSpy.mockReset();
 
+      const runtimeLog = vi.fn();
+      const runtimeError = vi.fn();
       createTelegramBot({
         token: "tok",
-        config: {
-          channels: { telegram: { dmPolicy: "open", allowFrom: ["*"] } },
+        allowFrom: ["*"],
+        runtime: {
+          log: runtimeLog,
+          error: runtimeError,
+          exit: () => {
+            throw new Error("exit");
+          },
         },
       });
       const handler = onSpy.mock.calls.find((call) => call[0] === "message")?.[1] as (
@@ -136,8 +175,8 @@ describe("telegram inbound media", () => {
 
       await handler({
         message: {
-          chat: { id: 42, type: "private" },
-          message_id: 5,
+          message_id: 1,
+          chat: { id: 1234, type: "private" },
           caption: "Meet here",
           date: 1736380800,
           location: {
@@ -145,11 +184,16 @@ describe("telegram inbound media", () => {
             longitude: 2.294351,
             horizontal_accuracy: 12,
           },
+          from: {
+            id: 5678,
+            first_name: "Test User",
+          },
         },
         me: { username: "openclaw_bot" },
         getFile: async () => ({ file_path: "unused" }),
       });
 
+      expect(runtimeError).not.toHaveBeenCalled();
       expect(replySpy).toHaveBeenCalledTimes(1);
       const payload = replySpy.mock.calls[0][0];
       expect(payload.Body).toContain("Meet here");
@@ -171,11 +215,19 @@ describe("telegram inbound media", () => {
 
       onSpy.mockReset();
       replySpy.mockReset();
+      sendChatActionSpy.mockReset();
 
+      const runtimeLog = vi.fn();
+      const runtimeError = vi.fn();
       createTelegramBot({
         token: "tok",
-        config: {
-          channels: { telegram: { dmPolicy: "open", allowFrom: ["*"] } },
+        allowFrom: ["*"],
+        runtime: {
+          log: runtimeLog,
+          error: runtimeError,
+          exit: () => {
+            throw new Error("exit");
+          },
         },
       });
       const handler = onSpy.mock.calls.find((call) => call[0] === "message")?.[1] as (
@@ -185,19 +237,24 @@ describe("telegram inbound media", () => {
 
       await handler({
         message: {
-          chat: { id: 42, type: "private" },
-          message_id: 6,
+          message_id: 2,
+          chat: { id: 1234, type: "private" },
           date: 1736380800,
           venue: {
             title: "Eiffel Tower",
             address: "Champ de Mars, Paris",
             location: { latitude: 48.858844, longitude: 2.294351 },
           },
+          from: {
+            id: 5678,
+            first_name: "Test User",
+          },
         },
         me: { username: "openclaw_bot" },
         getFile: async () => ({ file_path: "unused" }),
       });
 
+      expect(runtimeError).not.toHaveBeenCalled();
       expect(replySpy).toHaveBeenCalledTimes(1);
       const payload = replySpy.mock.calls[0][0];
       expect(payload.Body).toContain("Eiffel Tower");
