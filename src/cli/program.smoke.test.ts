@@ -108,7 +108,15 @@ vi.mock("../agents/channel-tools.js", () => ({
   listChannelAgentTools: () => [],
 }));
 
-const messageCommand = vi.fn();
+vi.mock("../plugins/hook-runner-global.js", () => ({
+  getGlobalHookRunner: () => null,
+  initializeGlobalHookRunner: () => {},
+  resetGlobalHookRunner: () => {},
+  hasGlobalHooks: () => false,
+  getGlobalPluginRegistry: () => null,
+}));
+
+const messageCommand = vi.fn().mockResolvedValue(undefined);
 const statusCommand = vi.fn();
 const configureCommand = vi.fn();
 const configureCommandWithSections = vi.fn();

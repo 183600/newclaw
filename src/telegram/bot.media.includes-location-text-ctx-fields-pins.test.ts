@@ -69,13 +69,9 @@ vi.mock("../config/config.js", async (importOriginal) => {
   };
 });
 
-vi.mock("../config/sessions.js", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("../config/sessions.js")>();
-  return {
-    ...actual,
-    updateLastRoute: vi.fn(async () => undefined),
-  };
-});
+vi.mock("../config/sessions.js", () => ({
+  updateLastRoute: vi.fn(async () => undefined),
+}));
 
 vi.mock("../pairing/pairing-store.js", () => ({
   readChannelAllowFromStore: vi.fn(async () => [] as string[]),
@@ -83,6 +79,28 @@ vi.mock("../pairing/pairing-store.js", () => ({
     code: "PAIRCODE",
     created: true,
   })),
+}));
+
+vi.mock("../telegram/accounts.js", () => ({
+  resolveTelegramAccount: () => ({
+    accountId: "default",
+    enabled: true,
+    token: "mock-token",
+    tokenSource: "config" as const,
+    config: {},
+  }),
+}));
+
+vi.mock("../routing/resolve-route.js", () => ({
+  resolveAgentRoute: () => ({
+    accountId: "default",
+    sessionKey: "test-session",
+    mainSessionKey: "test-main-session",
+  }),
+}));
+
+vi.mock("../agents/agent-scope.js", () => ({
+  resolveDefaultAgentId: () => "default",
 }));
 
 vi.mock("../auto-reply/reply.js", () => {
@@ -105,7 +123,12 @@ describe("telegram inbound media", () => {
       onSpy.mockReset();
       replySpy.mockReset();
 
-      createTelegramBot({ token: "tok" });
+      createTelegramBot({
+        token: "tok",
+        config: {
+          channels: { telegram: { dmPolicy: "open", allowFrom: ["*"] } },
+        },
+      });
       const handler = onSpy.mock.calls.find((call) => call[0] === "message")?.[1] as (
         ctx: Record<string, unknown>,
       ) => Promise<void>;
@@ -149,7 +172,12 @@ describe("telegram inbound media", () => {
       onSpy.mockReset();
       replySpy.mockReset();
 
-      createTelegramBot({ token: "tok" });
+      createTelegramBot({
+        token: "tok",
+        config: {
+          channels: { telegram: { dmPolicy: "open", allowFrom: ["*"] } },
+        },
+      });
       const handler = onSpy.mock.calls.find((call) => call[0] === "message")?.[1] as (
         ctx: Record<string, unknown>,
       ) => Promise<void>;
