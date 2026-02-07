@@ -50,13 +50,18 @@ jobs:
           git config user.name "iflow-bot"
           git config user.email "iflow-bot@users.noreply.github.com"
 
+      # 👇 新增：先安装 pnpm
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 9 # 指定 pnpm 版本，例如 8 或 9
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "22"
-          # 👇 添加这一行。它会自动启用 Corepack 并准备好 pnpm，确保后续 cache 步骤能找到 pnpm
-          package-manager: "pnpm@latest" 
-          # 👇 保持原有的缓存配置
+          # 👇 删除了无效的 'package-manager' 参数
+          # 👇 保持缓存配置
           cache: "pnpm"
           cache-dependency-path: "pnpm-lock.yaml"
 
