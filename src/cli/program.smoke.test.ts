@@ -1,4 +1,112 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import type { ExecApprovalsResolved } from "../infra/exec-approvals.js";
+
+// Mock exec-approvals to prevent file system blocking
+vi.mock("../infra/exec-approvals.js", async (importOriginal) => {
+  const mod = await importOriginal<typeof import("../infra/exec-approvals.js")>();
+  const approvals: ExecApprovalsResolved = {
+    path: "/tmp/exec-approvals.json",
+    socketPath: "/tmp/exec-approvals.sock",
+    token: "token",
+    defaults: {
+      security: "allowlist",
+      ask: "off",
+      askFallback: "deny",
+      autoAllowSkills: false,
+    },
+    agent: {
+      security: "allowlist",
+      ask: "off",
+      askFallback: "deny",
+      autoAllowSkills: false,
+    },
+    allowlist: [],
+    file: {
+      version: 1,
+      socket: { path: "/tmp/exec-approvals.sock", token: "token" },
+      defaults: {
+        security: "allowlist",
+        ask: "off",
+        askFallback: "deny",
+        autoAllowSkills: false,
+      },
+      agents: {},
+    },
+  };
+  return {
+    ...mod,
+    resolveExecApprovals: () => approvals,
+    resolveExecApprovalsFromFile: () => approvals,
+    ensureExecApprovals: () => approvals.file,
+    loadExecApprovals: () => approvals.file,
+    saveExecApprovals: () => {},
+    readExecApprovalsSnapshot: () => ({
+      path: approvals.path,
+      exists: true,
+      raw: JSON.stringify(approvals.file),
+      file: approvals.file,
+      hash: "mock-hash",
+    }),
+    evaluateShellAllowlist: () => ({
+      allowed: true,
+      matched: [],
+      warnings: [],
+    }),
+    evaluateExecAllowlist: () => ({
+      allowed: true,
+      matched: [],
+      warnings: [],
+    }),
+    resolveCommandResolution: () => ({
+      executableName: "echo",
+      resolvedPath: "/bin/echo",
+      isScript: false,
+      isNodeScript: false,
+      isBuiltin: false,
+    }),
+    requiresExecApproval: () => false,
+    recordAllowlistUse: () => {},
+    addAllowlistEntry: () => {},
+    resolveSafeBins: (entries?: string[]) => new Set(entries ?? []),
+    isSafeBinUsage: () => true,
+    minSecurity: (a: string, _b: string) => a,
+    maxAsk: (a: string, _b: string) => a,
+  };
+});
+
+// Mock plugins to prevent file system operations
+vi.mock("../plugins/tools.js", async (importOriginal) => {
+  const mod = await importOriginal<typeof import("../plugins/tools.js")>();
+  return {
+    ...mod,
+    getPluginToolMeta: () => undefined,
+    resolvePluginTools: () => [],
+  };
+});
+
+vi.mock("../plugins/runtime.js", () => ({
+  setActivePluginRegistry: () => {},
+}));
+
+vi.mock("../routing/session-key.js", async (importOriginal) => {
+  const mod = await importOriginal<typeof import("../routing/session-key.js")>();
+  return {
+    ...mod,
+    isSubagentSessionKey: () => false,
+  };
+});
+
+vi.mock("../utils/message-channel.js", async (importOriginal) => {
+  const mod = await importOriginal<typeof import("../utils/message-channel.js")>();
+  return {
+    ...mod,
+    resolveGatewayMessageChannel: () => undefined,
+  };
+});
+
+vi.mock("../agents/channel-tools.js", () => ({
+  listChannelAgentTools: () => [],
+}));
 
 const messageCommand = vi.fn();
 const statusCommand = vi.fn();
