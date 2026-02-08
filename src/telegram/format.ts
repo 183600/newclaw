@@ -5,7 +5,6 @@ import {
   type MarkdownLinkSpan,
   type MarkdownIR,
 } from "../markdown/ir.js";
-import { renderMarkdownWithMarkers } from "../markdown/render.js";
 
 export type TelegramFormattedChunk = {
   html: string;
@@ -43,7 +42,7 @@ function renderTelegramHtml(ir: MarkdownIR): string {
     return "";
   }
 
-  const styleMarkers = {
+  const styleMarkers: Record<string, { open: string; close: string }> = {
     bold: { open: "<b>", close: "</b>" },
     italic: { open: "<i>", close: "</i>" },
     strikethrough: { open: "<s>", close: "</s>" },
@@ -92,20 +91,23 @@ function renderTelegramHtml(ir: MarkdownIR): string {
 
     // Determine what closes at this position
     const closingStyles = openStyles.filter((style) => style.end === pos);
-    const closingLinks = openLinks.filter((link) => link.end === pos);
+    const closingLinks = openLinks.filter((link) => link && link.end === pos);
 
     if (closingStyles.length > 0 && closingLinks.length > 0) {
       // Check nesting relationships for closing
-      let styleContainsLinks = false;
+      let _styleContainsLinks = false;
       let linkContainsStyles = false;
       let exactOverlap = false;
 
       for (const style of closingStyles) {
         for (const link of closingLinks) {
+          if (!link) {
+            continue;
+          }
           if (style.start === link.start && style.end === link.end) {
             exactOverlap = true;
           } else if (style.start <= link.start && style.end >= link.end) {
-            styleContainsLinks = true;
+            _styleContainsLinks = true;
           } else if (link.start <= style.start && link.end >= style.end) {
             linkContainsStyles = true;
           }
@@ -124,8 +126,9 @@ function renderTelegramHtml(ir: MarkdownIR): string {
           }
         }
         for (let j = openLinks.length - 1; j >= 0; j--) {
-          if (openLinks[j].end === pos) {
-            result += openLinks[j].close;
+          const link = openLinks[j];
+          if (link && link.end === pos) {
+            result += link.close;
             openLinks.splice(j, 1);
           }
         }
@@ -141,16 +144,18 @@ function renderTelegramHtml(ir: MarkdownIR): string {
           }
         }
         for (let j = openLinks.length - 1; j >= 0; j--) {
-          if (openLinks[j].end === pos) {
-            result += openLinks[j].close;
+          const link = openLinks[j];
+          if (link && link.end === pos) {
+            result += link.close;
             openLinks.splice(j, 1);
           }
         }
       } else {
         // Style contains links, close links first then styles
         for (let j = openLinks.length - 1; j >= 0; j--) {
-          if (openLinks[j].end === pos) {
-            result += openLinks[j].close;
+          const link = openLinks[j];
+          if (link && link.end === pos) {
+            result += link.close;
             openLinks.splice(j, 1);
           }
         }
@@ -178,8 +183,9 @@ function renderTelegramHtml(ir: MarkdownIR): string {
 
       // Close links that end at this position
       for (let j = openLinks.length - 1; j >= 0; j--) {
-        if (openLinks[j].end === pos) {
-          result += openLinks[j].close;
+        const link = openLinks[j];
+        if (link && link.end === pos) {
+          result += link.close;
           openLinks.splice(j, 1);
         }
       }
@@ -187,21 +193,24 @@ function renderTelegramHtml(ir: MarkdownIR): string {
 
     // Determine what to open at this position
     const openingStyles = ir.styles.filter((span) => span.start === pos);
-    const openingLinks = links.filter((link) => link.start === pos);
+    const openingLinks = links.filter((link) => link && link.start === pos);
 
     // Special handling for overlapping styles and links
     if (openingStyles.length > 0 && openingLinks.length > 0) {
       // Check if styles completely contain links or links completely contain styles
-      let styleContainsLinks = false;
+      let _styleContainsLinks = false;
       let linkContainsStyles = false;
       let exactOverlap = false;
 
       for (const style of openingStyles) {
         for (const link of openingLinks) {
+          if (!link) {
+            continue;
+          }
           if (style.start === link.start && style.end === link.end) {
             exactOverlap = true;
           } else if (style.start <= link.start && style.end >= link.end) {
-            styleContainsLinks = true;
+            _styleContainsLinks = true;
           } else if (link.start <= style.start && link.end >= style.end) {
             linkContainsStyles = true;
           }
@@ -211,8 +220,10 @@ function renderTelegramHtml(ir: MarkdownIR): string {
       if (exactOverlap) {
         // When styles and links exactly overlap, links should be outer
         for (const link of openingLinks) {
-          result += link.open;
-          openLinks.push(link);
+          if (link) {
+            result += link.open;
+            openLinks.push(link);
+          }
         }
         for (const style of openingStyles) {
           const marker = styleMarkers[style.style];
@@ -221,7 +232,7 @@ function renderTelegramHtml(ir: MarkdownIR): string {
             openStyles.push(style);
           }
         }
-      } else if (styleContainsLinks && !linkContainsStyles) {
+      } else if (_styleContainsLinks && !linkContainsStyles) {
         // Style contains links, style should be outer
         for (const style of openingStyles) {
           const marker = styleMarkers[style.style];
@@ -231,14 +242,18 @@ function renderTelegramHtml(ir: MarkdownIR): string {
           }
         }
         for (const link of openingLinks) {
-          result += link.open;
-          openLinks.push(link);
+          if (link) {
+            result += link.open;
+            openLinks.push(link);
+          }
         }
       } else {
         // Links contain styles or complex overlap, links should be outer
         for (const link of openingLinks) {
-          result += link.open;
-          openLinks.push(link);
+          if (link) {
+            result += link.open;
+            openLinks.push(link);
+          }
         }
         for (const style of openingStyles) {
           const marker = styleMarkers[style.style];
@@ -251,8 +266,10 @@ function renderTelegramHtml(ir: MarkdownIR): string {
     } else {
       // Open links that start at this position
       for (const link of openingLinks) {
-        result += link.open;
-        openLinks.push(link);
+        if (link) {
+          result += link.open;
+          openLinks.push(link);
+        }
       }
 
       // Open styles that start at this position
@@ -274,7 +291,10 @@ function renderTelegramHtml(ir: MarkdownIR): string {
 
   // Close any remaining styles and links
   for (let j = openLinks.length - 1; j >= 0; j--) {
-    result += openLinks[j].close;
+    const link = openLinks[j];
+    if (link) {
+      result += link.close;
+    }
   }
 
   for (let j = openStyles.length - 1; j >= 0; j--) {

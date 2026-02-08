@@ -83,8 +83,8 @@ more content here
 
   it("handles empty input", () => {
     expect(redactSensitiveText("")).toBe("");
-    expect(redactSensitiveText(null as any)).toBe(null);
-    expect(redactSensitiveText(undefined as any)).toBe(undefined);
+    expect(redactSensitiveText(null as unknown)).toBe(null);
+    expect(redactSensitiveText(undefined as unknown)).toBe(undefined);
   });
 
   it("can be disabled with mode: 'off'", () => {

@@ -59,10 +59,10 @@ describe("globals", () => {
       logVerbose("");
       expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining(""));
 
-      logVerbose(undefined as any);
+      logVerbose(undefined as unknown);
       expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining("undefined"));
 
-      logVerbose(null as any);
+      logVerbose(null as unknown);
       expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining("null"));
     });
   });
@@ -166,30 +166,30 @@ describe("globals", () => {
     });
 
     it("handles boolean conversion for setVerbose", () => {
-      setVerbose(true as any);
+      setVerbose(true as unknown);
       expect(isVerbose()).toBe(true);
 
-      setVerbose(false as any);
+      setVerbose(false as unknown);
       expect(isVerbose()).toBe(false);
 
-      setVerbose(Boolean(1) as any);
+      setVerbose(Boolean(1) as unknown);
       expect(isVerbose()).toBe(true);
 
-      setVerbose(Boolean(0) as any);
+      setVerbose(Boolean(0) as unknown);
       expect(isVerbose()).toBe(false);
     });
 
     it("handles boolean conversion for setYes", () => {
-      setYes(true as any);
+      setYes(true as unknown);
       expect(isYes()).toBe(true);
 
-      setYes(false as any);
+      setYes(false as unknown);
       expect(isYes()).toBe(false);
 
-      setYes(Boolean(1) as any);
+      setYes(Boolean(1) as unknown);
       expect(isYes()).toBe(true);
 
-      setYes(Boolean(0) as any);
+      setYes(Boolean(0) as unknown);
       expect(isYes()).toBe(false);
     });
   });

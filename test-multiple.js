@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import { spawn } from "child_process";
-import { dirname, join } from "path";
+import { dirname } from "path";
 import { fileURLToPath } from "url";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -47,7 +47,7 @@ async function runTests() {
     });
 
     if (code !== 0) {
-      console.error(`Test ${testFile} failed with code: ${code}`);
+      console.error(`Test ${testFile} failed with code: ${String(code)}`);
       process.exit(code);
     }
   }

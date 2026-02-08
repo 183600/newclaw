@@ -78,7 +78,7 @@ describe("spawnWithFallback", () => {
     const mockChild = {
       once: vi.fn(),
       pid: 123,
-    } as any;
+    } as unknown;
 
     mockSpawn.mockReturnValue(mockChild);
 
@@ -103,12 +103,12 @@ describe("spawnWithFallback", () => {
   it("uses fallback when primary spawn fails", async () => {
     const mockPrimaryChild = {
       once: vi.fn(),
-    } as any;
+    } as unknown;
 
     const mockFallbackChild = {
       once: vi.fn(),
       pid: 456,
-    } as any;
+    } as unknown;
 
     mockSpawn.mockReturnValueOnce(mockPrimaryChild).mockReturnValueOnce(mockFallbackChild);
 
@@ -156,7 +156,7 @@ describe("spawnWithFallback", () => {
   it("throws error when no fallback can handle the error", async () => {
     const mockChild = {
       once: vi.fn(),
-    } as any;
+    } as unknown;
 
     mockSpawn.mockReturnValue(mockChild);
 
@@ -190,11 +190,11 @@ describe("spawnWithFallback", () => {
   it("throws error when all fallbacks fail", async () => {
     const mockChild1 = {
       once: vi.fn(),
-    } as any;
+    } as unknown;
 
     const mockChild2 = {
       once: vi.fn(),
-    } as any;
+    } as unknown;
 
     mockSpawn.mockReturnValueOnce(mockChild1).mockReturnValueOnce(mockChild2);
 
@@ -233,16 +233,16 @@ describe("spawnWithFallback", () => {
   it("handles multiple fallbacks", async () => {
     const mockChild1 = {
       once: vi.fn(),
-    } as any;
+    } as unknown;
 
     const mockChild2 = {
       once: vi.fn(),
-    } as any;
+    } as unknown;
 
     const mockChild3 = {
       once: vi.fn(),
       pid: 789,
-    } as any;
+    } as unknown;
 
     mockSpawn
       .mockReturnValueOnce(mockChild1)
@@ -293,7 +293,7 @@ describe("spawnWithFallback", () => {
   it("uses custom retry codes", async () => {
     const mockChild = {
       once: vi.fn(),
-    } as any;
+    } as unknown;
 
     mockSpawn.mockReturnValue(mockChild);
 
@@ -329,7 +329,7 @@ describe("spawnWithFallback", () => {
     const mockChild = {
       once: vi.fn(),
       pid: 123,
-    } as any;
+    } as unknown;
 
     mockSpawn.mockReturnValue(mockChild);
 
@@ -350,7 +350,7 @@ describe("spawnWithFallback", () => {
     const mockChild = {
       once: vi.fn(),
       pid: 123,
-    } as any;
+    } as unknown;
 
     realSpawn.mockReturnValue(mockChild);
 

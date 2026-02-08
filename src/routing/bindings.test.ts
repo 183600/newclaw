@@ -36,8 +36,8 @@ describe("routing/bindings", () => {
     });
 
     it("handles null/undefined bindings", () => {
-      const cfg1 = mockConfig(null as any);
-      const cfg2 = mockConfig(undefined as any);
+      const cfg1 = mockConfig(null as unknown);
+      const cfg2 = mockConfig(undefined as unknown);
       expect(listBindings(cfg1)).toEqual([]);
       expect(listBindings(cfg2)).toEqual([]);
     });

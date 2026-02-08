@@ -286,7 +286,7 @@ describe("normalizePollInput", () => {
 
     it("handles very long question and options", () => {
       const longQuestion = "Q".repeat(1000);
-      const longOptions = Array.from({ length: 2 }, (_, i) => "O".repeat(500));
+      const longOptions = Array.from({ length: 2 }, (_, _i) => "O".repeat(500));
 
       const result = normalizePollInput({
         question: longQuestion,

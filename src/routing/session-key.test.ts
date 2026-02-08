@@ -20,8 +20,8 @@ describe("routing/session-key", () => {
   describe("normalizeMainKey", () => {
     it("returns default for empty input", () => {
       expect(normalizeMainKey("")).toBe(DEFAULT_MAIN_KEY);
-      expect(normalizeMainKey(null as any)).toBe(DEFAULT_MAIN_KEY);
-      expect(normalizeMainKey(undefined as any)).toBe(DEFAULT_MAIN_KEY);
+      expect(normalizeMainKey(null as unknown)).toBe(DEFAULT_MAIN_KEY);
+      expect(normalizeMainKey(undefined as unknown)).toBe(DEFAULT_MAIN_KEY);
     });
 
     it("trims and lowercases input", () => {
@@ -37,8 +37,8 @@ describe("routing/session-key", () => {
   describe("normalizeAgentId", () => {
     it("returns default for empty input", () => {
       expect(normalizeAgentId("")).toBe(DEFAULT_AGENT_ID);
-      expect(normalizeAgentId(null as any)).toBe(DEFAULT_AGENT_ID);
-      expect(normalizeAgentId(undefined as any)).toBe(DEFAULT_AGENT_ID);
+      expect(normalizeAgentId(null as unknown)).toBe(DEFAULT_AGENT_ID);
+      expect(normalizeAgentId(undefined as unknown)).toBe(DEFAULT_AGENT_ID);
     });
 
     it("accepts valid IDs", () => {
@@ -85,7 +85,7 @@ describe("routing/session-key", () => {
       ];
 
       testCases.forEach((testCase) => {
-        expect(sanitizeAgentId(testCase as any)).toBe(normalizeAgentId(testCase as any));
+        expect(sanitizeAgentId(testCase as unknown)).toBe(normalizeAgentId(testCase as unknown));
       });
     });
   });
@@ -93,8 +93,8 @@ describe("routing/session-key", () => {
   describe("normalizeAccountId", () => {
     it("returns default for empty input", () => {
       expect(normalizeAccountId("")).toBe(DEFAULT_ACCOUNT_ID);
-      expect(normalizeAccountId(null as any)).toBe(DEFAULT_ACCOUNT_ID);
-      expect(normalizeAccountId(undefined as any)).toBe(DEFAULT_ACCOUNT_ID);
+      expect(normalizeAccountId(null as unknown)).toBe(DEFAULT_ACCOUNT_ID);
+      expect(normalizeAccountId(undefined as unknown)).toBe(DEFAULT_ACCOUNT_ID);
     });
 
     it("accepts valid IDs", () => {
@@ -111,8 +111,8 @@ describe("routing/session-key", () => {
   describe("toAgentRequestSessionKey", () => {
     it("returns undefined for empty input", () => {
       expect(toAgentRequestSessionKey("")).toBeUndefined();
-      expect(toAgentRequestSessionKey(null as any)).toBeUndefined();
-      expect(toAgentRequestSessionKey(undefined as any)).toBeUndefined();
+      expect(toAgentRequestSessionKey(null as unknown)).toBeUndefined();
+      expect(toAgentRequestSessionKey(undefined as unknown)).toBeUndefined();
     });
 
     it("returns rest part for valid agent session key", () => {
@@ -192,8 +192,8 @@ describe("routing/session-key", () => {
   describe("resolveAgentIdFromSessionKey", () => {
     it("returns default for empty session key", () => {
       expect(resolveAgentIdFromSessionKey("")).toBe(DEFAULT_AGENT_ID);
-      expect(resolveAgentIdFromSessionKey(null as any)).toBe(DEFAULT_AGENT_ID);
-      expect(resolveAgentIdFromSessionKey(undefined as any)).toBe(DEFAULT_AGENT_ID);
+      expect(resolveAgentIdFromSessionKey(null as unknown)).toBe(DEFAULT_AGENT_ID);
+      expect(resolveAgentIdFromSessionKey(undefined as unknown)).toBe(DEFAULT_AGENT_ID);
     });
 
     it("extracts agent ID from valid session key", () => {

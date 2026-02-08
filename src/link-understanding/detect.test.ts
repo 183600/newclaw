@@ -27,8 +27,8 @@ describe("extractLinksFromMessage", () => {
   it("handles empty input", () => {
     expect(extractLinksFromMessage("")).toEqual([]);
     expect(extractLinksFromMessage("   ")).toEqual([]);
-    expect(extractLinksFromMessage(null as any)).toEqual([]);
-    expect(extractLinksFromMessage(undefined as any)).toEqual([]);
+    expect(extractLinksFromMessage(null as unknown)).toEqual([]);
+    expect(extractLinksFromMessage(undefined as unknown)).toEqual([]);
   });
 
   it("extracts URLs with punctuation", () => {

@@ -88,7 +88,7 @@ for (const entry of runs) {
   const code = await run(entry);
   if (code !== 0) {
     totalExitCode = code;
-    console.error(`\n❌ ${entry.name} tests failed with exit code ${code}`);
+    console.error(`\n❌ ${entry.name} tests failed with exit code ${String(code)}`);
     break;
   }
 }

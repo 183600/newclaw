@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { MarkdownIR, MarkdownStyleSpan, MarkdownLinkSpan } from "./ir.js";
+import type { MarkdownIR, MarkdownStyleSpan } from "./ir.js";
 import { renderMarkdownWithMarkers, type RenderOptions } from "./render.js";
 
 describe("renderMarkdownWithMarkers", () => {
@@ -176,7 +176,7 @@ describe("renderMarkdownWithMarkers", () => {
         links: [{ start: 6, end: 10, url: "https://example.com" }],
       });
       const options = createRenderOptions({
-        buildLink: (link, text) => ({
+        buildLink: (link, _text) => ({
           start: link.start,
           end: link.end,
           open: `[`,
@@ -195,7 +195,7 @@ describe("renderMarkdownWithMarkers", () => {
         ],
       });
       const options = createRenderOptions({
-        buildLink: (link, text) => ({
+        buildLink: (link, _text) => ({
           start: link.start,
           end: link.end,
           open: `[`,
@@ -227,7 +227,7 @@ describe("renderMarkdownWithMarkers", () => {
         links: [{ start: 5, end: 9, url: "https://example.com" }],
       });
       const options = createRenderOptions({
-        buildLink: (link, text) => ({
+        buildLink: (link, _text) => ({
           start: link.start,
           end: link.end,
           open: `[`,
@@ -246,7 +246,7 @@ describe("renderMarkdownWithMarkers", () => {
         links: [{ start: 5, end: 9, url: "https://example.com" }],
       });
       const options = createRenderOptions({
-        buildLink: (link, text) => ({
+        buildLink: (link, _text) => ({
           start: link.start,
           end: link.end,
           open: `[`,
@@ -273,7 +273,7 @@ describe("renderMarkdownWithMarkers", () => {
         links: [{ start: 2, end: 2, url: "https://example.com" }],
       });
       const options = createRenderOptions({
-        buildLink: (link, text) => ({
+        buildLink: (link, _text) => ({
           start: link.start,
           end: link.end,
           open: `[`,

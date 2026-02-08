@@ -6,7 +6,6 @@ import {
   isExternalHookSession,
   getHookType,
   wrapWebContent,
-  type ExternalContentSource,
 } from "./external-content.ts";
 
 describe("detectSuspiciousPatterns", () => {

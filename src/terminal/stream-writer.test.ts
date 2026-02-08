@@ -21,7 +21,9 @@ describe("createSafeStreamWriter", () => {
     const result = writer.write(mockStream, "test message");
 
     expect(result).toBe(true);
+    // eslint-disable-next-line @typescript-eslint/unbound-method
     expect(mockStream.write).toHaveBeenCalledWith("test message");
+    // eslint-disable-next-line @typescript-eslint/unbound-method
     expect(mockOptions.beforeWrite).toHaveBeenCalled();
   });
 
@@ -30,7 +32,9 @@ describe("createSafeStreamWriter", () => {
     const result = writer.writeLine(mockStream, "test message");
 
     expect(result).toBe(true);
+    // eslint-disable-next-line @typescript-eslint/unbound-method
     expect(mockStream.write).toHaveBeenCalledWith("test message\n");
+    // eslint-disable-next-line @typescript-eslint/unbound-method
     expect(mockOptions.beforeWrite).toHaveBeenCalled();
   });
 
@@ -91,6 +95,7 @@ describe("createSafeStreamWriter", () => {
     const result = writer.write(mockStream, "second message");
 
     expect(result).toBe(false);
+    // eslint-disable-next-line @typescript-eslint/unbound-method
     expect(mockStream.write).not.toHaveBeenCalled();
   });
 
@@ -148,6 +153,7 @@ describe("createSafeStreamWriter", () => {
     const result = writer.write(mockStream, "test message");
 
     expect(result).toBe(true);
+    // eslint-disable-next-line @typescript-eslint/unbound-method
     expect(mockStream.write).toHaveBeenCalledWith("test message");
   });
 });
