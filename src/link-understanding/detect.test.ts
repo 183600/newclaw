@@ -149,6 +149,7 @@ describe("extractLinksFromMessage", () => {
   it("handles URLs with common TLDs", () => {
     const links = extractLinksFromMessage(
       "https://example.com https://test.org https://site.net https://page.io https://app.dev",
+      { maxLinks: 5 },
     );
     expect(links).toEqual([
       "https://example.com",

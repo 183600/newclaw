@@ -63,7 +63,17 @@ export function normalizePollDurationHours(
   value: number | undefined,
   options: { defaultHours: number; maxHours: number },
 ): number {
-  const base =
-    typeof value === "number" && Number.isFinite(value) ? Math.floor(value) : options.defaultHours;
+  let base: number;
+  if (typeof value === "number") {
+    if (Number.isFinite(value)) {
+      base = Math.floor(value);
+    } else if (value === Number.POSITIVE_INFINITY) {
+      base = options.maxHours;
+    } else {
+      base = options.defaultHours;
+    }
+  } else {
+    base = options.defaultHours;
+  }
   return Math.min(Math.max(base, 1), options.maxHours);
 }

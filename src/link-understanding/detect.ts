@@ -8,6 +8,11 @@ function stripMarkdownLinks(message: string): string {
   return message.replace(MARKDOWN_LINK_RE, " ");
 }
 
+// Strip trailing punctuation from URLs
+function stripTrailingPunctuation(url: string): string {
+  return url.replace(/[.!?,;:)\]}]+$/g, "");
+}
+
 function resolveMaxLinks(value?: number): number {
   if (typeof value === "number" && Number.isFinite(value) && value > 0) {
     return Math.floor(value);
@@ -46,14 +51,18 @@ export function extractLinksFromMessage(message: string, opts?: { maxLinks?: num
     if (!raw) {
       continue;
     }
-    if (!isAllowedUrl(raw)) {
+    const cleaned = stripTrailingPunctuation(raw);
+    if (!cleaned) {
       continue;
     }
-    if (seen.has(raw)) {
+    if (!isAllowedUrl(cleaned)) {
       continue;
     }
-    seen.add(raw);
-    results.push(raw);
+    if (seen.has(cleaned)) {
+      continue;
+    }
+    seen.add(cleaned);
+    results.push(cleaned);
     if (results.length >= maxLinks) {
       break;
     }
