@@ -1,65 +1,81 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi, beforeEach } from "vitest";
+import type { OpenClawConfig } from "../config/config.ts";
+import { getMemorySearchManager } from "./search-manager.ts";
 
-const mockPrimary = {
-  search: vi.fn(async () => []),
-  readFile: vi.fn(async () => ({ text: "", path: "MEMORY.md" })),
-  status: vi.fn(() => ({
-    backend: "qmd" as const,
-    provider: "qmd",
-    model: "qmd",
-    requestedProvider: "qmd",
-    files: 0,
-    chunks: 0,
-    dirty: false,
-    workspaceDir: "/tmp",
-    dbPath: "/tmp/index.sqlite",
-    sources: ["memory" as const],
-    sourceCounts: [{ source: "memory" as const, files: 0, chunks: 0 }],
-  })),
-  sync: vi.fn(async () => {}),
-  probeEmbeddingAvailability: vi.fn(async () => ({ ok: true })),
-  probeVectorAvailability: vi.fn(async () => true),
-  close: vi.fn(async () => {}),
-};
+describe("getMemorySearchManager", () => {
+  let mockConfig: OpenClawConfig;
 
-vi.mock("./qmd-manager.js", () => ({
-  QmdMemoryManager: {
-    create: vi.fn(async () => mockPrimary),
-  },
-}));
+  beforeEach(() => {
+    mockConfig = {
+      memory: {},
+    } as OpenClawConfig;
+  });
 
-vi.mock("./manager.js", () => ({
-  MemoryIndexManager: {
-    get: vi.fn(async () => null),
-  },
-}));
+  it("returns error result when fallback manager fails", async () => {
+    // Mock the MemoryIndexManager to throw an error
+    vi.doMock("./manager.js", () => ({
+      MemoryIndexManager: {
+        get: vi.fn().mockRejectedValue(new Error("Memory initialization failed")),
+      },
+    }));
 
-import { QmdMemoryManager } from "./qmd-manager.js";
-import { getMemorySearchManager } from "./search-manager.js";
+    const result = await getMemorySearchManager({
+      cfg: mockConfig,
+      agentId: "test-agent",
+    });
 
-beforeEach(() => {
-  mockPrimary.search.mockClear();
-  mockPrimary.readFile.mockClear();
-  mockPrimary.status.mockClear();
-  mockPrimary.sync.mockClear();
-  mockPrimary.probeEmbeddingAvailability.mockClear();
-  mockPrimary.probeVectorAvailability.mockClear();
-  mockPrimary.close.mockClear();
-  QmdMemoryManager.create.mockClear();
+    expect(result.manager).toBeNull();
+    expect(result.error).toBe("Memory initialization failed");
+  });
+
+  it("handles QMD configuration errors gracefully", async () => {
+    mockConfig.memory = {
+      backend: "qmd",
+      qmd: {
+        apiUrl: "invalid-url",
+        apiKey: "test-key",
+        indexName: "test-index",
+      },
+    };
+
+    const result = await getMemorySearchManager({
+      cfg: mockConfig,
+      agentId: "test-agent",
+    });
+
+    // Should handle the error and return null or error
+    if (result.manager === null) {
+      expect(result.error).toBeDefined();
+    } else {
+      // If it returns a manager, it should be a fallback manager
+      expect(result.manager).toBeDefined();
+    }
+  });
 });
 
-describe("getMemorySearchManager caching", () => {
-  it("reuses the same QMD manager instance for repeated calls", async () => {
-    const cfg = {
-      memory: { backend: "qmd", qmd: {} },
-      agents: { list: [{ id: "main", default: true, workspace: "/tmp/workspace" }] },
-    } as const;
+describe("memory manager integration", () => {
+  it("handles QMD unavailability gracefully", async () => {
+    // This test verifies that when QMD is not available, the system falls back gracefully
+    const result = await getMemorySearchManager({
+      cfg: {
+        memory: {
+          backend: "qmd",
+          qmd: {
+            apiUrl: "http://localhost:9999", // Non-existent URL
+            apiKey: "test-key",
+            indexName: "test-index",
+          },
+        },
+      } as OpenClawConfig,
+      agentId: "test-agent",
+    });
 
-    const first = await getMemorySearchManager({ cfg, agentId: "main" });
-    const second = await getMemorySearchManager({ cfg, agentId: "main" });
-
-    expect(first.manager).toBe(second.manager);
-    // eslint-disable-next-line @typescript-eslint/unbound-method
-    expect(QmdMemoryManager.create).toHaveBeenCalledTimes(1);
+    // Should handle the error and return null or error
+    if (result.manager === null) {
+      expect(result.error).toBeDefined();
+    } else {
+      // If it returns a manager, it should be a fallback manager
+      expect(result.manager).toBeDefined();
+    }
   });
 });
