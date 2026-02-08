@@ -31,4 +31,10 @@ export default defineConfig([
     fixedExtension: false,
     platform: "node",
   },
+  {
+    entry: "src/browser/pw-ai.ts",
+    env,
+    fixedExtension: false,
+    platform: "node",
+  },
 ]);

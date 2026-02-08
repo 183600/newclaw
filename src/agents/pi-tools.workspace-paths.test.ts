@@ -3,7 +3,6 @@ import os from "node:os";
 import path from "node:path";
 import { describe, expect, it, vi } from "vitest";
 import type { ExecApprovalsResolved } from "../infra/exec-approvals.js";
-import { createOpenClawCodingTools } from "./pi-tools.js";
 
 // Mock exec-approvals to prevent file system blocking
 vi.mock("../infra/exec-approvals.js", async (importOriginal) => {
@@ -310,29 +309,6 @@ describe("sandboxed workspace paths", () => {
   it("uses sandbox workspace for relative read/write/edit", async () => {
     await withTempDir("openclaw-sandbox-", async (sandboxDir) => {
       await withTempDir("openclaw-workspace-", async (workspaceDir) => {
-        const sandbox = {
-          enabled: true,
-          sessionKey: "sandbox:test",
-          workspaceDir: sandboxDir,
-          agentWorkspaceDir: workspaceDir,
-          workspaceAccess: "rw",
-          containerName: "openclaw-sbx-test",
-          containerWorkdir: "/workspace",
-          docker: {
-            image: "openclaw-sandbox:bookworm-slim",
-            containerPrefix: "openclaw-sbx-",
-            workdir: "/workspace",
-            readOnlyRoot: true,
-            tmpfs: [],
-            network: "none",
-            user: "1000:1000",
-            capDrop: ["ALL"],
-            env: { LANG: "C.UTF-8" },
-          },
-          tools: { allow: [], deny: [] },
-          browserAllowHostControl: false,
-        };
-
         const testFile = "sandbox.txt";
         await fs.writeFile(path.join(sandboxDir, testFile), "sandbox read", "utf8");
         await fs.writeFile(path.join(workspaceDir, testFile), "workspace read", "utf8");
