@@ -41,11 +41,19 @@ describe("onboarding helpers", () => {
 
   describe("promptToken", () => {
     it("should return existing token when user confirms to keep it", async () => {
-      const { promptToken } = await import("./onboarding.js");
-
+      // Set up mock to return true (keep existing token)
       mockPromptConfirm.mockResolvedValue(true);
 
-      const result = await promptToken(mockPrompter, mockAccount, undefined);
+      // Import the module
+      const { promptToken } = await import("./onboarding.js");
+
+      // Call the function with a short timeout
+      const result = (await Promise.race([
+        promptToken(mockPrompter, mockAccount, undefined),
+        new Promise((_, reject) =>
+          setTimeout(() => reject(new Error("Function call timeout")), 5000),
+        ),
+      ])) as string;
 
       expect(result).toBe("oauth:test123");
       expect(mockPromptConfirm).toHaveBeenCalledWith({

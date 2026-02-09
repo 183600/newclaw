@@ -1,0 +1,18 @@
+
+> openclaw@2026.2.2 check /home/runner/work/newclaw/newclaw
+> pnpm tsgo && pnpm lint && pnpm format
+
+
+> openclaw@2026.2.2 lint /home/runner/work/newclaw/newclaw
+> oxlint --type-aware
+
+Found 0 warnings and 0 errors.
+Finished in 37.7s on 3097 files with 134 rules using 4 threads.
+
+> openclaw@2026.2.2 format /home/runner/work/newclaw/newclaw
+> oxfmt --check
+
+Checking formatting...
+
+All matched files use the correct format.
+Finished in 64627ms on 3935 files using 4 threads.
