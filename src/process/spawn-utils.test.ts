@@ -76,17 +76,16 @@ describe("spawnWithFallback", () => {
 
   it("spawns process successfully with primary options", async () => {
     const mockChild = {
-      once: vi.fn(),
+      once: vi.fn().mockImplementation((event, callback) => {
+        if (event === "spawn") {
+          // Simulate immediate successful spawn
+          process.nextTick(callback);
+        }
+      }),
       pid: 123,
     } as unknown;
 
     mockSpawn.mockReturnValue(mockChild);
-
-    // Simulate successful spawn
-    setTimeout(() => {
-      const spawnCallback = mockChild.once.mock.calls.find(([event]) => event === "spawn")?.[1];
-      spawnCallback?.();
-    }, 0);
 
     const result = await spawnWithFallback({
       argv: ["node", "script.js"],
@@ -102,33 +101,29 @@ describe("spawnWithFallback", () => {
 
   it("uses fallback when primary spawn fails", async () => {
     const mockPrimaryChild = {
-      once: vi.fn(),
+      once: vi.fn().mockImplementation((event, callback) => {
+        if (event === "error") {
+          // Simulate immediate spawn failure
+          process.nextTick(() => {
+            const error = new Error("EBADF") as NodeJS.ErrnoException;
+            error.code = "EBADF";
+            callback(error);
+          });
+        }
+      }),
     } as unknown;
 
     const mockFallbackChild = {
-      once: vi.fn(),
+      once: vi.fn().mockImplementation((event, callback) => {
+        if (event === "spawn") {
+          // Simulate immediate successful spawn
+          process.nextTick(callback);
+        }
+      }),
       pid: 456,
     } as unknown;
 
     mockSpawn.mockReturnValueOnce(mockPrimaryChild).mockReturnValueOnce(mockFallbackChild);
-
-    // Simulate primary spawn failure
-    setTimeout(() => {
-      const errorCallback = mockPrimaryChild.once.mock.calls.find(
-        ([event]) => event === "error",
-      )?.[1];
-      const error = new Error("EBADF") as NodeJS.ErrnoException;
-      error.code = "EBADF";
-      errorCallback?.(error);
-    }, 0);
-
-    // Simulate fallback spawn success
-    setTimeout(() => {
-      const spawnCallback = mockFallbackChild.once.mock.calls.find(
-        ([event]) => event === "spawn",
-      )?.[1];
-      spawnCallback?.();
-    }, 10);
 
     const fallbacks: SpawnFallback[] = [
       {
@@ -155,18 +150,19 @@ describe("spawnWithFallback", () => {
 
   it("throws error when no fallback can handle the error", async () => {
     const mockChild = {
-      once: vi.fn(),
+      once: vi.fn().mockImplementation((event, callback) => {
+        if (event === "error") {
+          // Simulate immediate spawn failure with non-retryable code
+          process.nextTick(() => {
+            const error = new Error("ENOENT") as NodeJS.ErrnoException;
+            error.code = "ENOENT";
+            callback(error);
+          });
+        }
+      }),
     } as unknown;
 
     mockSpawn.mockReturnValue(mockChild);
-
-    // Simulate spawn failure with non-retryable code
-    setTimeout(() => {
-      const errorCallback = mockChild.once.mock.calls.find(([event]) => event === "error")?.[1];
-      const error = new Error("ENOENT") as NodeJS.ErrnoException;
-      error.code = "ENOENT";
-      errorCallback?.(error);
-    }, 0);
 
     const fallbacks: SpawnFallback[] = [
       {
@@ -189,27 +185,32 @@ describe("spawnWithFallback", () => {
 
   it("throws error when all fallbacks fail", async () => {
     const mockChild1 = {
-      once: vi.fn(),
+      once: vi.fn().mockImplementation((event, callback) => {
+        if (event === "error") {
+          // Simulate immediate spawn failure
+          process.nextTick(() => {
+            const error = new Error("EBADF") as NodeJS.ErrnoException;
+            error.code = "EBADF";
+            callback(error);
+          });
+        }
+      }),
     } as unknown;
 
     const mockChild2 = {
-      once: vi.fn(),
+      once: vi.fn().mockImplementation((event, callback) => {
+        if (event === "error") {
+          // Simulate immediate spawn failure
+          process.nextTick(() => {
+            const error = new Error("EBADF") as NodeJS.ErrnoException;
+            error.code = "EBADF";
+            callback(error);
+          });
+        }
+      }),
     } as unknown;
 
     mockSpawn.mockReturnValueOnce(mockChild1).mockReturnValueOnce(mockChild2);
-
-    // Simulate both spawns failing
-    setTimeout(() => {
-      const errorCallback1 = mockChild1.once.mock.calls.find(([event]) => event === "error")?.[1];
-      const error1 = new Error("EBADF") as NodeJS.ErrnoException;
-      error1.code = "EBADF";
-      errorCallback1?.(error1);
-
-      const errorCallback2 = mockChild2.once.mock.calls.find(([event]) => event === "error")?.[1];
-      const error2 = new Error("EBADF") as NodeJS.ErrnoException;
-      error2.code = "EBADF";
-      errorCallback2?.(error2);
-    }, 0);
 
     const fallbacks: SpawnFallback[] = [
       {
@@ -232,15 +233,38 @@ describe("spawnWithFallback", () => {
 
   it("handles multiple fallbacks", async () => {
     const mockChild1 = {
-      once: vi.fn(),
+      once: vi.fn().mockImplementation((event, callback) => {
+        if (event === "error") {
+          // Simulate immediate spawn failure
+          process.nextTick(() => {
+            const error = new Error("EBADF") as NodeJS.ErrnoException;
+            error.code = "EBADF";
+            callback(error);
+          });
+        }
+      }),
     } as unknown;
 
     const mockChild2 = {
-      once: vi.fn(),
+      once: vi.fn().mockImplementation((event, callback) => {
+        if (event === "error") {
+          // Simulate immediate spawn failure
+          process.nextTick(() => {
+            const error = new Error("EBADF") as NodeJS.ErrnoException;
+            error.code = "EBADF";
+            callback(error);
+          });
+        }
+      }),
     } as unknown;
 
     const mockChild3 = {
-      once: vi.fn(),
+      once: vi.fn().mockImplementation((event, callback) => {
+        if (event === "spawn") {
+          // Simulate immediate successful spawn
+          process.nextTick(callback);
+        }
+      }),
       pid: 789,
     } as unknown;
 
@@ -248,23 +272,6 @@ describe("spawnWithFallback", () => {
       .mockReturnValueOnce(mockChild1)
       .mockReturnValueOnce(mockChild2)
       .mockReturnValueOnce(mockChild3);
-
-    // Simulate first two spawns failing
-    setTimeout(() => {
-      const errorCallback1 = mockChild1.once.mock.calls.find(([event]) => event === "error")?.[1];
-      const error1 = new Error("EBADF") as NodeJS.ErrnoException;
-      error1.code = "EBADF";
-      errorCallback1?.(error1);
-
-      const errorCallback2 = mockChild2.once.mock.calls.find(([event]) => event === "error")?.[1];
-      const error2 = new Error("EBADF") as NodeJS.ErrnoException;
-      error2.code = "EBADF";
-      errorCallback2?.(error2);
-
-      // Third spawn succeeds
-      const spawnCallback = mockChild3.once.mock.calls.find(([event]) => event === "spawn")?.[1];
-      spawnCallback?.();
-    }, 0);
 
     const fallbacks: SpawnFallback[] = [
       {
@@ -292,18 +299,32 @@ describe("spawnWithFallback", () => {
 
   it("uses custom retry codes", async () => {
     const mockChild = {
-      once: vi.fn(),
+      once: vi.fn().mockImplementation((event, callback) => {
+        if (event === "error") {
+          // Simulate immediate spawn failure with custom retry code
+          process.nextTick(() => {
+            const error = new Error("CUSTOM") as NodeJS.ErrnoException;
+            error.code = "CUSTOM";
+            callback(error);
+          });
+        }
+      }),
     } as unknown;
 
-    mockSpawn.mockReturnValue(mockChild);
+    const mockFallbackChild = {
+      once: vi.fn().mockImplementation((event, callback) => {
+        if (event === "error") {
+          // Simulate immediate spawn failure
+          process.nextTick(() => {
+            const error = new Error("CUSTOM") as NodeJS.ErrnoException;
+            error.code = "CUSTOM";
+            callback(error);
+          });
+        }
+      }),
+    } as unknown;
 
-    // Simulate spawn failure with custom retry code
-    setTimeout(() => {
-      const errorCallback = mockChild.once.mock.calls.find(([event]) => event === "error")?.[1];
-      const error = new Error("CUSTOM") as NodeJS.ErrnoException;
-      error.code = "CUSTOM";
-      errorCallback?.(error);
-    }, 0);
+    mockSpawn.mockReturnValueOnce(mockChild).mockReturnValueOnce(mockFallbackChild);
 
     const fallbacks: SpawnFallback[] = [
       {
@@ -348,17 +369,16 @@ describe("spawnWithFallback", () => {
     // We'll mock it to avoid actual process spawning
     const realSpawn = vi.mocked(spawn);
     const mockChild = {
-      once: vi.fn(),
+      once: vi.fn().mockImplementation((event, callback) => {
+        if (event === "spawn") {
+          // Simulate immediate successful spawn
+          process.nextTick(callback);
+        }
+      }),
       pid: 123,
     } as unknown;
 
     realSpawn.mockReturnValue(mockChild);
-
-    // Simulate successful spawn
-    setTimeout(() => {
-      const spawnCallback = mockChild.once.mock.calls.find(([event]) => event === "spawn")?.[1];
-      spawnCallback?.();
-    }, 0);
 
     const result = await spawnWithFallback({
       argv: ["echo", "hello"],
