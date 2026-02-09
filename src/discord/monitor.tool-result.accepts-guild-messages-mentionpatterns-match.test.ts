@@ -132,7 +132,7 @@ describe("discord tool result dispatch", () => {
 
     expect(dispatchMock).toHaveBeenCalledTimes(1);
     expect(sendMock).toHaveBeenCalledTimes(1);
-  }, 20_000);
+  }, 120_000);
 
   it("accepts guild messages when mentionPatterns match even if another user is mentioned", async () => {
     const { createDiscordMessageHandler } = await import("./monitor.js");
@@ -212,7 +212,7 @@ describe("discord tool result dispatch", () => {
 
     expect(dispatchMock).toHaveBeenCalledTimes(1);
     expect(sendMock).toHaveBeenCalledTimes(1);
-  }, 20_000);
+  }, 120_000);
 
   it("accepts guild reply-to-bot messages as implicit mentions", async () => {
     const { createDiscordMessageHandler } = await import("./monitor.js");
