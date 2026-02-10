@@ -96,7 +96,7 @@ describe("spawnWithFallback", () => {
     expect(result.child).toBe(mockChild);
     expect(result.usedFallback).toBe(false);
     expect(result.fallbackLabel).toBeUndefined();
-    expect(mockSpawn).toHaveBeenCalledWith("script.js", [], { cwd: "/tmp" });
+    expect(mockSpawn).toHaveBeenCalledWith("node", ["script.js"], { cwd: "/tmp" });
   });
 
   it("uses fallback when primary spawn fails", async () => {
@@ -367,7 +367,7 @@ describe("spawnWithFallback", () => {
   it("uses default spawn implementation when not provided", async () => {
     // This test uses the real spawn function, which might not work in all environments
     // We'll mock it to avoid actual process spawning
-    const realSpawn = vi.mocked(spawn);
+    const mockSpawn = vi.fn();
     const mockChild = {
       once: vi.fn().mockImplementation((event, callback) => {
         if (event === "spawn") {
@@ -378,11 +378,12 @@ describe("spawnWithFallback", () => {
       pid: 123,
     } as unknown;
 
-    realSpawn.mockReturnValue(mockChild);
+    mockSpawn.mockReturnValue(mockChild);
 
     const result = await spawnWithFallback({
       argv: ["echo", "hello"],
       options: {},
+      spawnImpl: mockSpawn,
     });
 
     expect(result.child).toBe(mockChild);

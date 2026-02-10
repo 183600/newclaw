@@ -69,8 +69,10 @@ async function spawnAndWaitForSpawn(
   return await new Promise((resolve, reject) => {
     let settled = false;
     const cleanup = () => {
-      child.removeListener("error", onError);
-      child.removeListener("spawn", onSpawn);
+      if (child && typeof child.removeListener === "function") {
+        child.removeListener("error", onError);
+        child.removeListener("spawn", onSpawn);
+      }
     };
     const finishResolve = () => {
       if (settled) {

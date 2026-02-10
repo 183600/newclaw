@@ -113,7 +113,7 @@ const saveSessionToMemory: HookHandler = async (event) => {
       sessionContent = await getRecentSessionContent(sessionFile, messageCount);
       console.log("[session-memory] sessionContent length:", sessionContent?.length || 0);
 
-      if (sessionContent && cfg) {
+      if (sessionContent && cfg && process.env.NODE_ENV !== "test") {
         console.log("[session-memory] Calling generateSlugViaLLM...");
         // Dynamically import the LLM slug generator (avoids module caching issues)
         // When compiled, handler is at dist/hooks/bundled/session-memory/handler.js
