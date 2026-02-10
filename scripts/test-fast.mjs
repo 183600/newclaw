@@ -1,5 +1,4 @@
 import { spawn } from "node:child_process";
-import os from "node:os";
 
 const pnpm = process.platform === "win32" ? "pnpm.cmd" : "pnpm";
 
