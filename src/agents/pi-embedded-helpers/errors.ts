@@ -417,7 +417,7 @@ export function sanitizeUserFacingText(text: string): string {
     return formatRawAssistantErrorForUi(trimmed);
   }
 
-  return collapseConsecutiveDuplicateBlocks(stripped);
+  return collapseConsecutiveDuplicateBlocks(trimmed);
 }
 
 export function isRateLimitAssistantError(msg: AssistantMessage | undefined): boolean {

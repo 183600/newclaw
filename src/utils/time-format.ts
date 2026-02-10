@@ -1,6 +1,12 @@
 export function formatRelativeTime(timestamp: number): string {
   const now = Date.now();
   const diff = now - timestamp;
+
+  // Handle future timestamps
+  if (diff < 0) {
+    return new Date(timestamp).toLocaleDateString(undefined, { month: "short", day: "numeric" });
+  }
+
   const seconds = Math.floor(diff / 1000);
   const minutes = Math.floor(seconds / 60);
   const hours = Math.floor(minutes / 60);

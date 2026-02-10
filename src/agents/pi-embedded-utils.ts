@@ -214,15 +214,17 @@ export function stripFinalTagsKeepContent(text: string): string {
   }
 
   // Remove final tags but keep their content
-  // For opening final tags, remove them and everything after
-  // For closing final tags, just remove the tag
+  // Match <final>...</final> patterns and extract only the content inside
   let result = text;
 
-  // First remove closing final tags
-  result = result.replace(/<\/\s*final\b[^>]*>/gi, "");
+  // Replace <final>...</final> patterns with just the content inside
+  result = result.replace(/<\s*final\b[^>]*>([\s\S]*?)<\/\s*final\b[^>]*>/gi, "$1");
 
-  // Then remove opening final tags and everything after them
-  result = result.replace(/<\s*final\b[^>]*>[\s\S]*/gi, "");
+  // Handle unclosed opening final tags by removing the tag but keeping content after it
+  result = result.replace(/<\s*final\b[^>]*>/gi, "");
+
+  // Remove any stray closing final tags
+  result = result.replace(/<\/\s*final\b[^>]*>/gi, "");
 
   return result;
 }
@@ -239,11 +241,14 @@ export function extractAssistantText(msg: AssistantMessage): string {
   const blocks = Array.isArray(msg.content)
     ? msg.content
         .filter(isTextBlock)
-        .map((c) =>
-          stripFinalTagsKeepContent(
-            stripThinkingTagsFromText(stripDowngradedToolCallText(stripMinimaxToolCallXml(c.text))),
-          ),
-        )
+        .map((c) => {
+          const step1 = stripMinimaxToolCallXml(c.text);
+          const step2 = stripDowngradedToolCallText(step1);
+          // Process final tags BEFORE thinking tags to preserve content
+          const step3 = stripFinalTagsKeepContent(step2);
+          const step4 = stripThinkingTagsFromText(step3);
+          return step4;
+        })
         .filter(Boolean)
         .map((text) => text.replace(/\n+$/, "")) // Remove trailing newlines
     : [];
