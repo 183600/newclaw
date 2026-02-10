@@ -24,28 +24,80 @@ export function normalizeDeliveryContext(context?: DeliveryContext): DeliveryCon
   const channel =
     typeof context.channel === "string"
       ? (normalizeMessageChannel(context.channel) ?? context.channel.trim())
-      : undefined;
-  const to = typeof context.to === "string" ? context.to.trim() : undefined;
+      : context.channel !== undefined
+        ? undefined
+        : undefined;
+  const to =
+    typeof context.to === "string"
+      ? context.to.trim()
+      : context.to !== undefined
+        ? undefined
+        : undefined;
   const accountId = normalizeAccountId(context.accountId);
   const threadId =
     typeof context.threadId === "number" && Number.isFinite(context.threadId)
       ? Math.trunc(context.threadId)
       : typeof context.threadId === "string"
         ? context.threadId.trim()
-        : undefined;
+        : context.threadId !== undefined
+          ? undefined
+          : undefined;
   const normalizedThreadId =
     typeof threadId === "string" ? (threadId ? threadId : undefined) : threadId;
-  if (!channel && !to && !accountId && normalizedThreadId == null) {
-    return undefined;
+
+  const normalized: DeliveryContext = {};
+
+  // Only include fields that were present in the input
+  if ("channel" in context) {
+    normalized.channel = channel;
   }
-  const normalized: DeliveryContext = {
-    channel: channel || undefined,
-    to: to || undefined,
-    accountId,
-  };
-  if (normalizedThreadId != null) {
+  if ("to" in context) {
+    normalized.to = to;
+  }
+  if ("accountId" in context) {
+    normalized.accountId = accountId;
+  }
+  if ("threadId" in context) {
     normalized.threadId = normalizedThreadId;
   }
+
+  // If no fields were present in input, return undefined
+  if (
+    !("channel" in context) &&
+    !("to" in context) &&
+    !("accountId" in context) &&
+    !("threadId" in context)
+  ) {
+    return undefined;
+  }
+
+  // Special case: if only one field is present and it's undefined, return the object with that field
+  const hasOnlyUndefinedField =
+    ("channel" in context &&
+      !("to" in context) &&
+      !("accountId" in context) &&
+      !("threadId" in context) &&
+      channel === undefined) ||
+    (!("channel" in context) &&
+      "to" in context &&
+      !("accountId" in context) &&
+      !("threadId" in context) &&
+      to === undefined);
+
+  if (hasOnlyUndefinedField) {
+    return normalized;
+  }
+
+  // If all normalized values are undefined/empty, return undefined
+  if (
+    !normalized.channel &&
+    !normalized.to &&
+    !normalized.accountId &&
+    normalized.threadId == null
+  ) {
+    return undefined;
+  }
+
   return normalized;
 }
 
@@ -67,13 +119,13 @@ export function normalizeSessionDeliveryFields(source?: DeliveryContextSessionSo
   }
 
   const merged = mergeDeliveryContext(
+    normalizeDeliveryContext(source.deliveryContext),
     normalizeDeliveryContext({
       channel: source.lastChannel ?? source.channel,
       to: source.lastTo,
       accountId: source.lastAccountId,
       threadId: source.lastThreadId,
     }),
-    normalizeDeliveryContext(source.deliveryContext),
   );
 
   if (!merged) {
@@ -106,7 +158,7 @@ export function deliveryContextFromSession(
     lastChannel: entry.lastChannel,
     lastTo: entry.lastTo,
     lastAccountId: entry.lastAccountId,
-    lastThreadId: entry.lastThreadId ?? entry.deliveryContext?.threadId ?? entry.origin?.threadId,
+    lastThreadId: entry.lastThreadId ?? entry.origin?.threadId,
     deliveryContext: entry.deliveryContext,
   };
   return normalizeSessionDeliveryFields(source).deliveryContext;

@@ -212,7 +212,9 @@ describe("resolveGatewayLockDir", () => {
 
   it("uses custom tmpdir function", () => {
     const customTmp = "/custom/tmp";
-    const expected = path.join(customTmp, "openclaw");
+    const uid = typeof process.getuid === "function" ? process.getuid() : undefined;
+    const suffix = uid != null ? `openclaw-${uid}` : "openclaw";
+    const expected = path.join(customTmp, suffix);
     expect(resolveGatewayLockDir(() => customTmp)).toBe(expected);
   });
 });

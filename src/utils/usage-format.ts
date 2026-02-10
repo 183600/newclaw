@@ -34,6 +34,9 @@ export function formatUsd(value?: number): string | undefined {
   if (value === undefined || !Number.isFinite(value)) {
     return undefined;
   }
+  if (value === 0) {
+    return "$0.00";
+  }
   if (value >= 1) {
     return `$${value.toFixed(2)}`;
   }

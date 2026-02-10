@@ -1,9 +1,9 @@
 export type ReasoningTagMode = "strict" | "preserve";
 export type ReasoningTagTrim = "none" | "start" | "both";
 
-const QUICK_TAG_RE = /<\s*\/?\s*(?:think(?:ing)?|thought|antthinking|final)\b/i;
+const QUICK_TAG_RE = /<\s*\/?\s*(?:think|thinking|thought|antthinking|final)\b/i;
 const FINAL_TAG_RE = /<\s*\/?\s*final\b[^<>]*>/gi;
-const THINKING_TAG_RE = /<\s*(\/?)\s*(?:think(?:ing)?|thought|antthinking)\b[^<>]*>/gi;
+const THINKING_TAG_RE = /<\s*(\/?)\s*(?:think|thinking|thought|antthinking)\b[^<>]*>/gi;
 
 interface CodeRegion {
   start: number;
@@ -67,21 +67,35 @@ export function stripReasoningTagsFromText(
   let cleaned = text;
   if (FINAL_TAG_RE.test(cleaned)) {
     FINAL_TAG_RE.lastIndex = 0;
-    const finalMatches: Array<{ start: number; length: number; inCode: boolean }> = [];
     const preCodeRegions = findCodeRegions(cleaned);
+    const finalRanges: Array<{ start: number; end: number; inCode: boolean }> = [];
+    let stack: Array<{ start: number }> = [];
+
     for (const match of cleaned.matchAll(FINAL_TAG_RE)) {
-      const start = match.index ?? 0;
-      finalMatches.push({
-        start,
-        length: match[0].length,
-        inCode: isInsideCode(start, preCodeRegions),
-      });
+      const idx = match.index ?? 0;
+      const isClose = match[0].includes("</final");
+
+      if (isInsideCode(idx, preCodeRegions)) {
+        continue;
+      }
+
+      if (!isClose) {
+        stack.push({ start: idx });
+      } else if (stack.length > 0) {
+        const open = stack.pop()!;
+        finalRanges.push({
+          start: open.start,
+          end: idx + match[0].length,
+          inCode: false,
+        });
+      }
     }
 
-    for (let i = finalMatches.length - 1; i >= 0; i--) {
-      const m = finalMatches[i];
-      if (!m.inCode) {
-        cleaned = cleaned.slice(0, m.start) + cleaned.slice(m.start + m.length);
+    // Remove final ranges in reverse order to maintain indices
+    for (let i = finalRanges.length - 1; i >= 0; i--) {
+      const range = finalRanges[i];
+      if (!range.inCode) {
+        cleaned = cleaned.slice(0, range.start) + cleaned.slice(range.end);
       }
     }
   } else {
@@ -94,6 +108,7 @@ export function stripReasoningTagsFromText(
   let result = "";
   let lastIndex = 0;
   let inThinking = false;
+  let thinkingStart = -1;
 
   for (const match of cleaned.matchAll(THINKING_TAG_RE)) {
     const idx = match.index ?? 0;
@@ -107,15 +122,26 @@ export function stripReasoningTagsFromText(
       result += cleaned.slice(lastIndex, idx);
       if (!isClose) {
         inThinking = true;
+        thinkingStart = idx;
       }
+      // For malformed closing tags without opening, skip them by just moving lastIndex
     } else if (isClose) {
       inThinking = false;
+      thinkingStart = -1;
     }
 
     lastIndex = idx + match[0].length;
   }
 
-  if (!inThinking || mode === "preserve") {
+  if (inThinking) {
+    if (mode === "preserve") {
+      // In preserve mode, keep the unclosed thinking tag and its content
+      result += cleaned.slice(thinkingStart >= 0 ? thinkingStart : lastIndex);
+    } else {
+      // In strict mode, drop the unclosed thinking content
+      // Don't add anything
+    }
+  } else {
     result += cleaned.slice(lastIndex);
   }
 

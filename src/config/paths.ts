@@ -73,7 +73,7 @@ export function resolveStateDir(
   return newDir;
 }
 
-function resolveUserPath(input: string): string {
+export function resolveUserPath(input: string): string {
   const trimmed = input.trim();
   if (!trimmed) {
     return trimmed;
