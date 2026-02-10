@@ -14,12 +14,14 @@ function findCodeRegions(text: string): CodeRegion[] {
   const regions: CodeRegion[] = [];
 
   const fencedRe = /(^|\n)(```|~~~)[^\n]*\n[\s\S]*?(?:\n\2(?:\n|$)|$)/g;
+  fencedRe.lastIndex = 0; // Reset lastIndex before matching
   for (const match of text.matchAll(fencedRe)) {
     const start = (match.index ?? 0) + match[1].length;
     regions.push({ start, end: start + match[0].length - match[1].length });
   }
 
   const inlineRe = /`+[^`]+`+/g;
+  inlineRe.lastIndex = 0; // Reset lastIndex before matching
   for (const match of text.matchAll(inlineRe)) {
     const start = match.index ?? 0;
     const end = start + match[0].length;
@@ -119,18 +121,28 @@ export function stripReasoningTagsFromText(
     }
 
     if (!inThinking) {
-      result += cleaned.slice(lastIndex, idx);
       if (!isClose) {
+        // This is an opening tag, add content before it and start skipping
+        // For trim="none", we skip the content before thinking blocks
+        // to preserve only the spacing of the actual content
+        if (trimMode !== "none") {
+          const beforeContent = cleaned.slice(lastIndex, idx);
+          result += beforeContent;
+        }
         inThinking = true;
         thinkingStart = idx;
       }
       // For malformed closing tags without opening, skip them by just moving lastIndex
-    } else if (isClose) {
-      inThinking = false;
-      thinkingStart = -1;
+      lastIndex = idx + match[0].length;
+    } else {
+      // We're inside a thinking block
+      if (isClose) {
+        // This is a closing tag, stop skipping
+        inThinking = false;
+        thinkingStart = -1;
+      }
+      lastIndex = idx + match[0].length;
     }
-
-    lastIndex = idx + match[0].length;
   }
 
   if (inThinking) {
@@ -142,7 +154,24 @@ export function stripReasoningTagsFromText(
       // Don't add anything
     }
   } else {
-    result += cleaned.slice(lastIndex);
+    // Add any remaining content after the last tag
+    let remaining = cleaned.slice(lastIndex);
+
+    // If we're in strict mode and just removed a thinking block,
+    // clean up potential double newlines
+    if (mode === "strict" && remaining) {
+      // Check if the character before the removed block was a newline
+      // and the character after is also a newline
+      const beforeChar = result.length > 0 ? result[result.length - 1] : "";
+      const afterChar = remaining[0] || "";
+
+      if (beforeChar === "\n" && afterChar === "\n") {
+        // Remove one of the newlines to avoid empty lines
+        remaining = remaining.slice(1);
+      }
+    }
+
+    result += remaining;
   }
 
   return applyTrim(result, trimMode);

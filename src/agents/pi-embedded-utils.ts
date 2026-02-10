@@ -24,6 +24,11 @@ export function stripMinimaxToolCallXml(text: string): string {
   // Remove stray minimax tool tags.
   cleaned = cleaned.replace(/<\/?minimax:tool_call>/gi, "");
 
+  // Trim trailing newlines if the entire content was tool calls
+  if (cleaned.trim() === "") {
+    return "";
+  }
+
   return cleaned;
 }
 
@@ -198,6 +203,30 @@ export function stripThinkingTagsFromText(text: string): string {
   return stripReasoningTagsFromText(text, { mode: "strict", trim: "both" });
 }
 
+/**
+ * Strip final tags but keep their content.
+ * This is used in extractAssistantText to preserve the actual content
+ * while removing the final tags.
+ */
+export function stripFinalTagsKeepContent(text: string): string {
+  if (!text) {
+    return text;
+  }
+
+  // Remove final tags but keep their content
+  // For opening final tags, remove them and everything after
+  // For closing final tags, just remove the tag
+  let result = text;
+
+  // First remove closing final tags
+  result = result.replace(/<\/\s*final\b[^>]*>/gi, "");
+
+  // Then remove opening final tags and everything after them
+  result = result.replace(/<\s*final\b[^>]*>[\s\S]*/gi, "");
+
+  return result;
+}
+
 export function extractAssistantText(msg: AssistantMessage): string {
   const isTextBlock = (block: unknown): block is { type: "text"; text: string } => {
     if (!block || typeof block !== "object") {
@@ -211,13 +240,14 @@ export function extractAssistantText(msg: AssistantMessage): string {
     ? msg.content
         .filter(isTextBlock)
         .map((c) =>
-          stripThinkingTagsFromText(
-            stripDowngradedToolCallText(stripMinimaxToolCallXml(c.text)),
-          ).trim(),
+          stripFinalTagsKeepContent(
+            stripThinkingTagsFromText(stripDowngradedToolCallText(stripMinimaxToolCallXml(c.text))),
+          ),
         )
         .filter(Boolean)
+        .map((text) => text.replace(/\n+$/, "")) // Remove trailing newlines
     : [];
-  const extracted = blocks.join("\n").trim();
+  const extracted = blocks.join("\n");
   return sanitizeUserFacingText(extracted);
 }
 
