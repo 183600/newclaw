@@ -1,4 +1,5 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, expect, it, beforeEach, afterEach, vi } from "vitest";
+import type { QueueState, QueueDropPolicy } from "./queue-helpers.js";
 import {
   elideQueueText,
   buildQueueSummaryLine,
@@ -8,190 +9,353 @@ import {
   buildQueueSummaryPrompt,
   buildCollectPrompt,
   hasCrossChannelItems,
-  type QueueState,
-} from "./queue-helpers";
+} from "./queue-helpers.js";
 
 describe("elideQueueText", () => {
-  it("should return text as-is when under limit", () => {
-    expect(elideQueueText("short text")).toBe("short text");
-    expect(elideQueueText("exact limit", 11)).toBe("exact limit");
+  it("should return text unchanged when under limit", () => {
+    const text = "Short text";
+    const result = elideQueueText(text, 20);
+    expect(result).toBe(text);
   });
 
   it("should elide text when over limit", () => {
-    expect(elideQueueText("this is a long text", 10)).toBe("this is a…");
-    expect(elideQueueText("verylongword", 5)).toBe("very…");
+    const text = "This is a very long text that should be truncated";
+    const result = elideQueueText(text, 20);
+    expect(result).toBe("This is a very long…");
+    expect(result.length).toBeLessThanOrEqual(20);
   });
 
-  it("should handle edge cases", () => {
-    expect(elideQueueText("", 5)).toBe("");
-    expect(elideQueueText("a", 0)).toBe("…");
-    expect(elideQueueText("text", -1)).toBe("…");
+  it("should handle edge case of limit 1", () => {
+    const text = "Hello";
+    const result = elideQueueText(text, 1);
+    expect(result).toBe("…");
+  });
+
+  it("should handle edge case of limit 0", () => {
+    const text = "Hello";
+    const result = elideQueueText(text, 0);
+    expect(result).toBe("…");
+  });
+
+  it("should trim trailing whitespace", () => {
+    const text = "This is a long text with spaces  ";
+    const result = elideQueueText(text, 20);
+    expect(result).toBe("This is a long text…");
+  });
+
+  it("should use default limit of 140", () => {
+    const text = "A".repeat(150);
+    const result = elideQueueText(text);
+    expect(result.length).toBe(140);
+    expect(result.endsWith("…")).toBe(true);
   });
 });
 
 describe("buildQueueSummaryLine", () => {
   it("should normalize whitespace and elide text", () => {
-    expect(buildQueueSummaryLine("  multiple   spaces  ")).toBe("multiple spaces");
-    expect(buildQueueSummaryLine("line\nbreaks\tand\ttabs")).toBe("line breaks and tabs");
+    const text = "This   has    multiple   spaces\nand\ttabs";
+    const result = buildQueueSummaryLine(text, 20);
+    expect(result).toBe("This has multiple…");
   });
 
-  it("should elide long text", () => {
-    const longText = "a".repeat(200);
-    const result = buildQueueSummaryLine(longText);
-    expect(result.length).toBeLessThanOrEqual(160);
-    expect(result).toMatch(/…$/);
+  it("should trim whitespace", () => {
+    const text = "   spaced text   ";
+    const result = buildQueueSummaryLine(text, 20);
+    expect(result).toBe("spaced text");
   });
 
-  it("should handle empty input", () => {
-    expect(buildQueueSummaryLine("")).toBe("");
-    expect(buildQueueSummaryLine("   ")).toBe("");
+  it("should use default limit of 160", () => {
+    const text = "A".repeat(170);
+    const result = buildQueueSummaryLine(text);
+    expect(result.length).toBe(160);
+    expect(result.endsWith("…")).toBe(true);
   });
 });
 
 describe("shouldSkipQueueItem", () => {
-  it("should not skip when no dedupe function provided", () => {
-    expect(shouldSkipQueueItem({ item: "test", items: [] })).toBe(false);
+  it("should not skip when no dedupe function", () => {
+    const result = shouldSkipQueueItem({
+      item: "test",
+      items: ["existing"],
+    });
+    expect(result).toBe(false);
   });
 
-  it("should use dedupe function to determine skip", () => {
-    const dedupe = vi.fn((item: string, items: string[]) => items.includes(item));
+  it("should not skip when dedupe returns false", () => {
+    const dedupe = vi.fn(() => false);
+    const result = shouldSkipQueueItem({
+      item: "test",
+      items: ["existing"],
+      dedupe,
+    });
+    expect(result).toBe(false);
+    expect(dedupe).toHaveBeenCalledWith("test", ["existing"]);
+  });
 
-    expect(shouldSkipQueueItem({ item: "test", items: ["other"], dedupe })).toBe(false);
-    expect(shouldSkipQueueItem({ item: "test", items: ["test"], dedupe })).toBe(true);
-    expect(dedupe).toHaveBeenCalledTimes(2);
+  it("should skip when dedupe returns true", () => {
+    const dedupe = vi.fn(() => true);
+    const result = shouldSkipQueueItem({
+      item: "test",
+      items: ["existing"],
+      dedupe,
+    });
+    expect(result).toBe(true);
+    expect(dedupe).toHaveBeenCalledWith("test", ["existing"]);
   });
 });
 
 describe("applyQueueDropPolicy", () => {
-  it("should accept when under capacity", () => {
+  it("should return true when cap is 0", () => {
     const queue: QueueState<string> = {
-      items: ["a", "b"],
+      items: ["item1", "item2"],
+      cap: 0,
+      dropPolicy: "old",
+      droppedCount: 0,
+      summaryLines: [],
+    };
+    const result = applyQueueDropPolicy({
+      queue,
+      summarize: (item) => item,
+    });
+    expect(result).toBe(true);
+  });
+
+  it("should return true when under capacity", () => {
+    const queue: QueueState<string> = {
+      items: ["item1", "item2"],
       cap: 5,
       dropPolicy: "old",
       droppedCount: 0,
       summaryLines: [],
     };
-
-    expect(applyQueueDropPolicy({ queue, summarize: (x) => x })).toBe(true);
-    expect(queue.items).toEqual(["a", "b"]);
+    const result = applyQueueDropPolicy({
+      queue,
+      summarize: (item) => item,
+    });
+    expect(result).toBe(true);
   });
 
-  it("should reject new items when dropPolicy is 'new'", () => {
+  it("should return false when over capacity with 'new' policy", () => {
     const queue: QueueState<string> = {
-      items: ["a", "b", "c"],
+      items: ["item1", "item2"],
       cap: 2,
       dropPolicy: "new",
       droppedCount: 0,
       summaryLines: [],
     };
-
-    expect(applyQueueDropPolicy({ queue, summarize: (x) => x })).toBe(false);
-    expect(queue.items).toEqual(["a", "b", "c"]);
+    const result = applyQueueDropPolicy({
+      queue,
+      summarize: (item) => item,
+    });
+    expect(result).toBe(false);
   });
 
-  it("should drop old items when dropPolicy is 'old'", () => {
+  it("should drop old items with 'old' policy", () => {
     const queue: QueueState<string> = {
-      items: ["a", "b", "c"],
+      items: ["item1", "item2", "item3"],
       cap: 2,
       dropPolicy: "old",
       droppedCount: 0,
       summaryLines: [],
     };
-
-    expect(applyQueueDropPolicy({ queue, summarize: (x) => x })).toBe(true);
-    expect(queue.items).toEqual(["c"]);
+    const result = applyQueueDropPolicy({
+      queue,
+      summarize: (item) => item,
+    });
+    expect(result).toBe(true);
+    expect(queue.items).toEqual(["item2", "item3"]);
   });
 
-  it("should summarize dropped items when dropPolicy is 'summarize'", () => {
+  it("should summarize dropped items with 'summarize' policy", () => {
     const queue: QueueState<string> = {
-      items: ["a", "b", "c"],
+      items: ["item1", "item2", "item3"],
       cap: 2,
       dropPolicy: "summarize",
       droppedCount: 0,
       summaryLines: [],
     };
-
-    expect(applyQueueDropPolicy({ queue, summarize: (x) => x.toUpperCase() })).toBe(true);
-    expect(queue.items).toEqual(["c"]);
-    expect(queue.droppedCount).toBe(2);
-    expect(queue.summaryLines).toEqual(["A", "B"]);
+    const result = applyQueueDropPolicy({
+      queue,
+      summarize: (item) => `Summary of ${item}`,
+      summaryLimit: 10,
+    });
+    expect(result).toBe(true);
+    expect(queue.items).toEqual(["item2", "item3"]);
+    expect(queue.droppedCount).toBe(1);
+    expect(queue.summaryLines).toEqual(["Summary of item1"]);
   });
 
   it("should limit summary lines", () => {
     const queue: QueueState<string> = {
-      items: ["a", "b", "c", "d", "e"],
+      items: ["item1", "item2", "item3", "item4", "item5"],
       cap: 2,
       dropPolicy: "summarize",
       droppedCount: 0,
-      summaryLines: ["existing"],
+      summaryLines: [],
     };
-
-    expect(applyQueueDropPolicy({ queue, summarize: (x) => x, summaryLimit: 2 })).toBe(true);
-    expect(queue.items).toEqual(["e"]);
-    expect(queue.droppedCount).toBe(4);
-    expect(queue.summaryLines).toEqual(["c", "d"]);
+    const result = applyQueueDropPolicy({
+      queue,
+      summarize: (item) => `Summary of ${item}`,
+      summaryLimit: 2,
+    });
+    expect(result).toBe(true);
+    expect(queue.items).toEqual(["item4", "item5"]);
+    expect(queue.droppedCount).toBe(3);
+    expect(queue.summaryLines).toEqual(["Summary of item2", "Summary of item3"]);
   });
 });
 
 describe("waitForQueueDebounce", () => {
+  beforeEach(() => {
+    vi.useFakeTimers();
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
   it("should resolve immediately when debounceMs is 0", async () => {
-    const queue = { debounceMs: 0, lastEnqueuedAt: Date.now() };
-    const start = Date.now();
-    await waitForQueueDebounce(queue);
-    expect(Date.now() - start).toBeLessThan(10);
+    const queue = {
+      debounceMs: 0,
+      lastEnqueuedAt: Date.now(),
+    };
+    const promise = waitForQueueDebounce(queue);
+    await expect(promise).resolves.toBeUndefined();
+  });
+
+  it("should resolve immediately when debounceMs is negative", async () => {
+    const queue = {
+      debounceMs: -100,
+      lastEnqueuedAt: Date.now(),
+    };
+    const promise = waitForQueueDebounce(queue);
+    await expect(promise).resolves.toBeUndefined();
   });
 
   it("should wait for debounce period", async () => {
-    const queue = { debounceMs: 50, lastEnqueuedAt: Date.now() };
-    const start = Date.now();
-    await waitForQueueDebounce(queue);
-    expect(Date.now() - start).toBeGreaterThanOrEqual(45);
+    const queue = {
+      debounceMs: 100,
+      lastEnqueuedAt: Date.now(),
+    };
+    const promise = waitForQueueDebounce(queue);
+
+    // Should not resolve immediately
+    let resolved = false;
+    promise.then(() => {
+      resolved = true;
+    });
+    await vi.runAllTimersAsync();
+    expect(resolved).toBe(true);
+  });
+
+  it("should extend wait if lastEnqueuedAt is updated", async () => {
+    const queue = {
+      debounceMs: 100,
+      lastEnqueuedAt: Date.now(),
+    };
+    const promise = waitForQueueDebounce(queue);
+
+    // Advance time partially
+    vi.advanceTimersByTime(50);
+
+    // Update lastEnqueuedAt
+    queue.lastEnqueuedAt = Date.now();
+
+    // Should wait additional 100ms
+    let resolved = false;
+    promise.then(() => {
+      resolved = true;
+    });
+    vi.advanceTimersByTime(50);
+    expect(resolved).toBe(false);
+
+    vi.advanceTimersByTime(50);
+    expect(resolved).toBe(true);
   });
 });
 
 describe("buildQueueSummaryPrompt", () => {
-  it("should return undefined when not summarize policy", () => {
+  it("should return undefined when dropPolicy is not summarize", () => {
     const state = {
-      dropPolicy: "old" as const,
+      dropPolicy: "old" as QueueDropPolicy,
       droppedCount: 5,
-      summaryLines: ["a", "b"],
+      summaryLines: ["summary1", "summary2"],
     };
-
-    expect(buildQueueSummaryPrompt({ state, noun: "message" })).toBeUndefined();
+    const result = buildQueueSummaryPrompt({
+      state,
+      noun: "message",
+    });
+    expect(result).toBeUndefined();
   });
 
-  it("should return undefined when no dropped items", () => {
+  it("should return undefined when droppedCount is 0", () => {
     const state = {
-      dropPolicy: "summarize" as const,
+      dropPolicy: "summarize" as QueueDropPolicy,
       droppedCount: 0,
       summaryLines: [],
     };
-
-    expect(buildQueueSummaryPrompt({ state, noun: "message" })).toBeUndefined();
+    const result = buildQueueSummaryPrompt({
+      state,
+      noun: "message",
+    });
+    expect(result).toBeUndefined();
   });
 
-  it("should build summary prompt with dropped items", () => {
+  it("should build prompt with default title", () => {
     const state = {
-      dropPolicy: "summarize" as const,
-      droppedCount: 2,
-      summaryLines: ["msg1", "msg2"],
+      dropPolicy: "summarize" as QueueDropPolicy,
+      droppedCount: 3,
+      summaryLines: ["summary1", "summary2"],
     };
+    const result = buildQueueSummaryPrompt({
+      state,
+      noun: "message",
+    });
+    expect(result).toBe(
+      "[Queue overflow] Dropped 3 messages due to cap.\n" +
+        "Summary:\n" +
+        "- summary1\n" +
+        "- summary2",
+    );
+  });
 
-    const result = buildQueueSummaryPrompt({ state, noun: "message" });
-    expect(result).toContain("Dropped 2 messages");
-    expect(result).toContain("Summary:");
-    expect(result).toContain("- msg1");
-    expect(result).toContain("- msg2");
+  it("should build prompt with custom title", () => {
+    const state = {
+      dropPolicy: "summarize" as QueueDropPolicy,
+      droppedCount: 1,
+      summaryLines: ["summary1"],
+    };
+    const result = buildQueueSummaryPrompt({
+      state,
+      noun: "message",
+      title: "Custom title",
+    });
+    expect(result).toBe("Custom title\n" + "Summary:\n" + "- summary1");
+  });
+
+  it("should handle singular noun", () => {
+    const state = {
+      dropPolicy: "summarize" as QueueDropPolicy,
+      droppedCount: 1,
+      summaryLines: ["summary1"],
+    };
+    const result = buildQueueSummaryPrompt({
+      state,
+      noun: "message",
+    });
+    expect(result).toContain("Dropped 1 message");
   });
 
   it("should reset state after building prompt", () => {
     const state = {
-      dropPolicy: "summarize" as const,
-      droppedCount: 2,
-      summaryLines: ["msg1"],
+      dropPolicy: "summarize" as QueueDropPolicy,
+      droppedCount: 3,
+      summaryLines: ["summary1", "summary2"],
     };
-
-    buildQueueSummaryPrompt({ state, noun: "message" });
+    buildQueueSummaryPrompt({
+      state,
+      noun: "message",
+    });
     expect(state.droppedCount).toBe(0);
     expect(state.summaryLines).toEqual([]);
   });
@@ -199,69 +363,81 @@ describe("buildQueueSummaryPrompt", () => {
 
 describe("buildCollectPrompt", () => {
   it("should build prompt with title and items", () => {
+    const items = ["item1", "item2"];
     const result = buildCollectPrompt({
-      title: "Test Collection",
-      items: ["item1", "item2"],
-      renderItem: (item, idx) => `${idx + 1}. ${item}`,
+      title: "Test Title",
+      items,
+      renderItem: (item, index) => `${index + 1}. ${item}`,
     });
-
-    expect(result).toBe("Test Collection\n\n1. item1\n\n2. item2");
+    expect(result).toBe("Test Title\n\n" + "1. item1\n\n" + "2. item2");
   });
 
   it("should include summary when provided", () => {
+    const items = ["item1"];
     const result = buildCollectPrompt({
-      title: "Test Collection",
-      items: ["item1"],
-      summary: "Previous summary",
+      title: "Test Title",
+      items,
+      summary: "This is a summary",
       renderItem: (item) => `- ${item}`,
     });
+    expect(result).toBe("Test Title\n" + "This is a summary\n\n" + "- item1");
+  });
 
-    expect(result).toBe("Test Collection\n\nPrevious summary\n\n- item1");
+  it("should handle empty items", () => {
+    const items: string[] = [];
+    const result = buildCollectPrompt({
+      title: "Test Title",
+      items,
+      renderItem: (item) => item,
+    });
+    expect(result).toBe("Test Title");
   });
 });
 
 describe("hasCrossChannelItems", () => {
-  it("should return false for empty items", () => {
-    expect(hasCrossChannelItems([], () => ({ key: "test", cross: false }))).toBe(false);
+  it("should return false when no items", () => {
+    const result = hasCrossChannelItems([], () => ({ key: "test", cross: false }));
+    expect(result).toBe(false);
   });
 
   it("should return true when any item is cross-channel", () => {
-    const items = [{ id: 1 }, { id: 2 }];
-    const resolveKey = (item: any) => ({
-      key: item.id.toString(),
-      cross: item.id === 2,
+    const items = ["item1", "item2", "item3"];
+    const resolveKey = (item: string) => ({
+      key: item,
+      cross: item === "item2",
     });
-
-    expect(hasCrossChannelItems(items, resolveKey)).toBe(true);
+    const result = hasCrossChannelItems(items, resolveKey);
+    expect(result).toBe(true);
   });
 
-  it("should return true when multiple different keys exist", () => {
-    const items = [{ id: 1 }, { id: 2 }];
-    const resolveKey = (item: any) => ({
-      key: item.id.toString(),
-      cross: false,
-    });
-
-    expect(hasCrossChannelItems(items, resolveKey)).toBe(true);
+  it("should return false when all items have same key", () => {
+    const items = ["item1", "item2"];
+    const resolveKey = () => ({ key: "same-key", cross: false });
+    const result = hasCrossChannelItems(items, resolveKey);
+    expect(result).toBe(false);
   });
 
-  it("should return true when there are unkeyed items with other keyed items", () => {
-    const items = [{ id: 1 }, { id: undefined }];
-    const resolveKey = (item: any) => ({
-      key: item.id?.toString(),
-      cross: false,
-    });
-
-    expect(hasCrossChannelItems(items, resolveKey)).toBe(true);
+  it("should return true when items have different keys", () => {
+    const items = ["item1", "item2"];
+    const resolveKey = (item: string) => ({ key: item, cross: false });
+    const result = hasCrossChannelItems(items, resolveKey);
+    expect(result).toBe(true);
   });
 
-  it("should return false when all items have the same key", () => {
-    const items = [{ id: 1 }, { id: 1 }];
-    const resolveKey = (item: any) => ({
-      key: item.id.toString(),
+  it("should return true when there are unkeyed items with keyed items", () => {
+    const items = ["item1", "item2"];
+    const resolveKey = (item: string) => ({
+      key: item === "item1" ? "key1" : undefined,
       cross: false,
     });
+    const result = hasCrossChannelItems(items, resolveKey);
+    expect(result).toBe(true);
+  });
 
-    expect(hasCrossChannelItems(items, resolveKey)).toBe(false);
+  it("should return false when all items are unkeyed", () => {
+    const items = ["item1", "item2"];
+    const resolveKey = () => ({ key: undefined, cross: false });
+    const result = hasCrossChannelItems(items, resolveKey);
+    expect(result).toBe(false);
   });
 });

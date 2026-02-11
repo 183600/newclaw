@@ -1,11 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
-import {
-  pickTagline,
-  activeTaglines,
-  DEFAULT_TAGLINE,
-  TAGLINES,
-  HOLIDAY_TAGLINES,
-} from "./tagline.js";
+import { pickTagline, activeTaglines, DEFAULT_TAGLINE, TAGLINES } from "./tagline.js";
+// Import HOLIDAY_TAGLINES separately to ensure it's available
+import { HOLIDAY_TAGLINES } from "./tagline.js";
 
 describe("pickTagline", () => {
   it("should return a tagline from the available pool", () => {

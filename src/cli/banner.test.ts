@@ -6,9 +6,29 @@ import {
   hasEmittedCliBanner,
 } from "./banner.js";
 
+// Mock the theme module
+vi.mock("../terminal/theme.js", () => ({
+  theme: {
+    heading: vi.fn((text: string) => text),
+    info: vi.fn((text: string) => text),
+    muted: vi.fn((text: string) => text),
+    accentDim: vi.fn((text: string) => `\u001b[38;2;255;90;45m${text}\u001b[0m`),
+    accent: vi.fn((text: string) => `\u001b[38;2;255;90;45m${text}\u001b[0m`),
+    accentBright: vi.fn((text: string) => text),
+  },
+  isRich: () => true,
+}));
+
 describe("formatCliBannerLine", () => {
+  let bannerModule: any;
+
+  beforeEach(async () => {
+    vi.resetModules();
+    bannerModule = await import("./banner.js");
+  });
+
   it("should format banner line with all components", () => {
-    const result = formatCliBannerLine("1.0.0", {
+    const result = bannerModule.formatCliBannerLine("1.0.0", {
       commit: "abc123",
       columns: 120,
       richTty: false,
@@ -21,7 +41,7 @@ describe("formatCliBannerLine", () => {
   });
 
   it("should split into two lines when content exceeds columns", () => {
-    const result = formatCliBannerLine("1.0.0", {
+    const result = bannerModule.formatCliBannerLine("1.0.0", {
       commit: "abc123",
       columns: 40, // Small width to force split
       richTty: false,
@@ -35,7 +55,7 @@ describe("formatCliBannerLine", () => {
   });
 
   it("should handle null commit", () => {
-    const result = formatCliBannerLine("1.0.0", {
+    const result = bannerModule.formatCliBannerLine("1.0.0", {
       commit: null,
       richTty: false,
     });
@@ -44,7 +64,7 @@ describe("formatCliBannerLine", () => {
   });
 
   it("should use rich formatting when enabled", () => {
-    const result = formatCliBannerLine("1.0.0", {
+    const result = bannerModule.formatCliBannerLine("1.0.0", {
       commit: "abc123",
       richTty: true,
     });
@@ -55,15 +75,22 @@ describe("formatCliBannerLine", () => {
 });
 
 describe("formatCliBannerArt", () => {
+  let bannerModule: any;
+
+  beforeEach(async () => {
+    vi.resetModules();
+    bannerModule = await import("./banner.js");
+  });
+
   it("should return ASCII art without rich formatting", () => {
-    const result = formatCliBannerArt({ richTty: false });
+    const result = bannerModule.formatCliBannerArt({ richTty: false });
 
     expect(result).toContain("▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄");
     expect(result).toContain("🦞 OPENCLAW 🦞");
   });
 
   it("should include colored escape codes when rich formatting is enabled", () => {
-    const result = formatCliBannerArt({ richTty: true });
+    const result = bannerModule.formatCliBannerArt({ richTty: true });
 
     // Should contain ANSI color codes
     expect(result).toContain("\u001b[");
@@ -74,11 +101,16 @@ describe("formatCliBannerArt", () => {
 describe("emitCliBanner", () => {
   let originalWrite: typeof process.stdout.write;
   let mockWrite: ReturnType<typeof vi.fn>;
+  let bannerModule: any;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     originalWrite = process.stdout.write;
     mockWrite = vi.fn();
     process.stdout.write = mockWrite;
+
+    // Reset modules and re-import to get a fresh state
+    vi.resetModules();
+    bannerModule = await import("./banner.js");
   });
 
   afterEach(() => {
@@ -89,10 +121,10 @@ describe("emitCliBanner", () => {
     const originalIsTTY = process.stdout.isTTY;
     process.stdout.isTTY = true;
 
-    emitCliBanner("1.0.0", { argv: ["node", "openclaw"] });
+    bannerModule.emitCliBanner("1.0.0", { argv: ["node", "openclaw"] });
 
     expect(mockWrite).toHaveBeenCalled();
-    expect(hasEmittedCliBanner()).toBe(true);
+    expect(bannerModule.hasEmittedCliBanner()).toBe(true);
 
     process.stdout.isTTY = originalIsTTY;
   });
@@ -101,10 +133,10 @@ describe("emitCliBanner", () => {
     const originalIsTTY = process.stdout.isTTY;
     process.stdout.isTTY = true;
 
-    emitCliBanner("1.0.0", { argv: ["node", "openclaw", "--json"] });
+    bannerModule.emitCliBanner("1.0.0", { argv: ["node", "openclaw", "--json"] });
 
     expect(mockWrite).not.toHaveBeenCalled();
-    expect(hasEmittedCliBanner()).toBe(false);
+    expect(bannerModule.hasEmittedCliBanner()).toBe(false);
 
     process.stdout.isTTY = originalIsTTY;
   });
@@ -113,10 +145,10 @@ describe("emitCliBanner", () => {
     const originalIsTTY = process.stdout.isTTY;
     process.stdout.isTTY = true;
 
-    emitCliBanner("1.0.0", { argv: ["node", "openclaw", "--version"] });
+    bannerModule.emitCliBanner("1.0.0", { argv: ["node", "openclaw", "--version"] });
 
     expect(mockWrite).not.toHaveBeenCalled();
-    expect(hasEmittedCliBanner()).toBe(false);
+    expect(bannerModule.hasEmittedCliBanner()).toBe(false);
 
     process.stdout.isTTY = originalIsTTY;
   });
@@ -125,10 +157,10 @@ describe("emitCliBanner", () => {
     const originalIsTTY = process.stdout.isTTY;
     process.stdout.isTTY = false;
 
-    emitCliBanner("1.0.0", { argv: ["node", "openclaw"] });
+    bannerModule.emitCliBanner("1.0.0", { argv: ["node", "openclaw"] });
 
     expect(mockWrite).not.toHaveBeenCalled();
-    expect(hasEmittedCliBanner()).toBe(false);
+    expect(bannerModule.hasEmittedCliBanner()).toBe(false);
 
     process.stdout.isTTY = originalIsTTY;
   });
@@ -137,10 +169,10 @@ describe("emitCliBanner", () => {
     const originalIsTTY = process.stdout.isTTY;
     process.stdout.isTTY = true;
 
-    emitCliBanner("1.0.0", { argv: ["node", "openclaw"] });
+    bannerModule.emitCliBanner("1.0.0", { argv: ["node", "openclaw"] });
     expect(mockWrite).toHaveBeenCalledTimes(1);
 
-    emitCliBanner("1.0.0", { argv: ["node", "openclaw"] });
+    bannerModule.emitCliBanner("1.0.0", { argv: ["node", "openclaw"] });
     expect(mockWrite).toHaveBeenCalledTimes(1); // Still only called once
 
     process.stdout.isTTY = originalIsTTY;

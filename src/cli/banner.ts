@@ -35,7 +35,8 @@ const hasVersionFlag = (argv: string[]) =>
   argv.some((arg) => arg === "--version" || arg === "-V" || arg === "-v");
 
 export function formatCliBannerLine(version: string, options: BannerOptions = {}): string {
-  const commit = options.commit ?? resolveCommitHash({ env: options.env });
+  const commit =
+    options.commit !== undefined ? options.commit : resolveCommitHash({ env: options.env });
   const commitLabel = commit ?? "unknown";
   const tagline = pickTagline(options);
   const rich = options.richTty ?? isRich();
@@ -53,14 +54,14 @@ export function formatCliBannerLine(version: string, options: BannerOptions = {}
     const line1 = `${theme.heading(title)} ${theme.info(version)} ${theme.muted(
       `(${commitLabel})`,
     )}`;
-    const line2 = `${" ".repeat(prefix.length)}${theme.accentDim(tagline)}`;
+    const line2 = `${" ".repeat(prefix.length)}${theme.accentDim("🦞")} ${theme.accentDim(tagline)}`;
     return `${line1}\n${line2}`;
   }
   if (fitsOnOneLine) {
     return plainFullLine;
   }
   const line1 = `${title} ${version} (${commitLabel})`;
-  const line2 = `${" ".repeat(prefix.length)}${tagline}`;
+  const line2 = `${" ".repeat(prefix.length)}🦞 ${tagline}`;
   return `${line1}\n${line2}`;
 }
 

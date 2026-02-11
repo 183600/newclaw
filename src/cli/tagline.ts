@@ -267,4 +267,4 @@ export function pickTagline(options: TaglineOptions = {}): string {
   return pool[index];
 }
 
-export { TAGLINES, HOLIDAY_RULES, DEFAULT_TAGLINE };
+export { TAGLINES, HOLIDAY_TAGLINES, HOLIDAY_RULES, DEFAULT_TAGLINE };
