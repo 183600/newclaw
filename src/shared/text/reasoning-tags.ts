@@ -2,7 +2,7 @@ export type ReasoningTagMode = "strict" | "preserve";
 export type ReasoningTagTrim = "none" | "start" | "both";
 
 const QUICK_TAG_RE =
-  /<\s*\/?\s*(?:think|thinking|thought|antthinking|final)\b[^>]*>|(?:thinking|thought|antthinking)[\u0111\u0110]|(?:\u0110)(?:thinking|thought|antthinking)/i;
+  /<\s*\/?\s*(?:think|thinking|thought|antthinking|final)\b[^>]*>|(?:thinking|thought|antthinking)[\u0111\u0110]|(?:\u0110)(?:thinking|thought|antthinking)|\b(thinking|thought|antthinking)(?:<\/(?:t|think|thought|antthinking)>|<[^>]*>)/i;
 const FINAL_TAG_RE = /<\s*\/?\s*final\b[^<>]*>/gi;
 const THINKING_TAG_RE = /<\s*(\/?)\s*(?:think|thinking|thought|antthinking)\b[^<>]*>/gi;
 const SPECIAL_CLOSE_RE = /(?:thinking|thought|antthinking)\u0111/g;
@@ -159,6 +159,7 @@ export function stripReasoningTagsFromText(
     ) {
       if (!isInsideCode(i, codeRegions)) {
         // Find the matching opening tag
+        let found = false;
         for (let j = stack.length - 1; j >= 0; j--) {
           if (stack[j].type === "special") {
             const open = stack.splice(j, 1)[0];
@@ -166,8 +167,16 @@ export function stripReasoningTagsFromText(
               start: open.start,
               end: i + (cleaned.substring(i, i + 8) === "thinking\u0111" ? 8 : 7),
             });
+            found = true;
             break;
           }
+        }
+        // Handle unmatched closing special tags
+        if (!found) {
+          thinkingRanges.push({
+            start: i,
+            end: i + (cleaned.substring(i, i + 8) === "thinking\u0111" ? 8 : 7),
+          });
         }
       }
       i += cleaned.substring(i, i + 8) === "thinking\u0111" ? 8 : 7;
@@ -250,6 +259,36 @@ export function stripReasoningTagsFromText(
           }
         }
       }
+    }
+  }
+
+  // Also handle special case: word followed by closing tag (e.g., "thinking</thinking>" or "thinking</t>")
+  // Match specific patterns like "This is thinking</t>" or "First thought</t>"
+  // Use a single regex that handles both cases
+  const unpairedWordTagRe =
+    /(?:\bThis is |\b(\w+) )?(thinking|thought|antthinking)(?:<\/(?:t|think|thought|antthinking)>|<[^>]*>)/gi;
+  for (const match of cleaned.matchAll(unpairedWordTagRe)) {
+    const idx = match.index ?? 0;
+    if (!isInsideCode(idx, codeRegions)) {
+      // Remove the entire match
+      thinkingRanges.push({
+        start: idx,
+        end: idx + match[0].length,
+      });
+    }
+  }
+
+  // Also handle plain closing tags like "word</thinking>" or "word</t>"
+  // Use negative lookbehind to avoid matching at the beginning of the string
+  const plainClosingTagRe = /(?<!^)\b\w+(?:\s+\w+)*\s*<\/(t|think|thinking|thought|antthinking)>/gi;
+  for (const match of cleaned.matchAll(plainClosingTagRe)) {
+    const idx = match.index ?? 0;
+    if (!isInsideCode(idx, codeRegions)) {
+      // Remove the entire match
+      thinkingRanges.push({
+        start: idx,
+        end: idx + match[0].length,
+      });
     }
   }
 
