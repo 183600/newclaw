@@ -1,27 +1,14 @@
-export type ReasoningTagMode = "strict" | "preserve";
-export type ReasoningTagTrim = "none" | "start" | "both";
+// Let's create a fixed version of the function
+const FIXED_QUICK_TAG_RE =
+  /<\s*\/?\s*(?:think|thinking|thought|antthinking|final)\b[^>]*>|(?:\w+)[đĐ]|(?:Đ)(?:\w+)|\b(thinking|thought|antthinking)(?:<\/(?:t|think|thinking|thought|antthinking)>|<[^>]*>)/i;
 
-const QUICK_TAG_RE =
-  /<\s*\/?\s*(?:think|thinking|thought|antthinking|final)\b[^>]*>|(?:\w+)[\u0111\u0110]|(?:\u0110)(?:\w+)|\b(thinking|thought|antthinking)(?:<\/(?:t|think|thought|antthinking)>|<[^>]*>)/i;
-const FINAL_TAG_RE = /<\s*\/?\s*final\b[^<>]*>/gi;
-const THINKING_TAG_RE = /<\s*(\/?)\s*(?:think|thinking|thought|antthinking)\b[^<>]*>/gi;
-const SPECIAL_CLOSE_RE = /(?:thinking|thought|antthinking)\u0111/g;
-const SPECIAL_OPEN_RE = /\u0110(?:thinking|thought|antthinking)/g;
-
-interface CodeRegion {
-  start: number;
-  end: number;
-}
-
-function findCodeRegions(text: string): CodeRegion[] {
-  const regions: CodeRegion[] = [];
-
+function findCodeRegions(text) {
+  const regions = [];
   const fencedRe = /(^|\n)(```|~~~)[^\n]*\n[\s\S]*?(?:\n\2(?:\n|$)|$)/g;
   for (const match of text.matchAll(fencedRe)) {
     const start = (match.index ?? 0) + match[1].length;
     regions.push({ start, end: start + match[0].length - match[1].length });
   }
-
   const inlineRe = /`+[^`]+`+/g;
   for (const match of text.matchAll(inlineRe)) {
     const start = match.index ?? 0;
@@ -31,36 +18,19 @@ function findCodeRegions(text: string): CodeRegion[] {
       regions.push({ start, end });
     }
   }
-
   regions.sort((a, b) => a.start - b.start);
   return regions;
 }
 
-function isInsideCode(pos: number, regions: CodeRegion[]): boolean {
+function isInsideCode(pos, regions) {
   return regions.some((r) => pos >= r.start && pos < r.end);
 }
 
-function applyTrim(value: string, mode: ReasoningTagTrim): string {
-  if (mode === "none") {
-    return value;
-  }
-  if (mode === "start") {
-    return value.trimStart();
-  }
-  return value.trim();
-}
-
-export function stripReasoningTagsFromText(
-  text: string,
-  options?: {
-    mode?: ReasoningTagMode;
-    trim?: ReasoningTagTrim;
-  },
-): string {
+function fixedStripReasoningTagsFromText(text, options) {
   if (!text) {
     return text;
   }
-  if (!QUICK_TAG_RE.test(text)) {
+  if (!FIXED_QUICK_TAG_RE.test(text)) {
     return text;
   }
 
@@ -76,11 +46,12 @@ export function stripReasoningTagsFromText(
   cleaned = cleaned.replace(/&#x110;thought/g, "Đthought");
 
   // First handle final tags
+  const FINAL_TAG_RE = /<\s*\/?\s*final\b[^<>]*>/gi;
   if (FINAL_TAG_RE.test(cleaned)) {
     FINAL_TAG_RE.lastIndex = 0;
     const preCodeRegions = findCodeRegions(cleaned);
-    const finalRanges: Array<{ start: number; end: number }> = [];
-    let stack: Array<{ start: number }> = [];
+    const finalRanges = [];
+    let stack = [];
 
     for (const match of cleaned.matchAll(FINAL_TAG_RE)) {
       const idx = match.index ?? 0;
@@ -93,7 +64,7 @@ export function stripReasoningTagsFromText(
       if (!isClose) {
         stack.push({ start: idx });
       } else if (stack.length > 0) {
-        const open = stack.pop()!;
+        const open = stack.pop();
         finalRanges.push({
           start: open.start,
           end: idx + match[0].length,
@@ -112,10 +83,11 @@ export function stripReasoningTagsFromText(
 
   // Now handle thinking tags
   const codeRegions = findCodeRegions(cleaned);
-  const thinkingRanges: Array<{ start: number; end: number }> = [];
-  let stack: Array<{ start: number; type: "html" | "special" }> = [];
+  const thinkingRanges = [];
+  let stack = [];
 
   // Find all HTML thinking tags
+  const THINKING_TAG_RE = /<\s*(\/?)\s*(?:think|thinking|thought|antthinking)\b[^<>]*>/gi;
   THINKING_TAG_RE.lastIndex = 0;
   for (const match of cleaned.matchAll(THINKING_TAG_RE)) {
     const idx = match.index ?? 0;
@@ -128,7 +100,7 @@ export function stripReasoningTagsFromText(
     if (!isClose) {
       stack.push({ start: idx, type: "html" });
     } else if (stack.length > 0 && stack[stack.length - 1].type === "html") {
-      const open = stack.pop()!;
+      const open = stack.pop();
       thinkingRanges.push({
         start: open.start,
         end: idx + match[0].length,
@@ -218,7 +190,7 @@ export function stripReasoningTagsFromText(
           }
         }
       }
-      return applyTrim(result, trimMode);
+      return cleaned.trim(); // Apply trim at the end
     } else if (mode === "strict") {
       // In strict mode, remove unclosed tags and their content
       for (const open of stack) {
@@ -273,13 +245,8 @@ export function stripReasoningTagsFromText(
   }
 
   // Also handle special case: word followed by closing tag (e.g., "thinking</thinking>" or "thinking</t>")
-  // Match specific patterns like "This is thinking</t>" or "First thought</t>"
-  // Use a single regex that handles both cases
   const unpairedWordTagRe =
     /(?:\bThis is |\b(\w+) )?(thinking|thought|antthinking)(?:<\/(?:t|think|thinking|thought|antthinking)>|<[^>]*>)/gi;
-
-  // Removed textWithClosingTagRe logic as it was causing over-matching
-  // The unpairedWordTagRe should handle the necessary cases
   for (const match of cleaned.matchAll(unpairedWordTagRe)) {
     const idx = match.index ?? 0;
     if (!isInsideCode(idx, codeRegions)) {
@@ -291,12 +258,6 @@ export function stripReasoningTagsFromText(
     }
   }
 
-  // Removed textWithClosingTagRe processing logic to avoid over-matching
-  // Only use unpairedWordTagRe for more precise matching
-
-  // Removed plainClosingTagRe logic as it was causing issues with over-matching
-  // The unpairedWordTagRe above should handle the necessary cases
-
   // Sort ranges by start position
   thinkingRanges.sort((a, b) => a.start - b.start);
 
@@ -306,5 +267,61 @@ export function stripReasoningTagsFromText(
     cleaned = cleaned.slice(0, range.start) + cleaned.slice(range.end);
   }
 
-  return applyTrim(cleaned, trimMode);
+  // Apply trim
+  if (trimMode === "none") {
+    return cleaned;
+  }
+  if (trimMode === "start") {
+    return cleaned.trimStart();
+  }
+  return cleaned.trim();
 }
+
+// Test the fixed function
+console.log("=== Testing fixed function ===");
+
+const test1 = `
+\`\`\`javascript
+function test() {
+  // This should be preservedđ
+  return true;
+}
+\`\`\`
+Outside This should be removedđ code block.`;
+
+console.log("\nTest 1 - Code blocks preservation:");
+console.log("Input:", JSON.stringify(test1));
+console.log("Output:", JSON.stringify(fixedStripReasoningTagsFromText(test1)));
+
+const test2 = "Text with \`inline codeđ\` and outside thinkingđ.";
+console.log("\nTest 2 - Inline code preservation:");
+console.log("Input:", JSON.stringify(test2));
+console.log("Output:", JSON.stringify(fixedStripReasoningTagsFromText(test2)));
+
+const test3 = "Before Đthinking Unclosed thinking content";
+console.log("\nTest 3 - Unclosed thinking tags (preserve mode):");
+console.log("Input:", JSON.stringify(test3));
+console.log(
+  "Output:",
+  JSON.stringify(fixedStripReasoningTagsFromText(test3, { mode: "preserve" })),
+);
+
+const test4 = "Before Đthinking Unclosed thinking content";
+console.log("\nTest 4 - Unclosed thinking tags (strict mode):");
+console.log("Input:", JSON.stringify(test4));
+console.log("Output:", JSON.stringify(fixedStripReasoningTagsFromText(test4, { mode: "strict" })));
+
+const test5 = "  Before Đthinkingđ after  ";
+console.log("\nTest 5 - Trim options:");
+console.log("Input:", JSON.stringify(test5));
+console.log("Trim both:", JSON.stringify(fixedStripReasoningTagsFromText(test5, { trim: "both" })));
+
+const test6 = "Start First thoughtđ middle Second thoughtđ end.";
+console.log("\nTest 6 - Multiple thinking blocks:");
+console.log("Input:", JSON.stringify(test6));
+console.log("Output:", JSON.stringify(fixedStripReasoningTagsFromText(test6)));
+
+const test7 = "StartĐfirst thoughtđMiddleĐsecond thoughtđEnd";
+console.log("\nTest 7 - Nested or multiple thinking blocks:");
+console.log("Input:", JSON.stringify(test7));
+console.log("Output:", JSON.stringify(fixedStripReasoningTagsFromText(test7)));

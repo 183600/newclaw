@@ -388,6 +388,7 @@ export function extractAssistantText(message: unknown): string | undefined {
       }
     }
   }
-  const joined = chunks.join("").trim();
+  // Join chunks directly without trimming to preserve spacing between blocks
+  const joined = chunks.join("");
   return joined ? sanitizeUserFacingText(joined) : undefined;
 }
