@@ -113,7 +113,12 @@ export function resolveAgentConfig(
       typeof entry.model === "string" || (entry.model && typeof entry.model === "object")
         ? entry.model
         : undefined,
-    skills: Array.isArray(entry.skills) ? entry.skills : undefined,
+    skills: Array.isArray(entry.skills)
+      ? entry.skills
+          .filter((skill): skill is string => skill != null)
+          .map((s) => String(s).trim())
+          .filter((s) => s.length > 0)
+      : undefined,
     memorySearch: entry.memorySearch,
     humanDelay: entry.humanDelay,
     heartbeat: entry.heartbeat,
@@ -133,7 +138,10 @@ export function resolveAgentSkillsFilter(
   if (!raw) {
     return undefined;
   }
-  const normalized = raw.map((entry) => String(entry).trim()).filter(Boolean);
+  const normalized = raw
+    .filter((entry): entry is string => entry != null) // Filter out null and undefined
+    .map((entry) => String(entry).trim())
+    .filter((entry) => entry.length > 0); // Filter out empty strings after trim
   return normalized.length > 0 ? normalized : [];
 }
 

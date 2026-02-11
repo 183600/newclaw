@@ -21,29 +21,21 @@ export function normalizeDeliveryContext(context?: DeliveryContext): DeliveryCon
   if (!context) {
     return undefined;
   }
+
   const channel =
-    typeof context.channel === "string"
-      ? (normalizeMessageChannel(context.channel) ?? context.channel.trim())
-      : context.channel !== undefined
-        ? undefined
-        : undefined;
-  const to =
-    typeof context.to === "string"
-      ? context.to.trim()
-      : context.to !== undefined
-        ? undefined
-        : undefined;
+    context.channel !== undefined ? normalizeMessageChannel(context.channel) : undefined;
+  const to = context.to !== undefined ? context.to.trim() || undefined : undefined;
   const accountId = normalizeAccountId(context.accountId);
-  const threadId =
-    typeof context.threadId === "number" && Number.isFinite(context.threadId)
-      ? Math.trunc(context.threadId)
-      : typeof context.threadId === "string"
-        ? context.threadId.trim()
-        : context.threadId !== undefined
-          ? undefined
-          : undefined;
-  const normalizedThreadId =
-    typeof threadId === "string" ? (threadId ? threadId : undefined) : threadId;
+
+  let threadId: string | number | undefined;
+  if (typeof context.threadId === "number" && Number.isFinite(context.threadId)) {
+    threadId = Math.trunc(context.threadId);
+  } else if (typeof context.threadId === "string") {
+    const trimmed = context.threadId.trim();
+    threadId = trimmed || undefined;
+  } else if (context.threadId !== undefined) {
+    threadId = undefined;
+  }
 
   const normalized: DeliveryContext = {};
 
@@ -58,7 +50,7 @@ export function normalizeDeliveryContext(context?: DeliveryContext): DeliveryCon
     normalized.accountId = accountId;
   }
   if ("threadId" in context) {
-    normalized.threadId = normalizedThreadId;
+    normalized.threadId = threadId;
   }
 
   // If no fields were present in input, return undefined
@@ -71,29 +63,20 @@ export function normalizeDeliveryContext(context?: DeliveryContext): DeliveryCon
     return undefined;
   }
 
-  // Special case: if only one field is present and it's undefined, return the object with that field
-  const hasOnlyUndefinedField =
-    ("channel" in context &&
-      !("to" in context) &&
-      !("accountId" in context) &&
-      !("threadId" in context) &&
-      channel === undefined) ||
-    (!("channel" in context) &&
-      "to" in context &&
-      !("accountId" in context) &&
-      !("threadId" in context) &&
-      to === undefined);
+  // If all normalized values are undefined/empty, but only one field was present in input, return the object with that field
+  const fieldCount =
+    ("channel" in context ? 1 : 0) +
+    ("to" in context ? 1 : 0) +
+    ("accountId" in context ? 1 : 0) +
+    ("threadId" in context ? 1 : 0);
 
-  if (hasOnlyUndefinedField) {
-    return normalized;
-  }
-
-  // If all normalized values are undefined/empty, return undefined
+  // If all normalized values are undefined/empty and more than one field was present, return undefined
   if (
-    !normalized.channel &&
-    !normalized.to &&
-    !normalized.accountId &&
-    normalized.threadId == null
+    fieldCount > 1 &&
+    normalized.channel === undefined &&
+    normalized.to === undefined &&
+    normalized.accountId === undefined &&
+    normalized.threadId === undefined
   ) {
     return undefined;
   }
@@ -173,12 +156,30 @@ export function mergeDeliveryContext(
   if (!normalizedPrimary && !normalizedFallback) {
     return undefined;
   }
-  return normalizeDeliveryContext({
+
+  const merged: DeliveryContext = {
     channel: normalizedPrimary?.channel ?? normalizedFallback?.channel,
     to: normalizedPrimary?.to ?? normalizedFallback?.to,
     accountId: normalizedPrimary?.accountId ?? normalizedFallback?.accountId,
     threadId: normalizedPrimary?.threadId ?? normalizedFallback?.threadId,
-  });
+  };
+
+  // Only include fields that were present in either input
+  const result: DeliveryContext = {};
+  if (normalizedPrimary?.channel !== undefined || normalizedFallback?.channel !== undefined) {
+    result.channel = merged.channel;
+  }
+  if (normalizedPrimary?.to !== undefined || normalizedFallback?.to !== undefined) {
+    result.to = merged.to;
+  }
+  if (normalizedPrimary?.accountId !== undefined || normalizedFallback?.accountId !== undefined) {
+    result.accountId = merged.accountId;
+  }
+  if (normalizedPrimary?.threadId !== undefined || normalizedFallback?.threadId !== undefined) {
+    result.threadId = merged.threadId;
+  }
+
+  return result;
 }
 
 export function deliveryContextKey(context?: DeliveryContext): string | undefined {

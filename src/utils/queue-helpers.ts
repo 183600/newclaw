@@ -46,7 +46,7 @@ export function applyQueueDropPolicy<T>(params: {
   if (params.queue.dropPolicy === "new") {
     return false;
   }
-  const dropCount = params.queue.items.length - cap + 1;
+  const dropCount = params.queue.items.length - cap;
   const dropped = params.queue.items.splice(0, dropCount);
   if (params.queue.dropPolicy === "summarize") {
     for (const item of dropped) {

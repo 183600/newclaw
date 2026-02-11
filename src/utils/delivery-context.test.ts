@@ -1,4 +1,16 @@
 import { describe, expect, it, beforeEach, vi } from "vitest";
+
+// Mock dependencies - must be before imports
+vi.mock("./account-id.js", () => ({
+  normalizeAccountId: vi.fn((id: string | undefined) => id?.trim() || undefined),
+}));
+
+vi.mock("./message-channel.js", () => ({
+  normalizeMessageChannel: vi.fn(
+    (channel: string | undefined) => channel?.toLowerCase() || undefined,
+  ),
+}));
+
 import type { DeliveryContext, DeliveryContextSessionSource } from "./delivery-context.js";
 import {
   normalizeDeliveryContext,
@@ -8,23 +20,19 @@ import {
   deliveryContextKey,
 } from "./delivery-context.js";
 
-// Mock dependencies
-vi.mock("./account-id.js", () => ({
-  normalizeAccountId: vi.fn((id) => id?.trim() || undefined),
-}));
-
-vi.mock("./message-channel.js", () => ({
-  normalizeMessageChannel: vi.fn((channel) => channel?.toLowerCase() || undefined),
-}));
-
 describe("normalizeDeliveryContext", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
   it("should return undefined for undefined input", () => {
     const result = normalizeDeliveryContext(undefined);
     expect(result).toBeUndefined();
   });
 
   it("should normalize string fields", async () => {
-    const { normalizeMessageChannel, normalizeAccountId } = await import("./message-channel.js");
+    const { normalizeMessageChannel } = await import("./message-channel.js");
+    const { normalizeAccountId } = await import("./account-id.js");
     vi.mocked(normalizeMessageChannel).mockReturnValue("whatsapp");
     vi.mocked(normalizeAccountId).mockReturnValue("account123");
 
@@ -91,7 +99,12 @@ describe("normalizeDeliveryContext", () => {
     });
   });
 
-  it("should return undefined when all normalized values are empty", () => {
+  it("should return undefined when all normalized values are empty", async () => {
+    const { normalizeMessageChannel } = await import("./message-channel.js");
+    const { normalizeAccountId } = await import("./account-id.js");
+    vi.mocked(normalizeMessageChannel).mockReturnValue(undefined); // Empty string should return undefined
+    vi.mocked(normalizeAccountId).mockReturnValue(undefined); // Empty string should return undefined
+
     const context: DeliveryContext = {
       channel: "",
       to: "",
@@ -116,6 +129,10 @@ describe("normalizeDeliveryContext", () => {
 });
 
 describe("normalizeSessionDeliveryFields", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
   it("should return all undefined for undefined source", () => {
     const result = normalizeSessionDeliveryFields(undefined);
 
@@ -128,7 +145,14 @@ describe("normalizeSessionDeliveryFields", () => {
     });
   });
 
-  it("should merge delivery context with last values", () => {
+  it("should merge delivery context with last values", async () => {
+    const { normalizeMessageChannel } = await import("./message-channel.js");
+    const { normalizeAccountId } = await import("./account-id.js");
+    vi.mocked(normalizeMessageChannel).mockImplementation(
+      (channel) => channel?.toLowerCase() || undefined,
+    );
+    vi.mocked(normalizeAccountId).mockImplementation((id) => id?.trim() || undefined);
+
     const source: DeliveryContextSessionSource = {
       deliveryContext: {
         channel: "telegram",
@@ -189,6 +213,10 @@ describe("normalizeSessionDeliveryFields", () => {
 });
 
 describe("deliveryContextFromSession", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
   it("should return undefined for undefined entry", () => {
     const result = deliveryContextFromSession(undefined);
     expect(result).toBeUndefined();
@@ -249,6 +277,10 @@ describe("deliveryContextFromSession", () => {
 });
 
 describe("mergeDeliveryContext", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
   it("should return undefined when both contexts are undefined", () => {
     const result = mergeDeliveryContext(undefined, undefined);
     expect(result).toBeUndefined();
