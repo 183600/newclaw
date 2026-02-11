@@ -40,12 +40,13 @@ export function applyQueueDropPolicy<T>(params: {
   summaryLimit?: number;
 }): boolean {
   const cap = params.queue.cap;
-  if (cap <= 0 || params.queue.items.length < cap) {
+  if (cap <= 0 || params.queue.items.length <= cap) {
     return true;
   }
   if (params.queue.dropPolicy === "new") {
     return false;
   }
+  // If queue is over capacity, drop items to fit within cap
   const dropCount = params.queue.items.length - cap;
   const dropped = params.queue.items.splice(0, dropCount);
   if (params.queue.dropPolicy === "summarize") {

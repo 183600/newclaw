@@ -44,14 +44,32 @@ export function enqueueFollowupRun(
   queue.lastEnqueuedAt = Date.now();
   queue.lastRun = run.run;
 
-  const shouldEnqueue = applyQueueDropPolicy({
-    queue,
-    summarize: (item) => item.summaryLine?.trim() || item.prompt.trim(),
-  });
-  if (!shouldEnqueue) {
-    return false;
+  // Check if adding a new item would exceed the capacity
+  const wouldExceedCapacity = queue.cap > 0 && queue.items.length >= queue.cap;
+
+  // If adding would exceed capacity, apply drop policy first
+  if (wouldExceedCapacity) {
+    // For 'new' policy, we should reject new items when at capacity
+    if (queue.dropPolicy === "new") {
+      return false;
+    }
+
+    // For 'old' and 'summarize' policies, add the item and then apply the policy
+    queue.items.push(run);
+    const shouldEnqueue = applyQueueDropPolicy({
+      queue,
+      summarize: (item) => item.summaryLine?.trim() || item.prompt.trim(),
+    });
+    // If we shouldn't enqueue after applying the policy, remove the item we just added
+    if (!shouldEnqueue) {
+      queue.items.pop();
+      return false;
+    }
+    // The item is already in the queue from when we added it above
+    return true;
   }
 
+  // No capacity issues, just add the item
   queue.items.push(run);
   return true;
 }

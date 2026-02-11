@@ -137,7 +137,7 @@ describe("applyQueueDropPolicy", () => {
 
   it("should return false when over capacity with 'new' policy", () => {
     const queue: QueueState<string> = {
-      items: ["item1", "item2"],
+      items: ["item1", "item2", "item3"],
       cap: 2,
       dropPolicy: "new",
       droppedCount: 0,

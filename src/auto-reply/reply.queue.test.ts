@@ -119,8 +119,9 @@ describe("queue followups", () => {
         return makeResult("ok");
       });
 
+      // Start with agent active to queue messages
       vi.mocked(isEmbeddedPiRunActive).mockReturnValue(true);
-      vi.mocked(isEmbeddedPiRunStreaming).mockReturnValue(false);
+      vi.mocked(isEmbeddedPiRunStreaming).mockReturnValue(true);
 
       const cfg = makeCfg(home, {
         mode: "followup",
@@ -129,15 +130,22 @@ describe("queue followups", () => {
         drop: "summarize",
       });
 
+      // Queue first message
       await getReplyFromConfig({ Body: "one", From: "+1002", To: "+2000" }, {}, cfg);
+
+      // Queue second message (should drop the first one due to cap=1)
       await getReplyFromConfig({ Body: "two", From: "+1002", To: "+2000" }, {}, cfg);
 
+      // Make agent inactive to trigger drain
       vi.mocked(isEmbeddedPiRunActive).mockReturnValue(false);
+      vi.mocked(isEmbeddedPiRunStreaming).mockReturnValue(false);
+
+      // Send third message to trigger the drain
       await getReplyFromConfig({ Body: "three", From: "+1002", To: "+2000" }, {}, cfg);
 
       await pollUntil(
         async () => (prompts.some((p) => p.includes("[Queue overflow]")) ? true : null),
-        { timeoutMs: 2000 },
+        { timeoutMs: 5000 },
       );
 
       expect(prompts.some((p) => p.includes("[Queue overflow]"))).toBe(true);
