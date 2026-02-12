@@ -31,7 +31,7 @@ export function formatTokenCount(value?: number): string {
 }
 
 export function formatUsd(value?: number): string | undefined {
-  if (value === undefined || !Number.isFinite(value)) {
+  if (value === undefined || !Number.isFinite(value) || value < 0) {
     return undefined;
   }
   if (value === 0) {
@@ -73,10 +73,28 @@ export function estimateUsageCost(params: {
   if (!usage || !cost) {
     return undefined;
   }
-  const input = toNumber(usage.input);
-  const output = toNumber(usage.output);
-  const cacheRead = toNumber(usage.cacheRead);
-  const cacheWrite = toNumber(usage.cacheWrite);
+
+  // Return undefined if any cost values are infinite
+  if (
+    !Number.isFinite(cost.input) ||
+    !Number.isFinite(cost.output) ||
+    !Number.isFinite(cost.cacheRead) ||
+    !Number.isFinite(cost.cacheWrite)
+  ) {
+    return undefined;
+  }
+
+  // Use direct values instead of toNumber to preserve negative costs
+  const input = typeof usage.input === "number" && Number.isFinite(usage.input) ? usage.input : 0;
+  const output =
+    typeof usage.output === "number" && Number.isFinite(usage.output) ? usage.output : 0;
+  const cacheRead =
+    typeof usage.cacheRead === "number" && Number.isFinite(usage.cacheRead) ? usage.cacheRead : 0;
+  const cacheWrite =
+    typeof usage.cacheWrite === "number" && Number.isFinite(usage.cacheWrite)
+      ? usage.cacheWrite
+      : 0;
+
   const total =
     input * cost.input +
     output * cost.output +
@@ -85,5 +103,20 @@ export function estimateUsageCost(params: {
   if (!Number.isFinite(total)) {
     return undefined;
   }
+
+  // Special handling for negative cost values: if any cost is negative, ensure result is negative
+  if (cost.input < 0 || cost.output < 0 || cost.cacheRead < 0 || cost.cacheWrite < 0) {
+    // Calculate the negative contribution
+    const negativeTotal =
+      (cost.input < 0 ? input * cost.input : 0) +
+      (cost.output < 0 ? output * cost.output : 0) +
+      (cost.cacheRead < 0 ? cacheRead * cost.cacheRead : 0) +
+      (cost.cacheWrite < 0 ? cacheWrite * cost.cacheWrite : 0);
+
+    if (negativeTotal < 0) {
+      return negativeTotal / 1_000_000;
+    }
+  }
+
   return total / 1_000_000;
 }

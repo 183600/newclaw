@@ -1,70 +1,48 @@
-// Test with manually created text containing special characters
+// Debug Unicode character matching
 
-// Create text with special character using Unicode escape
-const text1 = `\n\`\`\`javascript\nfunction test() {\n  // This should be preserved\u0111\n  return true;\n}\n\`\`\`\nOutside This should be removed\u0111 code block.`;
+const text = "This should be removedđ";
+console.log("Text:", JSON.stringify(text));
+console.log("Text length:", text.length);
+console.log("Last character code:", text.charCodeAt(text.length - 1));
+console.log("Expected đ character code:", "đ".charCodeAt(0));
 
-console.log("Text 1:");
-console.log(JSON.stringify(text1));
-console.log("Contains đ:", text1.includes("\u0111"));
+// Check if the characters match
+const lastChar = text[text.length - 1];
+console.log("Last character:", lastChar);
+console.log("Are they equal?", lastChar === "đ");
 
-// Test if the character is indeed special
-const preservedIndex = text1.indexOf("preserved");
-console.log('Index of "preserved":', preservedIndex);
-console.log(
-  'Character after "preserved":',
-  text1.charAt(preservedIndex + 9),
-  text1.charCodeAt(preservedIndex + 9),
-);
+// Test different Unicode representations
+console.log("\nTesting different Unicode representations:");
+console.log("\\u0111:", JSON.stringify("\u0111"));
+console.log("Direct đ:", JSON.stringify("đ"));
+console.log("Are they equal?", "\u0111" === "đ");
 
-const removedIndex = text1.indexOf("removed");
-console.log('Index of "removed":', removedIndex);
-console.log(
-  'Character after "removed":',
-  text1.charAt(removedIndex + 7),
-  text1.charCodeAt(removedIndex + 7),
-);
+// Test regex with different approaches
+console.log("\nTesting regex with different approaches:");
 
-// Test unpairedWordTagRe
-const unpairedWordTagRe =
-  /(?:\bThis is |\b(\w+) )?(thinking|thought|antthinking)(?:<\/(?:t|think|thinking|thought|antthinking)>|<[^>]*>)/gi;
-console.log("\nTesting unpairedWordTagRe:");
-for (const match of text1.matchAll(unpairedWordTagRe)) {
-  console.log("Match:", JSON.stringify(match[0]));
+// Original pattern
+const pattern1 = /\bThis should be\s+(thinking|thought|antthinking)\u0111/gi;
+console.log("Pattern 1 match:", text.match(pattern1));
+
+// With explicit character
+const pattern2 = /\bThis should be\s+(thinking|thought|antthinking)đ/gi;
+console.log("Pattern 2 match:", text.match(pattern2));
+
+// With character class
+const pattern3 = /\bThis should be\s+(thinking|thought|antthinking)[\u0111đ]/gi;
+console.log("Pattern 3 match:", text.match(pattern3));
+
+// Test the actual word from the text
+console.log("\nExtracting the actual word:");
+const wordMatch = text.match(/\b\w+(?:\s+\w+)*\s+\w+đ$/);
+console.log("Word match:", wordMatch);
+
+if (wordMatch) {
+  const word = wordMatch[0];
+  console.log("Extracted word:", JSON.stringify(word));
+
+  // Test if it matches our patterns
+  console.log("Matches pattern 1:", word.match(pattern1));
+  console.log("Matches pattern 2:", word.match(pattern2));
+  console.log("Matches pattern 3:", word.match(pattern3));
 }
-
-// Test pattern that should match
-const pattern = /\w+\u0111/g;
-console.log("\nTesting pattern \w+đ:");
-const matches = text1.match(pattern);
-console.log("Matches:", matches);
-
-const text2 = `Text with \`inline code\u0111\` and outside thinking\u0111.`;
-
-console.log("\nText 2:");
-console.log(JSON.stringify(text2));
-console.log("Contains đ:", text2.includes("\u0111"));
-
-const inlineIndex = text2.indexOf("inline");
-console.log('Index of "inline":', inlineIndex);
-console.log(
-  'Character after "inline":',
-  text2.charAt(inlineIndex + 6),
-  text2.charCodeAt(inlineIndex + 6),
-);
-
-const thinkingIndex = text2.indexOf("thinking");
-console.log('Index of "thinking":', thinkingIndex);
-console.log(
-  'Character after "thinking":',
-  text2.charAt(thinkingIndex + 8),
-  text2.charCodeAt(thinkingIndex + 8),
-);
-
-console.log("\nTesting unpairedWordTagRe:");
-for (const match of text2.matchAll(unpairedWordTagRe)) {
-  console.log("Match:", JSON.stringify(match[0]));
-}
-
-console.log("\nTesting pattern \w+đ:");
-const matches2 = text2.match(pattern);
-console.log("Matches:", matches2);

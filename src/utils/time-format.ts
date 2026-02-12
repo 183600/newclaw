@@ -1,4 +1,9 @@
 export function formatRelativeTime(timestamp: number): string {
+  // Handle invalid timestamps
+  if (!Number.isFinite(timestamp)) {
+    return new Date(0).toLocaleDateString(undefined, { month: "short", day: "numeric" });
+  }
+
   const now = Date.now();
   const diff = now - timestamp;
 

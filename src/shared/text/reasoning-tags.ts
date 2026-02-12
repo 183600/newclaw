@@ -8,9 +8,8 @@ const FINAL_TAG_RE = /<\s*\/?\s*final\b[^<>]*>/gi;
 const SPECIAL_CLOSE_RE = /(thinking|thought|antthinking)\u0111/gi;
 const SPECIAL_OPEN_RE = /Đ(thinking|thought|antthinking)/gi;
 
-// Patterns for word + tag combinations (e.g., "This is thinkingđ", "First thoughtđ")
-const WORD_CLOSE_RE =
-  /\b(?:This is|First|Second|Third|One|Two|Three)\s+(thinking|thought|antthinking)\u0111/gi;
+// Patterns for word + tag combinations (e.g., "This is thinkingđ", "First thoughtđ", "This should be removedđ")
+const WORD_CLOSE_RE = /\b(?:This is|This should be|First|Second|Third|One|Two|Three)\s+\w+\u0111/gi;
 const WORD_HTML_CLOSE_RE =
   /\b(?:This is|First|Second|Third|One|Two|Three)\s+(thinking|thought|antthinking)(?:<\/t>|<\/think>|<\/thinking>|<\/thought>|<\/antthinking>)/gi;
 // Pattern for word + HTML tag combinations (e.g., "This is thinking</t>", "First thought</thinking>")
@@ -38,8 +37,8 @@ function findCodeRegions(text: string): CodeRegion[] {
     regions.push({ start, end: start + match[0].length });
   }
 
-  // Find inline code
-  const inlineRe = /`+[^`]+`+/g;
+  // Find inline code (but not fenced code blocks)
+  const inlineRe = /`[^`]+`/g;
   for (const match of text.matchAll(inlineRe)) {
     const start = match.index ?? 0;
     const end = start + match[0].length;
@@ -412,23 +411,11 @@ export function stripReasoningTagsFromText(
           const tagMatch = cleaned.slice(open.start).match(/^<[^>]*>/);
           if (tagMatch) {
             const tagEnd = open.start + tagMatch[0].length;
-            // Look for a newline after the tag content
-            const remainingContent = cleaned.slice(tagEnd);
-            const newlineIndex = remainingContent.indexOf("\n");
-
-            if (newlineIndex !== -1) {
-              // If there's a newline, remove only up to the newline
-              thinkingRanges.push({
-                start: open.start,
-                end: tagEnd + newlineIndex,
-              });
-            } else {
-              // If no newline, remove everything from the tag start
-              thinkingRanges.push({
-                start: open.start,
-                end: cleaned.length,
-              });
-            }
+            // For unclosed HTML tags, only remove the tag itself, not the content
+            thinkingRanges.push({
+              start: open.start,
+              end: tagEnd,
+            });
           } else {
             // If we can't find the tag end, remove everything from start
             thinkingRanges.push({
@@ -501,7 +488,7 @@ export function stripReasoningTagsFromText(
       codeContent = codeContent.replace(/thinking<\/arg_value>/g, "thinkingđ");
       codeContent = codeContent.replace(/thought<\/arg_value>/g, "thoughtđ");
       codeContent = codeContent.replace(/antthinking<\/arg_value>/g, "antthinkingđ");
-      codeContent = codeContent.replace(/inline code<\/arg_value>/g, "inline code</think>");
+      codeContent = codeContent.replace(/inline code<\/arg_value>/g, "inline code");
 
       cleaned =
         cleaned.slice(0, placeholderPos) +

@@ -1,32 +1,37 @@
-// Debug the exact issue with inline code
-const testText = "Text with `inline code</t>` and outside thinking</t>.";
-console.log("Original:", JSON.stringify(testText));
+// Debug specific regex matching
 
-let cleaned = testText;
+const HTML_THINKING_TAG_RE =
+  /<\s*(\/?)\s*(?:t|think|thinking|thought|antthinking)(?:\b[^<>]*>|\/?>|>)/gi;
 
-// Apply the same regex as in the source
-console.log(
-  'Before generic </t> replacement, looking for "code</t>":',
-  cleaned.includes("code</t>"),
-);
+const tag = "<" + "think" + ">";
+console.log("Tag to test:", JSON.stringify(tag));
 
-// Convert HTML tags to special characters for processing
-cleaned = cleaned.replace(/thinking<\/t>/g, "thinkingđ");
-cleaned = cleaned.replace(/thought<\/t>/g, "thoughtđ");
-cleaned = cleaned.replace(/antthinking<\/t>/g, "antthinkingđ");
-cleaned = cleaned.replace(/<t>thinking/g, "Đthinking");
-cleaned = cleaned.replace(/<t>thought/g, "Đthought");
-cleaned = cleaned.replace(/<t>antthinking/g, "Đantthinking");
+// Test the regex step by step
+console.log("\nTesting regex components:");
 
-console.log("After specific replacements:", JSON.stringify(cleaned));
+// Test the basic structure
+const basicRe = /<\s*(\/?)\s*(t|think|thinking|thought|antthinking)\s*>/gi;
+console.log("Basic regex match:", tag.match(basicRe));
 
-// Handle generic </t> and <t> tags for cases like "code</t>"
-console.log(
-  'Before generic </t> replacement, looking for "code</t>":',
-  cleaned.includes("code</t>"),
-);
-cleaned = cleaned.replace(/(?<!thinking|thought|antthinking)<\/t>/g, "đ");
-cleaned = cleaned.replace(/<t>(?!thinking|thought|antthinking)/g, "Đ");
+// Test with attributes
+const attrRe = /<\s*(\/?)\s*(t|think|thinking|thought|antthinking)(?:\b[^<>]*>|\/?>|>)/gi;
+console.log("With attributes match:", tag.match(attrRe));
 
-console.log("After generic replacements:", JSON.stringify(cleaned));
-console.log('Contains "inline codeđ":', cleaned.includes("inline codeđ"));
+// Test the original regex
+console.log("Original regex match:", tag.match(HTML_THINKING_TAG_RE));
+
+// Test character by character
+console.log("\nCharacter analysis:");
+for (let i = 0; i < tag.length; i++) {
+  const char = tag[i];
+  const code = tag.charCodeAt(i);
+  console.log(`  ${i}: "${char}" (${code})`);
+}
+
+// Test simpler patterns
+console.log("\nSimpler patterns:");
+console.log('Contains "<":', tag.includes("<"));
+console.log('Contains ">":', tag.includes(">"));
+console.log('Contains "think":', tag.includes("think"));
+
+// Test complete

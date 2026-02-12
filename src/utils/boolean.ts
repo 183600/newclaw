@@ -18,19 +18,37 @@ export function parseBooleanValue(
   if (typeof value !== "string") {
     return undefined;
   }
-  const normalized = value.trim().toLowerCase();
-  if (!normalized) {
+  // Use a more comprehensive trim that handles zero-width spaces and other Unicode whitespace
+  const trimmed = value.replace(/[\u200B-\u200D\uFEFF\u00A0\s]+/g, "");
+  if (!trimmed) {
     return undefined;
   }
+
   const truthy = options.truthy ?? DEFAULT_TRUTHY;
   const falsy = options.falsy ?? DEFAULT_FALSY;
-  const truthySet = truthy === DEFAULT_TRUTHY ? DEFAULT_TRUTHY_SET : new Set(truthy);
-  const falsySet = falsy === DEFAULT_FALSY ? DEFAULT_FALSY_SET : new Set(falsy);
-  if (truthySet.has(normalized)) {
-    return true;
+
+  // Check if using custom options (case sensitive)
+  const usingCustomTruthy = options.truthy !== undefined;
+  const usingCustomFalsy = options.falsy !== undefined;
+
+  if (usingCustomTruthy || usingCustomFalsy) {
+    // For custom options, use case-sensitive comparison
+    if (usingCustomTruthy && truthy.includes(trimmed)) {
+      return true;
+    }
+    if (usingCustomFalsy && falsy.includes(trimmed)) {
+      return false;
+    }
+  } else {
+    // For default options, use case-insensitive comparison
+    const normalized = trimmed.toLowerCase();
+    if (DEFAULT_TRUTHY_SET.has(normalized)) {
+      return true;
+    }
+    if (DEFAULT_FALSY_SET.has(normalized)) {
+      return false;
+    }
   }
-  if (falsySet.has(normalized)) {
-    return false;
-  }
+
   return undefined;
 }

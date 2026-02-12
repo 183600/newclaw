@@ -1,63 +1,30 @@
-// Debug script to understand code block detection
-function findCodeRegions(text) {
-  const regions = [];
-
-  // Find fenced code blocks
-  const fencedRe = /(^|\n)(```|~~~)[^\n]*\n[\s\S]*?(?:\n\2(?:\n|$)|$)/g;
-  for (const match of text.matchAll(fencedRe)) {
-    const start = match.index ?? 0;
-    regions.push({ start, end: start + match[0].length });
-    console.log("Fenced block:", match[0], "at", start, "-", start + match[0].length);
-  }
-
-  // Find inline code
-  const inlineRe = /`+[^`]+`+/g;
-  for (const match of text.matchAll(inlineRe)) {
-    const start = match.index ?? 0;
-    const end = start + match[0].length;
-    const insideFenced = regions.some((r) => start >= r.start && end <= r.end);
-    if (!insideFenced) {
-      regions.push({ start, end });
-      console.log("Inline code:", match[0], "at", start, "-", end);
-    }
-  }
-
-  regions.sort((a, b) => a.start - b.start);
-  return regions;
-}
-
-function isInsideCode(pos, regions) {
-  return regions.some((r) => pos >= r.start && pos < r.end);
-}
-
-const text3 = `
+// Debug script for code block preservation
+const text = `
 \`\`\`javascript
 function test() {
-  // This should be preserved&#x111;
+  // This should be preservedđ
   return true;
 }
 \`\`\`
-Outside This should be removed&#x111; code block.`;
+Outside This should be removedđ code block.`;
 
-console.log("=== Analyzing code blocks ===");
-console.log("Text:", text3);
-console.log("Text length:", text3.length);
-const regions = findCodeRegions(text3);
-console.log("Code regions:", regions);
+console.log("Original text:");
+console.log(JSON.stringify(text));
 
-// Check if "Outside This should be removed" is inside a code region
-const removedText = "This should be removed&#x111;";
-const idx = text3.indexOf(removedText);
-console.log("\nIndex of removed text:", idx);
-console.log("Is inside code region:", isInsideCode(idx, regions));
+// Test the fenced code block regex
+const fencedRe = /(^|\n)(```|~~~)[^\n]*\n[\s\S]*?(?:\n\2(?:\n|$)|$)/g;
+const matches = [...text.matchAll(fencedRe)];
+console.log("\nCode block matches:");
+matches.forEach((match, index) => {
+  console.log(`Match ${index}:`, JSON.stringify(match[0]));
+  console.log(`Start: ${match.index}, End: ${match.index + match[0].length}`);
+});
 
-// Check character by character around the removed text
-console.log("\nContext around removed text:");
-const start = Math.max(0, idx - 10);
-const end = Math.min(text3.length, idx + removedText.length + 10);
-const context = text3.slice(start, end);
-console.log("Context:", context);
-console.log(
-  "Context chars:",
-  [...context].map((c, i) => `${c} (${start + i})`),
-);
+// Test inline code regex
+const inlineRe = /`+[^`]+`+/g;
+const inlineMatches = [...text.matchAll(inlineRe)];
+console.log("\nInline code matches:");
+inlineMatches.forEach((match, index) => {
+  console.log(`Match ${index}:`, JSON.stringify(match[0]));
+  console.log(`Start: ${match.index}, End: ${match.index + match[0].length}`);
+});
