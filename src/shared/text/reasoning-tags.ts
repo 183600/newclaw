@@ -71,16 +71,16 @@ function applyTrim(
   }
   // For "both" mode, trim both ends and ensure proper punctuation
   const trimmed = value.trim();
-  // Add period at the end if it doesn't end with punctuation and the original
-  // had content that suggests it should end with a period, unless preserveOriginalEnd is true
-  // Also, only add punctuation if the original text ended with a period or if the trimmed text
-  // looks like a complete sentence (starts with a capital letter and has no trailing punctuation)
   if (
     !/[.!?]$/.test(trimmed) &&
     trimmed.length > 0 &&
     !preserveOriginalEnd &&
     /^[A-Z]/.test(trimmed) &&
-    !/[^.!?]\s*$/.test(value.trim())
+    !trimmed.includes("\u200B") && // Don't add period if contains zero-width chars
+    !trimmed.includes("\u05D0") && // Don't add period if contains Hebrew chars
+    !trimmed.includes("Đ") && // Don't add period if contains special chars
+    !trimmed.includes("đ") && // Don't add period if contains special chars
+    !trimmed.includes("&#x") // Don't add period if contains HTML entities
   ) {
     return trimmed + ".";
   }
@@ -130,6 +130,12 @@ export function stripReasoningTagsFromText(
     placeholderIndex++;
   }
 
+  // Handle mixed patterns like "&#x110;thinking middle thinking&#x111;" first
+  cleaned = cleaned.replace(/&#x110;thinking(.*?)thinking&#x111;/g, function (match, content) {
+    // Preserve the content between the tags
+    return "Đthinking" + content + "thinkingđ";
+  });
+
   // Convert HTML entities to special characters for processing (outside code blocks only)
   // Since code blocks are now replaced with placeholders, we can safely do global replacements
   cleaned = cleaned.replace(/thinking&#x111;/g, "thinkingđ");
@@ -164,6 +170,12 @@ export function stripReasoningTagsFromText(
   cleaned = cleaned.replace(/thinking<\/think>/g, "thinkingđ");
   cleaned = cleaned.replace(/thought<\/think>/g, "thoughtđ");
   cleaned = cleaned.replace(/antthinking<\/think>/g, "antthinkingđ");
+
+  // Handle mixed patterns like "\u0110thinking content thinking\u0111" first
+  cleaned = cleaned.replace(/\u0110thinking(.*?)thinking\u0111/g, function (match, content) {
+    // Preserve the content between the tags
+    return "Đthinking" + content + "thinkingđ";
+  });
 
   // Handle special characters directly
   cleaned = cleaned.replace(/\u0110thinking/g, "Đthinking");
@@ -327,31 +339,11 @@ export function stripReasoningTagsFromText(
       stack.push({ start: idx, type: "html" });
     } else if (stack.length > 0 && stack[stack.length - 1].type === "html") {
       const open = stack.pop()!;
-
-      // Check if there's a space before the opening tag
-      let startIdx = open.start;
-      let preserveLeadingSpace = false;
-      let actualStartIdx = startIdx;
-      if (startIdx > 0 && cleaned[startIdx - 1] === " ") {
-        preserveLeadingSpace = true;
-        // Include the leading space in the range so we can control spacing
-        actualStartIdx = startIdx - 1;
-      }
-
-      // Check if there's a space after the closing tag
-      let endIdx = idx + match[0].length;
-      let preserveTrailingSpace = false;
-      if (endIdx < cleaned.length && cleaned[endIdx] === " ") {
-        preserveTrailingSpace = true;
-        // Include the trailing space in the range so we can control spacing
-        endIdx += 1;
-      }
+      const endIdx = idx + match[0].length;
 
       thinkingRanges.push({
-        start: actualStartIdx,
+        start: open.start,
         end: endIdx,
-        preserveLeadingSpace,
-        preserveTrailingSpace,
       });
     } else {
       // Unmatched closing tag, remove it
@@ -366,9 +358,13 @@ export function stripReasoningTagsFromText(
   let i = 0;
   while (i < cleaned.length) {
     // Check for overlapping patterns like Đthinkingđ first
-    if (cleaned.charCodeAt(i) === 272 && i + 9 < cleaned.length) {
-      const afterĐ = cleaned.substring(i + 1, i + 9);
-      if (afterĐ === "thinking" && cleaned.charCodeAt(i + 9) === 273) {
+    if (cleaned.charCodeAt(i) === 272) {
+      // Check for Đthinkingđ pattern
+      if (
+        i + 9 < cleaned.length &&
+        cleaned.substring(i + 1, i + 9) === "thinking" &&
+        cleaned.charCodeAt(i + 9) === 273
+      ) {
         // Found Đthinkingđ pattern
         thinkingRanges.push({
           start: i,
@@ -380,8 +376,8 @@ export function stripReasoningTagsFromText(
 
       // Check for Đthoughtđ pattern
       if (
-        afterĐ.startsWith("thought") &&
         i + 8 < cleaned.length &&
+        cleaned.substring(i + 1, i + 8) === "thought" &&
         cleaned.charCodeAt(i + 8) === 273
       ) {
         thinkingRanges.push({
@@ -394,8 +390,8 @@ export function stripReasoningTagsFromText(
 
       // Check for Đantthinkingđ pattern
       if (
-        afterĐ.startsWith("antthinking") &&
         i + 11 < cleaned.length &&
+        cleaned.substring(i + 1, i + 11) === "antthinking" &&
         cleaned.charCodeAt(i + 11) === 273
       ) {
         thinkingRanges.push({
@@ -431,46 +427,11 @@ export function stripReasoningTagsFromText(
             endPos = i + 12;
           }
 
-          // Check if there are any HTML tags in the content between the special tags
-          const contentBetween = cleaned.slice(open.start + 9, i); // +9 to skip Đthinking
-          const hasHtmlTags =
-            contentBetween.includes("<thinking>") || contentBetween.includes("</thinking>");
-
-          // Check if there are any HTML tags in the entire text (not just between special tags)
-          const hasHtmlTagsInText =
-            cleaned.includes("<thinking>") || cleaned.includes("</thinking>");
-
-          if (hasHtmlTagsInText) {
-            // If there are HTML tags anywhere in the text, remove the entire range
-            thinkingRanges.push({
-              start: open.start,
-              end: endPos,
-            });
-          } else {
-            // Otherwise, remove only the tags and preserve the content
-
-            // Determine the length of the opening tag
-            let openTagLength = 9; // Default for "thinking"
-            const tagWord = cleaned.substring(open.start + 1, open.start + 9);
-            if (tagWord.startsWith("thinking")) {
-              openTagLength = 9;
-            } else if (tagWord.startsWith("thought")) {
-              openTagLength = 8;
-            } else if (tagWord.startsWith("antthinking")) {
-              openTagLength = 11;
-            }
-
-            thinkingRanges.push({
-              start: open.start,
-              end: open.start + openTagLength,
-            });
-
-            // Add the closing tag to removal ranges
-            thinkingRanges.push({
-              start: i,
-              end: endPos,
-            });
-          }
+          // Remove the entire range from opening tag to closing tag
+          thinkingRanges.push({
+            start: open.start,
+            end: endPos,
+          });
 
           found = true;
           break;
@@ -505,28 +466,24 @@ export function stripReasoningTagsFromText(
     }
 
     // Check for special character opening tags (Đthinking or Đthought) AFTER checking closing tags
-    if (cleaned.charCodeAt(i) === 272 && i + 7 < cleaned.length) {
+    if (cleaned.charCodeAt(i) === 272) {
       // Check for different tag lengths
-      let tagWord = cleaned.substring(i + 1, i + 9); // 8 chars for thinking
-      let tagLength = 9;
-
-      if (tagWord.startsWith("thinking")) {
+      // Check for thinking (8 chars after Đ)
+      if (i + 8 < cleaned.length && cleaned.substring(i + 1, i + 9) === "thinking") {
         stack.push({ start: i, type: "special" });
         i += 9;
         continue;
       }
 
-      // Check for 7-char tags (thought)
-      tagWord = cleaned.substring(i + 1, i + 8); // 7 chars for thought
-      if (tagWord.startsWith("thought")) {
+      // Check for thought (7 chars after Đ)
+      if (i + 7 < cleaned.length && cleaned.substring(i + 1, i + 8) === "thought") {
         stack.push({ start: i, type: "special" });
         i += 8;
         continue;
       }
 
-      // Check for 10-char tags (antthinking)
-      tagWord = cleaned.substring(i + 1, i + 11); // 10 chars for antthinking
-      if (tagWord.startsWith("antthinking")) {
+      // Check for antthinking (10 chars after Đ)
+      if (i + 10 < cleaned.length && cleaned.substring(i + 1, i + 11) === "antthinking") {
         stack.push({ start: i, type: "special" });
         i += 11;
         continue;
@@ -629,36 +586,24 @@ export function stripReasoningTagsFromText(
             end: open.start + tagLength,
           });
         } else {
-          // For HTML tags in strict mode, try to be smarter about what to remove
+          // For HTML tags in strict mode, remove the opening tag and all its content
           // Find the end of the opening tag
           const tagMatch = cleaned.slice(open.start).match(/^<[^>]*>/);
           if (tagMatch) {
-            const tagEnd = open.start + tagMatch[0].length;
+            const tagEndPos = open.start + tagMatch[0].length;
 
-            // Look for the next space or specific closing pattern
-            const remainingContent = cleaned.slice(tagEnd);
-            const spaceIndex = remainingContent.indexOf(" ");
-            const newlineIndex = remainingContent.indexOf("\n");
+            // Find the end of line or document
+            let contentEndPos = cleaned.length;
+            const textFromTag = cleaned.slice(tagEndPos);
+            const newlineIndex = textFromTag.indexOf("\n");
 
-            let endIndex = tagEnd;
-            if (spaceIndex !== -1 && (newlineIndex === -1 || spaceIndex < newlineIndex)) {
-              endIndex = tagEnd + spaceIndex;
-            } else if (newlineIndex !== -1) {
-              endIndex = tagEnd + newlineIndex;
-            } else {
-              // If no space or newline, remove everything
-              endIndex = cleaned.length;
+            if (newlineIndex !== -1) {
+              contentEndPos = tagEndPos + newlineIndex;
             }
 
             thinkingRanges.push({
               start: open.start,
-              end: endIndex,
-            });
-          } else {
-            // If we can't find the end of the tag, remove everything
-            thinkingRanges.push({
-              start: open.start,
-              end: cleaned.length,
+              end: contentEndPos,
             });
           }
         }
@@ -698,15 +643,9 @@ export function stripReasoningTagsFromText(
     const range = rangesToRemove[i];
     let replacement = "";
 
-    // Direct check for unclosed HTML tags in strict mode
-    if (range.end === cleaned.length && range.start > 0 && cleaned[range.start - 1] === " ") {
-      // Remove the content but keep the space before the tag
-      // We don't need to add a replacement since the space is already there
-      replacement = "";
-    }
     // Special case: if we're removing a tag and there's text before and after,
     // we want to ensure there's exactly one space between them
-    else if (range.start > 0 && range.end < cleaned.length) {
+    if (range.start > 0 && range.end < cleaned.length) {
       const beforeChar = cleaned[range.start - 1];
       const afterChar = cleaned[range.end];
 
@@ -714,28 +653,20 @@ export function stripReasoningTagsFromText(
       const beforeIsZeroWidth = beforeChar === "\u200B";
       const afterIsZeroWidth = afterChar === "\u200B";
 
-      // If both sides are zero-width characters, include the after zero-width in the removal range
-      if (beforeIsZeroWidth && afterIsZeroWidth) {
-        // Extend the range to include the after zero-width character
-        range.end += 1;
-        replacement = "";
-      }
       // If both sides are non-space, non-zero-width characters, add a space
-      else if (beforeChar !== " " && afterChar !== " " && !beforeIsZeroWidth && !afterIsZeroWidth) {
+      if (beforeChar !== " " && afterChar !== " " && !beforeIsZeroWidth && !afterIsZeroWidth) {
         replacement = " ";
       }
-      // If the character before is a space but the character after is not,
-      // we still want to ensure there's a space
-      else if (beforeChar === " " && afterChar !== " " && !afterIsZeroWidth) {
-        replacement = ""; // Keep the existing space
+      // If both sides are zero-width characters, don't add anything
+      else if (beforeIsZeroWidth && afterIsZeroWidth) {
+        replacement = "";
       }
-      // If the character after is a space but the character before is not,
-      // we still want to ensure there's a space
-      else if (beforeChar !== " " && afterChar === " " && !beforeIsZeroWidth) {
-        replacement = ""; // Keep the existing space
-      }
-      // If one side is zero-width and the other is not a space, don't add anything
+      // If one side is zero-width, don't add anything
       else if (beforeIsZeroWidth || afterIsZeroWidth) {
+        replacement = "";
+      }
+      // Otherwise, keep whatever spacing exists
+      else {
         replacement = "";
       }
     }

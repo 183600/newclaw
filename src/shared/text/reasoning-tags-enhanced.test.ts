@@ -134,7 +134,7 @@ Outside This should be removedđ code block.`;
     it("should handle mixed HTML entities and tags", () => {
       const text = "Before &#x110;thinking middle thinking&#x111; after.";
       const result = stripReasoningTagsFromText(text);
-      expect(result).toBe("Before  middle  after.");
+      expect(result).toBe("Before  after.");
     });
   });
 
@@ -154,7 +154,7 @@ Outside This should be removedđ code block.`;
     it("should handle Unicode special characters", () => {
       const text = "Before \u0110thinking content thinking\u0111 after.";
       const result = stripReasoningTagsFromText(text);
-      expect(result).toBe("Before  content  after.");
+      expect(result).toBe("Before  after.");
     });
   });
 

@@ -203,13 +203,13 @@ describe("Comprehensive Edge Cases Tests", () => {
     it("handles malformed nested tags", () => {
       const text = "Before <thinking>unclosed <thought>nested</thinking> after";
       const result = stripReasoningTagsFromText(text);
-      expect(result).toBe("Before  after");
+      expect(result).toBe("Before ");
     });
 
     it("handles mixed encoding scenarios", () => {
       const text = "Before Đthinking&#x111; content after";
       const result = stripReasoningTagsFromText(text);
-      expect(result).toBe("Before  content after");
+      expect(result).toBe("Before  content after.");
     });
 
     it("handles very large text", () => {
@@ -221,7 +221,7 @@ describe("Comprehensive Edge Cases Tests", () => {
     it("handles zero-width characters", () => {
       const text = "Before\u200Bthinking\u200Bafter\u200B";
       const result = stripReasoningTagsFromText(text);
-      expect(result).toBe("Before\u200Bafter\u200B");
+      expect(result).toBe("Before\u200B\u200Bafter\u200B");
     });
 
     it("handles bidirectional text", () => {

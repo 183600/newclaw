@@ -1,6 +1,5 @@
-// 测试实际函数
+// 从源代码中提取关键逻辑进行测试
 
-// 由于无法直接导入 TypeScript 文件，我们手动复制关键逻辑
 function findCodeRegions(text) {
   const regions = [];
 
@@ -26,6 +25,10 @@ function findCodeRegions(text) {
   return regions;
 }
 
+function isInsideCode(pos, regions) {
+  return regions.some((r) => pos >= r.start && r < r.end);
+}
+
 function applyTrim(value, mode, preserveOriginalEnd = false) {
   if (mode === "none") {
     return value;
@@ -46,7 +49,6 @@ function applyTrim(value, mode, preserveOriginalEnd = false) {
   return trimmed;
 }
 
-// 完整的函数实现
 function stripReasoningTagsFromText(text, options = {}) {
   if (!text) {
     return text;
@@ -119,206 +121,83 @@ function stripReasoningTagsFromText(text, options = {}) {
   cleaned = cleaned.replace(/\u0110thought/g, "Đthought");
   cleaned = cleaned.replace(/\u0110antthinking/g, "Đantthinking");
 
-  // HTML thinking tags regex
+  // Handle HTML thinking tags
   const HTML_THINKING_TAG_RE =
     /<\s*(\/?)\s*(?:t|think|thinking|thought|antthinking)(?:\b[^<>]*>|\/?>|>)/gi;
-  const FINAL_TAG_RE = /<\s*\/?\s*final\b[^<>]*>/gi;
-  const SPECIAL_CLOSE_RE = /(thinking|thought|antthinking)\u0111/gi;
-  const SPECIAL_OPEN_RE = /Đ(thinking|thought|antthinking)/gi;
-
   const rangesToRemove = [];
-  const thinkingRanges = [];
-  const stack = [];
 
-  // Find all HTML thinking tags
   HTML_THINKING_TAG_RE.lastIndex = 0;
   for (const match of cleaned.matchAll(HTML_THINKING_TAG_RE)) {
     const idx = match.index ?? 0;
     const isClose = match[1] === "/";
 
     if (!isClose) {
-      stack.push({ start: idx, type: "html" });
-    } else if (stack.length > 0 && stack[stack.length - 1].type === "html") {
-      const open = stack.pop();
-      thinkingRanges.push({
-        start: open.start,
-        end: idx + match[0].length,
-      });
-    } else {
-      // Unmatched closing tag, remove it
-      thinkingRanges.push({
+      // Opening tag
+      const tagEnd = idx + match[0].length;
+      // Find the matching closing tag
+      const remainingText = cleaned.slice(tagEnd);
+      const closeMatch = remainingText.match(
+        /<\/\s*(?:t|think|thinking|thought|antthinking)\b[^<>]*>/i,
+      );
+
+      if (closeMatch) {
+        const closeIdx = tagEnd + closeMatch.index;
+        rangesToRemove.push({
+          start: idx,
+          end: closeIdx + closeMatch[0].length,
+        });
+      }
+    }
+  }
+
+  // Handle standalone closing tags
+  const STANDALONE_CLOSE_RE = /(?:<\/t>|<\/think>|<\/thinking>|<\/thought>|<\/antthinking>)/gi;
+  STANDALONE_CLOSE_RE.lastIndex = 0;
+  for (const match of cleaned.matchAll(STANDALONE_CLOSE_RE)) {
+    const idx = match.index ?? 0;
+    // Check if this closing tag is already part of a handled range
+    const alreadyHandled = rangesToRemove.some((range) => idx >= range.start && idx < range.end);
+    if (!alreadyHandled) {
+      rangesToRemove.push({
         start: idx,
         end: idx + match[0].length,
       });
     }
   }
 
-  // Handle unclosed thinking tags
-  if (stack.length > 0) {
-    if (mode === "strict") {
-      // In strict mode, remove everything from the opening tag to the end
-      for (const open of stack) {
-        if (open.type === "html") {
-          thinkingRanges.push({
-            start: open.start,
-            end: cleaned.length,
-          });
-        }
-      }
-    }
+  // Handle special character tags
+  const SPECIAL_CLOSE_RE = /(thinking|thought|antthinking)\u0111/gi;
+  const SPECIAL_OPEN_RE = /Đ(thinking|thought|antthinking)/gi;
+  const stack = [];
+
+  // Find all special character opening tags
+  SPECIAL_OPEN_RE.lastIndex = 0;
+  for (const match of cleaned.matchAll(SPECIAL_OPEN_RE)) {
+    const idx = match.index ?? 0;
+    stack.push({ start: idx, type: "special" });
   }
 
-  // Handle final tags
-  FINAL_TAG_RE.lastIndex = 0;
-  const finalRanges = [];
-  let finalStack = [];
-
-  for (const match of cleaned.matchAll(FINAL_TAG_RE)) {
+  // Find all special character closing tags
+  SPECIAL_CLOSE_RE.lastIndex = 0;
+  for (const match of cleaned.matchAll(SPECIAL_CLOSE_RE)) {
     const idx = match.index ?? 0;
-    const isClose = match[0].includes("</final");
-
-    if (!isClose) {
-      finalStack.push({ start: idx });
-    } else if (finalStack.length > 0) {
-      const open = finalStack.pop();
-      finalRanges.push({
+    if (stack.length > 0) {
+      const open = stack.pop();
+      rangesToRemove.push({
         start: open.start,
+        end: idx + match[0].length,
+      });
+    } else {
+      // Unmatched closing tag
+      rangesToRemove.push({
+        start: idx,
         end: idx + match[0].length,
       });
     }
   }
 
-  thinkingRanges.push(...finalRanges);
-
-  // Handle special character tags
-  let i = 0;
-  while (i < cleaned.length) {
-    // Check for special character opening tags
-    if (cleaned.charCodeAt(i) === 272 && i + 7 < cleaned.length) {
-      let tagWord = cleaned.substring(i + 1, i + 9);
-      if (tagWord.startsWith("thinking")) {
-        stack.push({ start: i, type: "special" });
-        i += 9;
-        continue;
-      }
-
-      tagWord = cleaned.substring(i + 1, i + 8);
-      if (tagWord.startsWith("thought")) {
-        stack.push({ start: i, type: "special" });
-        i += 8;
-        continue;
-      }
-
-      tagWord = cleaned.substring(i + 1, i + 11);
-      if (tagWord.startsWith("antthinking")) {
-        stack.push({ start: i, type: "special" });
-        i += 11;
-        continue;
-      }
-    }
-
-    // Check for special character closing tags
-    if (
-      (i + 8 < cleaned.length && cleaned.substring(i, i + 9) === "thinking\u0111") ||
-      (i + 7 < cleaned.length && cleaned.substring(i, i + 8) === "thought\u0111") ||
-      (i + 11 < cleaned.length && cleaned.substring(i, i + 12) === "antthinking\u0111")
-    ) {
-      let found = false;
-      for (let j = stack.length - 1; j >= 0; j--) {
-        if (stack[j].type === "special") {
-          const open = stack.splice(j, 1)[0];
-          let endPos;
-          if (i + 8 < cleaned.length && cleaned.substring(i, i + 9) === "thinking\u0111") {
-            endPos = i + 9;
-          } else if (i + 7 < cleaned.length && cleaned.substring(i, i + 8) === "thought\u0111") {
-            endPos = i + 8;
-          } else if (
-            i + 11 < cleaned.length &&
-            cleaned.substring(i, i + 12) === "antthinking\u0111"
-          ) {
-            endPos = i + 12;
-          }
-
-          // Always remove only the tags and preserve the content
-          let openTagLength = 9;
-          const tagWord = cleaned.substring(open.start + 1, open.start + 9);
-          if (tagWord.startsWith("thinking")) {
-            openTagLength = 9;
-          } else if (tagWord.startsWith("thought")) {
-            openTagLength = 8;
-          } else if (tagWord.startsWith("antthinking")) {
-            openTagLength = 11;
-          }
-
-          thinkingRanges.push({
-            start: open.start,
-            end: open.start + openTagLength,
-          });
-
-          thinkingRanges.push({
-            start: i,
-            end: endPos,
-          });
-
-          found = true;
-          break;
-        }
-      }
-      // Handle unmatched closing special tags
-      if (!found) {
-        let endPos;
-        if (i + 8 < cleaned.length && cleaned.substring(i, i + 9) === "thinking\u0111") {
-          endPos = i + 9;
-        } else if (i + 7 < cleaned.length && cleaned.substring(i, i + 8) === "thought\u0111") {
-          endPos = i + 8;
-        } else if (
-          i + 11 < cleaned.length &&
-          cleaned.substring(i, i + 12) === "antthinking\u0111"
-        ) {
-          endPos = i + 12;
-        }
-        thinkingRanges.push({
-          start: i,
-          end: endPos,
-        });
-      }
-      if (i + 8 < cleaned.length && cleaned.substring(i, i + 9) === "thinking\u0111") {
-        i += 9;
-      } else if (i + 7 < cleaned.length && cleaned.substring(i, i + 8) === "thought\u0111") {
-        i += 8;
-      } else if (i + 11 < cleaned.length && cleaned.substring(i, i + 12) === "antthinking\u0111") {
-        i += 12;
-      }
-      continue;
-    }
-    i++;
-  }
-
-  rangesToRemove.push(...thinkingRanges);
-
-  // Merge overlapping ranges
-  if (rangesToRemove.length > 0) {
-    rangesToRemove.sort((a, b) => a.start - b.start);
-    const mergedRanges = [];
-    let current = rangesToRemove[0];
-
-    for (let i = 1; i < rangesToRemove.length; i++) {
-      const next = rangesToRemove[i];
-      if (next.start <= current.end) {
-        current.end = Math.max(current.end, next.end);
-      } else {
-        mergedRanges.push(current);
-        current = next;
-      }
-    }
-    mergedRanges.push(current);
-    rangesToRemove.splice(0, rangesToRemove.length, ...mergedRanges);
-  }
-
-  // Sort ranges by start position
-  rangesToRemove.sort((a, b) => a.start - b.start);
-
   // Remove ranges in reverse order to maintain indices
+  rangesToRemove.sort((a, b) => a.start - b.start);
   for (let i = rangesToRemove.length - 1; i >= 0; i--) {
     const range = rangesToRemove[i];
     cleaned = cleaned.slice(0, range.start) + cleaned.slice(range.end);
@@ -381,24 +260,24 @@ console.log('Expected: "Before  after."');
 console.log("Match:", result4 === "Before  after.");
 console.log("");
 
-// Test adjacent tags
-console.log("Testing adjacent tags...");
-const test5 = "Before <thinking></thinking><thought></thought> after.";
-const result5 = stripReasoningTagsFromText(test5);
+// Test only opening tags
+console.log("Testing only opening tags...");
+const test5 = "Before <thinking>content after.";
+const result5 = stripReasoningTagsFromText(test5, { mode: "strict" });
 console.log("Input:", test5);
 console.log("Output:", result5);
-console.log('Expected: "Before  after."');
-console.log("Match:", result5 === "Before  after.");
+console.log('Expected: "Before "');
+console.log("Match:", result5 === "Before ");
 console.log("");
 
-// Test overlapping ranges
-console.log("Testing overlapping ranges...");
-const test6 = "Before Đthinking nested <thinking>content</thinking> thinkingđ after.";
+// Test adjacent tags
+console.log("Testing adjacent tags...");
+const test6 = "Before <thinking></thinking><thought></thought> after.";
 const result6 = stripReasoningTagsFromText(test6);
 console.log("Input:", test6);
 console.log("Output:", result6);
-console.log('Expected: "Before   after."');
-console.log("Match:", result6 === "Before   after.");
+console.log('Expected: "Before  after."');
+console.log("Match:", result6 === "Before  after.");
 console.log("");
 
 // Test mixed format tags

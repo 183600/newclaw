@@ -1,33 +1,4 @@
-// 简单测试脚本来调试失败
-
-// 模拟 stripReasoningTagsFromText 函数的逻辑
-function stripReasoningTagsFromText(text, options = {}) {
-  if (!text) {
-    return text;
-  }
-
-  const mode = options.mode ?? "strict";
-  const trimMode = options.trim ?? "both";
-
-  let cleaned = text;
-
-  // 简单处理 thinking 标签
-  cleaned = cleaned.replace(/thinking/g, "");
-
-  // 处理 trim
-  if (trimMode === "none") {
-    return cleaned;
-  }
-  if (trimMode === "start") {
-    return cleaned.trimStart();
-  }
-  // For "both" mode, trim both ends and ensure proper punctuation
-  const trimmed = cleaned.trim();
-  if (!/[.!?]$/.test(trimmed) && trimmed.length > 0) {
-    return trimmed + ".";
-  }
-  return trimmed;
-}
+const { stripReasoningTagsFromText } = require("./src/shared/text/reasoning-tags.ts");
 
 console.log("Testing inline code preservation...");
 const test1 = "Text with `inline code` and outside thinking.";
@@ -35,8 +6,6 @@ const result1 = stripReasoningTagsFromText(test1);
 console.log("Input:", test1);
 console.log("Output:", result1);
 console.log('Expected: contains "inline code", does not contain "thinking"');
-console.log("Contains inline code:", result1.includes("inline code"));
-console.log("Contains thinking:", result1.includes("thinking"));
 console.log("");
 
 console.log("Testing trim options...");

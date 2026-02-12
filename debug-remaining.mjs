@@ -1,52 +1,35 @@
 import { stripReasoningTagsFromText } from "./src/shared/text/reasoning-tags.js";
 
-// Test cases that are failing
+// Test cases that are still failing
 const testCases = [
   {
-    name: "should handle HTML thinking tags",
-    text: "Before <thinking>content</thinking> after.",
-    expected: "Before  after.",
+    name: "should handle mixed HTML entities and tags",
+    text: "Before &#x110;thinking middle thinking&#x111; after.",
+    expected: "Before  middle  after.",
   },
   {
-    name: "should handle HTML thought tags",
-    text: "Before <thought>content</thought> after.",
-    expected: "Before  after.",
+    name: "should handle Unicode special characters",
+    text: "Before \u0110thinking content thinking\u0111 after.",
+    expected: "Before  content  after.",
   },
   {
-    name: "should handle HTML antthinking tags",
-    text: "Before <antthinking>content</antthinking> after.",
-    expected: "Before  after.",
-  },
-  {
-    name: "should handle HTML tags with attributes",
-    text: "Before <thinking class='test'>content</thinking> after.",
-    expected: "Before  after.",
-  },
-  {
-    name: "should handle overlapping ranges",
-    text: "Before Đthinking nested <thinking>content</thinking> thinkingđ after.",
-    expected: "Before   after.",
-  },
-  {
-    name: "should handle adjacent tags",
-    text: "Before <thinking></thinking><thought></thought> after.",
-    expected: "Before  after.",
-  },
-  {
-    name: "should handle mixed format tags",
-    text: "Before <thinking>HTML content</thinking> and Đthinking special content thinkingđ after.",
-    expected: "Before   and   after.",
+    name: "should handle only opening tags",
+    text: "Before <thinking>content after.",
+    options: { mode: "strict" },
+    expected: "Before ",
   },
 ];
 
-console.log("Running failing test cases:\n");
+console.log("Running remaining failing test cases:\n");
 
 testCases.forEach((testCase, index) => {
   console.log(`Test ${index + 1}: ${testCase.name}`);
   console.log(`Input: "${testCase.text}"`);
   console.log(`Expected: "${testCase.expected}"`);
 
-  const result = stripReasoningTagsFromText(testCase.text);
+  const result = testCase.options
+    ? stripReasoningTagsFromText(testCase.text, testCase.options)
+    : stripReasoningTagsFromText(testCase.text);
   console.log(`Actual: "${result}"`);
 
   const passed = result === testCase.expected;

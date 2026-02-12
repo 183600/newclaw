@@ -1,45 +1,30 @@
-import { stripReasoningTagsFromText } from "./dist/shared-D2jHXEDM.js";
+import { stripReasoningTagsFromText } from "./src/shared/text/reasoning-tags.js";
 
 // Test cases that are failing
 const testCases = [
   {
-    name: "should handle HTML thinking tags",
-    text: "Before <thinking>content</thinking> after.",
-    expected: "Before  after.",
+    name: "handles malformed nested tags",
+    text: "Before <thinking>unclosed <thought>nested</thinking> after",
+    expected: "Before  after",
   },
   {
-    name: "should handle HTML thought tags",
-    text: "Before <thought>content</thought> after.",
-    expected: "Before  after.",
+    name: "handles mixed encoding scenarios",
+    text: "Before Đthinking&#x111; content after",
+    expected: "Before  content after",
   },
   {
-    name: "should handle HTML antthinking tags",
-    text: "Before <antthinking>content</antthinking> after.",
-    expected: "Before  after.",
+    name: "handles zero-width characters",
+    text: "Before\u200Bthinking\u200Bafter\u200B",
+    expected: "Before\u200Bafter\u200B",
   },
   {
-    name: "should handle HTML tags with attributes",
-    text: "Before <thinking class='test'>content</thinking> after.",
-    expected: "Before  after.",
-  },
-  {
-    name: "should handle overlapping ranges",
-    text: "Before Đthinking nested <thinking>content</thinking> thinkingđ after.",
-    expected: "Before   after.",
-  },
-  {
-    name: "should handle adjacent tags",
-    text: "Before <thinking></thinking><thought></thought> after.",
-    expected: "Before  after.",
-  },
-  {
-    name: "should handle mixed format tags",
-    text: "Before <thinking>HTML content</thinking> and Đthinking special content thinkingđ after.",
-    expected: "Before   and   after.",
+    name: "handles bidirectional text",
+    text: "Before thinking\u05D0after", // Hebrew character
+    expected: "Before \u05D0after",
   },
 ];
 
-console.log("Running failing test cases:\n");
+console.log("Running failing edge case tests:\n");
 
 testCases.forEach((testCase, index) => {
   console.log(`Test ${index + 1}: ${testCase.name}`);

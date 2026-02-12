@@ -36,10 +36,10 @@ Outside This should be removed</think> code block.`;
   });
 
   it("should handle inline code preservation", () => {
-    const text = "Text with \`inline code</arg_value>\` and outside thinking</think>.";
+    const text = "Text with \`inline code\` and outside thinking.";
     const result = stripReasoningTagsFromText(text);
-    expect(result).toContain("inline code</think>");
-    expect(result).not.toContain("thinking</think>");
+    expect(result).toContain("inline code");
+    expect(result).not.toContain("thinking");
   });
 
   it("should preserve unclosed thinking tags in preserve mode", () => {
@@ -61,7 +61,7 @@ Outside This should be removed</think> code block.`;
   });
 
   it("should respect trim options", () => {
-    const text = "  Before thinking</think> after  ";
+    const text = "  Before thinking after  ";
 
     const resultNone = stripReasoningTagsFromText(text, { trim: "none" });
     expect(resultNone).toBe("  Before  after  ");
