@@ -1,22 +1,17 @@
-// Debug the exact characters in test cases
-
-function debugChars(text) {
-  console.log(`Text: "${text}"`);
-  console.log("Char codes:");
-  for (let i = 0; i < text.length; i++) {
-    const char = text[i];
-    const code = char.charCodeAt(0);
-    const hex = code.toString(16);
-    console.log(`  [${i}] "${char}" (${code}) (0x${hex})`);
-  }
-  console.log("---");
+// Debug script to check the actual characters in the test
+const testText = "Before This is thinking after.";
+console.log("Full text:", testText);
+console.log("Character codes:");
+for (let i = 0; i < testText.length; i++) {
+  const char = testText[i];
+  const code = char.charCodeAt(0);
+  console.log(`'${char}' -> ${code} (0x${code.toString(16)})`);
 }
 
-// Debug the actual test case strings
-debugChars("Before This is thinking after.");
-debugChars("Start First thought middle Second thought end.");
-
-// Test what the special characters look like
-console.log("Special characters:");
-console.log("đ:", "đ".charCodeAt(0), "0x" + "đ".charCodeAt(0).toString(16));
-console.log("Đ:", "Đ".charCodeAt(0), "0x" + "Đ".charCodeAt(0).toString(16));
+// Check specifically for the special character
+const thinkingIndex = testText.indexOf("thinking");
+if (thinkingIndex !== -1) {
+  console.log("\nFound 'thinking' at index:", thinkingIndex);
+  const specialChar = testText[thinkingIndex - 1];
+  console.log("Character before 'thinking':", specialChar, "code:", specialChar.charCodeAt(0));
+}

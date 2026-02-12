@@ -1,42 +1,23 @@
-// Test with HTML entities like in the actual test file
-import { stripReasoningTagsFromText } from "./src/shared/text/reasoning-tags.js";
+// 测试 HTML 实体转换
+function testHtmlEntities(text) {
+  console.log("Original text:", text);
 
-// Test case 1: Code blocks with HTML entities
-const text1 = `
-\`\`\`javascript
-function test() {
-  // This should be preserved&#x111;
-  return true;
+  // Convert HTML entities to special characters for processing
+  let cleaned = text;
+  cleaned = cleaned.replace(/thinking&#x111;/g, "thinkingđ");
+  cleaned = cleaned.replace(/thought&#x111;/g, "thoughtđ");
+  cleaned = cleaned.replace(/antthinking&#x111;/g, "antthinkingđ");
+  cleaned = cleaned.replace(/&#x110;thinking/g, "Đthinking");
+  cleaned = cleaned.replace(/&#x110;thought/g, "Đthought");
+  cleaned = cleaned.replace(/&#x110;antthinking/g, "Đantthinking");
+
+  console.log("After HTML entity conversion:", cleaned);
+  return cleaned;
 }
-\`\`\`
-Outside This should be removed&#x111; code block.`;
 
-console.log("=== Test 1: Code blocks with HTML entities ===");
-console.log("Input:", JSON.stringify(text1));
-const result1 = stripReasoningTagsFromText(text1);
-console.log("Output:", JSON.stringify(result1));
-console.log('Contains "This should be preserved":', result1.includes("This should be preserved"));
-console.log('Contains "This should be removed":', result1.includes("This should be removed"));
+// 测试实际的测试用例
+const test1 = "Before This is thinking&#x111; after.";
+const result1 = testHtmlEntities(test1);
 
-// Test case 2: Simple thinking tag
-const text2 = "Before <thinking>after";
-
-console.log("\n=== Test 2: Simple thinking tag ===");
-console.log("Input:", JSON.stringify(text2));
-const result2 = stripReasoningTagsFromText(text2);
-console.log("Output:", JSON.stringify(result2));
-
-// Test case 3: Trim options with thinking tag
-const text3 = "  Before <thinking>after  ";
-
-console.log("\n=== Test 3: Trim options with thinking tag ===");
-console.log("Input:", JSON.stringify(text3));
-
-const resultNone = stripReasoningTagsFromText(text3, { trim: "none" });
-console.log("None result:", JSON.stringify(resultNone));
-
-const resultStart = stripReasoningTagsFromText(text3, { trim: "start" });
-console.log("Start result:", JSON.stringify(resultStart));
-
-const resultBoth = stripReasoningTagsFromText(text3, { trim: "both" });
-console.log("Both result:", JSON.stringify(resultBoth));
+const test2 = "Text with `inline code&#x110;thinking` and outside thinking&#x111;.";
+const result2 = testHtmlEntities(test2);

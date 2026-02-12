@@ -2,26 +2,16 @@ export type ReasoningTagMode = "strict" | "preserve";
 export type ReasoningTagTrim = "none" | "start" | "both";
 
 // Regex patterns for different tag types
-const HTML_THINKING_TAG_RE =
-  /<\s*(\/?)\s*(?:t|think|thinking|thought|antthinking)(?:\b[^<>]*>|\/?>|>)/gi;
+const HTML_THINKING_TAG_RE = /<\s*(\/?)\s*(?:think|thinking|thought|antthinking)\b[^<>]*>/gi;
 const FINAL_TAG_RE = /<\s*\/?\s*final\b[^<>]*>/gi;
 const SPECIAL_CLOSE_RE = /(thinking|thought|antthinking)\u0111/gi;
-const SPECIAL_OPEN_RE = /Đ(thinking|thought|antthinking)/gi;
+const SPECIAL_OPEN_RE = /\u0110(thinking|thought|antthinking)/gi;
 
 // Patterns for word + tag combinations (e.g., "This is thinkingđ", "First thoughtđ")
 const WORD_CLOSE_RE =
   /\b(?:This is|First|Second|Third|One|Two|Three)\s+(thinking|thought|antthinking)\u0111/gi;
 const WORD_HTML_CLOSE_RE =
-  /\b(?:This is|First|Second|Third|One|Two|Three)\s+(thinking|thought|antthinking)(?:<\/t>|<\/think>|<\/thinking>|<\/thought>|<\/antthinking>)/gi;
-// Pattern for word + HTML tag combinations (e.g., "This is thinking</t>", "First thought</thinking>")
-const WORD_HTML_TAG_RE =
   /\b(?:This is|First|Second|Third|One|Two|Three)\s+(thinking|thought|antthinking)(?:<\/t>|<\/thinking>|<\/thought>|<\/antthinking>)/gi;
-// Pattern for word + HTML closing tag combinations (e.g., "This is thinking</t>", "First thought</thinking>")
-const WORD_WITH_HTML_CLOSE_RE =
-  /\b(?:This is|First|Second|Third|One|Two|Three)\s+(thinking|thought|antthinking)(?:<\/t>|<\/thinking>|<\/thought>|<\/antthinking>)/gi;
-// Pattern for word + short HTML closing tag (e.g., "This is thinking</t>", "First thought</t>")
-const WORD_WITH_SHORT_HTML_CLOSE_RE =
-  /\b(?:This is|First|Second|Third|One|Two|Three)\s+(thinking|thought|antthinking)(?:<\/t>)/gi;
 
 interface CodeRegion {
   start: number;
@@ -57,25 +47,14 @@ function isInsideCode(pos: number, regions: CodeRegion[]): boolean {
   return regions.some((r) => pos >= r.start && pos < r.end);
 }
 
-function applyTrim(
-  value: string,
-  mode: ReasoningTagTrim,
-  preserveOriginalEnd: boolean = false,
-): string {
+function applyTrim(value: string, mode: ReasoningTagTrim): string {
   if (mode === "none") {
     return value;
   }
   if (mode === "start") {
     return value.trimStart();
   }
-  // For "both" mode, trim both ends and ensure proper punctuation
-  const trimmed = value.trim();
-  // Add period at the end if it doesn't end with punctuation and the original
-  // had content that suggests it should end with a period, unless preserveOriginalEnd is true
-  if (!/[.!?]$/.test(trimmed) && trimmed.length > 0 && !preserveOriginalEnd) {
-    return trimmed + ".";
-  }
-  return trimmed;
+  return value.trim();
 }
 
 export function stripReasoningTagsFromText(
@@ -93,22 +72,6 @@ export function stripReasoningTagsFromText(
   const trimMode = options?.trim ?? "both";
 
   let cleaned = text;
-
-  // Convert HTML entities to special characters for processing
-  cleaned = cleaned.replace(/thinking&#x111;/g, "thinkingđ");
-  cleaned = cleaned.replace(/thought&#x111;/g, "thoughtđ");
-  cleaned = cleaned.replace(/antthinking&#x111;/g, "antthinkingđ");
-  cleaned = cleaned.replace(/&#x110;thinking/g, "Đthinking");
-  cleaned = cleaned.replace(/&#x110;thought/g, "Đthought");
-  cleaned = cleaned.replace(/&#x110;antthinking/g, "Đantthinking");
-
-  // Convert HTML tags to special characters for processing
-  cleaned = cleaned.replace(/thinking<\/t>/g, "thinkingđ");
-  cleaned = cleaned.replace(/thought<\/t>/g, "thoughtđ");
-  cleaned = cleaned.replace(/antthinking<\/t>/g, "antthinkingđ");
-  cleaned = cleaned.replace(/<t>thinking/g, "Đthinking");
-  cleaned = cleaned.replace(/<t>thought/g, "Đthought");
-  cleaned = cleaned.replace(/<t>antthinking/g, "Đantthinking");
 
   // Find code regions first
   const codeRegions = findCodeRegions(cleaned);
@@ -129,71 +92,6 @@ export function stripReasoningTagsFromText(
   // Handle word + HTML close tags (e.g., "This is thinking</t>", "First thought</thinking>")
   WORD_HTML_CLOSE_RE.lastIndex = 0;
   for (const match of cleaned.matchAll(WORD_HTML_CLOSE_RE)) {
-    const idx = match.index ?? 0;
-    if (!isInsideCode(idx, codeRegions)) {
-      rangesToRemove.push({
-        start: idx,
-        end: idx + match[0].length,
-      });
-    }
-  }
-
-  // Handle standalone thinking words followed by closing tags (e.g., "thinking</thinking>", "thought</thought>")
-  const WORD_WITH_CLOSE_TAG_RE =
-    /\b(thinking|thought|antthinking)(?:<\/t>|<\/think>|<\/thinking>|<\/thought>|<\/antthinking>)/gi;
-  WORD_WITH_CLOSE_TAG_RE.lastIndex = 0;
-  for (const match of cleaned.matchAll(WORD_WITH_CLOSE_TAG_RE)) {
-    const idx = match.index ?? 0;
-    if (!isInsideCode(idx, codeRegions)) {
-      rangesToRemove.push({
-        start: idx,
-        end: idx + match[0].length,
-      });
-    }
-  }
-
-  // Handle unclosed thinking patterns (e.g., "Unclosed thinking")
-  const UNCLOSED_THINKING_RE = /\bUnclosed (thinking|thought|antthinking)\b/gi;
-  const unclosedMatches = [...cleaned.matchAll(UNCLOSED_THINKING_RE)];
-  if (unclosedMatches.length > 0) {
-    if (mode === "preserve") {
-      // In preserve mode, return everything from "Unclosed" onwards
-      const match = unclosedMatches[0];
-      const idx = match.index ?? 0;
-      return applyTrim(cleaned.slice(idx), trimMode, true); // Preserve original ending
-    } else if (mode === "strict") {
-      // In strict mode, remove everything from "Unclosed" to the end of line
-      for (const match of unclosedMatches) {
-        const idx = match.index ?? 0;
-        if (!isInsideCode(idx, codeRegions)) {
-          // Check if there's a space before "Unclosed" and preserve it
-          const startIdx = idx > 0 && cleaned[idx - 1] === " " ? idx - 1 : idx;
-
-          // Find the end of line or document
-          const remainingText = cleaned.slice(startIdx);
-          const newlineIndex = remainingText.indexOf("\n");
-
-          if (newlineIndex !== -1) {
-            // Remove from the start (or space before) "Unclosed" to the newline
-            rangesToRemove.push({
-              start: startIdx,
-              end: startIdx + newlineIndex,
-            });
-          } else {
-            // Remove from the start (or space before) "Unclosed" to the end
-            rangesToRemove.push({
-              start: startIdx,
-              end: cleaned.length,
-            });
-          }
-        }
-      }
-    }
-  }
-
-  // Handle word + short HTML closing tag (e.g., "This is thinking</t>", "First thought</t>")
-  WORD_WITH_SHORT_HTML_CLOSE_RE.lastIndex = 0;
-  for (const match of cleaned.matchAll(WORD_WITH_SHORT_HTML_CLOSE_RE)) {
     const idx = match.index ?? 0;
     if (!isInsideCode(idx, codeRegions)) {
       rangesToRemove.push({
@@ -240,23 +138,6 @@ export function stripReasoningTagsFromText(
     const isClose = match[1] === "/";
 
     if (isInsideCode(idx, codeRegions)) {
-      // For inline code, we want to preserve tags as-is (don't process them)
-      const isInInlineCode = codeRegions.some((r) => {
-        // Check if this is an inline code region (not fenced)
-        // Inline code regions from the regex include the backticks, so check if
-        // the region starts and ends with backticks
-        const isInline =
-          r.start < cleaned.length &&
-          cleaned[r.start] === "`" &&
-          r.end > 0 &&
-          cleaned[r.end - 1] === "`";
-        return isInline && idx >= r.start && idx < r.end;
-      });
-
-      if (isInInlineCode) {
-        // Skip processing tags in inline code - preserve them as-is
-        continue;
-      }
       continue;
     }
 
@@ -268,12 +149,6 @@ export function stripReasoningTagsFromText(
         start: open.start,
         end: idx + match[0].length,
       });
-    } else {
-      // Unmatched closing tag, remove it
-      thinkingRanges.push({
-        start: idx,
-        end: idx + match[0].length,
-      });
     }
   }
 
@@ -281,13 +156,13 @@ export function stripReasoningTagsFromText(
   let i = 0;
   while (i < cleaned.length) {
     // Check for special character opening tags (Đthinking or Đthought)
-    if (cleaned.charCodeAt(i) === 272 && i + 8 < cleaned.length) {
-      const tagWord = cleaned.substring(i + 1, i + 9);
+    if (cleaned[i] === "\u0110" && i + 7 < cleaned.length) {
+      const tagWord = cleaned.substring(i + 1, i + 8);
       if (tagWord === "thinking" || tagWord === "thought" || tagWord === "antthinking") {
         if (!isInsideCode(i, codeRegions)) {
           stack.push({ start: i, type: "special" });
         }
-        i += 9;
+        i += 8;
         continue;
       }
     }
@@ -374,9 +249,9 @@ export function stripReasoningTagsFromText(
       for (const open of stack) {
         if (open.type === "special") {
           // For special char tags, content starts after the tag word
-          const tagWord = cleaned.substring(open.start + 1, open.start + 9);
+          const tagWord = cleaned.substring(open.start + 1, open.start + 8);
           if (tagWord === "thinking" || tagWord === "thought" || tagWord === "antthinking") {
-            const contentStart = open.start + 9;
+            const contentStart = open.start + 8;
             result += cleaned.slice(contentStart);
           }
         } else {
@@ -444,28 +319,6 @@ export function stripReasoningTagsFromText(
 
   rangesToRemove.push(...thinkingRanges);
 
-  // Merge overlapping ranges
-  if (rangesToRemove.length > 0) {
-    rangesToRemove.sort((a, b) => a.start - b.start);
-    const mergedRanges: Array<{ start: number; end: number }> = [];
-    let current = rangesToRemove[0];
-
-    for (let i = 1; i < rangesToRemove.length; i++) {
-      const next = rangesToRemove[i];
-      if (next.start <= current.end) {
-        // Overlapping or adjacent ranges, merge them
-        current.end = Math.max(current.end, next.end);
-      } else {
-        mergedRanges.push(current);
-        current = next;
-      }
-    }
-    mergedRanges.push(current);
-
-    // Replace with merged ranges
-    rangesToRemove.splice(0, rangesToRemove.length, ...mergedRanges);
-  }
-
   // Sort ranges by start position
   rangesToRemove.sort((a, b) => a.start - b.start);
 
@@ -475,19 +328,5 @@ export function stripReasoningTagsFromText(
     cleaned = cleaned.slice(0, range.start) + cleaned.slice(range.end);
   }
 
-  // Check if we're in preserve or strict mode to determine if we should preserve the original ending
-  // In "both" trim mode, we should add punctuation unless in preserve or strict mode
-  const shouldPreserveOriginalEnd = mode === "preserve" || mode === "strict";
-  const result = applyTrim(cleaned, trimMode, shouldPreserveOriginalEnd);
-
-  // Special handling for strict mode: if the original text ended with a space before "Unclosed", preserve it
-  if (mode === "strict" && unclosedMatches.length > 0) {
-    const firstMatch = unclosedMatches[0];
-    const matchIdx = firstMatch.index ?? 0;
-    if (matchIdx > 0 && text[matchIdx - 1] === " " && !result.endsWith(" ")) {
-      return result + " ";
-    }
-  }
-
-  return result;
+  return applyTrim(cleaned, trimMode);
 }

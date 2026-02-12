@@ -1,33 +1,20 @@
-// Import the stripReasoningTagsFromText function
-import { stripReasoningTagsFromText } from "./src/shared/text/reasoning-tags.ts";
+// Debug with actual test data
+import { stripReasoningTagsFromText } from "./src/shared/text/reasoning-tags.js";
 
-// Create the exact test case with actual thinking tags
-const hex1 = "7072657365727665643c2f7468696e6b3e"; // preserved</thinking>
-const hex2 = "72656d6f7665643c2f7468696e6b3e"; // removed</thinking>
+// Test 1 - using actual chars from test file
+const text1 = "Before This is thinking\u0111 after."; // \u0111 is đ
+console.log("=== Test 1 ===");
+console.log("Input:", JSON.stringify(text1));
+const result1 = stripReasoningTagsFromText(text1);
+console.log("Output:", JSON.stringify(result1));
+console.log("Expected:", JSON.stringify("Before  after."));
+console.log("Match:", result1 === "Before  after.");
 
-// Convert hex to string
-const tag1 = Buffer.from(hex1, "hex").toString("utf8");
-const tag2 = Buffer.from(hex2, "hex").toString("utf8");
-
-const text = `
-\`\`\`javascript
-function test() {
-  // This should be preserved${tag1}
-  return true;
-}
-\`\`\`
-Outside This should be removed${tag2} code block.`;
-
-console.log("Input text:");
-console.log(text);
-
-console.log("\nTags:");
-console.log("Tag 1:", tag1);
-console.log("Tag 2:", tag2);
-
-console.log("\nOutput:");
-const result = stripReasoningTagsFromText(text);
-console.log(result);
-
-console.log('\nContains "preserved":', result.includes("preserved"));
-console.log('Contains "removed":', result.includes("removed"));
+// Test 2
+const text2 = "Start First thought\u0111 middle Second thought\u0111 end.";
+console.log("\n=== Test 2 ===");
+console.log("Input:", JSON.stringify(text2));
+const result2 = stripReasoningTagsFromText(text2);
+console.log("Output:", JSON.stringify(result2));
+console.log("Expected:", JSON.stringify("Start  middle  end."));
+console.log("Match:", result2 === "Start  middle  end.");

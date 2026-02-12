@@ -1,27 +1,46 @@
-// Debug exact characters in test
+// Debug script to check actual characters in test file
 import fs from "fs";
 
-const testFile = fs.readFileSync("src/agents/pi-embedded-utils.test.ts", "utf8");
-const lines = testFile.split("\n");
+const testContent = fs.readFileSync("./src/shared/text/reasoning-tags.test.ts", "utf8");
 
-// Find the test with "strips thinking tags without closing tag"
-for (let i = 0; i < lines.length; i++) {
-  if (lines[i].includes("strips thinking tags without closing tag")) {
-    // Look for the text definition in the next few lines
-    for (let j = i; j < Math.min(i + 10, lines.length); j++) {
-      if (lines[j].includes("text:")) {
-        console.log(`Line ${j + 1}:`, JSON.stringify(lines[j]));
-        // Extract the text value
-        const match = lines[j].match(/text:\s*"([^"]+)"/);
-        if (match) {
-          console.log("Extracted text:", JSON.stringify(match[1]));
-          console.log(
-            "Character codes:",
-            [...match[1]].map((c) => c.charCodeAt(0)),
-          );
-        }
-      }
-    }
-    break;
+// Find the test with code blocks
+const codeBlockTestStart = testContent.indexOf("should preserve content within code blocks");
+const codeBlockTestEnd = testContent.indexOf("}", codeBlockTestStart + 500);
+const testSection = testContent.slice(codeBlockTestStart, codeBlockTestEnd);
+
+console.log("=== Test section ===");
+console.log(testSection);
+
+// Extract the text variable
+const textMatch = testSection.match(/const text = `([^`]+)`/s);
+if (textMatch) {
+  const text = textMatch[1];
+  console.log("\n=== Extracted text ===");
+  console.log(text);
+
+  // Find the special characters
+  const preservedIndex = text.indexOf("This should be preserved");
+  const removedIndex = text.indexOf("This should be removed");
+
+  if (preservedIndex !== -1) {
+    const preservedEnd = text.indexOf("\n", preservedIndex);
+    const preservedLine = text.slice(preservedIndex, preservedEnd);
+    console.log("\n=== Preserved line ===");
+    console.log(preservedLine);
+    console.log(
+      "Char codes:",
+      [...preservedLine].map((c) => `${c} (${c.charCodeAt(0)})`),
+    );
+  }
+
+  if (removedIndex !== -1) {
+    const removedEnd = text.indexOf(" ", removedIndex);
+    const removedLine = text.slice(removedIndex, removedEnd);
+    console.log("\n=== Removed line ===");
+    console.log(removedLine);
+    console.log(
+      "Char codes:",
+      [...removedLine].map((c) => `${c} (${c.charCodeAt(0)})`),
+    );
   }
 }

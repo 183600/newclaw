@@ -1,30 +1,17 @@
-import { stripReasoningTagsFromText } from './src/shared/text/reasoning-tags.ts';
+// Simple test without importing the function
+console.log("=== Test character conversion ===");
 
-// Simple test case
-const text = "Before Unclosed thinking content";
-console.log("Input:", JSON.stringify(text));
-console.log("Output (preserve):", JSON.stringify(stripReasoningTagsFromText(text, { mode: "preserve" })));
-console.log("Output (strict):", JSON.stringify(stripReasoningTagsFromText(text, { mode: "strict" })));
+const testText = "Text with `inline code</t>` and outside thinking</t>.";
+console.log("Original:", JSON.stringify(testText));
 
-// Test case 2: Code blocks
-console.log("\n=== Code blocks ===");
-const text2 = `
-\`\`\`javascript
-function test() {
-  // This should be preserved
-  return true;
-}
-\`\`\`
-Outside This should be removed
- code block.`;
+// Apply the same conversions as in the source
+let cleaned = testText;
+cleaned = cleaned.replace(/thinking<\/t>/g, "thinkingđ");
+cleaned = cleaned.replace(/thought<\/t>/g, "thoughtđ");
+cleaned = cleaned.replace(/antthinking<\/t>/g, "antthinkingđ");
+cleaned = cleaned.replace(/<t>thinking/g, "Đthinking");
+cleaned = cleaned.replace(/<t>thought/g, "Đthought");
+cleaned = cleaned.replace(/<t>antthinking/g, "Đantthinking");
 
-console.log("Input:", JSON.stringify(text2));
-console.log("Output:", JSON.stringify(stripReasoningTagsFromText(text2)));
-
-// Test case 3: Inline code
-console.log("\n=== Inline code ===");
-const text3 = "Text with \`inline code
-\` and outside thinking
-.";
-console.log("Input:", JSON.stringify(text3));
-console.log("Output:", JSON.stringify(stripReasoningTagsFromText(text3)));
+console.log("After conversion:", JSON.stringify(cleaned));
+console.log('Contains "inline codeđ":', cleaned.includes("inline codeđ"));

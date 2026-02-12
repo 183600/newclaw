@@ -278,6 +278,9 @@ export function stripThinkingTagsFromText(text: string): string {
   result = result.replace(/^&#x111;[\s\S]*/gm, "");
   result = result.replace(/^&#x110;[\s\S]*/gm, "");
 
+  // Remove unclosed thinking tags starting from the beginning
+  result = result.replace(/^<think[\s\S]*/, "");
+
   // Return without trimming to preserve spaces
   return result;
 }

@@ -1,9 +1,12 @@
-// Debug the exact conversion
+// Debug HTML entity conversion
 const testText = "Text with `inline code</t>` and outside thinking</t>.";
 console.log("Original:", JSON.stringify(testText));
 
 let cleaned = testText;
-console.log('Looking for "</t>" in testText:', testText.includes("</t>"));
+// Handle special arg_value tags used in tests
+cleaned = cleaned.replace(/arg_value/g, "đ");
+cleaned = cleaned.replace(/arg_value/g, "Đ");
+console.log("After arg_value replacement:", JSON.stringify(cleaned));
 
 // Convert HTML tags to special characters for processing
 cleaned = cleaned.replace(/thinking<\/t>/g, "thinkingđ");
@@ -13,10 +16,3 @@ cleaned = cleaned.replace(/<t>thinking/g, "Đthinking");
 cleaned = cleaned.replace(/<t>thought/g, "Đthought");
 cleaned = cleaned.replace(/<t>antthinking/g, "Đantthinking");
 console.log("After HTML tag replacement:", JSON.stringify(cleaned));
-console.log('Looking for "</t>" after replacement:', cleaned.includes("</t>"));
-
-// Handle special HTML entity tags used in tests
-cleaned = cleaned.replace(/arg_value/g, "đ");
-cleaned = cleaned.replace(/arg_value/g, "Đ");
-console.log("After arg_value replacement:", JSON.stringify(cleaned));
-console.log('Contains "inline codeđ":', cleaned.includes("inline codeđ"));

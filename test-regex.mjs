@@ -1,30 +1,53 @@
-// Test the regex patterns
-const QUICK_TAG_RE =
-  /<\s*\/?\s*(?:think|thinking|thought|antthinking|final)\b[^>]*>|(?:thinking|thought|antthinking)[\u0111\u0110]/i;
+// Test regex patterns
+const HTML_THINKING_TAG_RE = /<\s*(\/?)\s*(?:think|thinking|thought|antthinking)\b[^<>]*>/gi;
 
-const test = "Before This is thinkingđ after.";
-console.log("Input:", test);
-console.log("Matches QUICK_TAG_RE:", QUICK_TAG_RE.test(test));
+const testText1 = "Before This is thinking</thinking> after.";
+const testText2 = "Start First thought</thought> middle Second thought</thought> end.";
+const testText3 = `
+\`\`\`javascript
+function test() {
+  // This should be preserved</thinking>
+  return true;
+}
+\`\`\`
+Outside This should be removed</thinking> code block.`;
 
-// Test individual parts
-const part1 = /<\s*\/?\s*(?:think|thinking|thought|antthinking|final)\b[^>]*>/i;
-const part2 = /(?:thinking|thought|antthinking)[\u0111\u0110]/i;
+console.log("=== Test 1 ===");
+console.log("Text:", testText1);
+const matches1 = [...testText1.matchAll(HTML_THINKING_TAG_RE)];
+console.log("Matches:", matches1);
 
-console.log("Matches part1 (HTML):", part1.test(test));
-console.log("Matches part2 (special):", part2.test(test));
+console.log("\n=== Test 2 ===");
+console.log("Text:", testText2);
+const matches2 = [...testText2.matchAll(HTML_THINKING_TAG_RE)];
+console.log("Matches:", matches2);
 
-// Test the special char pattern
-const test2 = "thinkingđ";
-console.log("\nTest2:", test2);
-console.log("Matches part2:", part2.test(test2));
+console.log("\n=== Test 3 ===");
+console.log("Text:", testText3);
+const matches3 = [...testText3.matchAll(HTML_THINKING_TAG_RE)];
+console.log("Matches:", matches3);
 
-// Test with đ
-const test3 = "thinkingđ";
-console.log("\nTest3:", test3);
-console.log("Matches part2:", part2.test(test3));
+// Test code block detection
+function findCodeRegions(text) {
+  const regions = [];
+  const fencedRe = /(^|\n)(```|~~~)[^\n]*\n[\s\S]*?(?:\n\2(?:\n|$)|$)/g;
+  for (const match of text.matchAll(fencedRe)) {
+    const start = match.index ?? 0;
+    regions.push({ start, end: start + match[0].length });
+    console.log("Fenced block at", start, "-", start + match[0].length);
+  }
+  return regions;
+}
 
-// Test character codes
-console.log("\nCharacter codes:");
-console.log("đ:", "đ".charCodeAt(0));
-console.log("\u0111:", "\u0111".charCodeAt(0));
-console.log("Are they equal?", "đ" === "\u0111");
+function isInsideCode(pos, regions) {
+  return regions.some((r) => pos >= r.start && pos < r.end);
+}
+
+console.log("\n=== Code block detection for Test 3 ===");
+const regions3 = findCodeRegions(testText3);
+console.log("Code regions:", regions3);
+
+for (const match of matches3) {
+  const idx = match.index ?? 0;
+  console.log(`Match "${match[0]}" at index ${idx}, isInsideCode: ${isInsideCode(idx, regions3)}`);
+}

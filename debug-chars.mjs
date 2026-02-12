@@ -1,20 +1,21 @@
-// 测试特殊字符转换
-console.log("=== Special Characters Test ===");
-console.log("thinking&#x111; ->", "thinkingđ");
-console.log("thought&#x111; ->", "thoughtđ");
-console.log("&#x110;thinking ->", "Đthinking");
-console.log("&#x110;thought ->", "Đthought");
+#!/usr/bin/env node
 
-// 测试实际输入
-const test1 = `
-\`\`\`javascript
-function test() {
-  // This should be preserved
-  return true;
+// 检查测试文件中的确切字符
+const testText = "Before This is thinking\u0111 after.";
+console.log("Test text:");
+console.log(JSON.stringify(testText));
+console.log("Character codes:");
+for (let i = 0; i < testText.length; i++) {
+  const char = testText[i];
+  const code = char.charCodeAt(0);
+  console.log(`Position ${i}: "${char}" (${code})`);
 }
-\`\`\`
-Outside This should be removed`;
 
-console.log("\n=== Test Input 1 ===");
-console.log("Input:", JSON.stringify(test1));
-console.log("Contains thinking tag:", test1.includes(""));
+// 检查是否包含特殊字符
+const hasSpecialChar = testText.includes("\u0111");
+console.log(`Contains special đ character: ${hasSpecialChar}`);
+
+// 检查正则表达式匹配
+const SPECIAL_CLOSE_RE = /(thinking|thought|antthinking)\u0111/g;
+const matches = [...testText.matchAll(SPECIAL_CLOSE_RE)];
+console.log(`Regex matches:`, matches);
