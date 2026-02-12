@@ -1,4 +1,4 @@
-import { stripReasoningTagsFromText } from "./src/shared/text/reasoning-tags.js";
+import { stripReasoningTagsFromText } from "./src/shared/text/reasoning-tags";
 
 // Test case 1: Code blocks
 const text1 = `

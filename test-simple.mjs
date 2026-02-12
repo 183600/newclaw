@@ -1,74 +1,27 @@
-// Let's create a simple test to verify the behavior
-import { stripReasoningTagsFromText } from "./src/shared/text/reasoning-tags.ts";
+// Test simple conversion
+let testText1 = "This should be preserved";
+console.log("Input 1:", testText1);
 
-// The exact test from the file
-const text = `
-\`\`\`javascript
-function test() {
-  // This should be preserved
-  return true;
-}
-\`\`\`
-Outside This should be removed code block.`;
+// Apply the same conversion as in reasoning-tags.ts
+let cleaned1 = testText1;
+cleaned1 = cleaned1.replace(/thinking<\/t>/g, "thinkingđ");
+cleaned1 = cleaned1.replace(/thought<\/t>/g, "thoughtđ");
+cleaned1 = cleaned1.replace(/antthinking<\/t>/g, "antthinkingđ");
 
-console.log("=== Test from file ===");
-console.log("Input:", JSON.stringify(text));
+console.log("Output 1:", cleaned1);
+console.log("Contains preserved:", cleaned1.includes("preserved"));
 
-// Check for special characters
-console.log("Has đ:", text.includes(""));
-console.log("Has Đ:", text.includes("Đ"));
+let testText2 = "inline code\n`";
+console.log("\nInput 2:", testText2);
 
-// Run the function
-const result = stripReasoningTagsFromText(text);
-console.log("\nResult:", JSON.stringify(result));
+// Apply the same conversion as in reasoning-tags.ts
+let cleaned2 = testText2;
+cleaned2 = cleaned2.replace(/thinking<\/t>/g, "thinkingđ");
+cleaned2 = cleaned2.replace(/thought<\/t>/g, "thoughtđ");
+cleaned2 = cleaned2.replace(/antthinking<\/t>/g, "antthinkingđ");
+cleaned2 = cleaned2.replace(/thinking<\/arg_value>/g, "thinkingđ");
+cleaned2 = cleaned2.replace(/thought<\/arg_value>/g, "thoughtđ");
+cleaned2 = cleaned2.replace(/antthinking<\/arg_value>/g, "antthinkingđ");
 
-// Check what the test expects
-console.log("\nTest expects:");
-console.log(
-  'expect(result).toContain("This should be preserved"):',
-  result.includes("This should be preserved"),
-);
-console.log(
-  'expect(result).not.toContain("This should be removed"):',
-  !result.includes("This should be removed"),
-);
-
-// The vitest error shows:
-// AssertionError: expected '```javascript\nfunction test() {\n  /…' not to contain 'This should be removed'
-
-// This means the result contains "This should be removed" (without special character)
-// But our result contains it too!
-
-// Let's check if the test file actually has special characters
-console.log("\n=== Checking test file ===");
-const fs = await import("fs");
-const testFileContent = fs.readFileSync("./src/shared/text/reasoning-tags.test.ts", "utf8");
-const testSection = testFileContent.substring(
-  testFileContent.indexOf("should preserve content within code blocks"),
-  testFileContent.indexOf("should preserve content within code blocks") + 500,
-);
-
-console.log("Test section from file:");
-console.log(testSection);
-
-// The issue might be that the test file has literal escape sequences
-// But when the test runs, these are not converted to special characters
-
-// Let's manually add the special characters
-const textWithSpecial = text.replace("preserved", "preservedđ").replace("removed", "removedđ");
-
-console.log("\n=== With special characters ===");
-console.log("Input:", JSON.stringify(textWithSpecial));
-const resultWithSpecial = stripReasoningTagsFromText(textWithSpecial);
-console.log("Result:", JSON.stringify(resultWithSpecial));
-console.log(
-  'Contains "This should be removed":',
-  resultWithSpecial.includes("This should be removed"),
-);
-console.log(
-  'Contains "This should be removedđ":',
-  resultWithSpecial.includes("This should be removedđ"),
-);
-
-// The function works correctly when there are special characters
-// The test file might not have them, or they are being processed differently
+console.log("Output 2:", cleaned2);
+console.log("Contains inline:", cleaned2.includes("inline"));
