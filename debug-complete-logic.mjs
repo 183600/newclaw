@@ -1,28 +1,23 @@
-export type ReasoningTagMode = "strict" | "preserve";
-export type ReasoningTagTrim = "none" | "start" | "both";
+// Test the actual stripReasoningTagsFromText function with all logic
 
+// Copy all the constants and functions from the source
 const QUICK_TAG_RE =
-  /<\s*\/?\s*(?:think|thinking|thought|antthinking|final)\b[^>]*>|(?:thinking|thought|antthinking)[\u0111\u0110]|(?:\u0110)(?:thinking|thought|antthinking)|\b(thinking|thought|antthinking)(?:<\/(?:t|think|thought|antthinking)>|<[^>]*>)/i;
+  /<\s*\/?\s*(?:think|thinking|thought|antthinking|final)\b[^>]*>|(?:\w+)[\u0111\u0110]|(?:\u0110)(?:\w+)|\b(thinking|thought|antthinking)(?:<\/(?:t|think|thought|antthinking)>|<[^>]*>)/i;
 const FINAL_TAG_RE = /<\s*\/?\s*final\b[^<>]*>/gi;
 const THINKING_TAG_RE = /<\s*(\/?)\s*(?:think|thinking|thought|antthinking)\b[^<>]*>/gi;
 const SPECIAL_CLOSE_RE = /(?:thinking|thought|antthinking)\u0111/g;
 const SPECIAL_OPEN_RE = /\u0110(?:thinking|thought|antthinking)/g;
 
-interface CodeRegion {
-  start: number;
-  end: number;
-}
-
-function findCodeRegions(text: string): CodeRegion[] {
-  const regions: CodeRegion[] = [];
+function findCodeRegions(text) {
+  const regions = [];
 
   const fencedRe = /(^|\n)(```|~~~)[^\n]*\n[\s\S]*?(?:\n\2(?:\n|$)|$)/g;
   for (const match of text.matchAll(fencedRe)) {
-    const start = (match.index ?? 0) + match[1].length;
-    regions.push({ start, end: start + match[0].length - match[1].length });
+    const start = match.index ?? 0;
+    regions.push({ start, end: start + match[0].length });
   }
 
-  const inlineRe = /`+[^`]+`+/g;
+  const inlineRe = /`[^`]+`/g;
   for (const match of text.matchAll(inlineRe)) {
     const start = match.index ?? 0;
     const end = start + match[0].length;
@@ -36,11 +31,11 @@ function findCodeRegions(text: string): CodeRegion[] {
   return regions;
 }
 
-function isInsideCode(pos: number, regions: CodeRegion[]): boolean {
+function isInsideCode(pos, regions) {
   return regions.some((r) => pos >= r.start && pos < r.end);
 }
 
-function applyTrim(value: string, mode: ReasoningTagTrim): string {
+function applyTrim(value, mode) {
   if (mode === "none") {
     return value;
   }
@@ -50,41 +45,40 @@ function applyTrim(value: string, mode: ReasoningTagTrim): string {
   return value.trim();
 }
 
-export function stripReasoningTagsFromText(
-  text: string,
-  options?: {
-    mode?: ReasoningTagMode;
-    trim?: ReasoningTagTrim;
-  },
-): string {
+// Full implementation of stripReasoningTagsFromText
+function stripReasoningTagsFromText(text, options = {}) {
+  console.log("\n=== Processing text ===");
+  console.log("Input:", JSON.stringify(text));
+
   if (!text) {
     return text;
   }
+  if (!QUICK_TAG_RE.test(text)) {
+    console.log("No quick tags found, returning original");
+    return text;
+  }
 
-  const mode = options?.mode ?? "strict";
-  const trimMode = options?.trim ?? "both";
+  const mode = options.mode ?? "strict";
+  const trimMode = options.trim ?? "both";
+
+  console.log("Mode:", mode, "Trim:", trimMode);
 
   let cleaned = text;
 
   // Convert HTML entities to special characters for processing
   cleaned = cleaned.replace(/thinking&#x111;/g, "thinkingđ");
   cleaned = cleaned.replace(/thought&#x111;/g, "thoughtđ");
-  cleaned = cleaned.replace(/antthinking&#x111;/g, "antthinkingđ");
   cleaned = cleaned.replace(/&#x110;thinking/g, "Đthinking");
   cleaned = cleaned.replace(/&#x110;thought/g, "Đthought");
-  cleaned = cleaned.replace(/&#x110;antthinking/g, "Đantthinking");
 
-  // Check for reasoning tags after conversion
-  if (!QUICK_TAG_RE.test(cleaned)) {
-    return text;
-  }
+  console.log("After HTML entity conversion:", JSON.stringify(cleaned));
 
   // First handle final tags
   if (FINAL_TAG_RE.test(cleaned)) {
     FINAL_TAG_RE.lastIndex = 0;
     const preCodeRegions = findCodeRegions(cleaned);
-    const finalRanges: Array<{ start: number; end: number }> = [];
-    let stack: Array<{ start: number }> = [];
+    const finalRanges = [];
+    let stack = [];
 
     for (const match of cleaned.matchAll(FINAL_TAG_RE)) {
       const idx = match.index ?? 0;
@@ -97,7 +91,7 @@ export function stripReasoningTagsFromText(
       if (!isClose) {
         stack.push({ start: idx });
       } else if (stack.length > 0) {
-        const open = stack.pop()!;
+        const open = stack.pop();
         finalRanges.push({
           start: open.start,
           end: idx + match[0].length,
@@ -116,8 +110,10 @@ export function stripReasoningTagsFromText(
 
   // Now handle thinking tags
   const codeRegions = findCodeRegions(cleaned);
-  const thinkingRanges: Array<{ start: number; end: number }> = [];
-  let stack: Array<{ start: number; type: "html" | "special" }> = [];
+  console.log("Code regions:", codeRegions);
+
+  const thinkingRanges = [];
+  let stack = [];
 
   // Find all HTML thinking tags
   THINKING_TAG_RE.lastIndex = 0;
@@ -132,7 +128,7 @@ export function stripReasoningTagsFromText(
     if (!isClose) {
       stack.push({ start: idx, type: "html" });
     } else if (stack.length > 0 && stack[stack.length - 1].type === "html") {
-      const open = stack.pop()!;
+      const open = stack.pop();
       thinkingRanges.push({
         start: open.start,
         end: idx + match[0].length,
@@ -140,74 +136,60 @@ export function stripReasoningTagsFromText(
     }
   }
 
-  // Find all special character thinking tags
+  // Find all special character thinking tags (including arbitrary words)
   let i = 0;
   while (i < cleaned.length) {
-    // Check for special character opening tags (Đthinking or Đthought)
-    if (cleaned[i] === "\u0110" && i + 7 < cleaned.length) {
-      const tagWord = cleaned.substring(i + 1, i + 8);
-      if (tagWord === "thinking" || tagWord === "thought" || tagWord === "antthinking") {
+    // Check for special character opening tags (Đword)
+    if (cleaned[i] === "\u0110" && i + 1 < cleaned.length) {
+      // Find the word after Đ
+      let wordEnd = i + 1;
+      while (wordEnd < cleaned.length && /[a-zA-Z]/.test(cleaned[wordEnd])) {
+        wordEnd++;
+      }
+      if (wordEnd > i + 1) {
         if (!isInsideCode(i, codeRegions)) {
           stack.push({ start: i, type: "special" });
         }
-        i += 8;
+        i = wordEnd;
         continue;
       }
     }
 
-    // Check for special character closing tags (thinkingđ, thoughtđ, or antthinkingđ)
-    if (
-      i + 7 < cleaned.length &&
-      (cleaned.substring(i, i + 8) === "thinking\u0111" ||
-        cleaned.substring(i, i + 7) === "thought\u0111" ||
-        cleaned.substring(i, i + 11) === "antthinking\u0111")
-    ) {
-      if (!isInsideCode(i, codeRegions)) {
-        // Find the matching opening tag
-        let found = false;
-        for (let j = stack.length - 1; j >= 0; j--) {
-          if (stack[j].type === "special") {
-            const open = stack.splice(j, 1)[0];
-            let endPos;
-            if (cleaned.substring(i, i + 8) === "thinking\u0111") {
-              endPos = i + 8;
-            } else if (cleaned.substring(i, i + 7) === "thought\u0111") {
-              endPos = i + 7;
-            } else if (cleaned.substring(i, i + 11) === "antthinking\u0111") {
-              endPos = i + 11;
+    // Check for special character closing tags (wordđ)
+    if (i > 0 && cleaned[i] === "\u0111") {
+      // Find the word before đ
+      let wordStart = i - 1;
+      while (wordStart >= 0 && /[a-zA-Z]/.test(cleaned[wordStart])) {
+        wordStart--;
+      }
+      wordStart++;
+
+      if (wordStart < i) {
+        if (!isInsideCode(wordStart, codeRegions)) {
+          // Find the matching opening tag
+          let found = false;
+          for (let j = stack.length - 1; j >= 0; j--) {
+            if (stack[j].type === "special") {
+              const open = stack.splice(j, 1)[0];
+              thinkingRanges.push({
+                start: open.start,
+                end: i + 1,
+              });
+              found = true;
+              break;
             }
+          }
+          // Handle unmatched closing special tags
+          if (!found) {
             thinkingRanges.push({
-              start: open.start,
-              end: endPos,
+              start: wordStart,
+              end: i + 1,
             });
-            found = true;
-            break;
           }
         }
-        // Handle unmatched closing special tags
-        if (!found) {
-          let endPos;
-          if (cleaned.substring(i, i + 8) === "thinking\u0111") {
-            endPos = i + 8;
-          } else if (cleaned.substring(i, i + 7) === "thought\u0111") {
-            endPos = i + 7;
-          } else if (cleaned.substring(i, i + 11) === "antthinking\u0111") {
-            endPos = i + 11;
-          }
-          thinkingRanges.push({
-            start: i,
-            end: endPos,
-          });
-        }
+        i++;
+        continue;
       }
-      if (cleaned.substring(i, i + 8) === "thinking\u0111") {
-        i += 8;
-      } else if (cleaned.substring(i, i + 7) === "thought\u0111") {
-        i += 7;
-      } else if (cleaned.substring(i, i + 11) === "antthinking\u0111") {
-        i += 11;
-      }
-      continue;
     }
 
     i++;
@@ -216,25 +198,41 @@ export function stripReasoningTagsFromText(
   // Handle unclosed thinking tags
   if (stack.length > 0) {
     if (mode === "preserve") {
-      // In preserve mode, only return the content of unclosed tags
-      let result = "";
-      for (const open of stack) {
+      // In preserve mode, extract content from unclosed tags and preserve everything else
+      let result = cleaned;
+      let lastPos = cleaned.length;
+
+      // Process stack in reverse order (last unclosed tag first)
+      for (let i = stack.length - 1; i >= 0; i--) {
+        const open = stack[i];
+        let contentStart = open.start;
+
         if (open.type === "special") {
           // For special char tags, content starts after the tag word
-          const tagWord = cleaned.substring(open.start + 1, open.start + 8);
-          if (tagWord === "thinking" || tagWord === "thought" || tagWord === "antthinking") {
-            const contentStart = open.start + 8;
-            result += cleaned.slice(contentStart);
+          let wordEnd = open.start + 1;
+          while (wordEnd < cleaned.length && /[a-zA-Z]/.test(cleaned[wordEnd])) {
+            wordEnd++;
           }
+          contentStart = wordEnd;
         } else {
           // For HTML tags, find the end of the opening tag
           const tagMatch = cleaned.slice(open.start).match(/^<[^>]*>/);
           if (tagMatch) {
-            const contentStart = open.start + tagMatch[0].length;
-            result += cleaned.slice(contentStart);
+            contentStart = open.start + tagMatch[0].length;
           }
         }
+
+        // Replace everything before the unclosed tag with just the content
+        result = cleaned.slice(contentStart, lastPos);
+        lastPos = open.start;
       }
+
+      // Add everything before the first unclosed tag
+      if (stack.length > 0 && lastPos > 0) {
+        const firstOpen = stack[0];
+        result = cleaned.slice(0, firstOpen.start) + result;
+      }
+
       return applyTrim(result, trimMode);
     } else if (mode === "strict") {
       // In strict mode, remove unclosed tags and their content
@@ -291,25 +289,13 @@ export function stripReasoningTagsFromText(
 
   // Also handle special case: word followed by closing tag (e.g., "thinking</thinking>" or "thinking</t>")
   // Match specific patterns like "This is thinking</t>" or "First thought</t>"
-  // Also handle special character closing tags like "thinkingđ"
   // Use a single regex that handles both cases
   const unpairedWordTagRe =
-    /(?:\bThis is |\b(\w+) )?(thinking|thought|antthinking)(?:<\/(?:t|think|thought|antthinking)>|<[^>]*>|\u0111)/gi;
-  for (const match of cleaned.matchAll(unpairedWordTagRe)) {
-    const idx = match.index ?? 0;
-    if (!isInsideCode(idx, codeRegions)) {
-      // Remove the entire match
-      thinkingRanges.push({
-        start: idx,
-        end: idx + match[0].length,
-      });
-    }
-  }
+    /(?:\bThis is |\b(\w+) )?(thinking|thought|antthinking)(?:<\/(?:t|think|thinking|thought|antthinking)>|<[^>]*>)/gi;
 
-  // Also handle plain closing tags like "word</thinking>" or "word</t>"
-  // Use negative lookbehind to avoid matching at the beginning of the string
-  const plainClosingTagRe = /(?<!^)\b\w+(?:\s+\w+)*\s*<\/(t|think|thinking|thought|antthinking)>/gi;
-  for (const match of cleaned.matchAll(plainClosingTagRe)) {
+  // Removed textWithClosingTagRe logic as it was causing over-matching
+  // The unpairedWordTagRe should handle the necessary cases
+  for (const match of cleaned.matchAll(unpairedWordTagRe)) {
     const idx = match.index ?? 0;
     if (!isInsideCode(idx, codeRegions)) {
       // Remove the entire match
@@ -323,11 +309,33 @@ export function stripReasoningTagsFromText(
   // Sort ranges by start position
   thinkingRanges.sort((a, b) => a.start - b.start);
 
+  console.log("Final thinking ranges:", thinkingRanges);
+
   // Remove thinking ranges in reverse order to maintain indices
   for (let i = thinkingRanges.length - 1; i >= 0; i--) {
     const range = thinkingRanges[i];
+    console.log(
+      `Removing range ${range.start}-${range.end}: "${cleaned.slice(range.start, range.end)}"`,
+    );
     cleaned = cleaned.slice(0, range.start) + cleaned.slice(range.end);
   }
 
+  console.log("Output:", JSON.stringify(cleaned));
   return applyTrim(cleaned, trimMode);
 }
+
+// Test case 1: Code blocks
+const text1 = `\n\`\`\`javascript\nfunction test() {\n  // This should be preserved\u0111\n  return true;\n}\n\`\`\`\nOutside This should be removed\u0111 code block.`;
+
+console.log("=== Test 1: Code blocks ===");
+const result1 = stripReasoningTagsFromText(text1);
+console.log('Expected: Contains "This should be preservedđ"');
+console.log('Expected: Does not contain "This should be removedđ"');
+
+// Test case 2: Inline code
+const text2 = `Text with \`inline code\u0111\` and outside thinking\u0111.`;
+
+console.log("\n=== Test 2: Inline code ===");
+const result2 = stripReasoningTagsFromText(text2);
+console.log('Expected: Contains "inline codeđ"');
+console.log('Expected: Does not contain "thinkingđ"');
