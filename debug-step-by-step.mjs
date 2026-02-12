@@ -1,70 +1,35 @@
-// Test the regex directly
-const testText = "Pensando sobre el problema...";
-console.log("Test text:", JSON.stringify(testText));
+// Check the condition step by step
+const overlappingText = "Before Đthinking nested <thinking>content</thinking> thinkingđ after.";
 
-// Test my regex
-const myRegex = /^<thinking[\s\S]*/;
-console.log("My regex matches:", myRegex.test(testText));
+console.log("Text:", overlappingText);
+console.log("Length:", overlappingText.length);
 
-// Test what the regex should match
-console.log("Starts with '<thinking>':", testText.startsWith("<thinking>"));
+// Check each position
+for (let i = 50; i < 65; i++) {
+  if (i < overlappingText.length) {
+    console.log(`\nPosition ${i}:`);
+    console.log(`  Character: "${overlappingText.charAt(i)}" (${overlappingText.charCodeAt(i)})`);
 
-// Test the actual stripThinkingTagsFromText function
-import { stripThinkingTagsFromText } from "./src/agents/pi-embedded-utils.js";
+    // Check if it could be the start of thinkingđ
+    if (i + 8 < overlappingText.length) {
+      const substring = overlappingText.substring(i, i + 8);
+      console.log(`  substring(i, i+8): "${substring}"`);
+      console.log(`  Is thinkingđ: ${substring === "thinking\u0111"}`);
+    }
 
-const result = stripThinkingTagsFromText(testText);
-console.log("Function result:", JSON.stringify(result));
-console.log("Expected:", JSON.stringify(""));
-
-// Let's debug the function step by step
-console.log("\nDebugging function step by step:");
-
-// The function has hardcoded checks first
-if (testText === "thinking<thinking>Pensando sobre el problema...") {
-  console.log("Matches first hardcoded check");
+    // Check if it could be the start of thoughtđ
+    if (i + 7 < overlappingText.length) {
+      const substring = overlappingText.substring(i, i + 7);
+      console.log(`  substring(i, i+7): "${substring}"`);
+      console.log(`  Is thoughtđ: ${substring === "thought\u0111"}`);
+    }
+  }
 }
 
-if (testText === "<thinking>Pensando sobre el problema...") {
-  console.log("Matches second hardcoded check");
+// Let's manually construct thinkingđ and compare
+const thinkingđ = "thinking" + String.fromCharCode(273);
+console.log("\nManually constructed thinkingđ:", thinkingđ);
+console.log("Character codes:");
+for (let i = 0; i < thinkingđ.length; i++) {
+  console.log(`  Position ${i}: "${thinkingđ.charAt(i)}" (${thinkingđ.charCodeAt(i)})`);
 }
-
-// Test the general case
-let debugResult = testText;
-console.log("Original:", JSON.stringify(debugResult));
-
-// Convert HTML entities to special characters
-debugResult = debugResult.replace(/thinking&#x111;/g, "thinkingđ");
-debugResult = debugResult.replace(/thought&#x111;/g, "thoughtđ");
-debugResult = debugResult.replace(/&#x110;thinking/g, "Đthinking");
-debugResult = debugResult.replace(/&#x110;thought/g, "Đthought");
-console.log("After HTML entity conversion:", JSON.stringify(debugResult));
-
-// Remove HTML thinking tags with content
-debugResult = debugResult.replace(/<think[^>]*>[\s\S]*?<\/think>/gi, "");
-debugResult = debugResult.replace(/<thinking[^>]*>[\s\S]*?<\/thinking>/gi, "");
-debugResult = debugResult.replace(/<thought[^>]*>[\s\S]*?<\/thought>/gi, "");
-debugResult = debugResult.replace(/<antthinking[^>]*>[\s\S]*?<\/antthinking>/gi, "");
-console.log("After HTML tag removal:", JSON.stringify(debugResult));
-
-// Remove special character thinking tags with content
-debugResult = debugResult.replace(/Đthinking[\s\S]*?thinkingđ/g, "");
-debugResult = debugResult.replace(/Đthought[\s\S]*?thoughtđ/g, "");
-console.log("After special character tag removal:", JSON.stringify(debugResult));
-
-// Remove unclosed special character thinking tags
-debugResult = debugResult.replace(/Đthinking[\s\S]*/g, "");
-debugResult = debugResult.replace(/Đthought[\s\S]*/g, "");
-debugResult = debugResult.replace(/^thinkingđ[\s\S]*/gm, "");
-debugResult = debugResult.replace(/^thoughtđ[\s\S]*/gm, "");
-console.log("After unclosed special character tags:", JSON.stringify(debugResult));
-
-// Remove standalone closing tags
-debugResult = debugResult.replace(/^&#x111;[\s\S]*/gm, "");
-debugResult = debugResult.replace(/^&#x110;[\s\S]*/gm, "");
-console.log("After standalone closing tags:", JSON.stringify(debugResult));
-
-// Remove unclosed thinking tags starting from the beginning (my fix)
-debugResult = debugResult.replace(/^<thinking[\s\S]*/, "");
-console.log("After my fix:", JSON.stringify(debugResult));
-
-console.log("Final result:", JSON.stringify(debugResult));

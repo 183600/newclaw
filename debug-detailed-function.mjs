@@ -1,55 +1,49 @@
-// Create a test version of the function with logging
-const QUICK_TAG_RE =
-  /<\s*\/?\s*(?:think|thinking|thought|antthinking|final)\b[^>]*>|(?:\w+)[\u0111\u0110]|(?:\u0110)(?:\w+)|\b(thinking|thought|antthinking)(?:<\/(?:t|think|thought|antthinking)>|<[^>]*>)/i;
+import { stripReasoningTagsFromText } from "./src/shared/text/reasoning-tags.ts";
 
-function debugStripReasoningTagsFromText(text, options = {}) {
-  console.log("\n=== Debug Function Start ===");
-  console.log("Input:", JSON.stringify(text));
+// Create a modified version of the function with debug logging
+function debugStripReasoningTagsFromText(text, options) {
+  console.log("=== Debug Function Start ===");
+  console.log("Input:", text);
+  console.log("Options:", options);
 
-  if (!text) {
-    console.log("Early return: empty text");
-    return text;
-  }
-  if (!QUICK_TAG_RE.test(text)) {
-    console.log("Early return: no quick tags found");
-    return text;
-  }
+  // This is a simplified version to debug the specific issue
+  const HTML_THINKING_TAG_RE =
+    /<\s*(\/?)\s*(?:t|think|thinking|thought|antthinking)(?:\b[^<>]*>|\/?>|>)/gi;
+  const match = text.match(HTML_THINKING_TAG_RE);
+  console.log("HTML tag match:", match);
 
-  console.log("Quick tags found, proceeding with processing");
+  if (match && !match[0].includes("</")) {
+    console.log("This is an opening tag");
+    const openIndex = text.indexOf(match[0]);
+    console.log("Opening tag at position:", openIndex);
+    console.log("Character before:", text.charAt(openIndex - 1));
+    console.log("Is space before:", text.charAt(openIndex - 1) === " ");
 
-  const mode = options.mode ?? "strict";
-  const trimMode = options.trim ?? "both";
+    // In strict mode, we should remove from the tag to the end
+    const result = text.slice(0, openIndex);
+    console.log("Simple result (no space preservation):", result);
 
-  let cleaned = text;
+    // With space preservation
+    const resultWithSpace =
+      openIndex > 0 && text.charAt(openIndex - 1) === " "
+        ? text.slice(0, openIndex) + " "
+        : text.slice(0, openIndex);
+    console.log("Result with space preservation:", resultWithSpace);
 
-  console.log("Before HTML entity conversion:", JSON.stringify(cleaned));
-
-  // Convert HTML entities to special characters for processing
-  cleaned = cleaned.replace(/thinking&#x111;/g, "thinkingđ");
-  cleaned = cleaned.replace(/thought&#x111;/g, "thoughtđ");
-  cleaned = cleaned.replace(/&#x110;thinking/g, "Đthinking");
-  cleaned = cleaned.replace(/&#x110;thought/g, "Đthought");
-
-  // Also handle arbitrary words with &#x111; and &#x110; patterns
-  console.log("Applying arbitrary word patterns...");
-  const beforeArbitrary = cleaned;
-  cleaned = cleaned.replace(/(\w+)&#x111;/g, "$1đ");
-  console.log("After &#x111; replacement:", JSON.stringify(cleaned));
-  cleaned = cleaned.replace(/&#x110;(\w+)/g, "Đ$1");
-  console.log("After &#x110; replacement:", JSON.stringify(cleaned));
-
-  if (beforeArbitrary !== cleaned) {
-    console.log("Arbitrary word patterns were applied!");
-  } else {
-    console.log("No changes from arbitrary word patterns");
+    return resultWithSpace;
   }
 
-  return cleaned; // Skip the rest for debugging
+  return text;
 }
 
-// Test the debug function
-const testText = "This should be preserved&#x111; and this should be removed&#x111;";
+// Test with debugging
+const text = "Before <thinking>content after.";
+console.log("Input:", text);
 
-console.log("=== Debug Function Test ===");
-const result = debugStripReasoningTagsFromText(testText);
-console.log("Final result:", JSON.stringify(result));
+const result = debugStripReasoningTagsFromText(text, { mode: "strict" });
+console.log("Debug output:", result);
+console.log("Expected: Before ");
+
+// Test the actual function
+const actualResult = stripReasoningTagsFromText(text, { mode: "strict" });
+console.log("Actual function output:", actualResult);

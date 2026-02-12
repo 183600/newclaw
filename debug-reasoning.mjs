@@ -1,52 +1,89 @@
-#!/usr/bin/env node
+// 直接测试 reasoning-tags.ts 文件中的函数
+import fs from "fs";
+import path from "path";
 
-// Simple debug script for reasoning tags
-import { stripReasoningTagsFromText } from "./src/shared/text/reasoning-tags.js";
+// 读取 TypeScript 源文件
+const tsFile = fs.readFileSync("./src/shared/text/reasoning-tags.ts", "utf8");
 
-console.log("=== Testing code block preservation ===");
-
-const testText = `
-\`\`\`javascript
-function test() {
-  // This should be preservedđ
-  return true;
+// 提取函数定义（简单的方法，用于调试）
+const functionMatch = tsFile.match(/export function stripReasoningTagsFromText\(([\s\S]*?)\n}/);
+if (!functionMatch) {
+  console.error("Could not find function definition");
+  process.exit(1);
 }
-\`\`\`
-Outside This should be removedđ code block.`;
 
-console.log("Input:");
-console.log(JSON.stringify(testText));
-console.log("\nOutput:");
-const result = stripReasoningTagsFromText(testText);
-console.log(JSON.stringify(result));
-console.log("\nContains preserved:", result.includes("This should be preservedđ"));
-console.log("Contains removed:", result.includes("This should be removedđ"));
+// 移除 export 关键字
+const functionWithoutExport = functionMatch[0].replace("export function", "function");
 
-console.log("\n=== Testing inline code preservation ===");
+// 创建一个包含函数的字符串
+const functionCode =
+  functionWithoutExport +
+  "\n" +
+  `
+// Helper functions from the file
+function findCodeRegions(text) {
+  const regions = [];
+  const fencedRe = /(^|\\n)(\`\`\`|~~~)[^\\n]*\\n[\\s\\S]*?(?:\\n\\2(?:\\n|$)|$)/g;
+  for (const match of text.matchAll(fencedRe)) {
+    const start = match.index ?? 0;
+    regions.push({ start, end: start + match[0].length });
+  }
+  const inlineRe = /\`([^\`\\n]+)\`/g;
+  for (const match of text.matchAll(inlineRe)) {
+    const start = match.index ?? 0;
+    const end = start + match[0].length;
+    const insideFenced = regions.some((r) => start >= r.start && end <= r.end);
+    if (!insideFenced) {
+      regions.push({ start, end });
+    }
+  }
+  regions.sort((a, b) => a.start - b.start);
+  return regions;
+}
 
-const inlineTest = "Text with \`inline code đ\` and outside thinkingđ.";
-console.log("Input:");
-console.log(JSON.stringify(inlineTest));
-console.log("\nOutput:");
-const inlineResult = stripReasoningTagsFromText(inlineTest);
-console.log(JSON.stringify(inlineResult));
-console.log("\nContains inline code:", inlineResult.includes("inline code đ"));
-console.log("Contains thinking:", inlineResult.includes("thinkingđ"));
+function isInsideCode(pos, regions) {
+  return regions.some((r) => pos >= r.start && pos < r.end);
+}
 
-console.log("\n=== Testing trim options ===");
+function applyTrim(value, mode, preserveOriginalEnd = false) {
+  if (mode === "none") {
+    return value;
+  }
+  if (mode === "start") {
+    return value.trimStart();
+  }
+  const trimmed = value.trim();
+  if (!/[.!?]$/.test(trimmed) && trimmed.length > 0 && !preserveOriginalEnd) {
+    return trimmed + ".";
+  }
+  return trimmed;
+}
 
-const trimTest = "  Before thinkingđ after  ";
-console.log("Input:");
-console.log(JSON.stringify(trimTest));
+// 测试用例
+const testCases = [
+  {
+    name: "should handle inline code preservation",
+    input: "Text with \`inline code\`\` and outside thinking\`\`.",
+    expectedToContain: "inline code\`\`",
+    expectedNotToContain: "thinking\`\`"
+  }
+];
 
-const resultNone = stripReasoningTagsFromText(trimTest, { trim: "none" });
-console.log("\nTrim none result:");
-console.log(JSON.stringify(resultNone));
+for (const test of testCases) {
+  console.log(\`Testing: \${test.name}\`);
+  console.log(\`Input: \${JSON.stringify(test.input)}\`);
+  try {
+    const result = stripReasoningTagsFromText(test.input);
+    console.log(\`Result: \${JSON.stringify(result)}\`);
+    console.log(\`Contains '\${test.expectedToContain}': \${result.includes(test.expectedToContain)}\`);
+    console.log(\`Contains '\${test.expectedNotToContain}': \${result.includes(test.expectedNotToContain)}\`);
+    console.log('---');
+  } catch (e) {
+    console.error(\`Error: \${e.message}\`);
+    console.log('---');
+  }
+}
+`;
 
-const resultStart = stripReasoningTagsFromText(trimTest, { trim: "start" });
-console.log("\nTrim start result:");
-console.log(JSON.stringify(resultStart));
-
-const resultBoth = stripReasoningTagsFromText(trimTest, { trim: "both" });
-console.log("\nTrim both result:");
-console.log(JSON.stringify(resultBoth));
+// 执行代码
+eval(functionCode);

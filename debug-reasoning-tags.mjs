@@ -1,45 +1,46 @@
 import { stripReasoningTagsFromText } from "./src/shared/text/reasoning-tags.js";
 
-console.log("=== Testing code blocks ===");
-const codeBlockTest = `
-\`\`\`javascript
-function test() {
-  // This should be preserved
-  return true;
-}
-\`\`\`
-Outside This should be removed code block.`;
+// Test case 1: inline code preservation
+console.log("=== Test 1: Inline code preservation ===");
+const text1 = "Text with `inline code</think>` and outside thinking</think>.";
+const result1 = stripReasoningTagsFromText(text1);
+console.log("Input:", JSON.stringify(text1));
+console.log("Output:", JSON.stringify(result1));
+console.log('Expected: contains "inline code</think>"');
+console.log("");
 
-console.log("Input:");
-console.log(JSON.stringify(codeBlockTest));
-console.log("\nOutput:");
-const result1 = stripReasoningTagsFromText(codeBlockTest);
-console.log(JSON.stringify(result1));
-console.log(
-  "\nExpected: Contains 'This should be preserved', does not contain 'This should be removed'",
-);
-console.log("Contains preserved:", result1.includes("This should be preserved"));
-console.log("Contains removed:", result1.includes("This should be removed"));
+// Test case 2: mixed HTML entities and tags
+console.log("=== Test 2: Mixed HTML entities and tags ===");
+const text2 = "Before &#x110;thinking middle thinking&#x111; after.";
+const result2 = stripReasoningTagsFromText(text2);
+console.log("Input:", JSON.stringify(text2));
+console.log("Output:", JSON.stringify(result2));
+console.log('Expected: "Before  middle  after."');
+console.log("");
 
-console.log("\n=== Testing inline code ===");
-// Using hex codes to avoid issues
-const inlineCodeTest =
-  "Text with `inline code" + "\u0111" + "` and outside thinking" + "\u0111" + ".";
-console.log("Input:");
-console.log(JSON.stringify(inlineCodeTest));
-console.log("\nOutput:");
-const result2 = stripReasoningTagsFromText(inlineCodeTest);
-console.log(JSON.stringify(result2));
-console.log("\nExpected: Contains 'inline code', does not contain 'thinking'");
-console.log("Contains inline:", result2.includes("inline code" + "\u0111"));
-console.log("Contains thinking:", result2.includes("thinking"));
+// Test case 3: Unicode special characters
+console.log("=== Test 3: Unicode special characters ===");
+const text3 = "Before \u0110thinking content thinking\u0111 after.";
+const result3 = stripReasoningTagsFromText(text3);
+console.log("Input:", JSON.stringify(text3));
+console.log("Output:", JSON.stringify(result3));
+console.log('Expected: "Before  content  after."');
+console.log("");
 
-console.log("\n=== Testing trim options ===");
-const trimTest = "  Before thinking" + "\u0111" + " after  ";
-console.log("Input:", JSON.stringify(trimTest));
-console.log("\nNone mode:", JSON.stringify(stripReasoningTagsFromText(trimTest, { trim: "none" })));
-console.log("Expected:", JSON.stringify("  Before  after  "));
-console.log("Start mode:", JSON.stringify(stripReasoningTagsFromText(trimTest, { trim: "start" })));
-console.log("Expected:", JSON.stringify("Before  after  "));
-console.log("Both mode:", JSON.stringify(stripReasoningTagsFromText(trimTest, { trim: "both" })));
-console.log("Expected:", JSON.stringify("Before  after."));
+// Test case 4: adjacent tags
+console.log("=== Test 4: Adjacent tags ===");
+const text4 = "Before <thinking></thinking><thought></thought> after.";
+const result4 = stripReasoningTagsFromText(text4);
+console.log("Input:", JSON.stringify(text4));
+console.log("Output:", JSON.stringify(result4));
+console.log('Expected: "Before  after."');
+console.log("");
+
+// Test case 5: mixed format tags
+console.log("=== Test 5: Mixed format tags ===");
+const text5 =
+  "Before <thinking>HTML content</thinking> and Đthinking special content thinkingđ after.";
+const result5 = stripReasoningTagsFromText(text5);
+console.log("Input:", JSON.stringify(text5));
+console.log("Output:", JSON.stringify(result5));
+console.log('Expected: "Before   and   after."');

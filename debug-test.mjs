@@ -1,31 +1,31 @@
 import { stripReasoningTagsFromText } from "./src/shared/text/reasoning-tags.js";
 
-// Test case 1: Code blocks
-const text1 = `
-\`\`\`javascript
-function test() {
-  // This should be preserved
-  return true;
-}
-\`\`\`
-Outside This should be removed`;
+// 测试失败的用例
+const testCases = [
+  {
+    name: "inline code preservation",
+    text: "Text with `inline code` and outside thinking`.",
+    expected: {
+      contains: "inline code",
+      notContains: "thinking",
+    },
+  },
+];
 
-console.log("=== Test 1: Code blocks ===");
-console.log("Input:");
-console.log(JSON.stringify(text1));
-console.log("\nOutput:");
-const result1 = stripReasoningTagsFromText(text1);
-console.log(JSON.stringify(result1));
-console.log('\nContains "This should be preserved":', result1.includes("This should be preserved"));
-console.log('Contains "This should be removed":', result1.includes("This should be removed"));
+testCases.forEach((test) => {
+  console.log(`\n=== 测试: ${test.name} ===`);
+  console.log(`输入: ${JSON.stringify(test.text)}`);
 
-// Test case 2: Inline code
-const text2 = "Text with \`inline code\` and outside thinking";
-console.log("\n=== Test 2: Inline code ===");
-console.log("Input:");
-console.log(JSON.stringify(text2));
-console.log("\nOutput:");
-const result2 = stripReasoningTagsFromText(text2);
-console.log(JSON.stringify(result2));
-console.log('\nContains "inline code":', result2.includes("inline code"));
-console.log('Contains "thinking":', result2.includes("thinking"));
+  const result = stripReasoningTagsFromText(test.text);
+  console.log(`输出: ${JSON.stringify(result)}`);
+
+  if (test.expected.contains) {
+    console.log(`应该包含: ${test.expected.contains}`);
+    console.log(`实际包含: ${result.includes(test.expected.contains)}`);
+  }
+
+  if (test.expected.notContains) {
+    console.log(`不应该包含: ${test.expected.notContains}`);
+    console.log(`实际不包含: ${!result.includes(test.expected.notContains)}`);
+  }
+});

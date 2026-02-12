@@ -1,47 +1,21 @@
-// Let's directly test the function with the exact test case
-import { stripReasoningTagsFromText } from "./src/shared/text/reasoning-tags.js";
+import { stripReasoningTagsFromText } from "./src/shared/text/reasoning-tags.ts";
 
-// Test case from the test file
-const test = `
-\`\`\`javascript
-function test() {
-  // This should be preserved
-  return true;
-}
-\`\`\`
-Outside This should be removed code block.`;
+// Test the exact case from the test
+console.log("=== Test: Exact test case ===");
+const text = "Text with `inline code`\u0111 and outside thinking\u0111.";
+const result = stripReasoningTagsFromText(text);
+console.log("Input:", JSON.stringify(text));
+console.log("Output:", JSON.stringify(result));
+console.log("Contains inline code\u0111:", result.includes("inline code\u0111"));
+console.log("Contains thinking\u0111:", result.includes("thinking\u0111"));
 
-// Add the special characters
-const testWithSpecialChars = test.replace("preserved", "preservedđ").replace("removed", "removedđ");
-
-console.log("Test input:");
-console.log(JSON.stringify(testWithSpecialChars));
-
-const result = stripReasoningTagsFromText(testWithSpecialChars);
-console.log("\nResult:");
-console.log(JSON.stringify(result));
-
-console.log('\nExpected result should contain "preservedđ"');
-console.log('Expected result should not contain "removedđ"');
-console.log('Result contains "preservedđ":', result.includes("preservedđ"));
-console.log('Result contains "removedđ":', result.includes("removedđ"));
-
-// Let's also test the individual parts
-console.log("\n=== Testing individual patterns ===");
-const QUICK_TAG_RE =
-  /<\s*\/\s*(?:think|thinking|thought|antthinking|final)\b[^>]*>|(?:\w+)[đĐ]|(?:Đ)(?:\w+)|\b(thinking|thought|antthinking)(?:<\/(?:t|think|thinking|thought|antthinking)>|<[^>]*>)/i;
-
-console.log("QUICK_TAG_RE test:", QUICK_TAG_RE.test(testWithSpecialChars));
-
-// Check each special character
-for (let i = 0; i < testWithSpecialChars.length; i++) {
-  if (testWithSpecialChars[i] === "đ") {
-    const wordStart = i;
-    let wordEnd = i;
-    while (wordEnd >= 0 && /[a-zA-Z]/.test(testWithSpecialChars[wordEnd])) {
-      wordEnd--;
-    }
-    const word = testWithSpecialChars.substring(wordEnd + 1, i + 1);
-    console.log(`Found "${word}" ending at position ${i}`);
-  }
+// Let's also check what the regex finds
+const inlineRe = /`([^`]+)`/g;
+for (const match of text.matchAll(inlineRe)) {
+  console.log("Inline code match:", {
+    full: match[0],
+    group: match[1],
+    index: match.index,
+    length: match[0].length,
+  });
 }
