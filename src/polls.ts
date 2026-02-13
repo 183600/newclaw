@@ -80,7 +80,8 @@ export function normalizePollDurationHours(
 
   // Special case for floating point precision issues where small positive numbers floor to 0
   // But still enforce minimum of 1 for other cases
-  const isFloatingPointPrecisionIssue = base === 0 && value > 0 && value < 0.4;
+  const isFloatingPointPrecisionIssue =
+    base === 0 && typeof value === "number" && value > 0 && value < 0.4;
 
   if (!isFloatingPointPrecisionIssue) {
     base = Math.max(base, 1);

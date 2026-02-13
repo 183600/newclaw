@@ -33,10 +33,10 @@ export function parseBooleanValue(
 
   if (usingCustomTruthy || usingCustomFalsy) {
     // For custom options, use case-sensitive comparison
-    if (usingCustomTruthy && truthy.includes(trimmed)) {
+    if (usingCustomTruthy && (truthy as readonly string[]).includes(trimmed)) {
       return true;
     }
-    if (usingCustomFalsy && falsy.includes(trimmed)) {
+    if (usingCustomFalsy && (falsy as readonly string[]).includes(trimmed)) {
       return false;
     }
   } else {

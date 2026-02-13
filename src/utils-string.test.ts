@@ -19,16 +19,16 @@ describe("String utility functions", () => {
     it("should handle surrogate pairs correctly", () => {
       // Emoji is a surrogate pair
       const emojiString = "Hello 🌍 World";
-      expect(sliceUtf16Safe(emojiString, 0, 6)).toBe("Hello 🌍");
-      expect(sliceUtf16Safe(emojiString, 7)).toBe("World");
-      expect(sliceUtf16Safe(emojiString, 6, 7)).toBe("🌍");
+      expect(sliceUtf16Safe(emojiString, 0, 6)).toBe("Hello ");
+      expect(sliceUtf16Safe(emojiString, 7)).toBe(" World");
+      expect(sliceUtf16Safe(emojiString, 6, 8)).toBe("🌍");
     });
 
     it("should handle multiple emojis", () => {
       const emojiString = "👍🏽👍🏿";
-      expect(sliceUtf16Safe(emojiString, 0, 2)).toBe("👍🏽");
-      expect(sliceUtf16Safe(emojiString, 2)).toBe("👍🏿");
-      expect(sliceUtf16Safe(emojiString, 1, 3)).toBe("👍🏿");
+      expect(sliceUtf16Safe(emojiString, 0, 2)).toBe("👍");
+      expect(sliceUtf16Safe(emojiString, 2)).toBe("🏽👍🏿");
+      expect(sliceUtf16Safe(emojiString, 1, 3)).toBe("");
     });
 
     it("should handle edge cases", () => {
@@ -44,7 +44,7 @@ describe("String utility functions", () => {
       expect(sliceUtf16Safe(emojiString, 0, 2)).toBe("A");
       expect(sliceUtf16Safe(emojiString, 0, 3)).toBe("A🌍");
       expect(sliceUtf16Safe(emojiString, 1, 3)).toBe("🌍");
-      expect(sliceUtf16Safe(emojiString, 2, 4)).toBe("🌍");
+      expect(sliceUtf16Safe(emojiString, 2, 4)).toBe("B");
     });
   });
 
@@ -57,16 +57,16 @@ describe("String utility functions", () => {
 
     it("should handle surrogate pairs correctly", () => {
       const emojiString = "Hello 🌍 World";
-      expect(truncateUtf16Safe(emojiString, 6)).toBe("Hello 🌍");
-      expect(truncateUtf16Safe(emojiString, 7)).toBe("Hello 🌍");
-      expect(truncateUtf16Safe(emojiString, 8)).toBe("Hello 🌍 ");
+      expect(truncateUtf16Safe(emojiString, 6)).toBe("Hello ");
+      expect(truncateUtf16Safe(emojiString, 7)).toBe("Hello ");
+      expect(truncateUtf16Safe(emojiString, 8)).toBe("Hello 🌍");
     });
 
     it("should handle edge cases with emojis", () => {
       const emojiString = "👍🏽👍🏿";
       expect(truncateUtf16Safe(emojiString, 1)).toBe("");
-      expect(truncateUtf16Safe(emojiString, 2)).toBe("👍🏽");
-      expect(truncateUtf16Safe(emojiString, 3)).toBe("👍🏽");
+      expect(truncateUtf16Safe(emojiString, 2)).toBe("👍");
+      expect(truncateUtf16Safe(emojiString, 3)).toBe("👍");
       expect(truncateUtf16Safe(emojiString, 4)).toBe("👍🏽");
     });
 

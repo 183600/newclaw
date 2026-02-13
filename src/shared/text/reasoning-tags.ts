@@ -403,7 +403,7 @@ export function stripReasoningTagsFromText(
       for (let j = stack.length - 1; j >= 0; j--) {
         if (stack[j].type === "special") {
           const open = stack.splice(j, 1)[0];
-          let endPos;
+          let endPos: number;
           if (i + 8 < cleaned.length && cleaned.substring(i, i + 9) === "thinking\u0111") {
             endPos = i + 9;
           } else if (i + 7 < cleaned.length && cleaned.substring(i, i + 8) === "thought\u0111") {
@@ -413,6 +413,9 @@ export function stripReasoningTagsFromText(
             cleaned.substring(i, i + 12) === "antthinking\u0111"
           ) {
             endPos = i + 12;
+          } else {
+            // Skip if none of the expected patterns match
+            continue;
           }
 
           // Remove the entire range from opening tag to closing tag
@@ -427,7 +430,7 @@ export function stripReasoningTagsFromText(
       }
       // Handle unmatched closing special tags
       if (!found) {
-        let endPos;
+        let endPos: number;
         if (i + 8 < cleaned.length && cleaned.substring(i, i + 9) === "thinking\u0111") {
           endPos = i + 9;
         } else if (i + 7 < cleaned.length && cleaned.substring(i, i + 8) === "thought\u0111") {
@@ -437,6 +440,9 @@ export function stripReasoningTagsFromText(
           cleaned.substring(i, i + 12) === "antthinking\u0111"
         ) {
           endPos = i + 12;
+        } else {
+          // Skip if none of the expected patterns match
+          continue;
         }
         thinkingRanges.push({
           start: i,

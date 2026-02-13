@@ -123,7 +123,9 @@ export function normalizeSessionDeliveryFields(source?: DeliveryContextSessionSo
       lastThreadId:
         typeof source.lastThreadId === "number" && Number.isFinite(source.lastThreadId)
           ? Math.trunc(source.lastThreadId)
-          : source.lastThreadId?.trim() || undefined,
+          : typeof source.lastThreadId === "string"
+            ? source.lastThreadId.trim()
+            : undefined,
     };
   }
 
@@ -140,7 +142,9 @@ export function normalizeSessionDeliveryFields(source?: DeliveryContextSessionSo
       lastThreadId:
         typeof source.lastThreadId === "number" && Number.isFinite(source.lastThreadId)
           ? Math.trunc(source.lastThreadId)
-          : source.lastThreadId?.trim() || undefined,
+          : typeof source.lastThreadId === "string"
+            ? source.lastThreadId.trim()
+            : undefined,
     };
   }
 

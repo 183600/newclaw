@@ -180,13 +180,16 @@ export function stripReasoningTagsFromText(
         for (let j = stack.length - 1; j >= 0; j--) {
           if (stack[j].type === "special") {
             const open = stack.splice(j, 1)[0];
-            let endPos;
+            let endPos: number;
             if (cleaned.substring(i, i + 8) === "thinking\u0111") {
               endPos = i + 8;
             } else if (cleaned.substring(i, i + 7) === "thought\u0111") {
               endPos = i + 7;
             } else if (cleaned.substring(i, i + 11) === "antthinking\u0111") {
               endPos = i + 11;
+            } else {
+              // This should not happen with the current condition checks
+              continue;
             }
             thinkingRanges.push({
               start: open.start,
@@ -198,13 +201,16 @@ export function stripReasoningTagsFromText(
         }
         // Handle unmatched closing special tags
         if (!found) {
-          let endPos;
+          let endPos: number;
           if (cleaned.substring(i, i + 8) === "thinking\u0111") {
             endPos = i + 8;
           } else if (cleaned.substring(i, i + 7) === "thought\u0111") {
             endPos = i + 7;
           } else if (cleaned.substring(i, i + 11) === "antthinking\u0111") {
             endPos = i + 11;
+          } else {
+            // Skip if none of the expected patterns match
+            continue;
           }
           thinkingRanges.push({
             start: i,

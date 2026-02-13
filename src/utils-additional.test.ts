@@ -108,7 +108,7 @@ describe("sliceUtf16Safe", () => {
     expect(sliceUtf16Safe(emoji, 0, 2)).toBe("🌟");
     expect(sliceUtf16Safe("a🌟b", 0, 3)).toBe("a🌟");
     expect(sliceUtf16Safe("a🌟b", 1, 3)).toBe("🌟");
-    expect(sliceUtf16Safe("a🌟b", 2, 3)).toBe("b");
+    expect(sliceUtf16Safe("a🌟b", 2, 3)).toBe("");
   });
 
   it("handles out of bounds", () => {
