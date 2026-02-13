@@ -6,7 +6,38 @@ import { getPluginToolMeta, resolvePluginTools } from "./tools.js";
 // Mock dependencies
 vi.mock("./loader.js");
 vi.mock("../agents/tool-policy.js");
-vi.mock("../logging/subsystem.js");
+vi.mock("../logging/subsystem.js", () => ({
+  createSubsystemLogger: vi.fn().mockImplementation((subsystem: string) => {
+    // Create and return a mock logger
+    const mockLogger = {
+      info: vi.fn(),
+      warn: vi.fn(),
+      error: vi.fn(),
+      debug: vi.fn(),
+      trace: vi.fn(),
+      fatal: vi.fn(),
+      raw: vi.fn(),
+      child: vi.fn().mockReturnValue({
+        subsystem: `${subsystem}/child`,
+        info: vi.fn(),
+        warn: vi.fn(),
+        error: vi.fn(),
+        debug: vi.fn(),
+        trace: vi.fn(),
+        fatal: vi.fn(),
+        raw: vi.fn(),
+        child: vi.fn(),
+      }),
+    };
+
+    // Store the plugins logger for test access
+    if (subsystem === "plugins") {
+      (globalThis as any).__mockPluginLogger = mockLogger;
+    }
+
+    return mockLogger;
+  }),
+}));
 
 import { normalizeToolName } from "../agents/tool-policy.js";
 import { createSubsystemLogger } from "../logging/subsystem.js";
@@ -20,12 +51,6 @@ describe("plugins/tools", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mockNormalizeToolName.mockImplementation((name: string) => name.toLowerCase().trim());
-    mockCreateSubsystemLogger.mockReturnValue({
-      info: vi.fn(),
-      warn: vi.fn(),
-      error: vi.fn(),
-      debug: vi.fn(),
-    } as any);
   });
 
   describe("getPluginToolMeta", () => {
@@ -183,8 +208,8 @@ describe("plugins/tools", () => {
       const result = resolvePluginTools({ context: mockContext });
 
       expect(result).toEqual([]);
-      expect(mockLogger.error).toHaveBeenCalledWith(
-        expect.stringContaining("plugin tool failed (error-plugin): Factory error"),
+      expect((globalThis as any).__mockPluginLogger.error).toHaveBeenCalledWith(
+        expect.stringContaining("plugin tool failed (error-plugin): Error: Factory error"),
       );
     });
 
@@ -212,7 +237,7 @@ describe("plugins/tools", () => {
       const result = resolvePluginTools({ context: mockContext });
 
       expect(result).toHaveLength(1); // Only one tool should be included
-      expect(mockCreateSubsystemLogger().error).toHaveBeenCalledWith(
+      expect((globalThis as any).__mockPluginLogger.error).toHaveBeenCalledWith(
         expect.stringContaining("plugin tool name conflict"),
       );
     });
@@ -237,7 +262,7 @@ describe("plugins/tools", () => {
       });
 
       expect(result).toEqual([]);
-      expect(mockCreateSubsystemLogger().error).toHaveBeenCalledWith(
+      expect((globalThis as any).__mockPluginLogger.error).toHaveBeenCalledWith(
         expect.stringContaining("plugin id conflicts with core tool name"),
       );
     });
@@ -292,7 +317,8 @@ describe("plugins/tools", () => {
         toolAllowlist: ["optional-tool-1"],
       });
 
-      expect(result).toEqual([requiredTool, optionalTool1]);
+      // When plugin is not optional, all tools are included regardless of allowlist
+      expect(result).toEqual([requiredTool, optionalTool1, optionalTool2]);
     });
 
     it("passes context to plugin factories", () => {

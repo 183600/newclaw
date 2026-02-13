@@ -158,3 +158,8 @@ export function clearCommandLane(lane: string = CommandLane.Main) {
   state.queue.length = 0;
   return removed;
 }
+
+// For testing purposes only
+export function _clearAllLanes() {
+  lanes.clear();
+}

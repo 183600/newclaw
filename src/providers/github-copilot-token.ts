@@ -55,6 +55,9 @@ function parseCopilotTokenResponse(value: unknown): {
 export const DEFAULT_COPILOT_API_BASE_URL = "https://api.individual.githubcopilot.com";
 
 export function deriveCopilotApiBaseUrlFromToken(token: string): string | null {
+  if (!token) {
+    return null;
+  }
   const trimmed = token.trim();
   if (!trimmed) {
     return null;
