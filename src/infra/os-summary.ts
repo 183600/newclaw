@@ -13,18 +13,27 @@ function safeTrim(value: unknown): string {
 }
 
 function macosVersion(): string {
-  const res = spawnSync("sw_vers", ["-productVersion"], { encoding: "utf-8" });
-  const out = safeTrim(res.stdout);
-  return out || os.release();
+  try {
+    const res = spawnSync("sw_vers", ["-productVersion"], { encoding: "utf-8" });
+    const out = safeTrim(res.stdout);
+    return out || os.release();
+  } catch {
+    return os.release();
+  }
 }
 
 export function resolveOsSummary(): OsSummary {
   const platform = os.platform();
-  const release = safeTrim(os.release());
   const arch = os.arch();
+  const release = (() => {
+    if (platform === "darwin") {
+      return macosVersion();
+    }
+    return safeTrim(os.release());
+  })();
   const label = (() => {
     if (platform === "darwin") {
-      return `macos ${macosVersion()} (${arch})`;
+      return `macos ${release} (${arch})`;
     }
     if (platform === "win32") {
       return `windows ${release} (${arch})`;

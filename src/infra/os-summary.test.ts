@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi, beforeEach } from "vitest";
 import { resolveOsSummary, type OsSummary } from "./os-summary.js";
 
 // Mock the child_process module

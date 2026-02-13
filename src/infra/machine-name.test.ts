@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi, afterEach } from "vitest";
 import { getMachineDisplayName, setMachineNameDeps } from "./machine-name.js";
 
 describe("getMachineDisplayName", () => {
@@ -95,9 +95,10 @@ describe("getMachineDisplayName", () => {
   });
 
   it("caches the result", async () => {
+    const mockHostname = vi.fn().mockReturnValue("test-hostname");
     const mockDeps = {
       platform: () => "linux",
-      hostname: () => "test-hostname",
+      hostname: mockHostname,
       execFile: vi.fn(),
       env: {},
     };
@@ -108,7 +109,7 @@ describe("getMachineDisplayName", () => {
 
     expect(result1).toBe("test-hostname");
     expect(result2).toBe("test-hostname");
-    expect(mockDeps.hostname).toHaveBeenCalledTimes(1);
+    expect(mockHostname).toHaveBeenCalledTimes(1);
   });
 
   it("resets cache when dependencies change", async () => {

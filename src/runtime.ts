@@ -25,7 +25,10 @@ export const createRuntime = (
       clearProgressFn();
       console.error(...args);
     },
-    exit: processExitFn,
+    exit: (code: number) => {
+      restoreStateFn("runtime exit");
+      return processExitFn(code);
+    },
   });
 
 export const defaultRuntime: RuntimeEnv = createRuntime();

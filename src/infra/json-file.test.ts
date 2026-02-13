@@ -179,7 +179,7 @@ describe("saveJsonFile", () => {
     saveJsonFile(testFile, testData);
 
     const content = fs.readFileSync(testFile, "utf8");
-    expect(content).toEndWith("\n");
+    expect(content).toMatch(/\n$/);
   });
 
   it("sets file permissions to 0o600 (read/write for owner only)", () => {
