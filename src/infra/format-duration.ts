@@ -27,9 +27,18 @@ export function formatDurationMs(ms: number, options: FormatDurationMsOptions = 
   if (!Number.isFinite(ms)) {
     return "unknown";
   }
-  if (ms < 1000) {
+
+  // Store original value to determine format
+  const originalMs = ms;
+
+  // Clamp negative values to 0
+  ms = Math.max(0, ms);
+
+  // Determine format based on original absolute value
+  if (Math.abs(originalMs) < 1000) {
     return `${ms}ms`;
   }
+
   return formatDurationSeconds(ms, {
     decimals: options.decimals ?? 2,
     unit: options.unit ?? "s",

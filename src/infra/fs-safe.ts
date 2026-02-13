@@ -39,6 +39,11 @@ export async function openFileWithinRoot(params: {
   rootDir: string;
   relativePath: string;
 }): Promise<SafeOpenResult> {
+  // Check if relativePath is an absolute path
+  if (path.isAbsolute(params.relativePath)) {
+    throw new SafeOpenError("invalid-path", "absolute paths not allowed");
+  }
+
   let rootReal: string;
   try {
     rootReal = await fs.realpath(params.rootDir);

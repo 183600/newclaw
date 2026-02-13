@@ -1,203 +1,285 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { getMachineDisplayName } from "./machine-name.js";
+import { describe, expect, it, vi } from "vitest";
+import { getMachineDisplayName, setMachineNameDeps } from "./machine-name.js";
 
 describe("getMachineDisplayName", () => {
-  let originalEnv: NodeJS.ProcessEnv;
-
-  beforeEach(() => {
-    originalEnv = process.env;
-    vi.resetModules();
-  });
+  const originalDeps = {
+    platform: () => process.platform,
+    hostname: () => require("os").hostname(),
+    execFile: require("util").promisify(require("child_process").execFile),
+    env: process.env,
+  };
 
   afterEach(() => {
-    process.env = originalEnv;
-    vi.restoreAllMocks();
+    // Reset dependencies after each test
+    setMachineNameDeps(originalDeps);
   });
 
   it("returns fallback hostname in test environment", async () => {
-    vi.stubEnv("NODE_ENV", "test");
+    const mockDeps = {
+      platform: () => "linux",
+      hostname: () => "test-hostname.local",
+      execFile: vi.fn(),
+      env: { NODE_ENV: "test" },
+    };
+    setMachineNameDeps(mockDeps);
 
-    // Re-import to get fresh module with test environment
-    const { getMachineDisplayName: freshGetMachineDisplayName } = await import("./machine-name.js");
-
-    const result = await freshGetMachineDisplayName();
-    expect(result).toBeDefined();
-    expect(typeof result).toBe("string");
-    expect(result.length).toBeGreaterThan(0);
+    const result = await getMachineDisplayName();
+    expect(result).toBe("test-hostname");
+    expect(mockDeps.execFile).not.toHaveBeenCalled();
   });
 
-  it("returns fallback hostname in vitest environment", async () => {
-    vi.stubEnv("VITEST", "true");
+  it("returns fallback hostname when VITEST env is set", async () => {
+    const mockDeps = {
+      platform: () => "linux",
+      hostname: () => "test-hostname.local",
+      execFile: vi.fn(),
+      env: { VITEST: "true" },
+    };
+    setMachineNameDeps(mockDeps);
 
-    // Re-import to get fresh module with vitest environment
-    const { getMachineDisplayName: freshGetMachineDisplayName } = await import("./machine-name.js");
-
-    const result = await freshGetMachineDisplayName();
-    expect(result).toBeDefined();
-    expect(typeof result).toBe("string");
-    expect(result.length).toBeGreaterThan(0);
+    const result = await getMachineDisplayName();
+    expect(result).toBe("test-hostname");
+    expect(mockDeps.execFile).not.toHaveBeenCalled();
   });
 
-  it("caches the result", async () => {
-    vi.stubEnv("NODE_ENV", "test");
+  it("returns fallback hostname when hostname is empty", async () => {
+    const mockDeps = {
+      platform: () => "linux",
+      hostname: () => "",
+      execFile: vi.fn(),
+      env: {},
+    };
+    setMachineNameDeps(mockDeps);
 
-    // Re-import to get fresh module
-    const { getMachineDisplayName: freshGetMachineDisplayName } = await import("./machine-name.js");
-
-    const result1 = await freshGetMachineDisplayName();
-    const result2 = await freshGetMachineDisplayName();
-
-    expect(result1).toBe(result2);
-  });
-
-  it("removes .local suffix from hostname", async () => {
-    vi.stubEnv("NODE_ENV", "test");
-
-    // Mock os.hostname to return a value with .local suffix
-    const os = await import("node:os");
-    vi.spyOn(os, "hostname").mockReturnValue("test-machine.local");
-
-    // Re-import to get fresh module with mocked hostname
-    const { getMachineDisplayName: freshGetMachineDisplayName } = await import("./machine-name.js");
-
-    const result = await freshGetMachineDisplayName();
-    expect(result).toBe("test-machine");
-  });
-
-  it("returns 'openclaw' as ultimate fallback", async () => {
-    vi.stubEnv("NODE_ENV", "test");
-
-    // Mock os.hostname to return empty string
-    const os = await import("node:os");
-    vi.spyOn(os, "hostname").mockReturnValue("");
-
-    // Re-import to get fresh module with mocked hostname
-    const { getMachineDisplayName: freshGetMachineDisplayName } = await import("./machine-name.js");
-
-    const result = await freshGetMachineDisplayName();
+    const result = await getMachineDisplayName();
     expect(result).toBe("openclaw");
   });
 
-  describe("macOS-specific behavior", () => {
-    beforeEach(() => {
-      vi.stubEnv("NODE_ENV", "production");
-      vi.stubEnv("VITEST", "");
-    });
+  it("returns fallback hostname when hostname is only whitespace", async () => {
+    const mockDeps = {
+      platform: () => "linux",
+      hostname: () => "   ",
+      execFile: vi.fn(),
+      env: {},
+    };
+    setMachineNameDeps(mockDeps);
 
-    it("tries scutil on macOS platform", async () => {
-      // Mock platform to be darwin
-      const os = await import("node:os");
-      vi.spyOn(os, "platform").mockReturnValue("darwin");
-      vi.spyOn(os, "hostname").mockReturnValue("fallback-host");
+    const result = await getMachineDisplayName();
+    expect(result).toBe("openclaw");
+  });
 
-      // Mock execFile to simulate scutil success
-      const { promisify } = await import("node:util");
-      const execFileMock = vi.fn().mockResolvedValue({
-        stdout: "MacBook Pro",
+  it("trims .local suffix from hostname", async () => {
+    const mockDeps = {
+      platform: () => "linux",
+      hostname: () => "my-computer.local",
+      execFile: vi.fn(),
+      env: {},
+    };
+    setMachineNameDeps(mockDeps);
+
+    const result = await getMachineDisplayName();
+    expect(result).toBe("my-computer");
+  });
+
+  it("trims .LOCAL suffix from hostname case-insensitively", async () => {
+    const mockDeps = {
+      platform: () => "linux",
+      hostname: () => "MY-COMputer.LOCAL",
+      execFile: vi.fn(),
+      env: {},
+    };
+    setMachineNameDeps(mockDeps);
+
+    const result = await getMachineDisplayName();
+    expect(result).toBe("MY-COMputer");
+  });
+
+  it("caches the result", async () => {
+    const mockDeps = {
+      platform: () => "linux",
+      hostname: () => "test-hostname",
+      execFile: vi.fn(),
+      env: {},
+    };
+    setMachineNameDeps(mockDeps);
+
+    const result1 = await getMachineDisplayName();
+    const result2 = await getMachineDisplayName();
+
+    expect(result1).toBe("test-hostname");
+    expect(result2).toBe("test-hostname");
+    expect(mockDeps.hostname).toHaveBeenCalledTimes(1);
+  });
+
+  it("resets cache when dependencies change", async () => {
+    const mockDeps1 = {
+      platform: () => "linux",
+      hostname: () => "host1",
+      execFile: vi.fn(),
+      env: {},
+    };
+    const mockDeps2 = {
+      platform: () => "linux",
+      hostname: () => "host2",
+      execFile: vi.fn(),
+      env: {},
+    };
+
+    setMachineNameDeps(mockDeps1);
+    const result1 = await getMachineDisplayName();
+    expect(result1).toBe("host1");
+
+    setMachineNameDeps(mockDeps2);
+    const result2 = await getMachineDisplayName();
+    expect(result2).toBe("host2");
+  });
+
+  describe("macOS platform", () => {
+    it("uses scutil ComputerName when available", async () => {
+      const mockExecFile = vi.fn().mockResolvedValueOnce({
+        stdout: "My MacBook Pro",
       });
-      vi.spyOn(promisify, vi.fn() as any).mockReturnValue(execFileMock);
+      const mockDeps = {
+        platform: () => "darwin",
+        hostname: () => "hostname.local",
+        execFile: mockExecFile,
+        env: {},
+      };
+      setMachineNameDeps(mockDeps);
 
-      // Re-import to get fresh module
-      const { getMachineDisplayName: freshGetMachineDisplayName } =
-        await import("./machine-name.js");
-
-      const result = await freshGetMachineDisplayName();
-      expect(result).toBe("MacBook Pro");
+      const result = await getMachineDisplayName();
+      expect(result).toBe("My MacBook Pro");
+      expect(mockExecFile).toHaveBeenCalledWith("/usr/sbin/scutil", ["--get", "ComputerName"], {
+        timeout: 1000,
+        windowsHide: true,
+      });
     });
 
-    it("tries LocalHostName if ComputerName fails", async () => {
-      // Mock platform to be darwin
-      const os = await import("node:os");
-      vi.spyOn(os, "platform").mockReturnValue("darwin");
-      vi.spyOn(os, "hostname").mockReturnValue("fallback-host");
-
-      // Mock execFile to simulate ComputerName failure but LocalHostName success
-      const { promisify } = await import("node:util");
-      const execFileMock = vi
+    it("falls back to LocalHostName when ComputerName fails", async () => {
+      const mockExecFile = vi
         .fn()
-        .mockResolvedValueOnce({ stdout: "" }) // ComputerName fails (empty)
-        .mockResolvedValueOnce({ stdout: "Mac-mini" }); // LocalHostName succeeds
-      vi.spyOn(promisify, vi.fn() as any).mockReturnValue(execFileMock);
+        .mockRejectedValueOnce(new Error("Command failed"))
+        .mockResolvedValueOnce({ stdout: "My-MacBook-Pro" });
+      const mockDeps = {
+        platform: () => "darwin",
+        hostname: () => "hostname.local",
+        execFile: mockExecFile,
+        env: {},
+      };
+      setMachineNameDeps(mockDeps);
 
-      // Re-import to get fresh module
-      const { getMachineDisplayName: freshGetMachineDisplayName } =
-        await import("./machine-name.js");
-
-      const result = await freshGetMachineDisplayName();
-      expect(result).toBe("Mac-mini");
+      const result = await getMachineDisplayName();
+      expect(result).toBe("My-MacBook-Pro");
+      expect(mockExecFile).toHaveBeenNthCalledWith(
+        1,
+        "/usr/sbin/scutil",
+        ["--get", "ComputerName"],
+        {
+          timeout: 1000,
+          windowsHide: true,
+        },
+      );
+      expect(mockExecFile).toHaveBeenNthCalledWith(
+        2,
+        "/usr/sbin/scutil",
+        ["--get", "LocalHostName"],
+        {
+          timeout: 1000,
+          windowsHide: true,
+        },
+      );
     });
 
-    it("falls back to hostname on macOS when scutil fails", async () => {
-      // Mock platform to be darwin
-      const os = await import("node:os");
-      vi.spyOn(os, "platform").mockReturnValue("darwin");
-      vi.spyOn(os, "hostname").mockReturnValue("mac-hostname");
+    it("falls back to hostname when both scutil commands fail", async () => {
+      const mockExecFile = vi
+        .fn()
+        .mockRejectedValueOnce(new Error("Command failed"))
+        .mockRejectedValueOnce(new Error("Command failed"));
+      const mockDeps = {
+        platform: () => "darwin",
+        hostname: () => "my-mac.local",
+        execFile: mockExecFile,
+        env: {},
+      };
+      setMachineNameDeps(mockDeps);
 
-      // Mock execFile to simulate scutil failure
-      const { promisify } = await import("node:util");
-      const execFileMock = vi.fn().mockRejectedValue(new Error("Command failed"));
-      vi.spyOn(promisify, vi.fn() as any).mockReturnValue(execFileMock);
-
-      // Re-import to get fresh module
-      const { getMachineDisplayName: freshGetMachineDisplayName } =
-        await import("./machine-name.js");
-
-      const result = await freshGetMachineDisplayName();
-      expect(result).toBe("mac-hostname");
+      const result = await getMachineDisplayName();
+      expect(result).toBe("my-mac");
     });
 
-    it("handles scutil timeout gracefully", async () => {
-      // Mock platform to be darwin
-      const os = await import("node:os");
-      vi.spyOn(os, "platform").mockReturnValue("darwin");
-      vi.spyOn(os, "hostname").mockReturnValue("timeout-host");
+    it("falls back to hostname when ComputerName returns empty", async () => {
+      const mockExecFile = vi
+        .fn()
+        .mockResolvedValueOnce({ stdout: "   " }) // Empty after trim
+        .mockResolvedValueOnce({ stdout: "My-Mac" });
+      const mockDeps = {
+        platform: () => "darwin",
+        hostname: () => "hostname.local",
+        execFile: mockExecFile,
+        env: {},
+      };
+      setMachineNameDeps(mockDeps);
 
-      // Mock execFile to simulate timeout
-      const { promisify } = await import("node:util");
-      const execFileMock = vi.fn().mockRejectedValue(new Error("Command timed out"));
-      vi.spyOn(promisify, vi.fn() as any).mockReturnValue(execFileMock);
+      const result = await getMachineDisplayName();
+      expect(result).toBe("My-Mac");
+    });
 
-      // Re-import to get fresh module
-      const { getMachineDisplayName: freshGetMachineDisplayName } =
-        await import("./machine-name.js");
+    it("handles scutil timeout", async () => {
+      const mockExecFile = vi.fn().mockRejectedValueOnce(new Error("Command timed out"));
+      const mockDeps = {
+        platform: () => "darwin",
+        hostname: () => "my-mac.local",
+        execFile: mockExecFile,
+        env: {},
+      };
+      setMachineNameDeps(mockDeps);
 
-      const result = await freshGetMachineDisplayName();
-      expect(result).toBe("timeout-host");
+      const result = await getMachineDisplayName();
+      expect(result).toBe("my-mac");
     });
   });
 
-  describe("non-macOS behavior", () => {
-    beforeEach(() => {
-      vi.stubEnv("NODE_ENV", "production");
-      vi.stubEnv("VITEST", "");
+  describe("non-macOS platforms", () => {
+    it("uses hostname fallback on Linux", async () => {
+      const mockDeps = {
+        platform: () => "linux",
+        hostname: () => "linux-box.local",
+        execFile: vi.fn(),
+        env: {},
+      };
+      setMachineNameDeps(mockDeps);
+
+      const result = await getMachineDisplayName();
+      expect(result).toBe("linux-box");
+      expect(mockDeps.execFile).not.toHaveBeenCalled();
     });
 
-    it("uses hostname on non-macOS platforms", async () => {
-      // Mock platform to be linux
-      const os = await import("node:os");
-      vi.spyOn(os, "platform").mockReturnValue("linux");
-      vi.spyOn(os, "hostname").mockReturnValue("linux-hostname");
+    it("uses hostname fallback on Windows", async () => {
+      const mockDeps = {
+        platform: () => "win32",
+        hostname: () => "windows-pc",
+        execFile: vi.fn(),
+        env: {},
+      };
+      setMachineNameDeps(mockDeps);
 
-      // Re-import to get fresh module
-      const { getMachineDisplayName: freshGetMachineDisplayName } =
-        await import("./machine-name.js");
-
-      const result = await freshGetMachineDisplayName();
-      expect(result).toBe("linux-hostname");
-    });
-
-    it("uses hostname on Windows", async () => {
-      // Mock platform to be win32
-      const os = await import("node:os");
-      vi.spyOn(os, "platform").mockReturnValue("win32");
-      vi.spyOn(os, "hostname").mockReturnValue("windows-pc");
-
-      // Re-import to get fresh module
-      const { getMachineDisplayName: freshGetMachineDisplayName } =
-        await import("./machine-name.js");
-
-      const result = await freshGetMachineDisplayName();
+      const result = await getMachineDisplayName();
       expect(result).toBe("windows-pc");
+      expect(mockDeps.execFile).not.toHaveBeenCalled();
+    });
+
+    it("uses hostname fallback on other platforms", async () => {
+      const mockDeps = {
+        platform: () => "freebsd",
+        hostname: () => "freebsd-server",
+        execFile: vi.fn(),
+        env: {},
+      };
+      setMachineNameDeps(mockDeps);
+
+      const result = await getMachineDisplayName();
+      expect(result).toBe("freebsd-server");
+      expect(mockDeps.execFile).not.toHaveBeenCalled();
     });
   });
 });

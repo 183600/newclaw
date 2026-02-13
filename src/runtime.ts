@@ -7,18 +7,25 @@ export type RuntimeEnv = {
   exit: (code: number) => never;
 };
 
-export const defaultRuntime: RuntimeEnv = {
-  log: (...args: Parameters<typeof console.log>) => {
-    clearActiveProgressLine();
-    console.log(...args);
-  },
-  error: (...args: Parameters<typeof console.error>) => {
-    clearActiveProgressLine();
-    console.error(...args);
-  },
-  exit: (code) => {
-    restoreTerminalState("runtime exit");
+export const createRuntime = (
+  clearProgressFn: () => void = clearActiveProgressLine,
+  restoreStateFn: (reason?: string) => void = restoreTerminalState,
+  processExitFn: (code: number) => never = (code) => {
+    restoreStateFn("runtime exit");
     process.exit(code);
     throw new Error("unreachable"); // satisfies tests when mocked
   },
-};
+): RuntimeEnv =>
+  ({
+    log: (...args: Parameters<typeof console.log>) => {
+      clearProgressFn();
+      console.log(...args);
+    },
+    error: (...args: Parameters<typeof console.error>) => {
+      clearProgressFn();
+      console.error(...args);
+    },
+    exit: processExitFn,
+  });
+
+export const defaultRuntime: RuntimeEnv = createRuntime();

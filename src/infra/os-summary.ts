@@ -20,7 +20,7 @@ function macosVersion(): string {
 
 export function resolveOsSummary(): OsSummary {
   const platform = os.platform();
-  const release = os.release();
+  const release = safeTrim(os.release());
   const arch = os.arch();
   const label = (() => {
     if (platform === "darwin") {

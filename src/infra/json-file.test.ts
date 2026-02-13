@@ -1,242 +1,247 @@
 import fs from "node:fs";
 import path from "node:path";
-import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it } from "vitest";
+import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 import { loadJsonFile, saveJsonFile } from "./json-file.js";
 
-describe("json-file", () => {
+describe("loadJsonFile", () => {
   let tempDir: string;
   let testFile: string;
-  let nestedFile: string;
 
   beforeAll(async () => {
     tempDir = await fs.promises.mkdtemp(path.join(process.cwd(), "test-json-file-"));
     testFile = path.join(tempDir, "test.json");
-    nestedFile = path.join(tempDir, "nested", "deep", "test.json");
   });
 
   afterAll(async () => {
     await fs.promises.rm(tempDir, { recursive: true, force: true });
   });
 
-  afterEach(async () => {
+  afterEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it("returns undefined for non-existent file", () => {
+    const nonExistentFile = path.join(tempDir, "nonexistent.json");
+    expect(loadJsonFile(nonExistentFile)).toBeUndefined();
+  });
+
+  it("loads and parses valid JSON file", () => {
+    const testData = { name: "test", value: 123, active: true };
+    fs.writeFileSync(testFile, JSON.stringify(testData), "utf8");
+
+    const result = loadJsonFile(testFile);
+    expect(result).toEqual(testData);
+  });
+
+  it("loads JSON with various data types", () => {
+    const testData = {
+      string: "hello",
+      number: 42,
+      boolean: true,
+      null: null,
+      array: [1, 2, 3],
+      object: { nested: "value" },
+    };
+    fs.writeFileSync(testFile, JSON.stringify(testData), "utf8");
+
+    const result = loadJsonFile(testFile);
+    expect(result).toEqual(testData);
+  });
+
+  it("returns undefined for invalid JSON", () => {
+    fs.writeFileSync(testFile, "{ invalid json }", "utf8");
+
+    const result = loadJsonFile(testFile);
+    expect(result).toBeUndefined();
+  });
+
+  it("returns undefined for empty file", () => {
+    fs.writeFileSync(testFile, "", "utf8");
+
+    const result = loadJsonFile(testFile);
+    expect(result).toBeUndefined();
+  });
+
+  it("returns undefined when file read throws error", () => {
+    const mockReadFileSync = vi.spyOn(fs, "readFileSync").mockImplementation(() => {
+      throw new Error("Permission denied");
+    });
+
     try {
-      await fs.promises.rm(testFile, { force: true });
-      await fs.promises.rm(path.join(tempDir, "nested"), { recursive: true, force: true });
-    } catch {
-      // Ignore cleanup errors
+      const result = loadJsonFile(testFile);
+      expect(result).toBeUndefined();
+    } finally {
+      mockReadFileSync.mockRestore();
     }
   });
 
-  describe("loadJsonFile", () => {
-    it("returns undefined for non-existent file", () => {
+  it("returns undefined when existsSync throws error", () => {
+    const mockExistsSync = vi.spyOn(fs, "existsSync").mockImplementation(() => {
+      throw new Error("File system error");
+    });
+
+    try {
       const result = loadJsonFile(testFile);
       expect(result).toBeUndefined();
-    });
-
-    it("loads valid JSON file", async () => {
-      const testData = { name: "test", value: 42 };
-      await fs.promises.writeFile(testFile, JSON.stringify(testData));
-
-      const result = loadJsonFile(testFile);
-      expect(result).toEqual(testData);
-    });
-
-    it("loads JSON array", async () => {
-      const testData = [1, 2, 3, "test"];
-      await fs.promises.writeFile(testFile, JSON.stringify(testData));
-
-      const result = loadJsonFile(testFile);
-      expect(result).toEqual(testData);
-    });
-
-    it("loads JSON primitive values", async () => {
-      await fs.promises.writeFile(testFile, "42");
-      expect(loadJsonFile(testFile)).toBe(42);
-
-      await fs.promises.writeFile(testFile, '"test string"');
-      expect(loadJsonFile(testFile)).toBe("test string");
-
-      await fs.promises.writeFile(testFile, "true");
-      expect(loadJsonFile(testFile)).toBe(true);
-
-      await fs.promises.writeFile(testFile, "null");
-      expect(loadJsonFile(testFile)).toBe(null);
-    });
-
-    it("returns undefined for invalid JSON", async () => {
-      await fs.promises.writeFile(testFile, "invalid json");
-      const result = loadJsonFile(testFile);
-      expect(result).toBeUndefined();
-    });
-
-    it("returns undefined for empty file", async () => {
-      await fs.promises.writeFile(testFile, "");
-      const result = loadJsonFile(testFile);
-      expect(result).toBeUndefined();
-    });
-
-    it("handles JSON with whitespace", async () => {
-      const testData = { test: "value" };
-      await fs.promises.writeFile(testFile, `  \n${JSON.stringify(testData)}\n  `);
-
-      const result = loadJsonFile(testFile);
-      expect(result).toEqual(testData);
-    });
-
-    it("returns undefined on file read errors", () => {
-      // Use a directory path instead of file path to trigger an error
-      const result = loadJsonFile(tempDir);
-      expect(result).toBeUndefined();
-    });
+    } finally {
+      mockExistsSync.mockRestore();
+    }
   });
 
-  describe("saveJsonFile", () => {
-    it("saves object to JSON file", async () => {
-      const testData = { name: "test", value: 42 };
-      saveJsonFile(testFile, testData);
+  it("handles JSON with whitespace", () => {
+    const testData = { test: "value" };
+    fs.writeFileSync(testFile, `  \n\t${JSON.stringify(testData)}\n  `, "utf8");
 
-      const content = await fs.promises.readFile(testFile, "utf8");
-      const parsed = JSON.parse(content);
-      expect(parsed).toEqual(testData);
-    });
+    const result = loadJsonFile(testFile);
+    expect(result).toEqual(testData);
+  });
+});
 
-    it("saves array to JSON file", async () => {
-      const testData = [1, 2, 3, "test"];
-      saveJsonFile(testFile, testData);
+describe("saveJsonFile", () => {
+  let tempDir: string;
+  let testFile: string;
+  let nestedDir: string;
+  let nestedFile: string;
 
-      const content = await fs.promises.readFile(testFile, "utf8");
-      const parsed = JSON.parse(content);
-      expect(parsed).toEqual(testData);
-    });
-
-    it("saves primitive values to JSON file", async () => {
-      saveJsonFile(testFile, 42);
-      let content = await fs.promises.readFile(testFile, "utf8");
-      expect(JSON.parse(content)).toBe(42);
-
-      saveJsonFile(testFile, "test string");
-      content = await fs.promises.readFile(testFile, "utf8");
-      expect(JSON.parse(content)).toBe("test string");
-
-      saveJsonFile(testFile, true);
-      content = await fs.promises.readFile(testFile, "utf8");
-      expect(JSON.parse(content)).toBe(true);
-
-      saveJsonFile(testFile, null);
-      content = await fs.promises.readFile(testFile, "utf8");
-      expect(JSON.parse(content)).toBe(null);
-    });
-
-    it("creates nested directories if they don't exist", async () => {
-      const testData = { nested: "file" };
-      saveJsonFile(nestedFile, testData);
-
-      expect(fs.existsSync(nestedFile)).toBe(true);
-
-      const content = await fs.promises.readFile(nestedFile, "utf8");
-      const parsed = JSON.parse(content);
-      expect(parsed).toEqual(testData);
-    });
-
-    it("formats JSON with proper indentation", async () => {
-      const testData = { level1: { level2: "value" } };
-      saveJsonFile(testFile, testData);
-
-      const content = await fs.promises.readFile(testFile, "utf8");
-      expect(content).toContain('  "level2": "value"');
-      expect(content).toContain("\n");
-    });
-
-    it("adds newline at end of file", async () => {
-      const testData = { test: "value" };
-      saveJsonFile(testFile, testData);
-
-      const content = await fs.promises.readFile(testFile, "utf8");
-      expect(content).toEndWith("\n");
-    });
-
-    it("sets secure file permissions", async () => {
-      const testData = { sensitive: "data" };
-      saveJsonFile(testFile, testData);
-
-      const stats = await fs.promises.stat(testFile);
-      const mode = stats.mode;
-
-      // Check that file permissions are 0o600 (owner read/write only)
-      expect(mode & 0o777).toBe(0o600);
-    });
-
-    it("sets secure directory permissions for nested paths", async () => {
-      const testData = { nested: "secure" };
-      saveJsonFile(nestedFile, testData);
-
-      const nestedDir = path.dirname(nestedFile);
-      const stats = await fs.promises.stat(nestedDir);
-      const mode = stats.mode;
-
-      // Check that directory permissions are 0o700 ( owner read/write/execute only)
-      expect(mode & 0o777).toBe(0o700);
-    });
-
-    it("overwrites existing file", async () => {
-      // Create initial file
-      await fs.promises.writeFile(testFile, "old content");
-
-      const newData = { new: "data" };
-      saveJsonFile(testFile, newData);
-
-      const content = await fs.promises.readFile(testFile, "utf8");
-      const parsed = JSON.parse(content);
-      expect(parsed).toEqual(newData);
-    });
-
-    it("handles circular references by throwing", () => {
-      const circular: any = { name: "test" };
-      circular.self = circular;
-
-      expect(() => saveJsonFile(testFile, circular)).toThrow();
-    });
+  beforeAll(async () => {
+    tempDir = await fs.promises.mkdtemp(path.join(process.cwd(), "test-json-file-save-"));
+    testFile = path.join(tempDir, "test.json");
+    nestedDir = path.join(tempDir, "nested", "dir");
+    nestedFile = path.join(nestedDir, "nested.json");
   });
 
-  describe("round-trip tests", () => {
-    it("can save and load complex objects", () => {
-      const testData = {
-        string: "test",
-        number: 42,
-        boolean: true,
-        null: null,
-        array: [1, "two", { three: 3 }],
-        nested: {
-          deep: {
-            value: "nested",
-          },
-        },
-      };
+  afterAll(async () => {
+    await fs.promises.rm(tempDir, { recursive: true, force: true });
+  });
 
-      saveJsonFile(testFile, testData);
-      const loaded = loadJsonFile(testFile);
-      expect(loaded).toEqual(testData);
-    });
+  afterEach(() => {
+    vi.clearAllMocks();
+  });
 
-    it("preserves data types through save/load cycle", () => {
-      const testData = {
-        int: 42,
-        float: 3.14,
-        string: "test",
-        boolean: true,
-        null: null,
-        array: [1, "two", true],
-      };
+  it("saves object to JSON file", () => {
+    const testData = { name: "test", value: 123 };
+    saveJsonFile(testFile, testData);
 
-      saveJsonFile(testFile, testData);
-      const loaded = loadJsonFile(testFile) as any;
+    expect(fs.existsSync(testFile)).toBe(true);
+    const content = fs.readFileSync(testFile, "utf8");
+    expect(JSON.parse(content)).toEqual(testData);
+  });
 
-      expect(typeof loaded.int).toBe("number");
-      expect(typeof loaded.float).toBe("number");
-      expect(typeof loaded.string).toBe("string");
-      expect(typeof loaded.boolean).toBe("boolean");
-      expect(loaded.null).toBe(null);
-      expect(Array.isArray(loaded.array)).toBe(true);
-    });
+  it("saves array to JSON file", () => {
+    const testData = [1, 2, 3, { nested: "value" }];
+    saveJsonFile(testFile, testData);
+
+    expect(fs.existsSync(testFile)).toBe(true);
+    const content = fs.readFileSync(testFile, "utf8");
+    expect(JSON.parse(content)).toEqual(testData);
+  });
+
+  it("saves primitive values to JSON file", () => {
+    saveJsonFile(testFile, "string value");
+    let content = fs.readFileSync(testFile, "utf8");
+    expect(JSON.parse(content)).toBe("string value");
+
+    saveJsonFile(testFile, 42);
+    content = fs.readFileSync(testFile, "utf8");
+    expect(JSON.parse(content)).toBe(42);
+
+    saveJsonFile(testFile, true);
+    content = fs.readFileSync(testFile, "utf8");
+    expect(JSON.parse(content)).toBe(true);
+
+    saveJsonFile(testFile, null);
+    content = fs.readFileSync(testFile, "utf8");
+    expect(JSON.parse(content)).toBe(null);
+  });
+
+  it("creates nested directories if they don't exist", () => {
+    const testData = { nested: "value" };
+    saveJsonFile(nestedFile, testData);
+
+    expect(fs.existsSync(nestedDir)).toBe(true);
+    expect(fs.existsSync(nestedFile)).toBe(true);
+
+    const content = fs.readFileSync(nestedFile, "utf8");
+    expect(JSON.parse(content)).toEqual(testData);
+  });
+
+  it("formats JSON with 2-space indentation", () => {
+    const testData = { level1: { level2: "value" } };
+    saveJsonFile(testFile, testData);
+
+    const content = fs.readFileSync(testFile, "utf8");
+    expect(content).toContain('  "level1":');
+    expect(content).toContain('    "level2":');
+  });
+
+  it("adds newline at end of file", () => {
+    const testData = { test: "value" };
+    saveJsonFile(testFile, testData);
+
+    const content = fs.readFileSync(testFile, "utf8");
+    expect(content).toEndWith("\n");
+  });
+
+  it("sets file permissions to 0o600 (read/write for owner only)", () => {
+    const testData = { test: "value" };
+    saveJsonFile(testFile, testData);
+
+    const stats = fs.statSync(testFile);
+    // On Windows, mode might be different, so we check on Unix-like systems only
+    if (process.platform !== "win32") {
+      expect(stats.mode & 0o777).toBe(0o600);
+    }
+  });
+
+  it("sets directory permissions to 0o700 (rwx for owner only)", () => {
+    const testData = { nested: "value" };
+    saveJsonFile(nestedFile, testData);
+
+    const stats = fs.statSync(nestedDir);
+    // On Windows, mode might be different, so we check on Unix-like systems only
+    if (process.platform !== "win32") {
+      expect(stats.mode & 0o777).toBe(0o700);
+    }
+  });
+
+  it("overwrites existing file", () => {
+    // Create initial file
+    saveJsonFile(testFile, { initial: "value" });
+
+    // Overwrite with new data
+    const newData = { new: "data" };
+    saveJsonFile(testFile, newData);
+
+    const content = fs.readFileSync(testFile, "utf8");
+    expect(JSON.parse(content)).toEqual(newData);
+  });
+
+  it("handles circular references by throwing error", () => {
+    const circular: any = { name: "test" };
+    circular.self = circular;
+
+    expect(() => saveJsonFile(testFile, circular)).toThrow();
+  });
+
+  it("handles undefined values", () => {
+    const testData = { defined: "value", undefined: undefined };
+    saveJsonFile(testFile, testData);
+
+    const content = fs.readFileSync(testFile, "utf8");
+    const parsed = JSON.parse(content);
+    expect(parsed).toEqual({ defined: "value" }); // undefined is omitted by JSON.stringify
+  });
+
+  it("handles special characters in data", () => {
+    const testData = {
+      unicode: "Hello 世界 🌍",
+      specialChars: "Special: \"quotes\" and 'apostrophes' and \\backslashes\\",
+      newlines: "Line 1\nLine 2\r\nLine 3",
+      tabs: "Column1\tColumn2\tColumn3",
+    };
+    saveJsonFile(testFile, testData);
+
+    const content = fs.readFileSync(testFile, "utf8");
+    expect(JSON.parse(content)).toEqual(testData);
   });
 });

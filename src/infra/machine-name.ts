@@ -6,9 +6,22 @@ const execFileAsync = promisify(execFile);
 
 let cachedPromise: Promise<string> | null = null;
 
+// Dependencies that can be injected for testing
+let deps = {
+  platform: () => process.platform,
+  hostname: () => os.hostname(),
+  execFile: execFileAsync,
+  env: process.env,
+};
+
+export function setMachineNameDeps(newDeps: typeof deps) {
+  deps = newDeps;
+  cachedPromise = null; // Reset cache when dependencies change
+}
+
 async function tryScutil(key: "ComputerName" | "LocalHostName") {
   try {
-    const { stdout } = await execFileAsync("/usr/sbin/scutil", ["--get", key], {
+    const { stdout } = await deps.execFile("/usr/sbin/scutil", ["--get", key], {
       timeout: 1000,
       windowsHide: true,
     });
@@ -21,7 +34,7 @@ async function tryScutil(key: "ComputerName" | "LocalHostName") {
 
 function fallbackHostName() {
   return (
-    os
+    deps
       .hostname()
       .replace(/\.local$/i, "")
       .trim() || "openclaw"
@@ -33,10 +46,10 @@ export async function getMachineDisplayName(): Promise<string> {
     return cachedPromise;
   }
   cachedPromise = (async () => {
-    if (process.env.VITEST || process.env.NODE_ENV === "test") {
+    if (deps.env.VITEST || deps.env.NODE_ENV === "test") {
       return fallbackHostName();
     }
-    if (process.platform === "darwin") {
+    if (deps.platform() === "darwin") {
       const computerName = await tryScutil("ComputerName");
       if (computerName) {
         return computerName;

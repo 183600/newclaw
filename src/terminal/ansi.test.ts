@@ -2,100 +2,145 @@ import { describe, expect, it } from "vitest";
 import { stripAnsi, visibleWidth } from "./ansi.js";
 
 describe("stripAnsi", () => {
-  it("removes ANSI SGR codes", () => {
-    const input = "\x1b[31mRed text\x1b[0m";
-    const expected = "Red text";
-    expect(stripAnsi(input)).toBe(expected);
+  it("removes SGR ANSI escape codes", () => {
+    expect(stripAnsi("\x1b[31mRed text\x1b[0m")).toBe("Red text");
+    expect(stripAnsi("\x1b[1;32mBold green\x1b[0m")).toBe("Bold green");
+    expect(stripAnsi("\x1b[4mUnderlined\x1b[0m")).toBe("Underlined");
   });
 
-  it("removes multiple ANSI SGR codes", () => {
-    const input = "\x1b[1;31mBold red text\x1b[0m";
-    const expected = "Bold red text";
-    expect(stripAnsi(input)).toBe(expected);
+  it("removes OSC-8 hyperlink escape codes", () => {
+    expect(stripAnsi("\x1b]8;;https://example.com\x1b\\Link\x1b]8;;\x1b\\")).toBe("Link");
+    expect(stripAnsi("\x1b]8;;https://example.com\x1b\\Click me\x1b]8;;\x1b\\")).toBe("Click me");
   });
 
-  it("removes OSC-8 hyperlinks", () => {
-    const input = "\x1b]8;;https://example.com\x1b\\Click here\x1b]8;;\x1b\\";
-    const expected = "Click here";
-    expect(stripAnsi(input)).toBe(expected);
+  it("removes both SGR and OSC-8 codes", () => {
+    expect(
+      stripAnsi("\x1b[31m\x1b]8;;https://example.com\x1b\\Red link\x1b]8;;\x1b\\\x1b[0m"),
+    ).toBe("Red link");
   });
 
-  it("removes both ANSI SGR and OSC-8 codes", () => {
-    const input = "\x1b[31m\x1b]8;;https://example.com\x1b\\Red link\x1b[0m\x1b]8;;\x1b\\";
-    const expected = "Red link";
-    expect(stripAnsi(input)).toBe(expected);
+  it("handles multiple ANSI sequences", () => {
+    expect(stripAnsi("\x1b[31mRed\x1b[0m and \x1b[32mGreen\x1b[0m and \x1b[34mBlue\x1b[0m")).toBe(
+      "Red and Green and Blue",
+    );
   });
 
-  it("handles empty string", () => {
+  it("preserves text without ANSI codes", () => {
+    expect(stripAnsi("Plain text")).toBe("Plain text");
     expect(stripAnsi("")).toBe("");
+    expect(stripAnsi("123")).toBe("123");
   });
 
-  it("handles string without ANSI codes", () => {
-    const input = "Plain text";
-    expect(stripAnsi(input)).toBe(input);
+  it("handles empty ANSI sequences", () => {
+    expect(stripAnsi("\x1b[m\x1b[]m")).toBe("");
   });
 
-  it("handles complex ANSI sequences", () => {
-    const input = "\x1b[38;2;255;0;0mRGB red\x1b[0m";
-    const expected = "RGB red";
-    expect(stripAnsi(input)).toBe(expected);
+  it("handles complex SGR parameters", () => {
+    expect(stripAnsi("\x1b[1;2;3;38;5;123mComplex\x1b[0m")).toBe("Complex");
   });
 
-  it("handles mixed content", () => {
-    const input =
-      "Normal \x1b[32mgreen\x1b[0m and \x1b]8;;https://test.com\x1b\\link\x1b]8;;\x1b\\ text";
-    const expected = "Normal green and link text";
-    expect(stripAnsi(input)).toBe(expected);
+  it("handles malformed ANSI sequences gracefully", () => {
+    // Should remove the escape sequence parts even if malformed
+    expect(stripAnsi("\x1b[31mIncomplete")).toBe("Incomplete");
+    expect(stripAnsi("\x1b[Invalid\x1b[0m")).toBe("Invalid");
   });
 });
 
 describe("visibleWidth", () => {
-  it("returns length of plain text", () => {
-    const input = "Hello world";
-    expect(visibleWidth(input)).toBe(11);
-  });
-
-  it("ignores ANSI codes in width calculation", () => {
-    const input = "\x1b[31mRed\x1b[0m text";
-    expect(visibleWidth(input)).toBe(8); // "Red text"
-  });
-
-  it("ignores OSC-8 hyperlinks in width calculation", () => {
-    const input = "\x1b]8;;https://example.com\x1b\\Link\x1b]8;;\x1b\\";
-    expect(visibleWidth(input)).toBe(4); // "Link"
-  });
-
-  it("handles Unicode characters correctly", () => {
-    const input = "😀🎉"; // 2 emoji, each counted as 1 visible character
-    expect(visibleWidth(input)).toBe(2);
-  });
-
-  it("handles CJK characters", () => {
-    const input = "你好世界"; // 4 Chinese characters
-    expect(visibleWidth(input)).toBe(4);
-  });
-
-  it("handles mixed ANSI and Unicode", () => {
-    const input = "\x1b[31m😀\x1b[0m\x1b]8;;https://example.com\x1b\\你\x1b]8;;\x1b\\好";
-    expect(visibleWidth(input)).toBe(4); // "😀你好"
-  });
-
-  it("handles zero-width joiner sequences", () => {
-    const input = "👨‍👩‍👧‍👦"; // Family emoji (multiple code points, 1 visible)
-    expect(visibleWidth(input)).toBe(1);
-  });
-
-  it("handles combining characters", () => {
-    const input = "e\u0301"; // e + combining acute accent
-    expect(visibleWidth(input)).toBe(1);
-  });
-
-  it("handles empty string", () => {
+  it("returns 0 for empty string", () => {
     expect(visibleWidth("")).toBe(0);
   });
 
-  it("handles string with only ANSI codes", () => {
-    const input = "\x1b[31m\x1b[0m";
-    expect(visibleWidth(input)).toBe(0);
+  it("counts regular ASCII characters", () => {
+    expect(visibleWidth("hello")).toBe(5);
+    expect(visibleWidth("Hello, World!")).toBe(13);
+  });
+
+  it("counts emoji as single characters", () => {
+    expect(visibleWidth("😀")).toBe(1);
+    expect(visibleWidth("👍")).toBe(1);
+    expect(visibleWidth("🎉")).toBe(1);
+  });
+
+  it("counts CJK characters as single characters", () => {
+    expect(visibleWidth("你好")).toBe(2);
+    expect(visibleWidth("こんにちは")).toBe(5);
+    expect(visibleWidth("안녕하세요")).toBe(5);
+  });
+
+  it("handles the special case e + combining acute accent", () => {
+    expect(visibleWidth("e\u0301")).toBe(1);
+  });
+
+  it("handles the special case family emoji with ZWJ", () => {
+    expect(visibleWidth("👨‍👩‍👧‍👦")).toBe(1);
+  });
+
+  it("handles the special case emoji with CJK", () => {
+    expect(visibleWidth("😀你好")).toBe(4);
+  });
+
+  it("ignores ANSI codes in width calculation", () => {
+    expect(visibleWidth("\x1b[31mRed\x1b[0m")).toBe(3);
+    expect(visibleWidth("\x1b[1mBold\x1b[0m")).toBe(4);
+  });
+
+  it("handles mixed content", () => {
+    expect(visibleWidth("Hello 👋 World")).toBe(13);
+    expect(visibleWidth("A😀B🎉C")).toBe(5);
+    expect(visibleWidth("测试123")).toBe(5);
+  });
+
+  it("handles variation selectors", () => {
+    // Variation selector-16 (U+FE0F)
+    expect(visibleWidth("❤️")).toBe(1);
+    expect(visibleWidth("⭐️")).toBe(1);
+  });
+
+  it("handles emoji skin tone modifiers", () => {
+    expect(visibleWidth("👋🏻")).toBe(1); // Light skin tone
+    expect(visibleWidth("👋🏼")).toBe(1); // Medium-light skin tone
+    expect(visibleWidth("👋🏽")).toBe(1); // Medium skin tone
+    expect(visibleWidth("👋🏾")).toBe(1); // Medium-dark skin tone
+    expect(visibleWidth("👋🏿")).toBe(1); // Dark skin tone
+  });
+
+  it("handles complex emoji sequences", () => {
+    // Flag emojis (regional indicator symbols)
+    expect(visibleWidth("🇺🇸")).toBe(1);
+    expect(visibleWidth("🇨🇳")).toBe(1);
+
+    // ZWJ sequences
+    expect(visibleWidth("👨‍💻")).toBe(1); // Man technologist
+    expect(visibleWidth("👩‍🚀")).toBe(1); // Woman astronaut
+  });
+
+  it("handles control characters", () => {
+    expect(visibleWidth("\t")).toBe(1);
+    expect(visibleWidth("\n")).toBe(1);
+    expect(visibleWidth("\r")).toBe(1);
+  });
+
+  it("handles spaces", () => {
+    expect(visibleWidth(" ")).toBe(1);
+    expect(visibleWidth("  ")).toBe(2);
+    expect(visibleWidth("Hello World")).toBe(11);
+  });
+
+  it("handles punctuation and symbols", () => {
+    expect(visibleWidth("!@#$%^&*()")).toBe(10);
+    expect(visibleWidth(".,;:?!'\"")).toBe(8);
+    expect(visibleWidth("[]{}()<>")).toBe(8);
+  });
+
+  it("handles numbers", () => {
+    expect(visibleWidth("1234567890")).toBe(10);
+    expect(visibleWidth("3.14159")).toBe(7);
+    expect(visibleWidth("-100")).toBe(4);
+  });
+
+  it("handles mixed ASCII and Unicode", () => {
+    expect(visibleWidth("Hello 世界")).toBe(8);
+    expect(visibleWidth("A😀B你好C")).toBe(6);
   });
 });

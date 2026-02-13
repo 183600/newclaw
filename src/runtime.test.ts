@@ -1,133 +1,239 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { defaultRuntime, type RuntimeEnv } from "./runtime.js";
+import { createRuntime, defaultRuntime, type RuntimeEnv } from "./runtime.js";
 
-describe("defaultRuntime", () => {
-  let mockConsole: {
-    log: ReturnType<typeof vi.spyOn>;
-    error: ReturnType<typeof vi.spyOn>;
-  };
-  let mockProcess: {
-    exit: ReturnType<typeof vi.spyOn>;
-  };
-  let mockClearActiveProgressLine: ReturnType<typeof vi.fn>;
-  let mockRestoreTerminalState: ReturnType<typeof vi.fn>;
+describe("createRuntime", () => {
+  let mockClearProgress: ReturnType<typeof vi.fn>;
+  let mockRestoreState: ReturnType<typeof vi.fn>;
+  let mockProcessExit: ReturnType<typeof vi.fn>;
 
   beforeEach(() => {
-    // Mock console methods
-    mockConsole = {
-      log: vi.spyOn(console, "log").mockImplementation(() => {}),
-      error: vi.spyOn(console, "error").mockImplementation(() => {}),
-    };
-
-    // Mock process.exit
-    mockProcess = {
-      exit: vi.spyOn(process, "exit").mockImplementation(() => {
-        throw new Error("process.exit called");
-      }),
-    };
-
-    // Mock imported functions
-    mockClearActiveProgressLine = vi.fn();
-    mockRestoreTerminalState = vi.fn();
-
-    vi.doMock("./terminal/progress-line.js", () => ({
-      clearActiveProgressLine: mockClearActiveProgressLine,
-    }));
-
-    vi.doMock("./terminal/restore.js", () => ({
-      restoreTerminalState: mockRestoreTerminalState,
-    }));
+    mockClearProgress = vi.fn();
+    mockRestoreState = vi.fn();
+    mockProcessExit = vi.fn();
+    vi.spyOn(console, "log").mockImplementation(() => {});
+    vi.spyOn(console, "error").mockImplementation(() => {});
   });
 
   afterEach(() => {
-    vi.restoreAllMocks();
     vi.clearAllMocks();
+    vi.restoreAllMocks();
+  });
+
+  it("creates a runtime environment with default functions", () => {
+    const runtime = createRuntime();
+
+    expect(typeof runtime.log).toBe("function");
+    expect(typeof runtime.error).toBe("function");
+    expect(typeof runtime.exit).toBe("function");
+  });
+
+  it("creates a runtime environment with custom functions", () => {
+    const runtime = createRuntime(mockClearProgress, mockRestoreState, mockProcessExit);
+
+    expect(runtime.log).toBeDefined();
+    expect(runtime.error).toBeDefined();
+    expect(runtime.exit).toBeDefined();
   });
 
   describe("log method", () => {
-    it("clears active progress line before logging", () => {
-      const testMessage = "Test log message";
-      defaultRuntime.log(testMessage);
+    it("calls clearProgress before logging", () => {
+      const runtime = createRuntime(mockClearProgress);
+      runtime.log("test message");
 
-      expect(mockClearActiveProgressLine).toHaveBeenCalled();
-      expect(mockConsole.log).toHaveBeenCalledWith(testMessage);
+      expect(mockClearProgress).toHaveBeenCalledTimes(1);
+      expect(mockClearProgress).toHaveBeenCalledBefore(console.log as any);
     });
 
-    it("passes multiple arguments to console.log", () => {
-      const arg1 = "First argument";
-      const arg2 = { data: "object" };
-      const arg3 = 42;
+    it("passes all arguments to console.log", () => {
+      const runtime = createRuntime(mockClearProgress);
+      const arg1 = "message";
+      const arg2 = { data: "test" };
+      const arg3 = 123;
 
-      defaultRuntime.log(arg1, arg2, arg3);
+      runtime.log(arg1, arg2, arg3);
 
-      expect(mockClearActiveProgressLine).toHaveBeenCalled();
-      expect(mockConsole.log).toHaveBeenCalledWith(arg1, arg2, arg3);
+      expect(console.log).toHaveBeenCalledWith(arg1, arg2, arg3);
+    });
+
+    it("handles multiple calls", () => {
+      const runtime = createRuntime(mockClearProgress);
+
+      runtime.log("first");
+      runtime.log("second", { data: "test" });
+
+      expect(mockClearProgress).toHaveBeenCalledTimes(2);
+      expect(console.log).toHaveBeenCalledTimes(2);
+      expect(console.log).toHaveBeenNthCalledWith(1, "first");
+      expect(console.log).toHaveBeenNthCalledWith(2, "second", { data: "test" });
+    });
+
+    it("works with default clearProgress function", () => {
+      const runtime = createRuntime();
+
+      expect(() => runtime.log("test")).not.toThrow();
+      expect(console.log).toHaveBeenCalledWith("test");
     });
   });
 
   describe("error method", () => {
-    it("clears active progress line before error logging", () => {
-      const errorMessage = "Test error message";
-      defaultRuntime.error(errorMessage);
+    it("calls clearProgress before error logging", () => {
+      const runtime = createRuntime(mockClearProgress);
+      runtime.error("error message");
 
-      expect(mockClearActiveProgressLine).toHaveBeenCalled();
-      expect(mockConsole.error).toHaveBeenCalledWith(errorMessage);
+      expect(mockClearProgress).toHaveBeenCalledTimes(1);
+      expect(mockClearProgress).toHaveBeenCalledBefore(console.error as any);
     });
 
-    it("passes multiple arguments to console.error", () => {
-      const arg1 = "Error message";
-      const arg2 = new Error("Test error");
-      const arg3 = { context: "additional info" };
+    it("passes all arguments to console.error", () => {
+      const runtime = createRuntime(mockClearProgress);
+      const arg1 = "error message";
+      const arg2 = new Error("test error");
+      const arg3 = { context: "test" };
 
-      defaultRuntime.error(arg1, arg2, arg3);
+      runtime.error(arg1, arg2, arg3);
 
-      expect(mockClearActiveProgressLine).toHaveBeenCalled();
-      expect(mockConsole.error).toHaveBeenCalledWith(arg1, arg2, arg3);
+      expect(console.error).toHaveBeenCalledWith(arg1, arg2, arg3);
+    });
+
+    it("handles multiple error calls", () => {
+      const runtime = createRuntime(mockClearProgress);
+
+      runtime.error("first error");
+      runtime.error("second error", { code: 500 });
+
+      expect(mockClearProgress).toHaveBeenCalledTimes(2);
+      expect(console.error).toHaveBeenCalledTimes(2);
+      expect(console.error).toHaveBeenNthCalledWith(1, "first error");
+      expect(console.error).toHaveBeenNthCalledWith(2, "second error", { code: 500 });
+    });
+
+    it("works with default clearProgress function", () => {
+      const runtime = createRuntime();
+
+      expect(() => runtime.error("test error")).not.toThrow();
+      expect(console.error).toHaveBeenCalledWith("test error");
     });
   });
 
   describe("exit method", () => {
-    it("restores terminal state before exiting", () => {
-      expect(() => defaultRuntime.exit(1)).toThrow("process.exit called");
-      expect(mockRestoreTerminalState).toHaveBeenCalledWith("runtime exit");
-      expect(mockProcess.exit).toHaveBeenCalledWith(1);
+    it("calls restoreState with 'runtime exit' before exiting", () => {
+      const runtime = createRuntime(mockClearProgress, mockRestoreState, mockProcessExit);
+
+      try {
+        runtime.exit(1);
+      } catch {
+        // Expected to throw due to mock implementation
+      }
+
+      expect(mockRestoreState).toHaveBeenCalledWith("runtime exit");
+      expect(mockRestoreState).toHaveBeenCalledBefore(mockProcessExit);
     });
 
-    it("passes exit code to process.exit", () => {
-      expect(() => defaultRuntime.exit(0)).toThrow("process.exit called");
-      expect(mockProcess.exit).toHaveBeenCalledWith(0);
+    it("calls processExit with the provided exit code", () => {
+      const runtime = createRuntime(mockClearProgress, mockRestoreState, mockProcessExit);
+
+      try {
+        runtime.exit(42);
+      } catch {
+        // Expected to throw due to mock implementation
+      }
+
+      expect(mockProcessExit).toHaveBeenCalledWith(42);
     });
 
-    it("throws an error after process.exit for test purposes", () => {
-      expect(() => defaultRuntime.exit(42)).toThrow("unreachable");
+    it("handles different exit codes", () => {
+      const runtime = createRuntime(mockClearProgress, mockRestoreState, mockProcessExit);
+
+      try {
+        runtime.exit(0);
+      } catch {
+        // Expected to throw due to mock implementation
+      }
+      expect(mockProcessExit).toHaveBeenLastCalledWith(0);
+
+      try {
+        runtime.exit(1);
+      } catch {
+        // Expected to throw due to mock implementation
+      }
+      expect(mockProcessExit).toHaveBeenLastCalledWith(1);
+
+      try {
+        runtime.exit(255);
+      } catch {
+        // Expected to throw due to mock implementation
+      }
+      expect(mockProcessExit).toHaveBeenLastCalledWith(255);
+    });
+
+    it("works with default functions", () => {
+      const mockProcessExit = vi.fn();
+      const runtime = createRuntime(undefined, undefined, mockProcessExit);
+
+      try {
+        runtime.exit(1);
+      } catch {
+        // Expected to throw due to mock implementation
+      }
+
+      expect(mockProcessExit).toHaveBeenCalledWith(1);
     });
   });
 
-  describe("RuntimeEnv type", () => {
-    it("has the correct interface structure", () => {
-      const runtime: RuntimeEnv = defaultRuntime;
+  describe("integration tests", () => {
+    it("maintains call order between log and error", () => {
+      const runtime = createRuntime(mockClearProgress);
 
-      expect(typeof runtime.log).toBe("function");
-      expect(typeof runtime.error).toBe("function");
-      expect(typeof runtime.exit).toBe("function");
+      runtime.log("log message");
+      runtime.error("error message");
+
+      expect(mockClearProgress).toHaveBeenCalledTimes(2);
+      expect(console.log).toHaveBeenCalledWith("log message");
+      expect(console.error).toHaveBeenCalledWith("error message");
     });
 
-    it("matches console.log signature", () => {
-      const logFunc: typeof console.log = defaultRuntime.log;
-      expect(typeof logFunc).toBe("function");
-    });
+    it("handles complex arguments", () => {
+      const runtime = createRuntime(mockClearProgress);
 
-    it("matches console.error signature", () => {
-      const errorFunc: typeof console.error = defaultRuntime.error;
-      expect(typeof errorFunc).toBe("function");
-    });
+      const complexObject = {
+        nested: { value: "test" },
+        array: [1, 2, 3],
+        date: new Date("2023-01-01"),
+      };
 
-    it("exit function returns never", () => {
-      // This test verifies the exit function has the correct return type
-      // In practice, it should never return normally
-      expect(() => {
-        defaultRuntime.exit(0);
-      }).toThrow();
+      runtime.log("Complex object:", complexObject);
+
+      expect(console.log).toHaveBeenCalledWith("Complex object:", complexObject);
     });
+  });
+});
+
+describe("defaultRuntime", () => {
+  it("is a valid RuntimeEnv object", () => {
+    expect(defaultRuntime).toBeDefined();
+    expect(typeof defaultRuntime.log).toBe("function");
+    expect(typeof defaultRuntime.error).toBe("function");
+    expect(typeof defaultRuntime.exit).toBe("function");
+  });
+
+  it("uses the actual console methods", () => {
+    const originalLog = console.log;
+    const originalError = console.error;
+    const mockLog = vi.fn();
+    const mockError = vi.fn();
+
+    console.log = mockLog;
+    console.error = mockError;
+
+    try {
+      defaultRuntime.log("test log");
+      defaultRuntime.error("test error");
+
+      expect(mockLog).toHaveBeenCalledWith("test log");
+      expect(mockError).toHaveBeenCalledWith("test error");
+    } finally {
+      console.log = originalLog;
+      console.error = originalError;
+    }
   });
 });
