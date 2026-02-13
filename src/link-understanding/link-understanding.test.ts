@@ -4,13 +4,13 @@ import type { OpenClawConfig } from "../config/config.js";
 import type { LinkToolsConfig, LinkModelConfig } from "../config/types.tools.js";
 import { applyLinkUnderstanding, type ApplyLinkUnderstandingResult } from "./apply.js";
 
-// Mock the runner module at the top level
-const mockRunLinkUnderstanding = vi.fn();
+// Mock the runner module
 vi.mock("./runner.js", () => ({
-  runLinkUnderstanding: mockRunLinkUnderstanding,
+  runLinkUnderstanding: vi.fn(),
 }));
 
-const { runLinkUnderstanding } = await import("./runner.js");
+// Import after mocking
+import { runLinkUnderstanding } from "./runner.js";
 
 describe("Link Understanding", () => {
   beforeEach(() => {
@@ -115,7 +115,9 @@ describe("Link Understanding", () => {
         tools: {
           links: {
             enabled: true,
-            scope: "deny",
+            scope: {
+              default: "deny",
+            },
           },
         },
       } as OpenClawConfig;
