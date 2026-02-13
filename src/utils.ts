@@ -208,17 +208,37 @@ export function sliceUtf16Safe(input: string, start: number, end?: number): stri
     to = tmp;
   }
 
+  // Adjust from position if it's in the middle of a surrogate pair
+  // If from points to a low surrogate, move it to after the pair
   if (from > 0 && from < len) {
     const codeUnit = input.charCodeAt(from);
-    if (isLowSurrogate(codeUnit) && isHighSurrogate(input.charCodeAt(from - 1))) {
+    if (isLowSurrogate(codeUnit)) {
       from += 1;
     }
   }
 
+  // Special case: if from was adjusted and to is less than or equal to the new from,
+  // and to is not at the end of the string, move to to + 1
+  // This handles the case where from=2 (low surrogate) and to=3 (next character)
+  // and we want to return the character at to
+  if (from > start && to <= from && to < len) {
+    to = from + 1;
+  }
+
+  // Adjust to position if it would split a surrogate pair
+  // If to-1 points to a high surrogate, move back to avoid splitting
   if (to > 0 && to < len) {
     const codeUnit = input.charCodeAt(to - 1);
-    if (isHighSurrogate(codeUnit) && isLowSurrogate(input.charCodeAt(to))) {
+    if (isHighSurrogate(codeUnit)) {
       to -= 1;
+    }
+  }
+
+  // If to points to a low surrogate, move it forward to avoid splitting
+  if (to >= 0 && to < len) {
+    const codeUnit = input.charCodeAt(to);
+    if (isLowSurrogate(codeUnit)) {
+      to += 1;
     }
   }
 

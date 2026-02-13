@@ -1,5 +1,12 @@
 import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
-import { logAcceptedEnvOption, normalizeZaiEnv, isTruthyEnvValue, normalizeEnv } from "./env.js";
+import {
+  logAcceptedEnvOption,
+  _logAcceptedEnvOptionInternal,
+  normalizeZaiEnv,
+  isTruthyEnvValue,
+  normalizeEnv,
+  _resetLoggedEnvForTesting,
+} from "./env.js";
 
 // Mock the logger
 vi.mock("../logging/subsystem.js", () => ({
@@ -14,6 +21,8 @@ describe("env", () => {
     // Reset process.env modifications
     const originalEnv = process.env;
     process.env = { ...originalEnv };
+    // Reset loggedEnv for testing
+    _resetLoggedEnvForTesting();
   });
 
   afterEach(() => {
@@ -35,10 +44,13 @@ describe("env", () => {
       }));
     });
 
-    it("logs environment option with value from process.env", () => {
+    it("logs environment option with value from process.env", async () => {
       process.env.TEST_OPTION = "test-value";
 
-      logAcceptedEnvOption({
+      // Re-import the function to get the mocked logger
+      const { _logAcceptedEnvOptionInternal } = await import("./env.js");
+
+      _logAcceptedEnvOptionInternal({
         key: "TEST_OPTION",
         description: "Test option",
       });
@@ -46,10 +58,13 @@ describe("env", () => {
       expect(mockLog.info).toHaveBeenCalledWith("env: TEST_OPTION=test-value (Test option)");
     });
 
-    it("uses provided value instead of process.env", () => {
+    it("uses provided value instead of process.env", async () => {
       process.env.TEST_OPTION = "env-value";
 
-      logAcceptedEnvOption({
+      // Re-import the function to get the mocked logger
+      const { _logAcceptedEnvOptionInternal } = await import("./env.js");
+
+      _logAcceptedEnvOptionInternal({
         key: "TEST_OPTION",
         description: "Test option",
         value: "provided-value",
@@ -58,10 +73,13 @@ describe("env", () => {
       expect(mockLog.info).toHaveBeenCalledWith("env: TEST_OPTION=provided-value (Test option)");
     });
 
-    it("redacts sensitive values", () => {
+    it("redacts sensitive values", async () => {
       process.env.SECRET_KEY = "super-secret-key";
 
-      logAcceptedEnvOption({
+      // Re-import the function to get the mocked logger
+      const { _logAcceptedEnvOptionInternal } = await import("./env.js");
+
+      _logAcceptedEnvOptionInternal({
         key: "SECRET_KEY",
         description: "Secret key",
         redact: true,
@@ -70,10 +88,13 @@ describe("env", () => {
       expect(mockLog.info).toHaveBeenCalledWith("env: SECRET_KEY=<redacted> (Secret key)");
     });
 
-    it("trims whitespace and normalizes line breaks", () => {
+    it("trims whitespace and normalizes line breaks", async () => {
       process.env.MULTILINE_VALUE = "  line1\n  line2  \n  line3  ";
 
-      logAcceptedEnvOption({
+      // Re-import the function to get the mocked logger
+      const { _logAcceptedEnvOptionInternal } = await import("./env.js");
+
+      _logAcceptedEnvOptionInternal({
         key: "MULTILINE_VALUE",
         description: "Multiline value",
       });
@@ -83,11 +104,14 @@ describe("env", () => {
       );
     });
 
-    it("truncates long values", () => {
+    it("truncates long values", async () => {
       const longValue = "a".repeat(200);
       process.env.LONG_VALUE = longValue;
 
-      logAcceptedEnvOption({
+      // Re-import the function to get the mocked logger
+      const { _logAcceptedEnvOptionInternal } = await import("./env.js");
+
+      _logAcceptedEnvOptionInternal({
         key: "LONG_VALUE",
         description: "Long value",
       });
@@ -95,16 +119,19 @@ describe("env", () => {
       expect(mockLog.info).toHaveBeenCalledWith(`env: LONG_VALUE=${"a".repeat(160)}… (Long value)`);
     });
 
-    it("does not log empty or whitespace-only values", () => {
+    it("does not log empty or whitespace-only values", async () => {
       process.env.EMPTY_VALUE = "";
       process.env.WHITESPACE_VALUE = "   \n  ";
 
-      logAcceptedEnvOption({
+      // Re-import the function to get the mocked logger
+      const { _logAcceptedEnvOptionInternal } = await import("./env.js");
+
+      _logAcceptedEnvOptionInternal({
         key: "EMPTY_VALUE",
         description: "Empty value",
       });
 
-      logAcceptedEnvOption({
+      _logAcceptedEnvOptionInternal({
         key: "WHITESPACE_VALUE",
         description: "Whitespace value",
       });
@@ -112,15 +139,18 @@ describe("env", () => {
       expect(mockLog.info).not.toHaveBeenCalled();
     });
 
-    it("does not log the same key twice", () => {
+    it("does not log the same key twice", async () => {
       process.env.TEST_OPTION = "test-value";
 
-      logAcceptedEnvOption({
+      // Re-import the function to get the mocked logger
+      const { _logAcceptedEnvOptionInternal } = await import("./env.js");
+
+      _logAcceptedEnvOptionInternal({
         key: "TEST_OPTION",
         description: "Test option",
       });
 
-      logAcceptedEnvOption({
+      _logAcceptedEnvOptionInternal({
         key: "TEST_OPTION",
         description: "Test option",
       });
@@ -128,9 +158,12 @@ describe("env", () => {
       expect(mockLog.info).toHaveBeenCalledTimes(1);
     });
 
-    it("does not log in test environment", () => {
+    it("does not log in test environment", async () => {
       process.env.NODE_ENV = "test";
       process.env.TEST_OPTION = "test-value";
+
+      // Re-import the function to get the mocked logger
+      const { logAcceptedEnvOption } = await import("./env.js");
 
       logAcceptedEnvOption({
         key: "TEST_OPTION",
@@ -140,9 +173,12 @@ describe("env", () => {
       expect(mockLog.info).not.toHaveBeenCalled();
     });
 
-    it("does not log in VITEST environment", () => {
+    it("does not log in VITEST environment", async () => {
       process.env.VITEST = "1";
       process.env.TEST_OPTION = "test-value";
+
+      // Re-import the function to get the mocked logger
+      const { logAcceptedEnvOption } = await import("./env.js");
 
       logAcceptedEnvOption({
         key: "TEST_OPTION",
@@ -239,14 +275,17 @@ describe("env", () => {
   });
 
   describe("normalizeEnv", () => {
-    it("calls normalizeZaiEnv", () => {
-      const spy = vi.spyOn({ normalizeZaiEnv }, "normalizeZaiEnv").mockImplementation(() => {});
+    it("calls normalizeZaiEnv", async () => {
+      // Set up test data
+      process.env.Z_AI_API_KEY = "test-key";
+      process.env.ZAI_API_KEY = "";
 
+      // Import and call normalizeEnv
+      const { normalizeEnv } = await import("./env.js");
       normalizeEnv();
 
-      expect(spy).toHaveBeenCalled();
-
-      spy.mockRestore();
+      // Check if normalizeZaiEnv was called by checking its effect
+      expect(process.env.ZAI_API_KEY).toBe("test-key");
     });
   });
 });
