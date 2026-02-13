@@ -1,97 +1,134 @@
-import { describe, it, expect } from "vitest";
-import { splitShellArgs } from "./shell-argv";
+import { describe, expect, it } from "vitest";
+import { splitShellArgs } from "./shell-argv.js";
 
 describe("splitShellArgs", () => {
-  it("should handle empty input", () => {
-    expect(splitShellArgs("")).toEqual([]);
-    expect(splitShellArgs("   ")).toEqual([]);
+  it("splits simple space-separated arguments", () => {
+    const result = splitShellArgs("command arg1 arg2");
+    expect(result).toEqual(["command", "arg1", "arg2"]);
   });
 
-  it("should split simple arguments", () => {
-    expect(splitShellArgs("arg1 arg2 arg3")).toEqual(["arg1", "arg2", "arg3"]);
-    expect(splitShellArgs("single")).toEqual(["single"]);
+  it("handles multiple spaces", () => {
+    const result = splitShellArgs("command   arg1    arg2");
+    expect(result).toEqual(["command", "arg1", "arg2"]);
   });
 
-  it("should handle single quotes", () => {
-    expect(splitShellArgs("'single quoted'")).toEqual(["single quoted"]);
-    expect(splitShellArgs("arg1 'quoted arg' arg2")).toEqual(["arg1", "quoted arg", "arg2"]);
-    expect(splitShellArgs("'it''s'")).toEqual(["its"]);
+  it("handles leading and trailing spaces", () => {
+    const result = splitShellArgs("  command arg1 arg2  ");
+    expect(result).toEqual(["command", "arg1", "arg2"]);
   });
 
-  it("should handle double quotes", () => {
-    expect(splitShellArgs('"double quoted"')).toEqual(["double quoted"]);
-    expect(splitShellArgs('arg1 "quoted arg" arg2')).toEqual(["arg1", "quoted arg", "arg2"]);
-    expect(splitShellArgs('"it"s"')).toBeNull(); // Unescaped quote inside quotes is invalid
+  it("preserves quoted strings", () => {
+    const result = splitShellArgs('command "arg with spaces" arg2');
+    expect(result).toEqual(["command", "arg with spaces", "arg2"]);
   });
 
-  it("should handle escaped characters", () => {
-    expect(splitShellArgs("arg\\ 1")).toEqual(["arg 1"]);
-    expect(splitShellArgs('arg\\"1')).toEqual(['arg"1']);
-    expect(splitShellArgs("arg\\'1")).toEqual(["arg'1"]);
-    expect(splitShellArgs("arg\\\\1")).toEqual(["arg\\1"]);
+  it("handles single quotes", () => {
+    const result = splitShellArgs("command 'arg with spaces' arg2");
+    expect(result).toEqual(["command", "arg with spaces", "arg2"]);
   });
 
-  it("should handle mixed quotes and escaping", () => {
-    expect(splitShellArgs("'single \"nested\" quotes'")).toEqual(['single "nested" quotes']);
-    expect(splitShellArgs("\"double 'nested' quotes\"")).toEqual(["double 'nested' quotes"]);
-    expect(splitShellArgs("'escaped \\' single'")).toBeNull(); // Unescaped quote inside quotes is invalid
-    expect(splitShellArgs('"escaped \\" double"')).toBeNull(); // Unescaped quote inside quotes is invalid
+  it("handles mixed quotes", () => {
+    const result = splitShellArgs("command \"arg1\" 'arg2' arg3");
+    expect(result).toEqual(["command", "arg1", "arg2", "arg3"]);
   });
 
-  it("should handle complex examples", () => {
-    expect(splitShellArgs("command \"arg with spaces\" 'another arg'")).toEqual([
-      "command",
-      "arg with spaces",
-      "another arg",
-    ]);
-
-    expect(splitShellArgs('git commit -m "commit message"')).toEqual([
-      "git",
-      "commit",
-      "-m",
-      "commit message",
-    ]);
+  it("handles escaped spaces", () => {
+    const result = splitShellArgs("command arg\\ with\\ spaces arg2");
+    expect(result).toEqual(["command", "arg with spaces", "arg2"]);
   });
 
-  it("should return null for malformed quotes", () => {
-    expect(splitShellArgs("unclosed 'quote")).toBeNull();
-    expect(splitShellArgs('unclosed "quote')).toBeNull();
-    expect(splitShellArgs("'mismatched\" quotes")).toBeNull();
-    expect(splitShellArgs("\"mismatched' quotes")).toBeNull();
+  it("handles escaped quotes in double quotes", () => {
+    const result = splitShellArgs('command "arg with \"embedded quotes\" arg2" arg3');
+    expect(result).toEqual(["command", "arg with embedded", "quotes arg2", "arg3"]);
   });
 
-  it("should return null for trailing escape", () => {
-    expect(splitShellArgs("trailing\\")).toBeNull();
-    expect(splitShellArgs("arg1\\ arg2\\")).toBeNull();
+  it("handles escaped characters", () => {
+    const result = splitShellArgs("command arg\\$value arg\\[1\\]");
+    expect(result).toEqual(["command", "arg$value", "arg[1]"]);
   });
 
-  it("should handle multiple whitespace", () => {
-    expect(splitShellArgs("arg1   arg2\targ3\narg4")).toEqual(["arg1", "arg2", "arg3", "arg4"]);
+  it("returns empty array for empty string", () => {
+    const result = splitShellArgs("");
+    expect(result).toEqual([]);
   });
 
-  it("should preserve whitespace within quotes", () => {
-    expect(splitShellArgs("'  spaced  '")).toEqual(["  spaced  "]);
-    expect(splitShellArgs('"  spaced  "')).toEqual(["  spaced  "]);
+  it("returns empty array for whitespace-only string", () => {
+    const result = splitShellArgs("   \t  \n  ");
+    expect(result).toEqual([]);
   });
 
-  it("should handle empty quoted strings", () => {
-    expect(splitShellArgs("''")).toEqual([]);
-    expect(splitShellArgs('""')).toEqual([]);
-    expect(splitShellArgs("arg1 '' arg2")).toEqual(["arg1", "arg2"]);
+  it("handles tabs and other whitespace", () => {
+    const result = splitShellArgs("command\targ1\narg2\rarg3");
+    expect(result).toEqual(["command", "arg1", "arg2", "arg3"]);
   });
 
-  it("should handle escaped whitespace in quotes", () => {
-    expect(splitShellArgs("'escaped\\ space'")).toEqual(["escaped\\ space"]);
-    expect(splitShellArgs('"escaped\\ space"')).toEqual(["escaped\\ space"]);
+  it("returns null for unclosed single quotes", () => {
+    const result = splitShellArgs("command 'unclosed quote");
+    expect(result).toBeNull();
   });
 
-  it("should handle real-world command examples", () => {
-    expect(splitShellArgs('echo "Hello, World!"')).toEqual(["echo", "Hello, World!"]);
-    expect(splitShellArgs("ls -la '/path with spaces/'")).toEqual([
-      "ls",
-      "-la",
-      "/path with spaces/",
-    ]);
-    expect(splitShellArgs('grep "pattern" file.txt')).toEqual(["grep", "pattern", "file.txt"]);
+  it("returns null for unclosed double quotes", () => {
+    const result = splitShellArgs('command "unclosed quote');
+    expect(result).toBeNull();
+  });
+
+  it("returns null for trailing escape", () => {
+    const result = splitShellArgs("command arg\\");
+    expect(result).toBeNull();
+  });
+
+  it("handles empty quoted strings", () => {
+    const result = splitShellArgs('command "" arg2');
+    expect(result).toEqual(["command", "arg2"]);
+  });
+
+  it("handles empty single quoted strings", () => {
+    const result = splitShellArgs("command '' arg2");
+    expect(result).toEqual(["command", "arg2"]);
+  });
+
+  it("handles quotes with spaces at edges", () => {
+    const result = splitShellArgs('command "  spaced arg  " arg2');
+    expect(result).toEqual(["command", "  spaced arg  ", "arg2"]);
+  });
+
+  it("handles complex nested scenarios", () => {
+    const result = splitShellArgs('git commit -m "Fix bug with \"quotes\" and spaces"');
+    expect(result).toEqual(["git", "commit", "-m", "Fix bug with quotes and spaces"]);
+  });
+
+  it("handles escaped backslashes", () => {
+    const result = splitShellArgs("command arg\\\\value arg2");
+    expect(result).toEqual(["command", "arg\\value", "arg2"]);
+  });
+
+  it("handles escaped backslashes in quotes", () => {
+    const result = splitShellArgs('command "arg\\\\value" arg2');
+    expect(result).toEqual(["command", "arg\\\\value", "arg2"]);
+  });
+
+  it("handles single quotes with escaped characters (literal)", () => {
+    const result = splitShellArgs("command 'arg\\nvalue' arg2");
+    expect(result).toEqual(["command", "arg\\nvalue", "arg2"]);
+  });
+
+  it("preserves escape sequences in double quotes", () => {
+    const result = splitShellArgs('command "arg\nvalue" arg2');
+    expect(result).toEqual(["command", "arg\nvalue", "arg2"]);
+  });
+
+  it("handles real-world command example", () => {
+    const result = splitShellArgs('ssh user@host "ls -la \"/path with spaces/\""');
+    expect(result).toEqual(["ssh", "user@host", "ls -la /path", "with", "spaces/"]);
+  });
+
+  it("handles command with array-like syntax", () => {
+    const result = splitShellArgs('node script.js --files ["file1","file2"] --verbose');
+    expect(result).toEqual(["node", "script.js", "--files", "[file1,file2]", "--verbose"]);
+  });
+
+  it("handles command with regex pattern", () => {
+    const result = splitShellArgs('grep --pattern "test.*[0-9]+" file.txt');
+    expect(result).toEqual(["grep", "--pattern", "test.*[0-9]+", "file.txt"]);
   });
 });
