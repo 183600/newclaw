@@ -6,18 +6,12 @@ const HTML_THINKING_TAG_RE =
   /<\s*(\/?)\s*(?:t|think|thinking|thought|antthinking)(?:\b[^<>]*>|\/?>|>)/gi;
 const FINAL_TAG_RE = /<\s*\/?\s*final\b[^<>]*>/gi;
 const SPECIAL_CLOSE_RE = /(thinking|thought|antthinking)\u0111/gi;
-const SPECIAL_OPEN_RE = /Đ(thinking|thought|antthinking)/gi;
 
 // Patterns for word + tag combinations (e.g., "This is thinkingđ", "First thoughtđ", "This should be removedđ")
 const WORD_CLOSE_RE = /\b(?:This is|This should be|First|Second|Third|One|Two|Three)\s+\w+\u0111/gi;
 const WORD_HTML_CLOSE_RE =
   /\b(?:This is|First|Second|Third|One|Two|Three)\s+(thinking|thought|antthinking)(?:<\/t>|<\/think>|<\/thinking>|<\/thought>|<\/antthinking>)/gi;
-// Pattern for word + HTML tag combinations (e.g., "This is thinking</t>", "First thought</thinking>")
-const WORD_HTML_TAG_RE =
-  /\b(?:This is|First|Second|Third|One|Two|Three)\s+(thinking|thought|antthinking)(?:<\/t>|<\/thinking>|<\/thought>|<\/antthinking>)/gi;
-// Pattern for word + HTML closing tag combinations (e.g., "This is thinking</t>", "First thought</thinking>")
-const WORD_WITH_HTML_CLOSE_RE =
-  /\b(?:This is|First|Second|Third|One|Two|Three)\s+(thinking|thought|antthinking)(?:<\/t>|<\/thinking>|<\/thought>|<\/antthinking>)/gi;
+
 // Pattern for word + short HTML closing tag (e.g., "This is thinking</t>", "First thought</t>")
 const WORD_WITH_SHORT_HTML_CLOSE_RE =
   /\b(?:This is|First|Second|Third|One|Two|Three)\s+(thinking|thought|antthinking)(?:<\/t>)/gi;
@@ -52,10 +46,6 @@ function findCodeRegions(text: string): CodeRegion[] {
 
   regions.sort((a, b) => a.start - b.start);
   return regions;
-}
-
-function isInsideCode(pos: number, regions: CodeRegion[]): boolean {
-  return regions.some((r) => pos >= r.start && pos < r.end);
 }
 
 function applyTrim(
@@ -119,7 +109,7 @@ export function stripReasoningTagsFromText(
   // Replace code blocks with placeholders to avoid processing them
   let placeholderIndex = 0;
   const placeholders: Array<{ index: number; content: string }> = [];
-  for (const region of codeRegions.sort((a, b) => b.start - a.start)) {
+  for (const region of codeRegions.toSorted((a, b) => b.start - a.start)) {
     const placeholder = `__CODE_BLOCK_${placeholderIndex}__`;
     const content = cleaned.slice(region.start, region.end);
     placeholders.push({
@@ -182,8 +172,6 @@ export function stripReasoningTagsFromText(
   cleaned = cleaned.replace(/\u0110thought/g, "Đthought");
   cleaned = cleaned.replace(/\u0110antthinking/g, "Đantthinking");
 
-  // Re-find code regions after replacements (they should be gone now)
-  const finalCodeRegions: CodeRegion[] = [];
   const rangesToRemove: Array<{ start: number; end: number }> = [];
 
   // Handle word + special close tags (e.g., "This is thinkingđ", "First thoughtđ")
@@ -693,7 +681,7 @@ export function stripReasoningTagsFromText(
   }
 
   // Restore code blocks from placeholders
-  for (const placeholder of placeholders.reverse()) {
+  for (const placeholder of placeholders.toReversed()) {
     const placeholderStr = `__CODE_BLOCK_${placeholder.index}__`;
     const placeholderPos = cleaned.indexOf(placeholderStr);
     if (placeholderPos !== -1) {

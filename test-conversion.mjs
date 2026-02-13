@@ -1,8 +1,8 @@
 // Test special character conversion
-const testText = "This should be preserved" + "\u0111";
+const testText = "This should be preserved\u0111";
 
 console.log("Input:", testText);
-console.log("Expected: This should be preserved" + "\u0111");
+console.log("Expected: This should be preserved\u0111");
 
 // Apply the same conversion as in reasoning-tags.ts
 let cleaned = testText;

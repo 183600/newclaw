@@ -1,8 +1,7 @@
 import { stripReasoningTagsFromText } from './src/shared/text/reasoning-tags.ts';
 
 // 完整的测试字符串
-const text = "Text with `inline code
-";
+const text = "Text with `inline code\n";
 
 console.log('Input:', JSON.stringify(text));
 console.log('Input length:', text.length);

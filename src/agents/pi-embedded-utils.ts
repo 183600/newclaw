@@ -1,5 +1,4 @@
 import type { AssistantMessage } from "@mariozechner/pi-ai";
-import { stripReasoningTagsFromText } from "../shared/text/reasoning-tags.js";
 import { sanitizeUserFacingText } from "./pi-embedded-helpers.js";
 import { formatToolDetail, resolveToolDisplay } from "./tool-display.js";
 

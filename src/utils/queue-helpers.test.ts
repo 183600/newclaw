@@ -321,7 +321,7 @@ describe("buildQueueSummaryPrompt", () => {
       noun: "message",
       title: "Custom title",
     });
-    expect(result).toBe("Custom title\n" + "Summary:\n" + "- summary1");
+    expect(result).toBe("Custom title\nSummary:\n- summary1");
   });
 
   it("should handle singular noun", () => {
@@ -360,7 +360,7 @@ describe("buildCollectPrompt", () => {
       items,
       renderItem: (item, index) => `${index + 1}. ${item}`,
     });
-    expect(result).toBe("Test Title\n\n" + "1. item1\n\n" + "2. item2");
+    expect(result).toBe("Test Title\n\n1. item1\n\n2. item2");
   });
 
   it("should include summary when provided", () => {
@@ -371,7 +371,7 @@ describe("buildCollectPrompt", () => {
       summary: "This is a summary",
       renderItem: (item) => `- ${item}`,
     });
-    expect(result).toBe("Test Title\n\n" + "This is a summary\n\n" + "- item1");
+    expect(result).toBe("Test Title\n\nThis is a summary\n\n- item1");
   });
 
   it("should handle empty items", () => {

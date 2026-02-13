@@ -61,9 +61,6 @@ export function resolveModelCostConfig(params: {
   return entry?.cost;
 }
 
-const toNumber = (value: number | undefined): number =>
-  typeof value === "number" && Number.isFinite(value) ? value : 0;
-
 export function estimateUsageCost(params: {
   usage?: NormalizedUsage | UsageTotals | null;
   cost?: ModelCostConfig;

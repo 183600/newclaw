@@ -30,6 +30,24 @@
     "skills/",
     "src/canvas-host/a2ui/a2ui.bundle.js",
     "Swabble/",
-    "vendor/"
+    "vendor/",
+    "test-*.js",
+    "test-*.ts",
+    "test-*.mjs",
+    "test-*.cjs",
+    "debug-*.js",
+    "debug-*.ts",
+    "debug-*.mjs",
+    "debug-*.cjs",
+    "check-*.js",
+    "check-*.ts",
+    "check-*.mjs",
+    "check-*.cjs",
+    "*-backup.ts",
+    "*-fixed.ts",
+    "*-final.ts",
+    "*-final-fixed.ts",
+    "read-test-file.mjs",
+    "find-test-input.mjs"
   ]
 }
