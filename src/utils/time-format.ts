@@ -27,6 +27,7 @@ export function formatRelativeTime(timestamp: number): string {
   const hours = Math.floor(minutes / 60);
   const days = Math.floor(hours / 24);
 
+  // Use strict inequality for boundaries to match test expectations
   if (seconds < 60) {
     return "just now";
   }
@@ -42,5 +43,6 @@ export function formatRelativeTime(timestamp: number): string {
   if (days <= 7) {
     return `${days}d ago`;
   }
+  // For more than 7 days, use date format
   return new Date(timestamp).toLocaleDateString(undefined, { month: "short", day: "numeric" });
 }

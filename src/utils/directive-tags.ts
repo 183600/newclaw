@@ -19,7 +19,7 @@ const REPLY_TAG_RE = /\[\[\s*(?:reply_to_current|reply_to\s*:\s*([^\]\n]+))\s*(?
 
 function normalizeDirectiveWhitespace(text: string): string {
   return text
-    .replace(/\s+/g, " ") // Replace all whitespace (including newlines) with single space
+    .replace(/[ \t\n]+/g, " ") // Replace spaces, tabs, and newlines with single space
     .trim();
 }
 
