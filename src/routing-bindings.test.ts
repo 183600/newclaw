@@ -1,12 +1,17 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import type { OpenClawConfig } from "./config/types.js";
-import { resolveDefaultAgentId } from "./agents/agent-scope.js";
 import {
   listBindings,
   listBoundAccountIds,
   resolveDefaultAgentBoundAccountId,
   buildChannelAccountBindings,
 } from "./routing/bindings.js";
+
+// Mock the module using hoisted
+const mockResolveDefaultAgentId = vi.fn(() => "default-agent");
+vi.mock("./agents/agent-scope.js", () => ({
+  resolveDefaultAgentId: mockResolveDefaultAgentId,
+}));
 
 describe("routing bindings", () => {
   const createMockConfig = (bindings: any[] = []): OpenClawConfig =>
@@ -145,9 +150,7 @@ describe("routing bindings", () => {
       const cfg = createMockConfig(bindings);
 
       // Mock resolveDefaultAgentId to return "default-agent"
-      vi.doMock("./agents/agent-scope.js", () => ({
-        resolveDefaultAgentId: () => "default-agent",
-      }));
+      mockResolveDefaultAgentId.mockReturnValue("default-agent");
 
       expect(resolveDefaultAgentBoundAccountId(cfg, "telegram")).toBeNull();
     });
@@ -157,12 +160,13 @@ describe("routing bindings", () => {
         { agentId: "default-agent", match: { channel: "telegram", accountId: "account1" } },
         { agentId: "other-agent", match: { channel: "telegram", accountId: "account2" } },
       ];
-      const cfg = createMockConfig(bindings);
-
-      // Mock resolveDefaultAgentId to return "default-agent"
-      vi.doMock("./agents/agent-scope.js", () => ({
-        resolveDefaultAgentId: () => "default-agent",
-      }));
+      // Create config with default agent
+      const cfg = {
+        bindings,
+        agents: {
+          list: [{ id: "default-agent", default: true }, { id: "other-agent" }],
+        },
+      } as OpenClawConfig;
 
       expect(resolveDefaultAgentBoundAccountId(cfg, "telegram")).toBe("account1");
     });
@@ -171,12 +175,13 @@ describe("routing bindings", () => {
       const bindings = [
         { agentId: "DEFAULT-AGENT", match: { channel: "telegram", accountId: "account1" } },
       ];
-      const cfg = createMockConfig(bindings);
-
-      // Mock resolveDefaultAgentId to return "default-agent"
-      vi.doMock("./agents/agent-scope.js", () => ({
-        resolveDefaultAgentId: () => "default-agent",
-      }));
+      // Create config with default agent
+      const cfg = {
+        bindings,
+        agents: {
+          list: [{ id: "default-agent", default: true }],
+        },
+      } as OpenClawConfig;
 
       expect(resolveDefaultAgentBoundAccountId(cfg, "telegram")).toBe("account1");
     });
@@ -188,9 +193,7 @@ describe("routing bindings", () => {
       const cfg = createMockConfig(bindings);
 
       // Mock resolveDefaultAgentId to return "default-agent"
-      vi.doMock("./agents/agent-scope.js", () => ({
-        resolveDefaultAgentId: () => "default-agent",
-      }));
+      mockResolveDefaultAgentId.mockReturnValue("default-agent");
 
       expect(resolveDefaultAgentBoundAccountId(cfg, "telegram")).toBeNull();
     });
@@ -199,12 +202,13 @@ describe("routing bindings", () => {
       const bindings = [
         { agentId: "default-agent", match: { channel: "telegram", accountId: "  account1  " } },
       ];
-      const cfg = createMockConfig(bindings);
-
-      // Mock resolveDefaultAgentId to return "default-agent"
-      vi.doMock("./agents/agent-scope.js", () => ({
-        resolveDefaultAgentId: () => "default-agent",
-      }));
+      // Create config with default agent
+      const cfg = {
+        bindings,
+        agents: {
+          list: [{ id: "default-agent", default: true }],
+        },
+      } as OpenClawConfig;
 
       expect(resolveDefaultAgentBoundAccountId(cfg, "telegram")).toBe("account1");
     });

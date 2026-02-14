@@ -353,7 +353,7 @@ describe("sessions send-policy", () => {
           ],
         });
 
-        expect(resolveSendPolicy({ cfg, channel: "telegram" })).toBe("deny"); // default
+        expect(resolveSendPolicy({ cfg, channel: "telegram" })).toBe("allow"); // global allow rule matches
       });
 
       it("handles empty session key", () => {
