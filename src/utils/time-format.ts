@@ -39,7 +39,7 @@ export function formatRelativeTime(timestamp: number): string {
   if (days === 1) {
     return "Yesterday";
   }
-  if (days < 7) {
+  if (days <= 7) {
     return `${days}d ago`;
   }
   return new Date(timestamp).toLocaleDateString(undefined, { month: "short", day: "numeric" });

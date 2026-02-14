@@ -134,11 +134,17 @@ export function normalizeSessionDeliveryFields(source?: DeliveryContextSessionSo
     return {
       deliveryContext: {
         channel: normalizeMessageChannel(source.channel),
-        accountId: normalizeAccountId(source.lastAccountId),
+        accountId:
+          source.deliveryContext.accountId !== undefined
+            ? normalizeAccountId(source.deliveryContext.accountId)
+            : normalizeAccountId(source.lastAccountId),
       },
       lastChannel: normalizeMessageChannel(source.channel),
       lastTo: source.lastTo?.trim() || undefined,
-      lastAccountId: normalizeAccountId(source.lastAccountId),
+      lastAccountId:
+        source.deliveryContext.accountId !== undefined
+          ? normalizeAccountId(source.deliveryContext.accountId)
+          : normalizeAccountId(source.lastAccountId),
       lastThreadId:
         typeof source.lastThreadId === "number" && Number.isFinite(source.lastThreadId)
           ? Math.trunc(source.lastThreadId)
@@ -189,7 +195,7 @@ export function deliveryContextFromSession(
     lastChannel: entry.lastChannel,
     lastTo: entry.lastTo,
     lastAccountId: entry.lastAccountId,
-    lastThreadId: entry.lastThreadId ?? entry.origin?.threadId,
+    lastThreadId: entry.lastThreadId,
     deliveryContext: entry.deliveryContext,
   };
   return normalizeSessionDeliveryFields(source).deliveryContext;

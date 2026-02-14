@@ -1,4 +1,74 @@
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
+
+// Mock the dependencies
+vi.mock("../channels/registry.js", () => ({
+  CHANNEL_IDS: ["telegram", "discord", "slack", "signal", "whatsapp"],
+  listChatChannelAliases: () => ["tg", "dc", "slack"],
+  normalizeChatChannelId: vi.fn((id: string) => {
+    const channels: Record<string, string> = {
+      tg: "telegram",
+      dc: "discord",
+    };
+    return channels[id] || id;
+  }),
+}));
+
+vi.mock("../gateway/protocol/client-info.js", () => ({
+  GATEWAY_CLIENT_MODES: {
+    CLI: "cli",
+    WEBCHAT: "webchat",
+    AGENT: "agent",
+  },
+  GATEWAY_CLIENT_NAMES: {
+    WEBCHAT_UI: "webchat-ui",
+    AGENT: "agent",
+  },
+  normalizeGatewayClientMode: (mode: string | null | undefined) => mode?.toLowerCase(),
+  normalizeGatewayClientName: (id: string | null | undefined) => id?.toLowerCase(),
+}));
+
+vi.mock("../plugins/runtime.js", () => {
+  const mockRegistry = {
+    channels: [
+      {
+        plugin: {
+          id: "custom-channel",
+          meta: {
+            aliases: ["custom", "cc"],
+          },
+        },
+      },
+    ],
+  };
+  return {
+    getActivePluginRegistry: () => {
+      console.log("Mock getActivePluginRegistry called");
+      return mockRegistry;
+    },
+    requireActivePluginRegistry: () => {
+      console.log("Mock requireActivePluginRegistry called");
+      return mockRegistry;
+    },
+    setActivePluginRegistry: (registry: any) => {
+      console.log("Mock setActivePluginRegistry called with:", registry);
+      // Update the mockRegistry with the new registry
+      mockRegistry.channels = registry.channels || [];
+      mockRegistry.plugins = registry.plugins || [];
+      mockRegistry.tools = registry.tools || [];
+      mockRegistry.hooks = registry.hooks || [];
+      mockRegistry.typedHooks = registry.typedHooks || [];
+      mockRegistry.providers = registry.providers || [];
+      mockRegistry.gatewayHandlers = registry.gatewayHandlers || {};
+      mockRegistry.httpHandlers = registry.httpHandlers || [];
+      mockRegistry.httpRoutes = registry.httpRoutes || [];
+      mockRegistry.cliRegistrars = registry.cliRegistrars || [];
+      mockRegistry.services = registry.services || [];
+      mockRegistry.commands = registry.commands || [];
+      mockRegistry.diagnostics = registry.diagnostics || [];
+    },
+  };
+});
+
 import {
   INTERNAL_MESSAGE_CHANNEL,
   isGatewayCliClient,
@@ -16,48 +86,6 @@ import {
   isMarkdownCapableMessageChannel,
   type GatewayClientInfoLike,
 } from "./message-channel.js";
-
-// Mock the dependencies
-vi.mock("../channels/registry.js", () => ({
-  CHANNEL_IDS: ["telegram", "discord", "slack", "signal", "whatsapp"],
-  listChatChannelAliases: () => ["tg", "dc", "slack"],
-  normalizeChatChannelId: (id: string) => {
-    const channels: Record<string, string> = {
-      tg: "telegram",
-      dc: "discord",
-    };
-    return channels[id] || id;
-  },
-}));
-
-vi.mock("../gateway/protocol/client-info.js", () => ({
-  GATEWAY_CLIENT_MODES: {
-    CLI: "cli",
-    WEBCHAT: "webchat",
-    AGENT: "agent",
-  },
-  GATEWAY_CLIENT_NAMES: {
-    WEBCHAT_UI: "webchat-ui",
-    AGENT: "agent",
-  },
-  normalizeGatewayClientMode: (mode: string | null | undefined) => mode?.toLowerCase(),
-  normalizeGatewayClientName: (id: string | null | undefined) => id?.toLowerCase(),
-}));
-
-vi.mock("../plugins/runtime.js", () => ({
-  getActivePluginRegistry: () => ({
-    channels: [
-      {
-        plugin: {
-          id: "custom-channel",
-          meta: {
-            aliases: ["custom", "cc"],
-          },
-        },
-      },
-    ],
-  }),
-}));
 
 describe("INTERNAL_MESSAGE_CHANNEL", () => {
   it("should be 'webchat'", () => {
@@ -133,8 +161,52 @@ describe("isWebchatClient", () => {
 });
 
 describe("normalizeMessageChannel", () => {
+  beforeEach(async () => {
+    // Override the default registry with our mock
+    const { setActivePluginRegistry } = await import("../plugins/runtime.js");
+    setActivePluginRegistry({
+      channels: [
+        {
+          plugin: {
+            id: "custom-channel",
+            meta: {
+              aliases: ["custom", "cc"],
+            },
+          },
+        },
+      ],
+    });
+  });
+
+  afterEach(async () => {
+    // Re-override the default registry after each test
+    const { setActivePluginRegistry } = await import("../plugins/runtime.js");
+    setActivePluginRegistry({
+      channels: [
+        {
+          plugin: {
+            id: "custom-channel",
+            meta: {
+              aliases: ["custom", "cc"],
+            },
+          },
+        },
+      ],
+    });
+  });
+
   it("should return undefined for undefined input", () => {
     expect(normalizeMessageChannel(undefined)).toBeUndefined();
+  });
+
+  it("should verify mock is working", async () => {
+    // Test if the mock is properly imported
+    const { getActivePluginRegistry } = await import("../plugins/runtime.js");
+    const registry = getActivePluginRegistry();
+    console.log("Registry from mock:", registry);
+    expect(registry).toBeDefined();
+    expect(registry?.channels).toBeDefined();
+    expect(registry?.channels[0]?.plugin.id).toBe("custom-channel");
   });
 
   it("should return undefined for null input", () => {
@@ -162,7 +234,12 @@ describe("normalizeMessageChannel", () => {
     expect(normalizeMessageChannel("DC")).toBe("discord");
   });
 
-  it("should normalize plugin channels", () => {
+  it("should normalize plugin channels", async () => {
+    // Debug the plugin matching
+    const { getActivePluginRegistry } = await import("../plugins/runtime.js");
+    const registry = getActivePluginRegistry();
+    console.log("Plugin registry:", JSON.stringify(registry, null, 2));
+
     expect(normalizeMessageChannel("custom-channel")).toBe("custom-channel");
     expect(normalizeMessageChannel("custom")).toBe("custom-channel");
     expect(normalizeMessageChannel("cc")).toBe("custom-channel");

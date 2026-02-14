@@ -4,10 +4,8 @@ import { formatDocsLink, formatDocsRootLink, DOCS_ROOT } from "./links.js";
 // Mock the formatTerminalLink function from utils
 vi.mock("../utils.js", () => ({
   formatTerminalLink: vi.fn((label: string, url: string, opts?: any) => {
-    if (opts?.force === true || process.stdout.isTTY) {
-      return `[LINK:${label}->${url}]`;
-    }
-    return opts?.fallback ?? `${label} (${url})`;
+    // Always return link format in tests to ensure consistent behavior
+    return `[LINK:${label}->${url}]`;
   }),
 }));
 

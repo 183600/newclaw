@@ -104,6 +104,8 @@ export const CHAT_CHANNEL_ALIASES: Record<string, ChatChannelId> = {
   imsg: "imessage",
   "google-chat": "googlechat",
   gchat: "googlechat",
+  tg: "telegram",
+  dc: "discord",
 };
 
 const normalizeChannelKey = (raw?: string | null): string | undefined => {

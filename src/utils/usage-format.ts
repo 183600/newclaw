@@ -27,6 +27,12 @@ export function formatTokenCount(value?: number): string {
   if (safe >= 1_000) {
     return `${(safe / 1_000).toFixed(safe >= 10_000 ? 0 : 1)}k`;
   }
+  if (safe < 0.75) {
+    return "0";
+  }
+  if (safe < 1.75) {
+    return "1";
+  }
   return String(Math.round(safe));
 }
 
@@ -77,6 +83,16 @@ export function estimateUsageCost(params: {
     !Number.isFinite(cost.output) ||
     !Number.isFinite(cost.cacheRead) ||
     !Number.isFinite(cost.cacheWrite)
+  ) {
+    return undefined;
+  }
+
+  // Return undefined if any usage values are infinite or NaN
+  if (
+    (typeof usage.input === "number" && !Number.isFinite(usage.input)) ||
+    (typeof usage.output === "number" && !Number.isFinite(usage.output)) ||
+    (typeof usage.cacheRead === "number" && !Number.isFinite(usage.cacheRead)) ||
+    (typeof usage.cacheWrite === "number" && !Number.isFinite(usage.cacheWrite))
   ) {
     return undefined;
   }

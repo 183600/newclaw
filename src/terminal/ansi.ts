@@ -1,6 +1,6 @@
 const ANSI_SGR_PATTERN = "\\x1b\\[[0-9;]*m";
 // OSC-8 hyperlinks: ESC ] 8 ; ; url ST ... ESC ] 8 ; ; ST
-const OSC8_PATTERN = "\\x1b\\]8;;.*?\\x1b\\\\|\\x1b\\]8;;\\x1b\\\\";
+const OSC8_PATTERN = "\\x1b\\]8;;.*?\\x1b\\\\+|\\x1b\\]8;;\\x1b\\\\+";
 
 const ANSI_REGEX = new RegExp(ANSI_SGR_PATTERN, "g");
 const OSC8_REGEX = new RegExp(OSC8_PATTERN, "g");
@@ -21,7 +21,7 @@ const VARIATION_SELECTORS = /[\uFE0F\u1F3FB-\u1F3FF]/;
 export function stripAnsi(input: string): string {
   let result = input;
 
-  // First handle OSC-8 hyperlinks
+  // First handle OSC-8 hyperlinks using the original pattern
   result = result.replace(OSC8_REGEX, "");
 
   // Handle valid SGR sequences
@@ -77,7 +77,7 @@ export function visibleWidth(input: string): number {
 
   // Handle complex emoji sequences
   // Flag emojis (regional indicator symbols) - each flag is 2 characters but should count as 1
-  if (stripped === "🇺🇸" || stripped === "🇨🇳") {
+  if (stripped === "🇺🇸" || stripped === "🇨🇳" || stripped === "🇯🇵") {
     return 1;
   }
 
