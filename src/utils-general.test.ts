@@ -63,6 +63,8 @@ describe("General utility functions", () => {
     it("should work with zero delay", async () => {
       const promise = sleep(0);
 
+      // With fake timers, we need to advance time for the promise to resolve
+      await vi.advanceTimersByTimeAsync(0);
       await expect(promise).resolves.toBeUndefined();
     });
   });
