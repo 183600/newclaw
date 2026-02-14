@@ -254,8 +254,8 @@ describe("shortenHomePath", () => {
   });
 
   it("should handle null/undefined", () => {
-    expect(shortenHomePath(null as any)).toBe(null);
-    expect(shortenHomePath(undefined as any)).toBe(undefined);
+    expect(shortenHomePath(null as unknown)).toBe(null);
+    expect(shortenHomePath(undefined as unknown)).toBe(undefined);
   });
 });
 

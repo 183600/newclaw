@@ -44,7 +44,7 @@ describe("waitForever", () => {
 
     // Promise should not resolve immediately
     let resolved = false;
-    promise.then(() => {
+    void promise.then(() => {
       resolved = true;
     });
 

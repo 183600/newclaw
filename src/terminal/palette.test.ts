@@ -47,7 +47,7 @@ describe("LOBSTER_PALETTE", () => {
 
   it("exports as const for type safety", () => {
     // This test ensures the palette is exported as const for readonly type safety
-    const palette = LOBSTER_PALETTE as typeof LOBSTER_PALETTE;
+    const palette = LOBSTER_PALETTE;
     expect(palette.accent).toBe("#FF5A2D");
   });
 });

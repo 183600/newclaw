@@ -17,7 +17,7 @@ describe("legacy-names constants", () => {
     });
 
     it("is a const assertion", () => {
-      const projectName = PROJECT_NAME as typeof PROJECT_NAME;
+      const projectName = PROJECT_NAME;
       expect(projectName).toBe("openclaw");
     });
   });
@@ -28,7 +28,7 @@ describe("legacy-names constants", () => {
     });
 
     it("is a const assertion", () => {
-      const legacyNames = LEGACY_PROJECT_NAMES as typeof LEGACY_PROJECT_NAMES;
+      const legacyNames = LEGACY_PROJECT_NAMES;
       expect(legacyNames).toEqual([]);
     });
   });
@@ -59,7 +59,7 @@ describe("legacy-names constants", () => {
     });
 
     it("is a const assertion", () => {
-      const filenames = LEGACY_PLUGIN_MANIFEST_FILENAMES as typeof LEGACY_PLUGIN_MANIFEST_FILENAMES;
+      const filenames = LEGACY_PLUGIN_MANIFEST_FILENAMES;
       expect(filenames).toEqual([]);
     });
   });
@@ -70,7 +70,7 @@ describe("legacy-names constants", () => {
     });
 
     it("is a const assertion", () => {
-      const sourcesDir = MACOS_APP_SOURCES_DIR as typeof MACOS_APP_SOURCES_DIR;
+      const sourcesDir = MACOS_APP_SOURCES_DIR;
       expect(sourcesDir).toBe("apps/macos/Sources/OpenClaw");
     });
   });
@@ -81,7 +81,7 @@ describe("legacy-names constants", () => {
     });
 
     it("is a const assertion", () => {
-      const legacyDirs = LEGACY_MACOS_APP_SOURCES_DIRS as typeof LEGACY_MACOS_APP_SOURCES_DIRS;
+      const legacyDirs = LEGACY_MACOS_APP_SOURCES_DIRS;
       expect(legacyDirs).toEqual([]);
     });
   });

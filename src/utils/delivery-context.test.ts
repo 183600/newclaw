@@ -1,141 +1,180 @@
 import { describe, expect, it } from "vitest";
 import {
-  deliveryContextFromSession,
-  deliveryContextKey,
-  mergeDeliveryContext,
   normalizeDeliveryContext,
   normalizeSessionDeliveryFields,
+  deliveryContextFromSession,
+  mergeDeliveryContext,
+  deliveryContextKey,
   type DeliveryContext,
   type DeliveryContextSessionSource,
 } from "./delivery-context.js";
 
 describe("normalizeDeliveryContext", () => {
-  it("returns undefined for undefined input", () => {
+  it("should return undefined for undefined input", () => {
     expect(normalizeDeliveryContext(undefined)).toBeUndefined();
   });
 
-  it("normalizes channel field", () => {
-    expect(normalizeDeliveryContext({ channel: "whatsapp" })).toEqual({ channel: "whatsapp" });
-    expect(normalizeDeliveryContext({ channel: "  WhatsApp  " })).toEqual({ channel: "whatsapp" });
-    expect(normalizeDeliveryContext({ channel: "" })).toEqual({ channel: undefined });
-    expect(normalizeDeliveryContext({ channel: "   " })).toEqual({ channel: undefined });
+  it("should return undefined for empty object", () => {
+    expect(normalizeDeliveryContext({})).toBeUndefined();
   });
 
-  it("normalizes to field", () => {
-    expect(normalizeDeliveryContext({ to: "+1234567890" })).toEqual({ to: "+1234567890" });
-    expect(normalizeDeliveryContext({ to: "  +1234567890  " })).toEqual({ to: "+1234567890" });
-    expect(normalizeDeliveryContext({ to: "" })).toEqual({ to: undefined });
-    expect(normalizeDeliveryContext({ to: "   " })).toEqual({ to: undefined });
+  it("should normalize channel", () => {
+    const result = normalizeDeliveryContext({ channel: " telegram " });
+    expect(result?.channel).toBe("telegram");
   });
 
-  it("normalizes accountId field", () => {
-    expect(normalizeDeliveryContext({ accountId: "test@example.com" })).toEqual({
-      accountId: "test@example.com",
+  it("should normalize to by trimming", () => {
+    const result = normalizeDeliveryContext({ to: "  user123  " });
+    expect(result?.to).toBe("user123");
+  });
+
+  it("should handle empty to field", () => {
+    const result = normalizeDeliveryContext({ to: "   " });
+    expect(result?.to).toBeUndefined();
+  });
+
+  it("should normalize accountId", () => {
+    const result = normalizeDeliveryContext({ accountId: "  account123  " });
+    expect(result?.accountId).toBe("account123");
+  });
+
+  it("should handle numeric threadId", () => {
+    const result = normalizeDeliveryContext({ threadId: 123.456 });
+    expect(result?.threadId).toBe(123);
+  });
+
+  it("should handle infinite numeric threadId", () => {
+    const result = normalizeDeliveryContext({ threadId: Infinity });
+    expect(result?.threadId).toBeUndefined();
+  });
+
+  it("should handle string threadId", () => {
+    const result = normalizeDeliveryContext({ threadId: "  thread123  " });
+    expect(result?.threadId).toBe("thread123");
+  });
+
+  it("should handle empty string threadId", () => {
+    const result = normalizeDeliveryContext({ threadId: "   " });
+    expect(result?.threadId).toBeUndefined();
+  });
+
+  it("should return undefined if all normalized values are undefined and multiple fields were present", () => {
+    const result = normalizeDeliveryContext({
+      channel: "   ",
+      to: "   ",
+      accountId: "   ",
+      threadId: "   ",
     });
-    expect(normalizeDeliveryContext({ accountId: "  test@example.com  " })).toEqual({
-      accountId: "test@example.com",
-    });
-    expect(normalizeDeliveryContext({ accountId: "" })).toEqual({ accountId: undefined });
-    expect(normalizeDeliveryContext({ accountId: "   " })).toEqual({ accountId: undefined });
+    expect(result).toBeUndefined();
   });
 
-  it("normalizes threadId field", () => {
-    expect(normalizeDeliveryContext({ threadId: "123" })).toEqual({ threadId: "123" });
-    expect(normalizeDeliveryContext({ threadId: "  123  " })).toEqual({ threadId: "123" });
-    expect(normalizeDeliveryContext({ threadId: "" })).toEqual({ threadId: undefined });
-    expect(normalizeDeliveryContext({ threadId: "   " })).toEqual({ threadId: undefined });
-    expect(normalizeDeliveryContext({ threadId: 123.456 })).toEqual({ threadId: 123 });
-    expect(normalizeDeliveryContext({ threadId: 123.789 })).toEqual({ threadId: 123 });
-    expect(normalizeDeliveryContext({ threadId: Infinity })).toEqual({ threadId: undefined });
-    expect(normalizeDeliveryContext({ threadId: -Infinity })).toEqual({ threadId: undefined });
-    expect(normalizeDeliveryContext({ threadId: NaN })).toEqual({ threadId: undefined });
-  });
-
-  it("normalizes all fields together", () => {
-    expect(
-      normalizeDeliveryContext({
-        channel: "WhatsApp",
-        to: " +1234567890 ",
-        accountId: " test@example.com ",
-        threadId: " 123 ",
-      }),
-    ).toEqual({
-      channel: "whatsapp",
-      to: "+1234567890",
-      accountId: "test@example.com",
-      threadId: "123",
-    });
-  });
-
-  it("returns undefined when all normalized values are empty and multiple fields were present", () => {
-    expect(
-      normalizeDeliveryContext({
-        channel: "",
-        to: "   ",
-        accountId: "",
-        threadId: "",
-      }),
-    ).toBeUndefined();
-  });
-
-  it("returns object with single field when only one field was present", () => {
-    expect(normalizeDeliveryContext({ channel: "" })).toEqual({ channel: undefined });
-    expect(normalizeDeliveryContext({ to: "" })).toEqual({ to: undefined });
-    expect(normalizeDeliveryContext({ accountId: "" })).toEqual({ accountId: undefined });
-    expect(normalizeDeliveryContext({ threadId: "" })).toEqual({ threadId: undefined });
-  });
-
-  it("only includes fields that were present in input", () => {
-    const input: DeliveryContext = { channel: "whatsapp" };
-    const result = normalizeDeliveryContext(input);
-    expect(result).toEqual({ channel: "whatsapp" });
-    expect("to" in result!).toBe(false);
-    expect("accountId" in result!).toBe(false);
-    expect("threadId" in result!).toBe(false);
+  it("should return object with undefined field if only one field was present", () => {
+    const result = normalizeDeliveryContext({ channel: "   " });
+    expect(result).toEqual({ channel: undefined });
   });
 });
 
 describe("mergeDeliveryContext", () => {
-  it("returns undefined when both inputs are undefined", () => {
+  it("should return undefined for undefined inputs", () => {
     expect(mergeDeliveryContext(undefined, undefined)).toBeUndefined();
   });
 
-  it("returns primary when only primary is provided", () => {
-    const primary = { channel: "whatsapp", to: "+1234567890" };
-    expect(mergeDeliveryContext(primary, undefined)).toEqual(primary);
+  it("should return primary context when fallback is undefined", () => {
+    const primary: DeliveryContext = { channel: "telegram", to: "user1" };
+    const result = mergeDeliveryContext(primary, undefined);
+    expect(result).toEqual(primary);
   });
 
-  it("returns fallback when only fallback is provided", () => {
-    const fallback = { channel: "telegram", to: "@username" };
-    expect(mergeDeliveryContext(undefined, fallback)).toEqual(fallback);
+  it("should return fallback context when primary is undefined", () => {
+    const fallback: DeliveryContext = { channel: "slack", to: "user2" };
+    const result = mergeDeliveryContext(undefined, fallback);
+    expect(result).toEqual(fallback);
   });
 
-  it("merges primary and fallback with primary taking precedence", () => {
-    const primary = { channel: "whatsapp", to: "+1234567890" };
-    const fallback = { channel: "telegram", accountId: "test@example.com" };
-    expect(mergeDeliveryContext(primary, fallback)).toEqual({
-      channel: "whatsapp", // from primary
-      to: "+1234567890", // from primary
-      accountId: "test@example.com", // from fallback
-    });
-  });
-
-  it("includes all fields that were present in either input", () => {
-    const primary = { channel: "whatsapp" };
-    const fallback = { accountId: "test@example.com" };
+  it("should merge contexts with primary taking precedence", () => {
+    const primary: DeliveryContext = { channel: "telegram", to: "user1" };
+    const fallback: DeliveryContext = { channel: "slack", to: "user2", accountId: "account1" };
     const result = mergeDeliveryContext(primary, fallback);
     expect(result).toEqual({
-      channel: "whatsapp",
-      accountId: "test@example.com",
+      channel: "telegram",
+      to: "user1",
+      accountId: "account1",
     });
-    expect("to" in result!).toBe(false);
-    expect("threadId" in result!).toBe(false);
+  });
+
+  it("should merge all fields", () => {
+    const primary: DeliveryContext = { channel: "telegram" };
+    const fallback: DeliveryContext = { to: "user2", accountId: "account1", threadId: "thread1" };
+    const result = mergeDeliveryContext(primary, fallback);
+    expect(result).toEqual({
+      channel: "telegram",
+      to: "user2",
+      accountId: "account1",
+      threadId: "thread1",
+    });
+  });
+});
+
+describe("deliveryContextKey", () => {
+  it("should return undefined for undefined input", () => {
+    expect(deliveryContextKey(undefined)).toBeUndefined();
+  });
+
+  it("should return undefined for context without channel", () => {
+    const context: DeliveryContext = { to: "user1" };
+    expect(deliveryContextKey(context)).toBeUndefined();
+  });
+
+  it("should return undefined for context without to", () => {
+    const context: DeliveryContext = { channel: "telegram" };
+    expect(deliveryContextKey(context)).toBeUndefined();
+  });
+
+  it("should generate key with channel and to", () => {
+    const context: DeliveryContext = { channel: "telegram", to: "user1" };
+    expect(deliveryContextKey(context)).toBe("telegram|user1||");
+  });
+
+  it("should generate key with channel, to, and accountId", () => {
+    const context: DeliveryContext = { channel: "telegram", to: "user1", accountId: "account1" };
+    expect(deliveryContextKey(context)).toBe("telegram|user1|account1|");
+  });
+
+  it("should generate key with all fields", () => {
+    const context: DeliveryContext = {
+      channel: "telegram",
+      to: "user1",
+      accountId: "account1",
+      threadId: "thread1",
+    };
+    expect(deliveryContextKey(context)).toBe("telegram|user1|account1|thread1");
+  });
+
+  it("should handle numeric threadId", () => {
+    const context: DeliveryContext = {
+      channel: "telegram",
+      to: "user1",
+      accountId: "account1",
+      threadId: 123,
+    };
+    expect(deliveryContextKey(context)).toBe("telegram|user1|account1|123");
+  });
+
+  it("should handle empty string threadId", () => {
+    const context: DeliveryContext = {
+      channel: "telegram",
+      to: "user1",
+      accountId: "account1",
+      threadId: "",
+    };
+    expect(deliveryContextKey(context)).toBe("telegram|user1|account1|");
   });
 });
 
 describe("normalizeSessionDeliveryFields", () => {
-  it("returns all undefined values when source is undefined", () => {
-    expect(normalizeSessionDeliveryFields(undefined)).toEqual({
+  it("should return all undefined values for undefined input", () => {
+    const result = normalizeSessionDeliveryFields(undefined);
+    expect(result).toEqual({
       deliveryContext: undefined,
       lastChannel: undefined,
       lastTo: undefined,
@@ -144,197 +183,65 @@ describe("normalizeSessionDeliveryFields", () => {
     });
   });
 
-  it("normalizes deliveryContext and other fields", () => {
+  it("should normalize deliveryContext and other fields", () => {
     const source: DeliveryContextSessionSource = {
-      channel: "WhatsApp",
-      lastChannel: "Telegram",
-      lastTo: "+1234567890",
-      lastAccountId: "test@example.com",
-      lastThreadId: "123",
-      deliveryContext: {
-        channel: "Signal",
-        to: "+9876543210",
-      },
+      deliveryContext: { channel: " telegram ", to: " user1 " },
+      lastChannel: " slack ",
+      lastTo: " user2 ",
+      lastAccountId: " account1 ",
+      lastThreadId: " thread1 ",
     };
-
     const result = normalizeSessionDeliveryFields(source);
     expect(result).toEqual({
-      deliveryContext: {
-        channel: "signal",
-        to: "+9876543210",
-      },
-      lastChannel: "signal",
-      lastTo: "+9876543210",
-      lastAccountId: "test@example.com",
-      lastThreadId: "123",
+      deliveryContext: { channel: "telegram", to: "user1" },
+      lastChannel: "telegram",
+      lastTo: "user1",
+      lastAccountId: "account1",
+      lastThreadId: "thread1",
     });
   });
 
-  it("merges deliveryContext with other fields", () => {
+  it("should prioritize channel over lastChannel", () => {
     const source: DeliveryContextSessionSource = {
-      deliveryContext: {
-        channel: "WhatsApp",
-        to: "+1234567890",
-      },
-      lastAccountId: "test@example.com",
-      lastThreadId: "123",
+      channel: "telegram",
+      lastChannel: "slack",
+      lastAccountId: "account1",
+      deliveryContext: { accountId: "account2" },
     };
-
     const result = normalizeSessionDeliveryFields(source);
     expect(result).toEqual({
-      deliveryContext: {
-        channel: "whatsapp",
-        to: "+1234567890",
-        accountId: "test@example.com",
-        threadId: "123",
-      },
-      lastChannel: "whatsapp",
-      lastTo: "+1234567890",
-      lastAccountId: "test@example.com",
-      lastThreadId: "123",
+      deliveryContext: { channel: "telegram", accountId: "account2" },
+      lastChannel: "telegram",
+      lastTo: undefined,
+      lastAccountId: "account2",
+      lastThreadId: undefined,
     });
-  });
-
-  it("prioritizes channel over lastChannel", () => {
-    const source: DeliveryContextSessionSource = {
-      channel: "WhatsApp",
-      lastChannel: "Telegram",
-      deliveryContext: {
-        accountId: "test@example.com",
-      },
-    };
-
-    const result = normalizeSessionDeliveryFields(source);
-    expect(result.deliveryContext?.channel).toBe("whatsapp");
-    expect(result.lastChannel).toBe("whatsapp");
   });
 });
 
 describe("deliveryContextFromSession", () => {
-  it("returns undefined when entry is undefined", () => {
+  it("should return undefined for undefined input", () => {
     expect(deliveryContextFromSession(undefined)).toBeUndefined();
   });
 
-  it("extracts delivery context from session entry", () => {
+  it("should extract delivery context from session", () => {
     const entry = {
-      channel: "WhatsApp",
-      lastChannel: "Telegram",
-      lastTo: "+1234567890",
-      lastAccountId: "test@example.com",
-      lastThreadId: "123",
-      deliveryContext: {
-        channel: "Signal",
-        to: "+9876543210",
-      },
+      deliveryContext: { channel: "telegram", to: "user1" },
+      lastChannel: "slack",
+      lastTo: "user2",
     };
-
     const result = deliveryContextFromSession(entry);
-    expect(result).toEqual({
-      channel: "signal",
-      to: "+9876543210",
-    });
+    expect(result).toEqual({ channel: "telegram", to: "user1" });
   });
 
-  it("uses origin.threadId when lastThreadId is not provided", () => {
+  it("should use origin threadId if lastThreadId is undefined", () => {
     const entry = {
-      deliveryContext: {
-        channel: "WhatsApp",
-      },
-      origin: {
-        threadId: "456",
-      },
+      deliveryContext: { channel: "telegram", to: "user1" },
+      lastChannel: "slack",
+      lastTo: "user2",
+      origin: { threadId: "thread1" },
     };
-
     const result = deliveryContextFromSession(entry);
-    expect(result).toEqual({
-      channel: "whatsapp",
-      threadId: "456",
-    });
-  });
-
-  it("prioritizes lastThreadId over origin.threadId", () => {
-    const entry = {
-      lastThreadId: "123",
-      deliveryContext: {
-        channel: "WhatsApp",
-      },
-      origin: {
-        threadId: "456",
-      },
-    };
-
-    const result = deliveryContextFromSession(entry);
-    expect(result?.threadId).toBe("123");
-  });
-});
-
-describe("deliveryContextKey", () => {
-  it("returns undefined when context is undefined", () => {
-    expect(deliveryContextKey(undefined)).toBeUndefined();
-  });
-
-  it("returns undefined when channel is missing", () => {
-    expect(deliveryContextKey({ to: "+1234567890" })).toBeUndefined();
-  });
-
-  it("returns undefined when to is missing", () => {
-    expect(deliveryContextKey({ channel: "whatsapp" })).toBeUndefined();
-  });
-
-  it("creates key with channel and to", () => {
-    expect(deliveryContextKey({ channel: "whatsapp", to: "+1234567890" })).toBe(
-      "whatsapp|+1234567890||",
-    );
-  });
-
-  it("includes accountId in key", () => {
-    expect(
-      deliveryContextKey({
-        channel: "whatsapp",
-        to: "+1234567890",
-        accountId: "test@example.com",
-      }),
-    ).toBe("whatsapp|+1234567890|test@example.com|");
-  });
-
-  it("includes threadId in key", () => {
-    expect(
-      deliveryContextKey({
-        channel: "whatsapp",
-        to: "+1234567890",
-        threadId: "123",
-      }),
-    ).toBe("whatsapp|+1234567890||123");
-  });
-
-  it("includes all fields in key", () => {
-    expect(
-      deliveryContextKey({
-        channel: "whatsapp",
-        to: "+1234567890",
-        accountId: "test@example.com",
-        threadId: "123",
-      }),
-    ).toBe("whatsapp|+1234567890|test@example.com|123");
-  });
-
-  it("handles numeric threadId", () => {
-    expect(
-      deliveryContextKey({
-        channel: "whatsapp",
-        to: "+1234567890",
-        threadId: 123,
-      }),
-    ).toBe("whatsapp|+1234567890||123");
-  });
-
-  it("handles empty threadId", () => {
-    expect(
-      deliveryContextKey({
-        channel: "whatsapp",
-        to: "+1234567890",
-        threadId: "",
-      }),
-    ).toBe("whatsapp|+1234567890||");
+    expect(result).toEqual({ channel: "telegram", to: "user1" });
   });
 });

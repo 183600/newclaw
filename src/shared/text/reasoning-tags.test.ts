@@ -36,7 +36,7 @@ Outside This should be removed</think> code block.`;
   });
 
   it("should handle inline code preservation", () => {
-    const text = "Text with \`inline code\` and outside thinking.";
+    const text = "Text with `inline code` and outside thinking.";
     const result = stripReasoningTagsFromText(text);
     expect(result).toContain("inline code");
     expect(result).not.toContain("thinking");
@@ -75,7 +75,7 @@ Outside This should be removed</think> code block.`;
 
   it("should handle empty or null input", () => {
     expect(stripReasoningTagsFromText("")).toBe("");
-    expect(stripReasoningTagsFromText(null as any)).toBe(null);
-    expect(stripReasoningTagsFromText(undefined as any)).toBe(undefined);
+    expect(stripReasoningTagsFromText(null as unknown)).toBe(null);
+    expect(stripReasoningTagsFromText(undefined as unknown)).toBe(undefined);
   });
 });

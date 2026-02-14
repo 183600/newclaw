@@ -1,109 +1,138 @@
-import { describe, expect, it, vi, beforeEach } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { stylePromptMessage, stylePromptTitle, stylePromptHint } from "./prompt-style.js";
 
 // Mock the theme module
 vi.mock("./theme.js", () => ({
   isRich: vi.fn(),
   theme: {
-    accent: vi.fn((text: string) => `accent(${text})`),
-    heading: vi.fn((text: string) => `heading(${text})`),
-    muted: vi.fn((text: string) => `muted(${text})`),
+    accent: vi.fn((text: string) => `ACCENT:${text}`),
+    heading: vi.fn((text: string) => `HEADING:${text}`),
+    muted: vi.fn((text: string) => `MUTED:${text}`),
   },
 }));
 
 describe("stylePromptMessage", () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
+  it("should apply accent styling when rich", () => {
+    const { isRich, theme } = require("./theme.js");
+    isRich.mockReturnValue(true);
+
+    const result = stylePromptMessage("Test message");
+
+    expect(result).toBe("ACCENT:Test message");
+    expect(theme.accent).toHaveBeenCalledWith("Test message");
   });
 
-  it("should apply accent styling when rich mode is enabled", async () => {
-    const { isRich, theme } = await import("./theme.js");
-    vi.mocked(isRich).mockReturnValue(true);
+  it("should return plain text when not rich", () => {
+    const { isRich } = require("./theme.js");
+    isRich.mockReturnValue(false);
 
-    const message = "Test message";
-    const result = stylePromptMessage(message);
+    const result = stylePromptMessage("Test message");
 
-    expect(isRich).toHaveBeenCalled();
-    expect(theme.accent).toHaveBeenCalledWith(message);
-    expect(result).toBe("accent(Test message)");
+    expect(result).toBe("Test message");
   });
 
-  it("should return plain message when rich mode is disabled", async () => {
-    const { isRich } = await import("./theme.js");
-    vi.mocked(isRich).mockReturnValue(false);
+  it("should handle empty message", () => {
+    const { isRich } = require("./theme.js");
+    isRich.mockReturnValue(true);
 
-    const message = "Test message";
-    const result = stylePromptMessage(message);
+    const result = stylePromptMessage("");
 
-    expect(isRich).toHaveBeenCalled();
-    expect(result).toBe(message);
+    expect(result).toBe("ACCENT:");
   });
 });
 
 describe("stylePromptTitle", () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
+  it("should apply heading styling when rich and title is provided", () => {
+    const { isRich, theme } = require("./theme.js");
+    isRich.mockReturnValue(true);
+
+    const result = stylePromptTitle("Test title");
+
+    expect(result).toBe("HEADING:Test title");
+    expect(theme.heading).toHaveBeenCalledWith("Test title");
   });
 
-  it("should apply heading styling when rich mode is enabled and title is provided", async () => {
-    const { isRich, theme } = await import("./theme.js");
-    vi.mocked(isRich).mockReturnValue(true);
+  it("should return plain title when not rich", () => {
+    const { isRich } = require("./theme.js");
+    isRich.mockReturnValue(false);
 
-    const title = "Test Title";
-    const result = stylePromptTitle(title);
+    const result = stylePromptTitle("Test title");
 
-    expect(isRich).toHaveBeenCalled();
-    expect(theme.heading).toHaveBeenCalledWith(title);
-    expect(result).toBe("heading(Test Title)");
+    expect(result).toBe("Test title");
   });
 
-  it("should return plain title when rich mode is disabled", async () => {
-    const { isRich } = await import("./theme.js");
-    vi.mocked(isRich).mockReturnValue(false);
+  it("should return undefined when title is not provided", () => {
+    const { isRich } = require("./theme.js");
+    isRich.mockReturnValue(true);
 
-    const title = "Test Title";
-    const result = stylePromptTitle(title);
-
-    expect(isRich).toHaveBeenCalled();
-    expect(result).toBe(title);
-  });
-
-  it("should return undefined when no title is provided", () => {
     const result = stylePromptTitle(undefined);
+
+    expect(result).toBeUndefined();
+  });
+
+  it("should return undefined when title is null", () => {
+    const { isRich } = require("./theme.js");
+    isRich.mockReturnValue(true);
+
+    const result = stylePromptTitle(null);
+
+    expect(result).toBeUndefined();
+  });
+
+  it("should return undefined when title is empty string", () => {
+    const { isRich } = require("./theme.js");
+    isRich.mockReturnValue(true);
+
+    const result = stylePromptTitle("");
+
     expect(result).toBeUndefined();
   });
 });
 
 describe("stylePromptHint", () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
+  it("should apply muted styling when rich and hint is provided", () => {
+    const { isRich, theme } = require("./theme.js");
+    isRich.mockReturnValue(true);
+
+    const result = stylePromptHint("Test hint");
+
+    expect(result).toBe("MUTED:Test hint");
+    expect(theme.muted).toHaveBeenCalledWith("Test hint");
   });
 
-  it("should apply muted styling when rich mode is enabled and hint is provided", async () => {
-    const { isRich, theme } = await import("./theme.js");
-    vi.mocked(isRich).mockReturnValue(true);
+  it("should return plain hint when not rich", () => {
+    const { isRich } = require("./theme.js");
+    isRich.mockReturnValue(false);
 
-    const hint = "Test Hint";
-    const result = stylePromptHint(hint);
+    const result = stylePromptHint("Test hint");
 
-    expect(isRich).toHaveBeenCalled();
-    expect(theme.muted).toHaveBeenCalledWith(hint);
-    expect(result).toBe("muted(Test Hint)");
+    expect(result).toBe("Test hint");
   });
 
-  it("should return plain hint when rich mode is disabled", async () => {
-    const { isRich } = await import("./theme.js");
-    vi.mocked(isRich).mockReturnValue(false);
+  it("should return undefined when hint is not provided", () => {
+    const { isRich } = require("./theme.js");
+    isRich.mockReturnValue(true);
 
-    const hint = "Test Hint";
-    const result = stylePromptHint(hint);
-
-    expect(isRich).toHaveBeenCalled();
-    expect(result).toBe(hint);
-  });
-
-  it("should return undefined when no hint is provided", () => {
     const result = stylePromptHint(undefined);
+
+    expect(result).toBeUndefined();
+  });
+
+  it("should return undefined when hint is null", () => {
+    const { isRich } = require("./theme.js");
+    isRich.mockReturnValue(true);
+
+    const result = stylePromptHint(null);
+
+    expect(result).toBeUndefined();
+  });
+
+  it("should return undefined when hint is empty string", () => {
+    const { isRich } = require("./theme.js");
+    isRich.mockReturnValue(true);
+
+    const result = stylePromptHint("");
+
     expect(result).toBeUndefined();
   });
 });

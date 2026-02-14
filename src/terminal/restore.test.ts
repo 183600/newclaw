@@ -59,19 +59,19 @@ describe("restoreTerminalState", () => {
   it("should restore raw mode when stdin is TTY", () => {
     Object.defineProperty(process.stdin, "isTTY", { value: true, writable: true });
     restoreTerminalState();
-    expect(process.stdin.setRawMode).toHaveBeenCalledWith(false);
+    expect(vi.mocked(process.stdin.setRawMode)).toHaveBeenCalledWith(false);
   });
 
   it("should resume stdin if it was paused", () => {
     (process.stdin.isPaused as any).mockReturnValue(true);
     restoreTerminalState();
-    expect(process.stdin.resume).toHaveBeenCalled();
+    expect(vi.mocked(process.stdin.resume)).toHaveBeenCalled();
   });
 
   it("should not resume stdin if it was not paused", () => {
     (process.stdin.isPaused as any).mockReturnValue(false);
     restoreTerminalState();
-    expect(process.stdin.resume).not.toHaveBeenCalled();
+    expect(vi.mocked(process.stdin.resume)).not.toHaveBeenCalled();
   });
 
   it("should write reset sequence to stdout when it is TTY", () => {
@@ -91,7 +91,7 @@ describe("restoreTerminalState", () => {
   it("should not attempt to restore raw mode when stdin is not TTY", () => {
     Object.defineProperty(process.stdin, "isTTY", { value: false, writable: true });
     restoreTerminalState();
-    expect(process.stdin.setRawMode).not.toHaveBeenCalled();
+    expect(vi.mocked(process.stdin.setRawMode)).not.toHaveBeenCalled();
   });
 
   it("should handle errors in clearActiveProgressLine", () => {

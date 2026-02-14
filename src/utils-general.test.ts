@@ -49,7 +49,7 @@ describe("General utility functions", () => {
 
       // Promise should not resolve before time passes
       let resolved = false;
-      promise.then(() => {
+      void promise.then(() => {
         resolved = true;
       });
 

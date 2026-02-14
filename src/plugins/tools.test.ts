@@ -32,7 +32,8 @@ vi.mock("../logging/subsystem.js", () => ({
 
     // Store the plugins logger for test access
     if (subsystem === "plugins") {
-      (globalThis as any).__mockPluginLogger = mockLogger;
+      (globalThis as unknown as { __mockPluginLogger: typeof mockLogger }).__mockPluginLogger =
+        mockLogger;
     }
 
     return mockLogger;
@@ -81,7 +82,7 @@ describe("plugins/tools", () => {
 
     const createMockTool = (name: string): AnyAgentTool => ({ name }) as AnyAgentTool;
 
-    const createMockRegistry = (tools: any[]) => ({
+    const createMockRegistry = (tools: unknown[]) => ({
       tools,
       diagnostics: [],
     });
@@ -208,7 +209,10 @@ describe("plugins/tools", () => {
       const result = resolvePluginTools({ context: mockContext });
 
       expect(result).toEqual([]);
-      expect((globalThis as any).__mockPluginLogger.error).toHaveBeenCalledWith(
+      expect(
+        (globalThis as unknown as { __mockPluginLogger: { error: ReturnType<typeof vi.fn> } })
+          .__mockPluginLogger.error,
+      ).toHaveBeenCalledWith(
         expect.stringContaining("plugin tool failed (error-plugin): Error: Factory error"),
       );
     });
@@ -237,9 +241,10 @@ describe("plugins/tools", () => {
       const result = resolvePluginTools({ context: mockContext });
 
       expect(result).toHaveLength(1); // Only one tool should be included
-      expect((globalThis as any).__mockPluginLogger.error).toHaveBeenCalledWith(
-        expect.stringContaining("plugin tool name conflict"),
-      );
+      expect(
+        (globalThis as unknown as { __mockPluginLogger: { error: ReturnType<typeof vi.fn> } })
+          .__mockPluginLogger.error,
+      ).toHaveBeenCalledWith(expect.stringContaining("plugin tool name conflict"));
     });
 
     it("prevents plugin id conflicts with existing tools", () => {
@@ -262,9 +267,10 @@ describe("plugins/tools", () => {
       });
 
       expect(result).toEqual([]);
-      expect((globalThis as any).__mockPluginLogger.error).toHaveBeenCalledWith(
-        expect.stringContaining("plugin id conflicts with core tool name"),
-      );
+      expect(
+        (globalThis as unknown as { __mockPluginLogger: { error: ReturnType<typeof vi.fn> } })
+          .__mockPluginLogger.error,
+      ).toHaveBeenCalledWith(expect.stringContaining("plugin id conflicts with core tool name"));
     });
 
     it("blocks entire plugin after id conflict", () => {

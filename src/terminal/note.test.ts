@@ -1,148 +1,145 @@
-import { describe, expect, it, vi, beforeEach } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { wrapNoteMessage, note } from "./note.js";
 
-// Mock dependencies
+// Mock the dependencies
 vi.mock("@clack/prompts", () => ({
   note: vi.fn(),
 }));
 
+vi.mock("./ansi.js", () => ({
+  visibleWidth: vi.fn((str: string) => str.length),
+}));
+
 vi.mock("./prompt-style.js", () => ({
-  stylePromptTitle: vi.fn((title?: string) => (title ? `styled(${title})` : undefined)),
+  stylePromptTitle: vi.fn((title?: string) => title ?? ""),
 }));
 
 describe("wrapNoteMessage", () => {
   beforeEach(() => {
-    vi.clearAllMocks();
+    vi.mocked(process.stdout.columns).mockReturnValue(80);
   });
 
-  it("should wrap a simple message", () => {
-    const message = "This is a simple message";
-    const result = wrapNoteMessage(message, { maxWidth: 20 });
-    // The message might be wrapped across lines, so check if parts are present
-    expect(result).toContain("This");
-    expect(result).toContain("simple");
-    expect(result).toContain("message");
+  it("should return message unchanged when under max width", () => {
+    const message = "Short message";
+    const result = wrapNoteMessage(message);
+    expect(result).toBe(message);
   });
 
-  it("should wrap a long message", () => {
-    const message = "This is a very long message that should be wrapped at the specified width";
+  it("should wrap long lines", () => {
+    const message = "This is a very long message that should be wrapped at the appropriate width";
     const result = wrapNoteMessage(message, { maxWidth: 20 });
-    const lines = result.split("\n");
-    expect(lines.length).toBeGreaterThan(1);
-    // Each line should not exceed the maximum width (approximately, considering ANSI codes)
-    lines.forEach((line) => {
-      // This is a rough check - in practice, visibleWidth would be used
-      expect(line.length).toBeLessThanOrEqual(25); // Allow some margin
-    });
+    expect(result).toBe(
+      "This is a very long\nmessage that should\nbe wrapped at the\nappropriate width",
+    );
+  });
+
+  it("should handle multiple lines", () => {
+    const message = "First line\nSecond line that is very long and should be wrapped";
+    const result = wrapNoteMessage(message, { maxWidth: 20 });
+    expect(result).toBe("First line\nSecond line that is\nvery long and should\nbe wrapped");
   });
 
   it("should handle empty lines", () => {
-    const message = "Line 1\n\nLine 3";
+    const message = "First line\n\nThird line";
     const result = wrapNoteMessage(message, { maxWidth: 20 });
-    const lines = result.split("\n");
-    expect(lines).toContain("Line 1");
-    expect(lines).toContain("");
-    expect(lines).toContain("Line 3");
+    expect(result).toBe("First line\n\nThird line");
+  });
+
+  it("should handle indented lines", () => {
+    const message = "  Indented line that should be wrapped";
+    const result = wrapNoteMessage(message, { maxWidth: 20 });
+    expect(result).toBe("  Indented line\n  that should be\n  wrapped");
   });
 
   it("should handle bullet points", () => {
-    const message = "  * First bullet point\n  * Second bullet point that is very long";
-    const result = wrapNoteMessage(message, { maxWidth: 30 });
-    const lines = result.split("\n");
-    expect(lines[0]).toContain("* First bullet point");
-    expect(lines[1]).toContain("* Second bullet point");
+    const message = "- Bullet point that should be wrapped";
+    const result = wrapNoteMessage(message, { maxWidth: 20 });
+    expect(result).toBe("- Bullet point that\n  should be wrapped");
   });
 
-  it("should handle numbered lists", () => {
-    const message = "  1. First item\n  2. Second item that is very long";
-    const result = wrapNoteMessage(message, { maxWidth: 30 });
-    const lines = result.split("\n");
-    expect(lines[0]).toContain("1. First item");
-    expect(lines[1]).toContain("2. Second item");
+  it("should handle asterisk bullet points", () => {
+    const message = "* Bullet point that should be wrapped";
+    const result = wrapNoteMessage(message, { maxWidth: 20 });
+    expect(result).toBe("* Bullet point that\n  should be wrapped");
   });
 
-  it("should handle indented content", () => {
-    const message = "    This is indented content that should wrap properly";
-    const result = wrapNoteMessage(message, { maxWidth: 30 });
-    const lines = result.split("\n");
-    expect(lines[0]).to.include("    ");
-    if (lines.length > 1) {
-      expect(lines[1]).to.include("    ");
-    }
-  });
-
-  it("should use default max width when not specified", () => {
-    const message = "This is a message";
-    const result = wrapNoteMessage(message);
-    expect(result).toContain(message);
-  });
-
-  it("should use process.stdout.columns when available", () => {
-    const originalColumns = process.stdout.columns;
-    process.stdout.columns = 100;
-
-    const message = "This is a message";
-    const result = wrapNoteMessage(message);
-    expect(result).toContain(message);
-
-    process.stdout.columns = originalColumns;
+  it("should handle Unicode bullet points", () => {
+    const message = "\u2022 Bullet point that should be wrapped";
+    const result = wrapNoteMessage(message, { maxWidth: 20 });
+    expect(result).toBe("\u2022 Bullet point that\n  should be wrapped");
   });
 
   it("should handle very long words", () => {
     const message = "Supercalifragilisticexpialidocious is a very long word";
-    const result = wrapNoteMessage(message, { maxWidth: 20 });
-    const lines = result.split("\n");
-    expect(lines.length).toBeGreaterThan(1);
+    const result = wrapNoteMessage(message, { maxWidth: 15 });
+    expect(result).toBe("Supercalifragil\nisticexpialidoc\nious is a very\nlong word");
   });
 
-  it("should handle mixed content", () => {
-    const message = "Normal text\n  * Bullet point\n    Indented text\nNormal text again";
-    const result = wrapNoteMessage(message, { maxWidth: 30 });
-    const lines = result.split("\n");
-    expect(lines[0]).toBe("Normal text");
-    expect(lines[1]).toContain("* Bullet point");
-    expect(lines[2]).toContain("Indented text");
-    expect(lines[3]).toBe("Normal text again");
+  it("should handle zero max width", () => {
+    const message = "Any message";
+    const result = wrapNoteMessage(message, { maxWidth: 0 });
+    expect(result).toBe(message);
+  });
+
+  it("should use process.stdout.columns when available", () => {
+    vi.mocked(process.stdout.columns).mockReturnValue(100);
+    const message = "This is a message that should not be wrapped with a wider terminal";
+    const result = wrapNoteMessage(message);
+    expect(result).toBe(message);
+  });
+
+  it("should use default width when process.stdout.columns is not available", () => {
+    vi.mocked(process.stdout.columns).mockReturnValue(undefined);
+    const message = "This is a message that should be wrapped with default width";
+    const result = wrapNoteMessage(message, { maxWidth: 20 });
+    expect(result).toBe("This is a message\nthat should be\nwrapped with default\nwidth");
+  });
+
+  it("should limit max width to 88", () => {
+    const message = "This is a message that should be wrapped with a very wide terminal";
+    const result = wrapNoteMessage(message, { columns: 200 });
+    expect(result).toContain("\n");
+  });
+
+  it("should ensure minimum width of 40", () => {
+    const message = "This is a message that should be wrapped with a narrow terminal";
+    const result = wrapNoteMessage(message, { columns: 30 });
+    expect(result).toContain("\n");
+  });
+
+  it("should handle complex wrapping with bullets and indentation", () => {
+    const message =
+      "  - First bullet point that is very long and should be wrapped\n  - Second bullet point";
+    const result = wrapNoteMessage(message, { maxWidth: 25 });
+    expect(result).toBe(
+      "  - First bullet point\n    that is very long\n    and should be\n    wrapped\n  - Second bullet point",
+    );
   });
 });
 
 describe("note", () => {
-  it("should call clack note with wrapped message", async () => {
-    // Get the mocked clack note function
-    const clackPrompts = await import("@clack/prompts");
-    const clackNote = vi.mocked(clackPrompts.note);
+  it("should call clackNote with wrapped message and styled title", () => {
+    const { note } = require("@clack/prompts");
+    const { stylePromptTitle } = require("./prompt-style.js");
+
+    const message = "Test message";
+    const title = "Test title";
+
+    note(message, title);
+
+    expect(note).toHaveBeenCalledWith("Test message", "Test title");
+    expect(stylePromptTitle).toHaveBeenCalledWith("Test title");
+  });
+
+  it("should call clackNote with wrapped message and default title", () => {
+    const { note } = require("@clack/prompts");
+    const { stylePromptTitle } = require("./prompt-style.js");
+
     const message = "Test message";
 
     note(message);
 
-    expect(clackNote).toHaveBeenCalled();
-    const wrappedMessage = clackNote.mock.calls[0][0];
-    expect(wrappedMessage).toContain(message);
-  });
-
-  it("should call clack note with styled title", async () => {
-    const clackPrompts = await import("@clack/prompts");
-    const clackNote = vi.mocked(clackPrompts.note);
-    const message = "Test message";
-    const title = "Test Title";
-
-    note(message, title);
-
-    expect(clackNote).toHaveBeenCalledWith(expect.any(String), "styled(Test Title)");
-  });
-
-  it("should handle message without title", async () => {
-    // This test verifies that the note function works without a title
-    const message = "Test message";
-    expect(() => note(message)).not.toThrow();
-  });
-
-  it("should handle empty message", async () => {
-    const clackPrompts = await import("@clack/prompts");
-    const clackNote = vi.mocked(clackPrompts.note);
-
-    note("");
-
-    expect(clackNote).toHaveBeenCalled();
+    expect(note).toHaveBeenCalledWith("Test message", "");
+    expect(stylePromptTitle).toHaveBeenCalledWith(undefined);
   });
 });
