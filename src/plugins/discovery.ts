@@ -180,6 +180,23 @@ function discoverInDirectory(params: {
       continue;
     }
 
+    // Check for openclaw.plugin.json
+    const pluginManifestPath = path.join(fullPath, "openclaw.plugin.json");
+    if (fs.existsSync(pluginManifestPath)) {
+      addCandidate({
+        candidates: params.candidates,
+        seen: params.seen,
+        idHint: entry.name,
+        source: pluginManifestPath,
+        rootDir: fullPath,
+        origin: params.origin,
+        workspaceDir: params.workspaceDir,
+        manifest,
+        packageDir: fullPath,
+      });
+      continue;
+    }
+
     const indexCandidates = ["index.ts", "index.js", "index.mjs", "index.cjs"];
     const indexFile = indexCandidates
       .map((candidate) => path.join(fullPath, candidate))

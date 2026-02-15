@@ -35,6 +35,7 @@ describe("buildWorkspaceSkillSnapshot", () => {
     const snapshot = buildWorkspaceSkillSnapshot(workspaceDir, {
       managedSkillsDir: path.join(workspaceDir, ".managed"),
       bundledSkillsDir: path.join(workspaceDir, ".bundled"),
+      config: { plugins: { enabled: false } },
     });
 
     expect(snapshot.prompt).toBe("");
@@ -58,6 +59,7 @@ describe("buildWorkspaceSkillSnapshot", () => {
     const snapshot = buildWorkspaceSkillSnapshot(workspaceDir, {
       managedSkillsDir: path.join(workspaceDir, ".managed"),
       bundledSkillsDir: path.join(workspaceDir, ".bundled"),
+      config: { plugins: { enabled: false } },
     });
 
     expect(snapshot.prompt).toContain("visible-skill");

@@ -1,24 +1,20 @@
-// Debug regex in detail
-const regex = /<\s*(\/?)\s*(?:t|think|thinking|thought|antthinking)(?:\b[^<>]*>|\/?>|>)/gi;
+// Test the WORD_CLOSE_RE regex
+const WORD_CLOSE_RE =
+  /\b(?:This is|This should be|First|Second|Third|One|Two|Three|Zero)\s+(thinking|thought|antthinking)\u0111|\b(?:This is|This should be|First|Second|Third|One|Two|Three|Zero)\s+(thinking|thought|antthinking)(?=[.!?]|\s|$)|\u0110more\s+\w+\u0111/gi;
 
-const test = "</t>";
-console.log("Testing:", JSON.stringify(test));
-console.log("Regex:", regex);
+const text = "Before This is thinkingđ after.";
+console.log("Original:", JSON.stringify(text));
+console.log("Length:", text.length);
+console.log("Char at 6:", JSON.stringify(text[6]));
+console.log("Char at 7:", JSON.stringify(text[7]));
 
-// Test step by step
-console.log("\nStep by step:");
-console.log("  Matches '<':", /</.test(test));
-console.log("  Matches '</':", /<\//.test(test));
-console.log("  Matches '</t':", /<\/t/.test(test));
-console.log("  Matches '</t>':", /<\/t>/.test(test));
+const matches = [...text.matchAll(WORD_CLOSE_RE)];
+console.log("Matches:", matches);
 
-// Test with optional spaces
-console.log("\nWith optional spaces:");
-console.log("  Matches '<\\s*/\\s*t>':", /<\s*\/\s*t>/.test(test));
-
-// Test the full pattern
-console.log("\nFull pattern:");
-console.log("  Matches:", regex.test(test));
-regex.lastIndex = 0; // Reset
-const match = test.match(regex);
-console.log("  Match result:", match);
+for (const match of matches) {
+  console.log("Full match:", JSON.stringify(match[0]));
+  console.log("Index:", match.index);
+  console.log("End:", match.index + match[0].length);
+  console.log("Before char:", JSON.stringify(text[match.index - 1]));
+  console.log("After char:", JSON.stringify(text[match.index + match[0].length]));
+}

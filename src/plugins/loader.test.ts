@@ -23,21 +23,22 @@ function writePlugin(params: {
   body: string;
   dir?: string;
   filename?: string;
+  kind?: string;
 }): TempPlugin {
   const dir = params.dir ?? makeTempDir();
   const filename = params.filename ?? `${params.id}.js`;
   const file = path.join(dir, filename);
   fs.writeFileSync(file, params.body, "utf-8");
+  const manifest: any = {
+    id: params.id,
+    configSchema: EMPTY_PLUGIN_SCHEMA,
+  };
+  if (params.kind) {
+    manifest.kind = params.kind;
+  }
   fs.writeFileSync(
     path.join(dir, "openclaw.plugin.json"),
-    JSON.stringify(
-      {
-        id: params.id,
-        configSchema: EMPTY_PLUGIN_SCHEMA,
-      },
-      null,
-      2,
-    ),
+    JSON.stringify(manifest, null, 2),
     "utf-8",
   );
   return { dir, file, id: params.id };
@@ -150,6 +151,7 @@ describe("loadOpenClawPlugins", () => {
       body: `export default { id: "memory-core", kind: "memory", register() {} };`,
       dir: bundledDir,
       filename: "memory-core.ts",
+      kind: "memory",
     });
     process.env.OPENCLAW_BUNDLED_PLUGINS_DIR = bundledDir;
 
@@ -188,6 +190,7 @@ describe("loadOpenClawPlugins", () => {
       body: `export default { id: "memory-core", kind: "memory", name: "Memory (Core)", register() {} };`,
       dir: pluginDir,
       filename: "index.ts",
+      kind: "memory",
     });
 
     process.env.OPENCLAW_BUNDLED_PLUGINS_DIR = bundledDir;

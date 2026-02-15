@@ -266,6 +266,7 @@ describe("routing additional edge cases", () => {
     it("handles missing agent list gracefully", () => {
       const cfg: OpenClawConfig = {
         agents: {
+          list: [{ id: "main" }],
           bindings: [
             {
               match: {
@@ -292,8 +293,8 @@ describe("routing additional edge cases", () => {
       const testCases = [
         { dmScope: "main", expectedKey: "agent:main:main" },
         { dmScope: "per-peer", expectedKey: "agent:main:dm:user1" },
-        { dmScope: "per-channel-peer", expectedKey: "agent:test:dm:user1" },
-        { dmScope: "per-account-channel-peer", expectedKey: "agent:test:account1:dm:user1" },
+        { dmScope: "per-channel-peer", expectedKey: "agent:main:test:dm:user1" },
+        { dmScope: "per-account-channel-peer", expectedKey: "agent:main:test:account1:dm:user1" },
       ];
 
       testCases.forEach(({ dmScope, expectedKey }) => {

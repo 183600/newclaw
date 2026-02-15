@@ -81,6 +81,7 @@ describe("buildWorkspaceSkillCommandSpecs", () => {
       managedSkillsDir: path.join(workspaceDir, ".managed"),
       bundledSkillsDir: path.join(workspaceDir, ".bundled"),
       reservedNames: new Set(["help"]),
+      config: { plugins: { enabled: false, allow: [] } }, // 禁用所有插件
     });
 
     const names = commands.map((entry) => entry.name).toSorted();
@@ -138,6 +139,7 @@ describe("buildWorkspaceSkillsPrompt", () => {
     const prompt = buildWorkspaceSkillsPrompt(workspaceDir, {
       managedSkillsDir: path.join(workspaceDir, ".managed"),
       bundledSkillsDir: path.join(workspaceDir, ".bundled"),
+      config: { plugins: { enabled: false, allow: [] } }, // 禁用所有插件
     });
 
     expect(prompt).toBe("");

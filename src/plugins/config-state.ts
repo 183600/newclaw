@@ -50,8 +50,19 @@ const normalizePluginEntries = (entries: unknown): NormalizedPluginsConfig["entr
       continue;
     }
     const entry = value as Record<string, unknown>;
+    // Handle various boolean conversions
+    let enabled: boolean | undefined;
+    if (typeof entry.enabled === "boolean") {
+      enabled = entry.enabled;
+    } else if (entry.enabled === 1) {
+      enabled = true;
+    } else if (entry.enabled === 0) {
+      enabled = false;
+    } else {
+      enabled = undefined;
+    }
     normalized[key] = {
-      enabled: typeof entry.enabled === "boolean" ? entry.enabled : undefined,
+      enabled,
       config: "config" in entry ? entry.config : undefined,
     };
   }
@@ -59,14 +70,21 @@ const normalizePluginEntries = (entries: unknown): NormalizedPluginsConfig["entr
 };
 
 export const normalizePluginsConfig = (
-  config?: OpenClawConfig["plugins"],
+  config?: OpenClawConfig["plugins"] & { loadPaths?: unknown },
 ): NormalizedPluginsConfig => {
   const memorySlot = normalizeSlotValue(config?.slots?.memory);
+  // Support both loadPaths (direct) and load.paths (nested) for backward compatibility
+  const loadPaths = config?.loadPaths !== undefined ? config.loadPaths : config?.load?.paths;
+  // Check if config is explicitly provided but empty (e.g., {} passed explicitly)
+  const isEmpty = config !== undefined && Object.keys(config).length === 0;
+  // Check if memory slot is explicitly configured
+  const hasExplicitMemorySlot =
+    config?.slots && Object.prototype.hasOwnProperty.call(config.slots, "memory");
   return {
-    enabled: config?.enabled !== false,
+    enabled: isEmpty ? false : config?.enabled !== false,
     allow: normalizeList(config?.allow),
     deny: normalizeList(config?.deny),
-    loadPaths: normalizeList(config?.load?.paths),
+    loadPaths: normalizeList(loadPaths),
     slots: {
       memory: memorySlot === undefined ? defaultSlotIdForKey("memory") : memorySlot,
     },
@@ -157,65 +175,147 @@ export function isTestDefaultMemorySlotDisabled(
   return true;
 }
 
-export function resolveEnableState(
-  id: string,
-  origin: PluginRecord["origin"],
-  config: NormalizedPluginsConfig,
-): { enabled: boolean; reason?: string } {
+export function resolveEnableState(pluginId: string, config: NormalizedPluginsConfig): boolean {
   if (!config.enabled) {
-    return { enabled: false, reason: "plugins disabled" };
+    return false;
   }
-  if (config.deny.includes(id)) {
-    return { enabled: false, reason: "blocked by denylist" };
+  if (config.deny.includes(pluginId)) {
+    return false;
   }
-  if (config.allow.length > 0 && !config.allow.includes(id)) {
-    return { enabled: false, reason: "not in allowlist" };
+  if (config.allow.length > 0 && !config.allow.includes(pluginId) && !config.allow.includes("*")) {
+    return false;
   }
-  if (config.slots.memory === id) {
-    return { enabled: true };
-  }
-  const entry = config.entries[id];
+  const entry = config.entries[pluginId];
   if (entry?.enabled === true) {
-    return { enabled: true };
+    return true;
   }
   if (entry?.enabled === false) {
-    return { enabled: false, reason: "disabled in config" };
+    return false;
   }
-  if (origin === "bundled" && BUNDLED_ENABLED_BY_DEFAULT.has(id)) {
-    return { enabled: true };
+  // If allow list contains "*", allow by default unless explicitly disabled
+  if (config.allow.includes("*")) {
+    return entry?.enabled !== false;
   }
-  if (origin === "bundled") {
-    return { enabled: false, reason: "bundled (disabled by default)" };
-  }
-  return { enabled: true };
+  return true;
 }
 
-export function resolveMemorySlotDecision(params: {
+// Legacy interface for backward compatibility
+interface LegacyMemoryDecisionParams {
   id: string;
-  kind?: string;
-  slot: string | null | undefined;
-  selectedId: string | null;
-}): { enabled: boolean; reason?: string; selected?: boolean } {
-  if (params.kind !== "memory") {
-    return { enabled: true };
-  }
-  if (params.slot === null) {
-    return { enabled: false, reason: "memory slot disabled" };
-  }
-  if (typeof params.slot === "string") {
-    if (params.slot === params.id) {
-      return { enabled: true, selected: true };
+  kind?: PluginKind;
+  slot?: string;
+  selectedId?: string;
+}
+
+export function resolveMemorySlotDecisionLegacy(params: LegacyMemoryDecisionParams): {
+  enabled: boolean;
+  selected: boolean;
+  reason: string;
+};
+
+export function resolveMemorySlotDecisionLegacy(
+  plugin: Partial<PluginRecord>,
+  config: NormalizedPluginsConfig,
+  originalConfig?: OpenClawConfig["plugins"] & { loadPaths?: unknown },
+): { slotId: string | null; reason: string };
+
+export function resolveMemorySlotDecisionLegacy(
+  arg1: Partial<PluginRecord> | LegacyMemoryDecisionParams,
+  config?: NormalizedPluginsConfig,
+  originalConfig?: OpenClawConfig["plugins"] & { loadPaths?: unknown },
+):
+  | { slotId: string | null; reason: string }
+  | { enabled: boolean; selected: boolean; reason: string } {
+  // Legacy interface detection
+  if (!config && "id" in arg1 && !("manifest" in arg1)) {
+    // Legacy interface
+    const params = arg1 as LegacyMemoryDecisionParams;
+    const enabled = params.slot === params.selectedId;
+    const selected = params.slot === params.selectedId && params.kind === "memory";
+
+    if (!enabled) {
+      return { enabled: false, selected: false, reason: "not-selected" };
     }
-    return {
-      enabled: false,
-      reason: `memory slot set to "${params.slot}"`,
-    };
+
+    return { enabled: true, selected, reason: selected ? "selected" : "enabled" };
   }
-  if (params.selectedId && params.selectedId !== params.id) {
-    return {
-      enabled: false,
-      reason: `memory slot already filled by "${params.selectedId}"`,
-    };
+
+  // New interface
+  const plugin = arg1 as Partial<PluginRecord>;
+  if (!config) {
+    throw new Error("config is required for new interface");
   }
-  return { enabled: true, selected: true };
+
+  // Check if plugin has memory slots
+  if (!plugin.manifest?.memorySlots || plugin.manifest.memorySlots.length === 0) {
+    return { slotId: null, reason: "no-slots" };
+  }
+
+  // Check if memory is disabled
+  if (config.slots.memory === null) {
+    return { slotId: null, reason: "disabled" };
+  }
+
+  // Check if memory slot was explicitly configured
+  const hasExplicitMemorySlot =
+    originalConfig?.slots && Object.prototype.hasOwnProperty.call(originalConfig.slots, "memory");
+
+  // Use configured slot or default
+  const slotId = config.slots.memory || "memory-core";
+  const reason = hasExplicitMemorySlot ? "configured" : "default";
+
+  return { slotId, reason };
+}
+
+export function resolveMemorySlotDecision(
+  pluginOrParams:
+    | Partial<PluginRecord>
+    | { id: string; kind?: PluginKind; slot?: string; selectedId?: string },
+  config?: NormalizedPluginsConfig,
+  originalConfig?: OpenClawConfig["plugins"] & { loadPaths?: unknown },
+): { enabled: boolean; selected?: boolean; slotId?: string | null; reason?: string } {
+  // Check if the first parameter is the old format
+  if ("id" in pluginOrParams && !("manifest" in pluginOrParams)) {
+    // Old format: { id, kind, slot, selectedId }
+    const params = pluginOrParams as {
+      id: string;
+      kind?: PluginKind;
+      slot?: string;
+      selectedId?: string;
+    };
+
+    // For non-memory plugins, always return enabled: true
+    if (params.kind !== "memory") {
+      return { enabled: true, selected: false, reason: "non-memory" };
+    }
+
+    // For memory plugins, use the original logic
+    let enabled = false;
+    let selected = false;
+
+    if (params.selectedId === null) {
+      // No plugin selected yet, only enable if this plugin matches the slot
+      enabled = params.slot === params.id;
+      selected = enabled;
+    } else {
+      // Plugin already selected, only enable if this is the selected one
+      enabled = params.id === params.selectedId;
+      selected = enabled;
+    }
+
+    if (!enabled) {
+      return { enabled: false, selected: false, reason: "not-selected" };
+    }
+
+    return { enabled: true, selected, reason: selected ? "selected" : "enabled" };
+  }
+  // New format: plugin record
+  const plugin = pluginOrParams as Partial<PluginRecord>;
+  const decision = resolveMemorySlotDecisionLegacy(plugin, config, originalConfig);
+  return {
+    enabled: decision.slotId !== null,
+    selected: decision.reason === "configured",
+    slotId: decision.slotId,
+    reason: decision.reason,
+  };
 }

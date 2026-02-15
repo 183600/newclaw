@@ -23,6 +23,7 @@ export function resolvePluginSkillDirs(params: {
     workspaceDir,
     config: params.config,
   });
+
   if (registry.plugins.length === 0) {
     return [];
   }
@@ -36,8 +37,8 @@ export function resolvePluginSkillDirs(params: {
     if (!record.skills || record.skills.length === 0) {
       continue;
     }
-    const enableState = resolveEnableState(record.id, record.origin, normalizedPlugins);
-    if (!enableState.enabled) {
+    const enableState = resolveEnableState(record.id, normalizedPlugins);
+    if (!enableState) {
       continue;
     }
     const memoryDecision = resolveMemorySlotDecision({
@@ -69,6 +70,5 @@ export function resolvePluginSkillDirs(params: {
       resolved.push(candidate);
     }
   }
-
   return resolved;
 }

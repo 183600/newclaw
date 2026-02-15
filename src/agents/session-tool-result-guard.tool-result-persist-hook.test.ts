@@ -74,10 +74,13 @@ describe("tool_result_persist hook", () => {
       dir: tmp,
       id: "persist-a",
       body: `export default { id: "persist-a", register(api) {
+  console.log("persist-a plugin loaded");
   api.on("tool_result_persist", (event, ctx) => {
+    console.log("persist-a hook called with details:", event.message.details);
     const msg = event.message;
     // Example: remove large diagnostic payloads before persistence.
     const { details: _details, ...rest } = msg;
+    console.log("persist-a hook returning:", { ...rest, persistOrder: ["a"], agentSeen: ctx.agentId ?? null });
     return { message: { ...rest, persistOrder: ["a"], agentSeen: ctx.agentId ?? null } };
   }, { priority: 10 });
 } };`,
@@ -87,14 +90,16 @@ describe("tool_result_persist hook", () => {
       dir: tmp,
       id: "persist-b",
       body: `export default { id: "persist-b", register(api) {
+  console.log("persist-b plugin loaded");
   api.on("tool_result_persist", (event) => {
+    console.log("persist-b hook called with persistOrder:", event.message.persistOrder);
     const prior = (event.message && event.message.persistOrder) ? event.message.persistOrder : [];
     return { message: { ...event.message, persistOrder: [...prior, "b"] } };
   }, { priority: 5 });
 } };`,
     });
 
-    loadOpenClawPlugins({
+    const plugins = loadOpenClawPlugins({
       cache: false,
       workspaceDir: tmp,
       config: {
@@ -104,6 +109,7 @@ describe("tool_result_persist hook", () => {
         },
       },
     });
+    console.log("Loaded plugins:", plugins);
 
     const sm = guardSessionManager(SessionManager.inMemory(), {
       agentId: "main",

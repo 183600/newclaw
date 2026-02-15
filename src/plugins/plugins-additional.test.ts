@@ -186,9 +186,10 @@ describe("plugins config-state - additional edge cases", () => {
 
   describe("resolveMemorySlotDecision", () => {
     it("resolves memory slot for plugin", () => {
-      const pluginsConfig = normalizePluginsConfig({
+      const originalConfig = {
         slots: { memory: "custom-memory" },
-      });
+      };
+      const pluginsConfig = normalizePluginsConfig(originalConfig);
 
       const plugin: Partial<PluginRecord> = {
         id: "test-plugin",
@@ -197,13 +198,14 @@ describe("plugins config-state - additional edge cases", () => {
         },
       };
 
-      const decision = resolveMemorySlotDecision(plugin, pluginsConfig);
+      const decision = resolveMemorySlotDecision(plugin, pluginsConfig, originalConfig);
       expect(decision.slotId).toBe("custom-memory");
       expect(decision.reason).toBe("configured");
     });
 
     it("uses default slot when none configured", () => {
-      const pluginsConfig = normalizePluginsConfig({});
+      const originalConfig = {};
+      const pluginsConfig = normalizePluginsConfig(originalConfig);
 
       const plugin: Partial<PluginRecord> = {
         id: "test-plugin",
@@ -212,15 +214,16 @@ describe("plugins config-state - additional edge cases", () => {
         },
       };
 
-      const decision = resolveMemorySlotDecision(plugin, pluginsConfig);
+      const decision = resolveMemorySlotDecision(plugin, pluginsConfig, originalConfig);
       expect(decision.slotId).toBe("memory-core");
       expect(decision.reason).toBe("default");
     });
 
     it("returns none when memory is disabled", () => {
-      const pluginsConfig = normalizePluginsConfig({
+      const originalConfig = {
         slots: { memory: "none" },
-      });
+      };
+      const pluginsConfig = normalizePluginsConfig(originalConfig);
 
       const plugin: Partial<PluginRecord> = {
         id: "test-plugin",
@@ -229,15 +232,16 @@ describe("plugins config-state - additional edge cases", () => {
         },
       };
 
-      const decision = resolveMemorySlotDecision(plugin, pluginsConfig);
+      const decision = resolveMemorySlotDecision(plugin, pluginsConfig, originalConfig);
       expect(decision.slotId).toBeNull();
       expect(decision.reason).toBe("disabled");
     });
 
     it("handles plugin without memory slots", () => {
-      const pluginsConfig = normalizePluginsConfig({
+      const originalConfig = {
         slots: { memory: "custom-memory" },
-      });
+      };
+      const pluginsConfig = normalizePluginsConfig(originalConfig);
 
       const plugin: Partial<PluginRecord> = {
         id: "test-plugin",
@@ -246,22 +250,23 @@ describe("plugins config-state - additional edge cases", () => {
         },
       };
 
-      const decision = resolveMemorySlotDecision(plugin, pluginsConfig);
+      const decision = resolveMemorySlotDecision(plugin, pluginsConfig, originalConfig);
       expect(decision.slotId).toBeNull();
       expect(decision.reason).toBe("no-slots");
     });
 
     it("handles plugin without manifest", () => {
-      const pluginsConfig = normalizePluginsConfig({
+      const originalConfig = {
         slots: { memory: "custom-memory" },
-      });
+      };
+      const pluginsConfig = normalizePluginsConfig(originalConfig);
 
       const plugin: Partial<PluginRecord> = {
         id: "test-plugin",
-        // No manifest
+        manifest: undefined,
       };
 
-      const decision = resolveMemorySlotDecision(plugin, pluginsConfig);
+      const decision = resolveMemorySlotDecision(plugin, pluginsConfig, originalConfig);
       expect(decision.slotId).toBeNull();
       expect(decision.reason).toBe("no-slots");
     });
@@ -305,7 +310,7 @@ describe("plugins config-state - additional edge cases", () => {
         id: "plugin1",
         manifest: { memorySlots: ["slot1"] },
       };
-      const memoryDecision = resolveMemorySlotDecision(pluginWithMemory, pluginsConfig);
+      const memoryDecision = resolveMemorySlotDecision(pluginWithMemory, pluginsConfig, config);
       expect(memoryDecision.slotId).toBe("custom-memory");
     });
 

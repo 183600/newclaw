@@ -14,7 +14,9 @@ function normalizeBindingChannelId(raw?: string | null): string | null {
 }
 
 export function listBindings(cfg: OpenClawConfig): AgentBinding[] {
-  return Array.isArray(cfg.bindings) ? cfg.bindings : [];
+  // Support both cfg.agents.bindings and cfg.bindings for backward compatibility
+  const bindings = cfg.agents?.bindings || cfg.bindings;
+  return Array.isArray(bindings) ? bindings : [];
 }
 
 export function listBoundAccountIds(cfg: OpenClawConfig, channelId: string): string[] {

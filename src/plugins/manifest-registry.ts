@@ -168,6 +168,22 @@ export function loadPluginManifestRegistry(params: {
         source: candidate.source,
         message: `duplicate plugin id detected; later plugin may be overridden (${candidate.source})`,
       });
+
+      // If the new plugin is from workspace and the existing one is not, replace it
+      const existingIndex = records.findIndex((r) => r.id === manifest.id);
+      if (
+        existingIndex !== -1 &&
+        candidate.origin === "workspace" &&
+        records[existingIndex].origin !== "workspace"
+      ) {
+        records[existingIndex] = buildRecord({
+          manifest,
+          candidate,
+          manifestPath: manifestRes.manifestPath,
+          schemaCacheKey,
+          configSchema,
+        });
+      }
     } else {
       seenIds.add(manifest.id);
     }

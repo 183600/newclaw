@@ -1,37 +1,14 @@
-// Debug specific regex matching
+// Test regex pattern
+const WORD_CLOSE_RE =
+  /\b(?:This is|This should be|First|Second|Third|One|Two|Three|Zero)\s+(thinking|thought|antthinking)\u0111|\b(?:This is|This should be|First|Second|Third|One|Two|Three|Zero)\s+(thinking|thought|antthinking)(?=[.!?]|\s|$)|\u0110more\s+\w+\u0111/gi;
 
-const HTML_THINKING_TAG_RE =
-  /<\s*(\/?)\s*(?:t|think|thinking|thought|antthinking)(?:\b[^<>]*>|\/?>|>)/gi;
+const text = "Before This is thinkingđ after.";
+const matches = [...text.matchAll(WORD_CLOSE_RE)];
+console.log("Matches:", matches);
+console.log("Match count:", matches.length);
 
-const tag = "<" + "think" + ">";
-console.log("Tag to test:", JSON.stringify(tag));
-
-// Test the regex step by step
-console.log("\nTesting regex components:");
-
-// Test the basic structure
-const basicRe = /<\s*(\/?)\s*(t|think|thinking|thought|antthinking)\s*>/gi;
-console.log("Basic regex match:", tag.match(basicRe));
-
-// Test with attributes
-const attrRe = /<\s*(\/?)\s*(t|think|thinking|thought|antthinking)(?:\b[^<>]*>|\/?>|>)/gi;
-console.log("With attributes match:", tag.match(attrRe));
-
-// Test the original regex
-console.log("Original regex match:", tag.match(HTML_THINKING_TAG_RE));
-
-// Test character by character
-console.log("\nCharacter analysis:");
-for (let i = 0; i < tag.length; i++) {
-  const char = tag[i];
-  const code = tag.charCodeAt(i);
-  console.log(`  ${i}: "${char}" (${code})`);
+for (const match of matches) {
+  console.log("Full match:", match[0]);
+  console.log("Index:", match.index);
+  console.log("Groups:", match.slice(1));
 }
-
-// Test simpler patterns
-console.log("\nSimpler patterns:");
-console.log('Contains "<":', tag.includes("<"));
-console.log('Contains ">":', tag.includes(">"));
-console.log('Contains "think":', tag.includes("think"));
-
-// Test complete

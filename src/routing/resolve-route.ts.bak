@@ -5,7 +5,6 @@ import {
   buildAgentMainSessionKey,
   buildAgentPeerSessionKey,
   DEFAULT_ACCOUNT_ID,
-  DEFAULT_AGENT_ID,
   DEFAULT_MAIN_KEY,
   normalizeAgentId,
   sanitizeAgentId,
@@ -71,7 +70,7 @@ function matchesAccountId(match: string | undefined, actual: string): boolean {
   if (trimmed === "*") {
     return true;
   }
-  return trimmed.toLowerCase() === actual.toLowerCase();
+  return trimmed === actual;
 }
 
 export function buildAgentSessionKey(params: {
@@ -88,7 +87,7 @@ export function buildAgentSessionKey(params: {
   return buildAgentPeerSessionKey({
     agentId: params.agentId,
     mainKey: DEFAULT_MAIN_KEY,
-    channel: channel || "unknown",
+    channel,
     accountId: params.accountId,
     peerKind: peer?.kind ?? "dm",
     peerId: peer ? normalizeId(peer.id) || "unknown" : null,
@@ -105,7 +104,7 @@ function listAgents(cfg: OpenClawConfig) {
 function pickFirstExistingAgentId(cfg: OpenClawConfig, agentId: string): string {
   const trimmed = (agentId ?? "").trim();
   if (!trimmed) {
-    return sanitizeAgentId(trimmed);
+    return sanitizeAgentId(resolveDefaultAgentId(cfg));
   }
   const normalized = normalizeAgentId(trimmed);
   const agents = listAgents(cfg);
@@ -116,8 +115,7 @@ function pickFirstExistingAgentId(cfg: OpenClawConfig, agentId: string): string 
   if (match?.id?.trim()) {
     return sanitizeAgentId(match.id.trim());
   }
-  // Return DEFAULT_AGENT_ID only when the agent list is not empty and the agent is not found
-  return DEFAULT_AGENT_ID;
+  return sanitizeAgentId(resolveDefaultAgentId(cfg));
 }
 
 function matchesChannel(
@@ -140,14 +138,11 @@ function matchesPeer(
     return false;
   }
   const kind = normalizeToken(m.kind);
-  const id = normalizeToken(m.id);
-  const peerKind = normalizeToken(peer.kind);
-  const peerId = normalizeToken(peer.id);
+  const id = normalizeId(m.id);
   if (!kind || !id) {
     return false;
   }
-  const result = kind === peerKind && id === peerId;
-  return result;
+  return kind === normalizeToken(peer.kind) && id === normalizeId(peer.id);
 }
 
 function matchesGuild(
@@ -199,7 +194,7 @@ export function resolveAgentRoute(input: ResolveAgentRouteInput): ResolvedAgentR
     const resolvedAgentId = pickFirstExistingAgentId(input.cfg, agentId);
     const sessionKey = buildAgentSessionKey({
       agentId: resolvedAgentId,
-      channel: channel || "unknown",
+      channel,
       accountId,
       peer,
       dmScope,
@@ -211,7 +206,7 @@ export function resolveAgentRoute(input: ResolveAgentRouteInput): ResolvedAgentR
     }).toLowerCase();
     return {
       agentId: resolvedAgentId,
-      channel: channel || "unknown",
+      channel,
       accountId,
       sessionKey,
       mainSessionKey,

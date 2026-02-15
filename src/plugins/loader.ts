@@ -252,8 +252,19 @@ export function loadOpenClawPlugins(options: PluginLoadOptions = {}): PluginRegi
       continue;
     }
 
-    const enableState = resolveEnableState(pluginId, candidate.origin, normalized);
+    let isEnabled = resolveEnableState(pluginId, normalized);
     const entry = normalized.entries[pluginId];
+
+    // Bundled plugins are disabled by default unless explicitly enabled
+    // However, if it's a memory plugin and matches the selected slot, enable it
+    const isMemoryPlugin = manifestRecord.kind === "memory";
+    const isSelectedMemoryPlugin =
+      isMemoryPlugin && memorySlot && memorySlot !== "none" && memorySlot === pluginId;
+
+    if (candidate.origin === "bundled" && !entry?.enabled && !isSelectedMemoryPlugin) {
+      isEnabled = false;
+    }
+
     const record = createPluginRecord({
       id: pluginId,
       name: manifestRecord.name ?? pluginId,
@@ -262,16 +273,19 @@ export function loadOpenClawPlugins(options: PluginLoadOptions = {}): PluginRegi
       source: candidate.source,
       origin: candidate.origin,
       workspaceDir: candidate.workspaceDir,
-      enabled: enableState.enabled,
+      enabled: isEnabled,
       configSchema: Boolean(manifestRecord.configSchema),
     });
     record.kind = manifestRecord.kind;
     record.configUiHints = manifestRecord.configUiHints;
     record.configJsonSchema = manifestRecord.configSchema;
 
-    if (!enableState.enabled) {
+    if (!isEnabled) {
       record.status = "disabled";
-      record.error = enableState.reason;
+      record.error =
+        candidate.origin === "bundled" && !entry?.enabled
+          ? "bundled plugins are disabled by default"
+          : "plugin is disabled";
       registry.plugins.push(record);
       seenIds.set(pluginId, candidate.origin);
       continue;

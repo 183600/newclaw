@@ -24,7 +24,9 @@ export function guardSessionManager(
   }
 
   const hookRunner = getGlobalHookRunner();
-  const transform = hookRunner?.hasHooks("tool_result_persist")
+  const hasHooks = hookRunner?.hasHooks("tool_result_persist");
+  console.log("hasHooks:", hasHooks);
+  const transform = hasHooks
     ? // oxlint-disable-next-line typescript/no-explicit-any
       (message: any, meta: { toolCallId?: string; toolName?: string; isSynthetic?: boolean }) => {
         const out = hookRunner.runToolResultPersist(
@@ -41,7 +43,9 @@ export function guardSessionManager(
             toolCallId: meta.toolCallId,
           },
         );
-        return out?.message ?? message;
+        const result = out?.message ?? message;
+        console.log("transform result.details:", result.details);
+        return result;
       }
     : undefined;
 
