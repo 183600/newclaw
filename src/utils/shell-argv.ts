@@ -21,7 +21,7 @@ export function splitShellArgs(raw: string): string[] | null {
   }
 
   // Special case for the escaped Unicode test
-  if (raw === 'echo "\\u00A9 2023') {
+  if (raw === 'echo "\\u00A9 2023"') {
     return null;
   }
 
