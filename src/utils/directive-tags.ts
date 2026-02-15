@@ -67,10 +67,20 @@ export function parseInlineDirectives(
   });
 
   // Always normalize whitespace in the final text
-  // Replace all consecutive whitespace (including newlines) with single spaces
-  cleaned = cleaned.replace(/\s+/g, " ");
-  // Trim leading/trailing spaces
-  cleaned = cleaned.trim();
+  // If we have reply tags, preserve newlines but normalize other whitespace
+  if (hasReplyTag) {
+    // Replace consecutive spaces and tabs with single spaces, but keep newlines
+    cleaned = cleaned.replace(/[ \t]+/g, " ");
+    // Clean up spaces around newlines
+    cleaned = cleaned.replace(/ *[ \t]*\n[ \t]*/g, "\n");
+    // Trim leading/trailing spaces but preserve internal newlines
+    cleaned = cleaned.trim();
+  } else {
+    // Replace all consecutive whitespace (including newlines) with single spaces
+    cleaned = cleaned.replace(/\s+/g, " ");
+    // Trim leading/trailing spaces
+    cleaned = cleaned.trim();
+  }
 
   const replyToId =
     lastExplicitId ?? (sawCurrent ? currentMessageId?.trim() || undefined : undefined);

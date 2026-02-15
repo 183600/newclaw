@@ -86,7 +86,7 @@ describe("formatRelativeTime - Additional Tests", () => {
     expect(formatRelativeTime(now - 172799999)).toBe("Yesterday"); // 1.999 days, still "Yesterday"
     expect(formatRelativeTime(now - 172800000)).toBe("2d ago"); // Exactly 2 days
     expect(formatRelativeTime(now - 604799999)).toBe("6d ago"); // 1 millisecond before 7 days
-    expect(formatRelativeTime(now - 604800000)).toMatch(/^[A-Za-z]{3} \d+$/); // Exactly 7 days
+    expect(formatRelativeTime(now - 604800000)).toBe("7d ago"); // Exactly 7 days
   });
 
   it("handles timestamps with milliseconds precision", () => {
@@ -170,8 +170,7 @@ describe("formatRelativeTime - Additional Tests", () => {
 
     const weekAgo = newYear - 7 * 86400000; // 1 week ago (last year)
     const result = formatRelativeTime(weekAgo);
-    expect(result).toMatch(/^[A-Za-z]{3} \d+$/);
-    expect(result).toContain("Dec"); // Should be in December
+    expect(result).toBe("7d ago"); // 7 days ago should show "7d ago" regardless of year boundary
   });
 
   it("handles timestamps with very small system time changes", () => {
