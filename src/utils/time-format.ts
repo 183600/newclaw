@@ -40,9 +40,9 @@ export function formatRelativeTime(timestamp: number): string {
   if (days === 1) {
     return "Yesterday";
   }
-  if (days < 7) {
+  if (days <= 7) {
     return `${days}d ago`;
   }
-  // For 7 days or more, use date format
+  // For more than 7 days, use date format
   return new Date(timestamp).toLocaleDateString(undefined, { month: "short", day: "numeric" });
 }

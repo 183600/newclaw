@@ -20,6 +20,8 @@ const REPLY_TAG_RE = /\[\[\s*(?:reply_to_current|reply_to\s*:\s*([^\]\n]+))\s*(?
 function normalizeDirectiveWhitespace(text: string): string {
   return text
     .replace(/[ \t]+/g, " ") // Replace spaces and tabs with single space, but preserve newlines
+    .replace(/[ \t]*(\n)[ \t]*/g, "$1") // Remove spaces/tabs before and after newlines
+    .replace(/\n+/g, " ") // Replace newlines with single spaces
     .trim();
 }
 
@@ -65,15 +67,10 @@ export function parseInlineDirectives(
   });
 
   // Always normalize whitespace in the final text
-  // Replace spaces and tabs with single spaces, but preserve newlines
-  cleaned = cleaned.replace(/[ \t]+/g, " ");
-  // Trim leading/trailing spaces on each line
-  cleaned = cleaned
-    .split("\n")
-    .map((line) => line.trim())
-    .join("\n");
-  // Trim leading/trailing newlines
-  cleaned = cleaned.replace(/^\n+|\n+$/g, "");
+  // Replace all consecutive whitespace (including newlines) with single spaces
+  cleaned = cleaned.replace(/\s+/g, " ");
+  // Trim leading/trailing spaces
+  cleaned = cleaned.trim();
 
   const replyToId =
     lastExplicitId ?? (sawCurrent ? currentMessageId?.trim() || undefined : undefined);
