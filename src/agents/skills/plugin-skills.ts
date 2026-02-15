@@ -43,9 +43,9 @@ export function resolvePluginSkillDirs(params: {
     }
     const memoryDecision = resolveMemorySlotDecision({
       id: record.id,
-      kind: record.kind,
-      slot: memorySlot,
-      selectedId: selectedMemoryPluginId,
+      kind: record.kind as "memory" | undefined,
+      slot: memorySlot || undefined,
+      selectedId: selectedMemoryPluginId || undefined,
     });
     if (!memoryDecision.enabled) {
       continue;

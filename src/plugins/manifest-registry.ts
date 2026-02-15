@@ -161,6 +161,12 @@ export function loadPluginManifestRegistry(params: {
       });
     }
 
+    const configSchema = manifest.configSchema;
+    const manifestMtime = safeStatMtimeMs(manifestRes.manifestPath);
+    const schemaCacheKey = manifestMtime
+      ? `${manifestRes.manifestPath}:${manifestMtime}`
+      : manifestRes.manifestPath;
+
     if (seenIds.has(manifest.id)) {
       diagnostics.push({
         level: "warn",
@@ -187,12 +193,6 @@ export function loadPluginManifestRegistry(params: {
     } else {
       seenIds.add(manifest.id);
     }
-
-    const configSchema = manifest.configSchema;
-    const manifestMtime = safeStatMtimeMs(manifestRes.manifestPath);
-    const schemaCacheKey = manifestMtime
-      ? `${manifestRes.manifestPath}:${manifestMtime}`
-      : manifestRes.manifestPath;
 
     records.push(
       buildRecord({

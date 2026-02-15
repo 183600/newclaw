@@ -1,3 +1,4 @@
+import fs from "node:fs";
 import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
 import {
   assertWebChannel,
@@ -40,13 +41,12 @@ describe("Message Processing Utilities", () => {
   describe("JID to E164 Conversion", () => {
     it("converts JIDs back to phone numbers", () => {
       // Mock file system for LID mapping
-      const mockFs = vi.mocked(require("node:fs"));
-      mockFs.readFileSync.mockReturnValue('"5551234"');
+      const readFileSyncSpy = vi.spyOn(fs, "readFileSync").mockReturnValue('"5551234"');
 
       const result = jidToE164("123@lid");
       expect(result).toBe("+5551234");
 
-      mockFs.readFileSync.mockRestore();
+      readFileSyncSpy.mockRestore();
     });
 
     it("handles regular JIDs", () => {
@@ -182,7 +182,8 @@ describe("Message Processing Utilities", () => {
 
       expect(formatSize(messageSizes.text)).toBe("100 B");
       expect(formatSize(messageSizes.image)).toBe("1000.0 KB");
-      expect(formatSize(messageSizes.video)).toBe("5.0 MB");
+      // 5120000 / (1024 * 1024) = 4.8828125, rounded to 4.9
+      expect(formatSize(messageSizes.video)).toBe("4.9 MB");
     });
   });
 

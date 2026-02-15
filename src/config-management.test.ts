@@ -3,7 +3,7 @@ import os from "node:os";
 import path from "node:path";
 import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
 import { parseConfigJson5 } from "./config/io.js";
-import { resolveConfigDir } from "./config/paths.js";
+import { resolveConfigDir } from "./utils.js";
 
 describe("Configuration Management", () => {
   let tempDir: string;
@@ -33,8 +33,9 @@ describe("Configuration Management", () => {
 
       fs.writeFileSync(configPath, JSON.stringify(config, null, 2));
 
-      const parsed = parseConfigJson5(fs.readFileSync(configPath, "utf-8"));
-      expect(parsed).toEqual(config);
+      const result = parseConfigJson5(fs.readFileSync(configPath, "utf-8"));
+      expect(result.ok).toBe(true);
+      expect(result.parsed).toEqual(config);
     });
 
     it("parses JSON5 with comments", () => {
@@ -49,9 +50,10 @@ describe("Configuration Management", () => {
 
       fs.writeFileSync(configPath, configWithComments);
 
-      const parsed = parseConfigJson5(fs.readFileSync(configPath, "utf-8"));
-      expect(parsed.gateway.mode).toBe("local");
-      expect(parsed.gateway.port).toBe(18789);
+      const result = parseConfigJson5(fs.readFileSync(configPath, "utf-8"));
+      expect(result.ok).toBe(true);
+      expect(result.parsed.gateway.mode).toBe("local");
+      expect(result.parsed.gateway.port).toBe(18789);
     });
 
     it("handles trailing commas", () => {
@@ -65,9 +67,10 @@ describe("Configuration Management", () => {
 
       fs.writeFileSync(configPath, configWithTrailingCommas);
 
-      const parsed = parseConfigJson5(fs.readFileSync(configPath, "utf-8"));
-      expect(parsed.gateway.mode).toBe("local");
-      expect(parsed.gateway.port).toBe(18789);
+      const result = parseConfigJson5(fs.readFileSync(configPath, "utf-8"));
+      expect(result.ok).toBe(true);
+      expect(result.parsed.gateway.mode).toBe("local");
+      expect(result.parsed.gateway.port).toBe(18789);
     });
 
     it("handles invalid JSON5", () => {
@@ -80,16 +83,17 @@ describe("Configuration Management", () => {
 
       fs.writeFileSync(configPath, invalidConfig);
 
-      expect(() => {
-        parseConfigJson5(fs.readFileSync(configPath, "utf-8"));
-      }).toThrow();
+      const result = parseConfigJson5(fs.readFileSync(configPath, "utf-8"));
+      expect(result.ok).toBe(false);
+      expect(result.error).toBeDefined();
     });
 
     it("handles empty configuration", () => {
       fs.writeFileSync(configPath, "{}");
 
-      const parsed = parseConfigJson5(fs.readFileSync(configPath, "utf-8"));
-      expect(parsed).toEqual({});
+      const result = parseConfigJson5(fs.readFileSync(configPath, "utf-8"));
+      expect(result.ok).toBe(true);
+      expect(result.parsed).toEqual({});
     });
   });
 
@@ -114,7 +118,7 @@ describe("Configuration Management", () => {
       const customConfigDir = path.join(tempDir, "custom-config");
       fs.mkdirSync(customConfigDir, { recursive: true });
 
-      const env = { OPENCLAW_CONFIG_DIR: customConfigDir };
+      const env = { OPENCLAW_STATE_DIR: customConfigDir };
 
       const resolved = resolveConfigDir(env, () => tempDir);
       expect(resolved).toBe(customConfigDir);
@@ -126,6 +130,8 @@ describe("Configuration Management", () => {
       fs.mkdirSync(homeDir, { recursive: true });
 
       const resolved = resolveConfigDir(env, () => homeDir);
+      // Manually create the directory to test the path resolution
+      fs.mkdirSync(resolved, { recursive: true });
       expect(fs.existsSync(resolved)).toBe(true);
     });
   });
@@ -148,8 +154,9 @@ describe("Configuration Management", () => {
       fs.writeFileSync(configPath, JSON.stringify(config, null, 2));
 
       const content = fs.readFileSync(configPath, "utf-8");
-      const parsed = parseConfigJson5(content);
-      expect(parsed).toEqual(config);
+      const result = parseConfigJson5(content);
+      expect(result.ok).toBe(true);
+      expect(result.parsed).toEqual(config);
     });
 
     it("handles nested configuration structures", () => {
@@ -187,9 +194,10 @@ describe("Configuration Management", () => {
       fs.writeFileSync(configPath, JSON.stringify(config, null, 2));
 
       const content = fs.readFileSync(configPath, "utf-8");
-      const parsed = parseConfigJson5(content);
-      expect(parsed.agents[0].tools[0].name).toBe("web-search");
-      expect(parsed.channels.whatsapp.allowFrom).toEqual(["+1234567890"]);
+      const result = parseConfigJson5(content);
+      expect(result.ok).toBe(true);
+      expect(result.parsed.agents[0].tools[0].name).toBe("web-search");
+      expect(result.parsed.channels.whatsapp.allowFrom).toEqual(["+1234567890"]);
     });
   });
 
@@ -205,10 +213,11 @@ describe("Configuration Management", () => {
       fs.writeFileSync(configPath, JSON.stringify(config, null, 2));
 
       const content = fs.readFileSync(configPath, "utf-8");
-      const parsed = parseConfigJson5(content);
+      const result = parseConfigJson5(content);
 
-      expect(parsed.gateway.mode).toBeDefined();
-      expect(parsed.gateway.port).toBe(18789);
+      expect(result.ok).toBe(true);
+      expect(result.parsed.gateway.mode).toBeDefined();
+      expect(result.parsed.gateway.port).toBe(18789);
     });
 
     it("handles configuration with arrays", () => {
@@ -226,12 +235,13 @@ describe("Configuration Management", () => {
       fs.writeFileSync(configPath, JSON.stringify(config, null, 2));
 
       const content = fs.readFileSync(configPath, "utf-8");
-      const parsed = parseConfigJson5(content);
+      const result = parseConfigJson5(content);
 
-      expect(parsed.agents).toHaveLength(2);
-      expect(parsed.tools).toHaveLength(2);
-      expect(parsed.agents[0].model).toBe("gpt-4");
-      expect(parsed.tools[1].enabled).toBe(false);
+      expect(result.ok).toBe(true);
+      expect(result.parsed.agents).toHaveLength(2);
+      expect(result.parsed.tools).toHaveLength(2);
+      expect(result.parsed.agents[0].model).toBe("gpt-4");
+      expect(result.parsed.tools[1].enabled).toBe(false);
     });
   });
 });

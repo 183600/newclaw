@@ -301,20 +301,19 @@ export function validateConfigObjectWithPlugins(raw: unknown):
     const entry = normalizedPlugins.entries[pluginId];
     const entryHasConfig = Boolean(entry?.config);
 
-    const enableState = resolveEnableState(pluginId, record.origin, normalizedPlugins);
-    let enabled = enableState.enabled;
-    let reason = enableState.reason;
+    let enabled = resolveEnableState(pluginId, normalizedPlugins);
+    let reason: string | undefined;
 
     if (enabled) {
       const memoryDecision = resolveMemorySlotDecision({
         id: pluginId,
-        kind: record.kind,
-        slot: memorySlot,
-        selectedId: selectedMemoryPluginId,
+        kind: record.kind as "memory" | undefined,
+        slot: memorySlot || undefined,
+        selectedId: selectedMemoryPluginId || undefined,
       });
       if (!memoryDecision.enabled) {
         enabled = false;
-        reason = memoryDecision.reason;
+        reason = memoryDecision.reason || undefined;
       }
       if (memoryDecision.selected && record.kind === "memory") {
         selectedMemoryPluginId = pluginId;

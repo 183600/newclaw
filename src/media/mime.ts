@@ -96,10 +96,10 @@ export function isAudioFileName(fileName?: string | null): boolean | undefined {
     return undefined;
   }
   // Return undefined for empty string or filename without extension
-  if (fileName === "" || !getFileExtension(fileName)) {
+  const ext = getFileExtension(fileName);
+  if (!ext) {
     return undefined;
   }
-  const ext = getFileExtension(fileName);
   return AUDIO_FILE_EXTENSIONS.has(ext);
 }
 

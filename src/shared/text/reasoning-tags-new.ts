@@ -8,7 +8,8 @@ const FINAL_TAG_RE = /<\s*\/?\s*final\b[^<>]*>/gi;
 const SPECIAL_CLOSE_RE = /(thinking|thought|antthinking)\u0111/gi;
 
 // Patterns for word + tag combinations (e.g., "This is thinkingđ", "First thoughtđ", "This should be removedđ")
-const WORD_CLOSE_RE = /\b(?:This is|This should be|First|Second|Third|One|Two|Three|Zero|Four)\s+(thinking|thought|antthinking)\u0111/gi;
+const WORD_CLOSE_RE =
+  /\b(?:This is|This should be|First|Second|Third|One|Two|Three|Zero|Four)\s+(thinking|thought|antthinking)\u0111/gi;
 const WORD_HTML_CLOSE_RE =
   /\b(?:This is|First|Second|Third|One|Two|Three|Zero|Four)\s+(thinking|thought|antthinking)(?:<\/t>|<\/think>|<\/thinking>|<\/thought>|<\/antthinking>)/gi;
 
@@ -136,10 +137,9 @@ export function stripReasoningTagsFromText(
   cleaned = cleaned.replace(/<t>thinking/g, "Đthinking");
   cleaned = cleaned.replace(/<t>thought/g, "Đthought");
   cleaned = cleaned.replace(/<t>antthinking/g, "Đantthinking");
-  
+
   // Convert HTML thinking tags to special characters
   cleaned = cleaned.replace(/<thinking>/g, "Đthinking");
-  cleaned = cleaned.replace(//g, "Đthinking");
   cleaned = cleaned.replace(/<thought>/g, "Đthought");
   cleaned = cleaned.replace(/<antthinking>/g, "Đantthinking");
   cleaned = cleaned.replace(/<\/thinking>/g, "thinkingđ");
@@ -161,7 +161,7 @@ export function stripReasoningTagsFromText(
   cleaned = cleaned.replace(/thought<\/arg_value>/g, "thoughtđ");
   cleaned = cleaned.replace(/antthinking<\/arg_value>/g, "antthinkingđ");
   cleaned = cleaned.replace(/inline code<\/arg_value>/g, "inline code");
-  
+
   // Handle malformed tags like "<thinking after</thinking>"
   cleaned = cleaned.replace(/<thinking\s+after<\/thinking>/g, "");
   cleaned = cleaned.replace(/<thinking\s+after/g, "");
@@ -570,11 +570,11 @@ export function stripReasoningTagsFromText(
       const idx = match.index ?? 0;
       // Check if there's a space before the tag and preserve it
       const startIdx = idx > 0 && cleaned[idx - 1] === " " ? idx - 1 : idx;
-      
+
       // Find the end of line or document
       const remainingText = cleaned.slice(startIdx);
       const newlineIndex = remainingText.indexOf("\n");
-      
+
       if (newlineIndex !== -1) {
         // Remove from the start (or space before) to the newline
         rangesToRemove.push({
@@ -590,7 +590,7 @@ export function stripReasoningTagsFromText(
       }
     }
   }
-  
+
   // Handle unclosed thinking tags
   if (stack.length > 0) {
     if (mode === "preserve") {
@@ -609,7 +609,7 @@ export function stripReasoningTagsFromText(
           } else if (tagWord.startsWith("antthinking")) {
             tagLength = 11;
           }
-          
+
           const contentStart = open.start + tagLength;
           result += cleaned.slice(contentStart);
         } else {

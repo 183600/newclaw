@@ -1,5 +1,6 @@
 import type { OpenClawConfig } from "../config/config.js";
 import type { PluginRecord } from "./registry.js";
+import type { PluginKind } from "./types.js";
 import { defaultSlotIdForKey } from "./slots.js";
 
 export type NormalizedPluginsConfig = {
@@ -247,7 +248,7 @@ export function resolveMemorySlotDecisionLegacy(
   }
 
   // Check if plugin has memory slots
-  if (!plugin.manifest?.memorySlots || plugin.manifest.memorySlots.length === 0) {
+  if (!(plugin as any).manifest?.memorySlots || (plugin as any).manifest.memorySlots.length === 0) {
     return { slotId: null, reason: "no-slots" };
   }
 
@@ -293,7 +294,7 @@ export function resolveMemorySlotDecision(
     let enabled = false;
     let selected = false;
 
-    if (params.selectedId === null) {
+    if (params.selectedId === null || params.selectedId === undefined) {
       // No plugin selected yet, only enable if this plugin matches the slot
       enabled = params.slot === params.id;
       selected = enabled;
@@ -311,7 +312,7 @@ export function resolveMemorySlotDecision(
   }
   // New format: plugin record
   const plugin = pluginOrParams as Partial<PluginRecord>;
-  const decision = resolveMemorySlotDecisionLegacy(plugin, config, originalConfig);
+  const decision = resolveMemorySlotDecisionLegacy(plugin, config!, originalConfig);
   return {
     enabled: decision.slotId !== null,
     selected: decision.reason === "configured",
