@@ -8,7 +8,8 @@ const FINAL_TAG_RE = /<\s*\/?\s*final\b[^<>]*>/gi;
 const SPECIAL_CLOSE_RE = /(thinking|thought|antthinking)\u0111/gi;
 
 // Patterns for word + tag combinations (e.g., "This is thinkingđ", "First thoughtđ", "This should be removedđ")
-const WORD_CLOSE_RE = /\b(?:This is|This should be|First|Second|Third|One|Two|Three|Zero|Four)\s+(thinking|thought|antthinking)\u0111/gi;
+const WORD_CLOSE_RE =
+  /\b(?:This is|This should be|First|Second|Third|One|Two|Three|Zero|Four)\s+(thinking|thought|antthinking)\u0111/gi;
 const WORD_HTML_CLOSE_RE =
   /\b(?:This is|First|Second|Third|One|Two|Three|Zero|Four)\s+(thinking|thought|antthinking)(?:<\/t>|<\/think>|<\/thinking>|<\/thought>|<\/antthinking>)/gi;
 
@@ -136,10 +137,10 @@ export function stripReasoningTagsFromText(
   cleaned = cleaned.replace(/<t>thinking/g, "Đthinking");
   cleaned = cleaned.replace(/<t>thought/g, "Đthought");
   cleaned = cleaned.replace(/<t>antthinking/g, "Đantthinking");
-  
+
   // Convert HTML thinking tags to special characters
   cleaned = cleaned.replace(/<thinking>/g, "Đthinking");
-  cleaned = cleaned.replace(//g, "Đthinking");
+  cleaned = cleaned.replace(/<t>/g, "Đthinking");
   cleaned = cleaned.replace(/<thought>/g, "Đthought");
   cleaned = cleaned.replace(/<antthinking>/g, "Đantthinking");
   cleaned = cleaned.replace(/<\/thinking>/g, "thinkingđ");
@@ -161,7 +162,7 @@ export function stripReasoningTagsFromText(
   cleaned = cleaned.replace(/thought<\/arg_value>/g, "thoughtđ");
   cleaned = cleaned.replace(/antthinking<\/arg_value>/g, "antthinkingđ");
   cleaned = cleaned.replace(/inline code<\/arg_value>/g, "inline code");
-  
+
   // Handle malformed tags like "<thinking after</thinking>"
   cleaned = cleaned.replace(/<thinking\s+after<\/thinking>/g, "");
   cleaned = cleaned.replace(/<thinking\s+after/g, "");
@@ -193,17 +194,6 @@ export function stripReasoningTagsFromText(
     });
   }
 
-  // Handle standalone words with thinking (e.g., "Zero thinking", "One thinking")
-  const WORD_THINKING_RE = /\b(?:Zero|One|Two|Three|Four)\s+(thinking|thought|antthinking)\b/gi;
-  WORD_THINKING_RE.lastIndex = 0;
-  for (const match of cleaned.matchAll(WORD_THINKING_RE)) {
-    const idx = match.index ?? 0;
-    rangesToRemove.push({
-      start: idx,
-      end: idx + match[0].length,
-    });
-  }
-
   // Handle standalone thinking words followed by closing tags (e.g., "thinking</thinking>", "thought</thought>")
   const WORD_WITH_CLOSE_TAG_RE =
     /\b(thinking|thought|antthinking)(?:<\/t>|<\/think>|<\/thinking>|<\/thought>|<\/antthinking>)/gi;
@@ -226,7 +216,7 @@ export function stripReasoningTagsFromText(
     // Check if this closing tag is already part of a word+tag pattern
     const beforeText = cleaned.slice(Math.max(0, idx - 20), idx);
     const isPartOfWordPattern =
-      /\b(?:This is|First|Second|Third|One|Two|Three|Zero|Four)\s+(thinking|thought|antthinking)$/.test(
+      /\b(?:This is|First|Second|Third|One|Two|Three)\s+(thinking|thought|antthinking)$/.test(
         beforeText.trim(),
       );
 
@@ -256,6 +246,10 @@ export function stripReasoningTagsFromText(
 
   // Handle unclosed thinking patterns (e.g., "Unclosed thinking")
   const UNCLOSED_THINKING_RE = /\bUnclosed (thinking|thought|antthinking)\b/gi;
+
+  // Handle unclosed HTML tags (e.g., "<thinking content")
+  const UNCLOSED_HTML_RE = /<thinking[^>]*$/gi;
+  const UNCLOSED_SPECIAL_RE = /Đthinking.*$/gi;
   const unclosedMatches = [...cleaned.matchAll(UNCLOSED_THINKING_RE)];
   if (unclosedMatches.length > 0) {
     if (mode === "preserve") {
@@ -294,6 +288,17 @@ export function stripReasoningTagsFromText(
   // Handle word + short HTML closing tag (e.g., "This is thinking</t>", "First thought</t>")
   WORD_WITH_SHORT_HTML_CLOSE_RE.lastIndex = 0;
   for (const match of cleaned.matchAll(WORD_WITH_SHORT_HTML_CLOSE_RE)) {
+    const idx = match.index ?? 0;
+    rangesToRemove.push({
+      start: idx,
+      end: idx + match[0].length,
+    });
+  }
+
+  // Handle standalone words with thinking (e.g., "Zero thinking", "One thinking")
+  const WORD_THINKING_RE = /\b(?:Zero|One|Two|Three|Four)\s+(thinking|thought|antthinking)\b/gi;
+  WORD_THINKING_RE.lastIndex = 0;
+  for (const match of cleaned.matchAll(WORD_THINKING_RE)) {
     const idx = match.index ?? 0;
     rangesToRemove.push({
       start: idx,
@@ -519,7 +524,7 @@ export function stripReasoningTagsFromText(
     const idx = match.index ?? 0;
     // Check if this is part of a word+tag pattern already handled
     const beforeText = cleaned.slice(Math.max(0, idx - 10), idx);
-    if (!/\b(?:This is|First|Second|Third|One|Two|Three|Zero|Four)\s+$/.test(beforeText)) {
+    if (!/\b(?:This is|First|Second|Third|One|Two|Three)\s+$/.test(beforeText)) {
       thinkingRanges.push({
         start: idx,
         end: idx + match[0].length,
@@ -550,7 +555,7 @@ export function stripReasoningTagsFromText(
       // Check if it's already part of a handled pattern
       const beforeText = cleaned.slice(Math.max(0, idx - 10), idx);
       if (
-        !/\b(?:This is|First|Second|Third|One|Two|Three|Zero|Four)\s+$/.test(beforeText) &&
+        !/\b(?:This is|First|Second|Third|One|Two|Three)\s+$/.test(beforeText) &&
         !beforeText.includes("Đ") &&
         !beforeText.includes("<")
       ) {
@@ -564,17 +569,16 @@ export function stripReasoningTagsFromText(
 
   // Handle unclosed HTML tags first
   if (mode === "strict") {
-    const UNCLOSED_HTML_RE = /<thinking[^>]*$/gi;
     UNCLOSED_HTML_RE.lastIndex = 0;
     for (const match of cleaned.matchAll(UNCLOSED_HTML_RE)) {
       const idx = match.index ?? 0;
       // Check if there's a space before the tag and preserve it
       const startIdx = idx > 0 && cleaned[idx - 1] === " " ? idx - 1 : idx;
-      
+
       // Find the end of line or document
       const remainingText = cleaned.slice(startIdx);
       const newlineIndex = remainingText.indexOf("\n");
-      
+
       if (newlineIndex !== -1) {
         // Remove from the start (or space before) to the newline
         rangesToRemove.push({
@@ -590,7 +594,7 @@ export function stripReasoningTagsFromText(
       }
     }
   }
-  
+
   // Handle unclosed thinking tags
   if (stack.length > 0) {
     if (mode === "preserve") {
@@ -609,7 +613,7 @@ export function stripReasoningTagsFromText(
           } else if (tagWord.startsWith("antthinking")) {
             tagLength = 11;
           }
-          
+
           const contentStart = open.start + tagLength;
           result += cleaned.slice(contentStart);
         } else {
