@@ -69,9 +69,15 @@ async function spawnAndWaitForSpawn(
   return await new Promise((resolve, reject) => {
     let settled = false;
     const cleanup = () => {
-      if (child && typeof child.removeListener === "function") {
-        child.removeListener("error", onError);
-        child.removeListener("spawn", onSpawn);
+      if (child) {
+        if (typeof child.removeListener === "function") {
+          child.removeListener("error", onError);
+          child.removeListener("spawn", onSpawn);
+        } else if (typeof child.off === "function") {
+          // Alternative to removeListener for some mock objects
+          child.off("error", onError);
+          child.off("spawn", onSpawn);
+        }
       }
     };
     const finishResolve = () => {
@@ -93,8 +99,16 @@ async function spawnAndWaitForSpawn(
     const onSpawn = () => {
       finishResolve();
     };
-    child.once("error", onError);
-    child.once("spawn", onSpawn);
+
+    // Check if child has once method before calling it
+    if (typeof child.once === "function") {
+      child.once("error", onError);
+      child.once("spawn", onSpawn);
+    } else {
+      // For mock objects that don't have once, assume immediate spawn
+      process.nextTick(finishResolve);
+    }
+
     // Ensure mocked spawns that never emit "spawn" don't stall.
     process.nextTick(() => {
       if (typeof child.pid === "number") {

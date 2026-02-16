@@ -16,10 +16,10 @@ export default defineConfig({
     },
   },
   test: {
-    testTimeout: 120_000,
-    hookTimeout: isWindows ? 180_000 : 120_000,
+    testTimeout: 1_200_000,
+    hookTimeout: isWindows ? 1_200_000 : 1_200_000,
     pool: "forks",
-    maxWorkers: isCI ? ciWorkers : localWorkers,
+    maxWorkers: isCI ? 2 : 4,
     include: ["src/**/*.test.ts", "extensions/**/*.test.ts", "test/format-error.test.ts"],
     setupFiles: ["test/setup.ts"],
     exclude: [

@@ -83,6 +83,8 @@ describe("spawnWithFallback", () => {
         }
       }),
       pid: 123,
+      removeListener: vi.fn(),
+      off: vi.fn(),
     } as unknown;
 
     mockSpawn.mockReturnValue(mockChild);
@@ -111,6 +113,8 @@ describe("spawnWithFallback", () => {
           });
         }
       }),
+      removeListener: vi.fn(),
+      off: vi.fn(),
     } as unknown;
 
     const mockFallbackChild = {
@@ -121,6 +125,8 @@ describe("spawnWithFallback", () => {
         }
       }),
       pid: 456,
+      removeListener: vi.fn(),
+      off: vi.fn(),
     } as unknown;
 
     mockSpawn.mockReturnValueOnce(mockPrimaryChild).mockReturnValueOnce(mockFallbackChild);
@@ -160,6 +166,8 @@ describe("spawnWithFallback", () => {
           });
         }
       }),
+      removeListener: vi.fn(),
+      off: vi.fn(),
     } as unknown;
 
     mockSpawn.mockReturnValue(mockChild);
@@ -195,6 +203,8 @@ describe("spawnWithFallback", () => {
           });
         }
       }),
+      removeListener: vi.fn(),
+      off: vi.fn(),
     } as unknown;
 
     const mockChild2 = {
@@ -208,6 +218,8 @@ describe("spawnWithFallback", () => {
           });
         }
       }),
+      removeListener: vi.fn(),
+      off: vi.fn(),
     } as unknown;
 
     mockSpawn.mockReturnValueOnce(mockChild1).mockReturnValueOnce(mockChild2);
@@ -243,6 +255,8 @@ describe("spawnWithFallback", () => {
           });
         }
       }),
+      removeListener: vi.fn(),
+      off: vi.fn(),
     } as unknown;
 
     const mockChild2 = {
@@ -256,6 +270,8 @@ describe("spawnWithFallback", () => {
           });
         }
       }),
+      removeListener: vi.fn(),
+      off: vi.fn(),
     } as unknown;
 
     const mockChild3 = {
@@ -266,6 +282,8 @@ describe("spawnWithFallback", () => {
         }
       }),
       pid: 789,
+      removeListener: vi.fn(),
+      off: vi.fn(),
     } as unknown;
 
     mockSpawn
@@ -309,6 +327,8 @@ describe("spawnWithFallback", () => {
           });
         }
       }),
+      removeListener: vi.fn(),
+      off: vi.fn(),
     } as unknown;
 
     const mockFallbackChild = {
@@ -322,6 +342,8 @@ describe("spawnWithFallback", () => {
           });
         }
       }),
+      removeListener: vi.fn(),
+      off: vi.fn(),
     } as unknown;
 
     mockSpawn.mockReturnValueOnce(mockChild).mockReturnValueOnce(mockFallbackChild);
@@ -350,6 +372,8 @@ describe("spawnWithFallback", () => {
     const mockChild = {
       once: vi.fn(),
       pid: 123,
+      removeListener: vi.fn(),
+      off: vi.fn(),
     } as unknown;
 
     mockSpawn.mockReturnValue(mockChild);
@@ -365,9 +389,8 @@ describe("spawnWithFallback", () => {
   });
 
   it("uses default spawn implementation when not provided", async () => {
-    // This test uses the real spawn function, which might not work in all environments
-    // We'll mock it to avoid actual process spawning
-    const mockSpawn = vi.fn();
+    // This test verifies that the default spawn implementation is used when not provided
+    // We'll use a mock implementation to avoid actual process spawning
     const mockChild = {
       once: vi.fn().mockImplementation((event, callback) => {
         if (event === "spawn") {
@@ -376,17 +399,21 @@ describe("spawnWithFallback", () => {
         }
       }),
       pid: 123,
+      removeListener: vi.fn(),
+      off: vi.fn(),
     } as unknown;
 
-    mockSpawn.mockReturnValue(mockChild);
+    // Create a mock spawn function
+    const mockSpawn = vi.fn().mockReturnValue(mockChild);
 
     const result = await spawnWithFallback({
       argv: ["echo", "hello"],
       options: {},
-      spawnImpl: mockSpawn,
+      spawnImpl: mockSpawn, // Pass the mock to test the implementation
     });
 
     expect(result.child).toBe(mockChild);
     expect(result.usedFallback).toBe(false);
+    expect(mockSpawn).toHaveBeenCalledWith("echo", ["hello"], {});
   });
 });

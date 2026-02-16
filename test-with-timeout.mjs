@@ -1,8 +1,7 @@
+#!/usr/bin/env node
+
 import { spawn } from "node:child_process";
 import os from "node:os";
-
-// Increase timeout for the entire test run
-const TEST_TIMEOUT = 900000; // 15 minutes
 
 const pnpm = process.platform === "win32" ? "pnpm.cmd" : "pnpm";
 
@@ -68,17 +67,9 @@ const runOnce = (entry, extraArgs = []) =>
       stdio: "inherit",
       env: { ...process.env, VITEST_GROUP: entry.name, NODE_OPTIONS: nextNodeOptions },
       shell: process.platform === "win32",
-      timeout: 900000, // 15 minutes timeout
     });
     children.add(child);
-
-    // Set a longer timeout for child processes
-    const timeout = setTimeout(() => {
-      child.kill("SIGKILL");
-    }, 900000); // 15 minutes
-
     child.on("exit", (code, signal) => {
-      clearTimeout(timeout);
       children.delete(child);
       resolve(code ?? (signal ? 1 : 0));
     });
