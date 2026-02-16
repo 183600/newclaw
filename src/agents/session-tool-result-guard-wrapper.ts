@@ -25,7 +25,6 @@ export function guardSessionManager(
 
   const hookRunner = getGlobalHookRunner();
   const hasHooks = hookRunner?.hasHooks("tool_result_persist");
-  console.log("hasHooks:", hasHooks);
   const transform =
     hasHooks && hookRunner
       ? // oxlint-disable-next-line typescript/no-explicit-any
@@ -45,7 +44,6 @@ export function guardSessionManager(
             },
           );
           const result = out?.message ?? message;
-          console.log("transform result.details:", result.details);
           return result;
         }
       : undefined;
