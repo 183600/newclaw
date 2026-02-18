@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
-import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
-import { openFileWithinRoot, SafeOpenError, type SafeOpenResult } from "./fs-safe.js";
+import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
+import { openFileWithinRoot, SafeOpenError } from "./fs-safe.js";
 
 describe("openFileWithinRoot", () => {
   let tempDir: string;
@@ -163,10 +163,10 @@ describe("openFileWithinRoot", () => {
       const mockHandle = {
         close: mockClose,
         stat: mockStat,
-      } as any;
+      } as unknown;
 
       // Mock fs.open to return our mock handle
-      const originalOpen = fs.promises.open;
+      const _originalOpen = fs.promises.open;
       vi.spyOn(fs.promises, "open").mockResolvedValue(mockHandle);
 
       try {
@@ -184,7 +184,7 @@ describe("openFileWithinRoot", () => {
     });
 
     it("handles file system errors gracefully", async () => {
-      const originalOpen = fs.promises.open;
+      const _originalOpen = fs.promises.open;
       vi.spyOn(fs.promises, "open").mockRejectedValue(new Error("Permission denied"));
 
       try {

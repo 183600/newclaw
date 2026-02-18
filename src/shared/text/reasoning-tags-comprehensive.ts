@@ -31,34 +31,6 @@ function findCodeRegions(text: string): CodeRegion[] {
   return regions;
 }
 
-function isInsideCode(pos: number, regions: CodeRegion[]): boolean {
-  return regions.some((r) => pos >= r.start && pos < r.end);
-}
-
-function applyTrim(value: string, mode: ReasoningTagTrim): string {
-  if (mode === "none") {
-    return value;
-  }
-  if (mode === "start") {
-    return value.trimStart();
-  }
-  // For "both" mode, trim both ends and ensure proper punctuation
-  const trimmed = value.trim();
-  if (
-    !/[.!?]$/.test(trimmed) &&
-    trimmed.length > 0 &&
-    /^[A-Z]/.test(trimmed) &&
-    !trimmed.includes("\u200B") && // Don't add period if contains zero-width chars
-    !trimmed.includes("\u05D0") && // Don't add period if contains Hebrew chars
-    !trimmed.includes("Đ") && // Don't add period if contains special chars
-    !trimmed.includes("đ") && // Don't add period if contains special chars
-    !trimmed.includes("&#x") // Don't add period if contains HTML entities
-  ) {
-    return trimmed + ".";
-  }
-  return trimmed;
-}
-
 export function stripReasoningTagsFromText(
   text: string,
   options?: {
@@ -185,7 +157,7 @@ export function stripReasoningTagsFromText(
 function processTextOutsideCode(
   text: string,
   mode: ReasoningTagMode,
-  trimMode: ReasoningTagTrim,
+  _trimMode: ReasoningTagTrim,
 ): string {
   if (!text) {
     return text;
@@ -229,7 +201,7 @@ function processTextOutsideCode(
 
   cleaned = cleaned.replace(
     /\b(This is|First|Second)\s+(thinking|thought|antthinking)\b/gi,
-    (match, prefix, tag) => {
+    (match, prefix, _tag) => {
       return prefix === "This is" ? "" : prefix;
     },
   );

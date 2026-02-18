@@ -123,7 +123,7 @@ describe("activeTaglines", () => {
     const active = activeTaglines({ now: () => regularDate });
 
     expect(
-      active.every((tagline) => !Object.values(HOLIDAY_TAGLINES).includes(tagline as any)),
+      active.every((tagline) => !Object.values(HOLIDAY_TAGLINES).includes(tagline as unknown)),
     ).toBe(true);
   });
 });

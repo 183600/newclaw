@@ -235,7 +235,8 @@ describe("Additional Utils Tests", () => {
   describe("formatTerminalLink", () => {
     it("should format terminal links when TTY is available", () => {
       const result = formatTerminalLink("Test Link", "https://example.com", { force: true });
-      expect(result).toMatch(/\u001b\]8;;https:\/\/example\.com\u0007Test Link\u001b\]8;;\u0007/);
+      const expected = "\u001b]8;;https://example.com\u0007Test Link\u001b]8;;\u0007";
+      expect(result).toBe(expected);
     });
 
     it("should use fallback when TTY is not available", () => {

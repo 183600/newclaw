@@ -1,10 +1,4 @@
 import { describe, expect, it, beforeEach, afterEach, vi } from "vitest";
-import {
-  formatCliBannerLine,
-  formatCliBannerArt,
-  emitCliBanner,
-  hasEmittedCliBanner,
-} from "./banner.js";
 
 // Mock the theme module
 vi.mock("../terminal/theme.js", () => ({
@@ -20,7 +14,7 @@ vi.mock("../terminal/theme.js", () => ({
 }));
 
 describe("formatCliBannerLine", () => {
-  let bannerModule: any;
+  let bannerModule: unknown;
 
   beforeEach(async () => {
     vi.resetModules();
@@ -75,7 +69,7 @@ describe("formatCliBannerLine", () => {
 });
 
 describe("formatCliBannerArt", () => {
-  let bannerModule: any;
+  let bannerModule: unknown;
 
   beforeEach(async () => {
     vi.resetModules();
@@ -101,10 +95,10 @@ describe("formatCliBannerArt", () => {
 describe("emitCliBanner", () => {
   let originalWrite: typeof process.stdout.write;
   let mockWrite: ReturnType<typeof vi.fn>;
-  let bannerModule: any;
+  let bannerModule: unknown;
 
   beforeEach(async () => {
-    originalWrite = process.stdout.write;
+    originalWrite = process.stdout.write.bind(process.stdout);
     mockWrite = vi.fn();
     process.stdout.write = mockWrite;
 

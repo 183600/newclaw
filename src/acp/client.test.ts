@@ -1,12 +1,6 @@
 import { spawn } from "node:child_process";
-import { Readable, Writable } from "node:stream";
 import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
-import {
-  createAcpClient,
-  runAcpClientInteractive,
-  type AcpClientOptions,
-  type AcpClientHandle,
-} from "./client.js";
+import { createAcpClient } from "./client.js";
 
 // Mock dependencies
 vi.mock("node:child_process", () => ({
@@ -42,7 +36,7 @@ describe("ACP Client", () => {
         stdin: null,
         stdout: null,
         kill: vi.fn(),
-      } as any;
+      } as unknown;
 
       vi.mocked(spawn).mockReturnValue(mockAgent);
 

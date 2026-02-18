@@ -5,13 +5,13 @@ describe("UTF-16 utilities - Additional Tests", () => {
   describe("sliceUtf16Safe", () => {
     it("handles null and undefined inputs", () => {
       // The function doesn't handle null/undefined, so we expect it to throw
-      expect(() => sliceUtf16Safe(null as any, 0, 5)).toThrow();
-      expect(() => sliceUtf16Safe(undefined as any, 0, 5)).toThrow();
+      expect(() => sliceUtf16Safe(null as unknown, 0, 5)).toThrow();
+      expect(() => sliceUtf16Safe(undefined as unknown, 0, 5)).toThrow();
     });
 
     it("handles numbers", () => {
       // The function expects a string, so passing a number should throw
-      expect(() => sliceUtf16Safe(12345 as any, 0, 2)).toThrow();
+      expect(() => sliceUtf16Safe(12345 as unknown, 0, 2)).toThrow();
     });
 
     it("handles empty string", () => {
@@ -117,13 +117,13 @@ describe("UTF-16 utilities - Additional Tests", () => {
   describe("truncateUtf16Safe", () => {
     it("handles null and undefined inputs", () => {
       // The function doesn't handle null/undefined, so we expect it to throw
-      expect(() => truncateUtf16Safe(null as any, 5)).toThrow();
-      expect(() => truncateUtf16Safe(undefined as any, 5)).toThrow();
+      expect(() => truncateUtf16Safe(null as unknown, 5)).toThrow();
+      expect(() => truncateUtf16Safe(undefined as unknown, 5)).toThrow();
     });
 
     it("handles numbers", () => {
       // The function expects a string, so passing a number should throw
-      expect(() => truncateUtf16Safe(12345 as any, 3)).toThrow();
+      expect(() => truncateUtf16Safe(12345 as unknown, 3)).toThrow();
     });
 
     it("handles empty string", () => {

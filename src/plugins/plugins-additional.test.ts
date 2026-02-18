@@ -18,9 +18,13 @@ describe("plugins config-state - additional edge cases", () => {
       ];
 
       testCases.forEach(({ allow, deny, expected }) => {
-        const config: any = {};
-        if (allow !== undefined) config.allow = allow;
-        if (deny !== undefined) config.deny = deny;
+        const config: Record<string, unknown> = {};
+        if (allow !== undefined) {
+          config.allow = allow;
+        }
+        if (deny !== undefined) {
+          config.deny = deny;
+        }
 
         const result = normalizePluginsConfig(config);
 

@@ -1,11 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { MarkdownTableMode } from "../config/types.base.js";
-import {
-  createInlineCodeState,
-  buildCodeSpanIndex,
-  type InlineCodeState,
-  type CodeSpanIndex,
-} from "./code-spans.js";
+import { createInlineCodeState, buildCodeSpanIndex, type InlineCodeState } from "./code-spans.js";
 import { convertMarkdownTables } from "./tables.js";
 
 describe("Markdown Code Spans", () => {
@@ -163,7 +157,7 @@ describe("Markdown Tables", () => {
     });
 
     it("returns original text when null", () => {
-      const markdown = null as any;
+      const markdown = null as unknown;
       const result = convertMarkdownTables(markdown, "code");
 
       expect(result).toBe(markdown);

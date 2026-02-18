@@ -1,6 +1,6 @@
 import os from "node:os";
 import path from "node:path";
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 import {
   resolveUserPath,
   resolveConfigDir,
@@ -178,8 +178,8 @@ describe("Path utility functions", () => {
     });
 
     it("should handle null/undefined", () => {
-      expect(shortenHomePath(null as any)).toBe(null);
-      expect(shortenHomePath(undefined as any)).toBe(undefined);
+      expect(shortenHomePath(null as unknown)).toBe(null);
+      expect(shortenHomePath(undefined as unknown)).toBe(undefined);
     });
 
     it("should handle paths that start with home directory but are not subdirectories", () => {
@@ -212,7 +212,7 @@ describe("Path utility functions", () => {
     it("should default to ~/.openclaw", () => {
       // CONFIG_DIR is calculated at module load time, so it may use a different
       // home directory than the current test environment
-      const expected = path.join(os.homedir(), ".openclaw");
+      const _expected = path.join(os.homedir(), ".openclaw");
       // Since CONFIG_DIR is calculated at module load time, we can't guarantee
       // it matches the current test environment's home directory
       expect(CONFIG_DIR).toMatch(/\.openclaw$/);

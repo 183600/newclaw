@@ -253,7 +253,7 @@ describe("waitForQueueDebounce", () => {
 
     // Should not resolve immediately
     let resolved = false;
-    promise.then(() => {
+    void promise.then(() => {
       resolved = true;
     });
 
@@ -279,7 +279,7 @@ describe("waitForQueueDebounce", () => {
     queue.lastEnqueuedAt += 50;
 
     let resolved = false;
-    promise.then(() => {
+    void promise.then(() => {
       resolved = true;
     });
 
@@ -406,7 +406,7 @@ describe("buildCollectPrompt", () => {
     const result = buildCollectPrompt({
       title: "Test Title",
       items: [],
-      renderItem: (item, index) => `${index}: ${item}`,
+      renderItem: (item: never, index: number) => `${index}: ${String(item)}`,
     });
 
     expect(result).toBe("Test Title");
@@ -481,7 +481,7 @@ describe("hasCrossChannelItems", () => {
       { id: 2, channel: null },
     ];
 
-    const result = hasCrossChannelItems(items, (item) => ({
+    const result = hasCrossChannelItems(items, (_item) => ({
       key: undefined,
       cross: false,
     }));

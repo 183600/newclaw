@@ -17,7 +17,7 @@ describe("Routing Resolve Route", () => {
     ...overrides,
   });
 
-  const createRouteInput = (overrides: Partial<any> = {}): any => ({
+  const createRouteInput = (overrides: Partial<unknown> = {}): unknown => ({
     cfg: createMockConfig(),
     channel: "whatsapp",
     accountId: "account1",

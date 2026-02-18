@@ -43,7 +43,7 @@ describe("Additional Utility Functions", () => {
   describe("sleep function", () => {
     it("resolves after specified time", async () => {
       vi.useFakeTimers();
-      const start = Date.now();
+      const _start = Date.now();
       const promise = sleep(1000);
 
       vi.advanceTimersByTime(1000);

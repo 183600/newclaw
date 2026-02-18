@@ -1,5 +1,3 @@
-import type { SpawnOptions } from "node:child_process";
-import { spawn } from "node:child_process";
 import { describe, expect, it, vi, beforeEach } from "vitest";
 import {
   resolveCommandStdio,
@@ -101,7 +99,7 @@ describe("spawnWithFallback", () => {
       once: vi.fn(),
       pid: 123,
       removeListener: vi.fn(),
-    } as any;
+    } as unknown;
 
     mockSpawn.mockReturnValue(mockChild);
 
@@ -129,12 +127,12 @@ describe("spawnWithFallback", () => {
       once: vi.fn(),
       pid: 123,
       removeListener: vi.fn(),
-    } as any;
+    } as unknown;
 
     const mockFailedChild = {
       once: vi.fn(),
       removeListener: vi.fn(),
-    } as any;
+    } as unknown;
 
     mockSpawn.mockReturnValueOnce(mockFailedChild).mockReturnValueOnce(mockChild);
 
@@ -176,12 +174,12 @@ describe("spawnWithFallback", () => {
     const mockChild1 = {
       once: vi.fn(),
       removeListener: vi.fn(),
-    } as any;
+    } as unknown;
 
     const mockChild2 = {
       once: vi.fn(),
       removeListener: vi.fn(),
-    } as any;
+    } as unknown;
 
     mockSpawn.mockReturnValueOnce(mockChild1).mockReturnValueOnce(mockChild2);
 
@@ -219,7 +217,7 @@ describe("spawnWithFallback", () => {
     const mockChild = {
       once: vi.fn(),
       removeListener: vi.fn(),
-    } as any;
+    } as unknown;
 
     mockSpawn.mockReturnValue(mockChild);
 
@@ -246,12 +244,12 @@ describe("spawnWithFallback", () => {
     const mockChild = {
       once: vi.fn(),
       removeListener: vi.fn(),
-    } as any;
+    } as unknown;
 
     const mockFailedChild = {
       once: vi.fn(),
       removeListener: vi.fn(),
-    } as any;
+    } as unknown;
 
     mockSpawn.mockReturnValueOnce(mockFailedChild).mockReturnValueOnce(mockChild);
 
@@ -290,7 +288,7 @@ describe("spawnWithFallback", () => {
       once: vi.fn(),
       pid: 123,
       removeListener: vi.fn(),
-    } as any;
+    } as unknown;
 
     const customSpawn = vi.fn().mockReturnValue(mockChild);
 
@@ -317,7 +315,7 @@ describe("spawnWithFallback", () => {
       once: vi.fn(),
       pid: 123,
       removeListener: vi.fn(),
-    } as any;
+    } as unknown;
 
     const mockChildren = Array(3)
       .fill(null)
@@ -382,7 +380,7 @@ describe("spawnWithFallback", () => {
       once: vi.fn(),
       pid: 123,
       removeListener: vi.fn(),
-    } as any;
+    } as unknown;
 
     mockSpawn.mockReturnValue(mockChild);
 

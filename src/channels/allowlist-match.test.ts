@@ -79,7 +79,7 @@ describe("formatAllowlistMatchMeta", () => {
   it("should handle boolean values in matchSource", () => {
     const result = formatAllowlistMatchMeta({
       matchKey: "test",
-      matchSource: "wildcard" as any,
+      matchSource: "wildcard" as unknown,
     });
     expect(result).toBe("matchKey=test matchSource=wildcard");
   });

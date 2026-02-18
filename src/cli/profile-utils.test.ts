@@ -7,8 +7,8 @@ describe("isValidProfileName", () => {
   });
 
   it("should return false for null/undefined", () => {
-    expect(isValidProfileName(null as any)).toBe(false);
-    expect(isValidProfileName(undefined as any)).toBe(false);
+    expect(isValidProfileName(null as unknown)).toBe(false);
+    expect(isValidProfileName(undefined as unknown)).toBe(false);
   });
 
   it("should return true for valid single character", () => {

@@ -9,14 +9,14 @@ const OSC8_REGEX = new RegExp(OSC8_PATTERN, "g");
 const MALFORMED_ANSI_PATTERN = "\\x1b\\[[^m]*m?";
 const EMPTY_ANSI_PATTERN = "\\x1b\\[\\]?m";
 
-const MALFORMED_ANSI_REGEX = new RegExp(MALFORMED_ANSI_PATTERN, "g");
-const EMPTY_ANSI_REGEX = new RegExp(EMPTY_ANSI_PATTERN, "g");
+const _MALFORMED_ANSI_REGEX = new RegExp(MALFORMED_ANSI_PATTERN, "g");
+const _EMPTY_ANSI_REGEX = new RegExp(EMPTY_ANSI_PATTERN, "g");
 
 // Zero-width joiner (U+200D)
 const ZWJ = "\u200D";
 
 // Variation selectors and emoji modifiers (U+FE0F, U+1F3FB..U+1F3FF)
-const VARIATION_SELECTORS = /[\uFE0F\u1F3FB-\u1F3FF]/;
+const _VARIATION_SELECTORS = /[\uFE0F\u1F3FB-\u1F3FF]/;
 
 export function stripAnsi(input: string): string {
   let result = input;
@@ -29,11 +29,13 @@ export function stripAnsi(input: string): string {
 
   // Handle malformed ANSI sequences
   // For sequences like \x1b[Invalid, remove the escape part but keep the text
-  result = result.replace(/\x1b\[([a-zA-Z]+)/g, "$1");
+  // For sequences like \x1b[Invalid, remove the escape part but keep the text
+  const escapeChar = String.fromCharCode(27);
+  result = result.replace(new RegExp(`${escapeChar}\\[([a-zA-Z]+)`, "g"), "$1");
 
   // Handle empty ANSI sequences like \x1b[m and \x1b[]m
-  result = result.replace(/\x1b\[m/g, "");
-  result = result.replace(/\x1b\[\]m/g, "");
+  result = result.replace(new RegExp(`${escapeChar}\\[m`, "g"), "");
+  result = result.replace(new RegExp(`${escapeChar}\\[\\]m`, "g"), "");
 
   return result;
 }

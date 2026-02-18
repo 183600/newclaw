@@ -1,4 +1,3 @@
-import fs from "node:fs/promises";
 import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
 import {
   getImageMetadata,
@@ -17,7 +16,7 @@ vi.mock("sharp");
 import sharp from "sharp";
 import { runExec } from "../process/exec.js";
 
-const mockRunExec = vi.mocked(runExec);
+const _mockRunExec = vi.mocked(runExec);
 const mockSharp = vi.mocked(sharp);
 
 describe("image-ops", () => {

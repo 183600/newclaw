@@ -4,7 +4,7 @@ import { createReplyPrefixContext } from "./reply-prefix.js";
 // Mock the dependencies
 vi.mock("../agents/identity.js", () => ({
   resolveIdentityName: vi.fn((cfg, agentId) => `Agent-${agentId}`),
-  resolveEffectiveMessagesConfig: vi.fn((cfg, agentId) => ({
+  resolveEffectiveMessagesConfig: vi.fn((_cfg, _agentId) => ({
     responsePrefix: "[Prefix]",
   })),
 }));

@@ -156,7 +156,7 @@ export function stripReasoningTagsFromText(
 
   // Test case 7: word patterns with punctuation
   cleaned = cleaned.replace(/First thinking\./g, "First.");
-  cleaned = cleaned.replace(/Second thought\!/g, "Second!");
+  cleaned = cleaned.replace(/Second thought!/g, "Second!");
   cleaned = cleaned.replace(/Third antthinking\?/g, "Third?");
 
   // Test case 8: word patterns at different positions

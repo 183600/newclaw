@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { retryAsync, resolveRetryConfig, type RetryOptions } from "./infra/retry.js";
+import { retryAsync, resolveRetryConfig } from "./infra/retry.js";
 
 describe("retryAsync", () => {
   describe("basic functionality", () => {
@@ -126,7 +126,7 @@ describe("retryAsync", () => {
         .mockRejectedValueOnce(new Error("non-retryable"))
         .mockResolvedValue("success");
 
-      const shouldRetry = vi.fn((err, attempt) => err.message !== "non-retryable");
+      const shouldRetry = vi.fn((err, _attempt) => err.message !== "non-retryable");
 
       await expect(retryAsync(fn, { attempts: 5, shouldRetry })).rejects.toThrow("non-retryable");
       expect(fn).toHaveBeenCalledTimes(2);

@@ -357,7 +357,7 @@ export function loadOpenClawPlugins(options: PluginLoadOptions = {}): PluginRegi
 
     const memoryDecision = resolveMemorySlotDecision({
       id: record.id,
-      kind: record.kind as "memory" | undefined,
+      kind: record.kind,
       slot: memorySlot || undefined,
       selectedId: selectedMemoryPluginId || undefined,
     });

@@ -217,7 +217,7 @@ describe("saveJsonFile", () => {
   });
 
   it("handles circular references by throwing error", () => {
-    const circular: any = { name: "test" };
+    const circular: { name: string; self?: unknown } = { name: "test" };
     circular.self = circular;
 
     expect(() => saveJsonFile(testFile, circular)).toThrow();

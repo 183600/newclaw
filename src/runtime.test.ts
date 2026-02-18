@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { createRuntime, defaultRuntime, type RuntimeEnv } from "./runtime.js";
+import { createRuntime, defaultRuntime } from "./runtime.js";
 
 describe("createRuntime", () => {
   let mockClearProgress: ReturnType<typeof vi.fn>;
@@ -41,7 +41,7 @@ describe("createRuntime", () => {
       runtime.log("test message");
 
       expect(mockClearProgress).toHaveBeenCalledTimes(1);
-      expect(mockClearProgress).toHaveBeenCalledBefore(console.log as any);
+      expect(mockClearProgress).toHaveBeenCalledBefore(console.log as unknown);
     });
 
     it("passes all arguments to console.log", () => {
@@ -81,7 +81,7 @@ describe("createRuntime", () => {
       runtime.error("error message");
 
       expect(mockClearProgress).toHaveBeenCalledTimes(1);
-      expect(mockClearProgress).toHaveBeenCalledBefore(console.error as any);
+      expect(mockClearProgress).toHaveBeenCalledBefore(console.error as unknown);
     });
 
     it("passes all arguments to console.error", () => {

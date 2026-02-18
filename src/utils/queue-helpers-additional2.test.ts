@@ -1,4 +1,4 @@
-import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import {
   elideQueueText,
   buildQueueSummaryLine,
@@ -151,7 +151,7 @@ describe("queue-helpers - Additional Tests", () => {
       }
 
       let resolved = false;
-      promise.then(() => {
+      void promise.then(() => {
         resolved = true;
       });
 
@@ -246,7 +246,7 @@ describe("queue-helpers - Additional Tests", () => {
         { id: 2, type: "notification" },
       ];
 
-      const result = hasCrossChannelItems(items, (item) => ({
+      const result = hasCrossChannelItems(items, (_item) => ({
         key: "",
         cross: false,
       }));

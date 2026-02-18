@@ -33,7 +33,7 @@ describe("resolveOsSummary", () => {
     mockSpawnSync.mockReturnValue({
       stdout: "13.5.2",
       status: 0,
-    } as any);
+    } as unknown);
 
     const result = resolveOsSummary();
 
@@ -55,7 +55,7 @@ describe("resolveOsSummary", () => {
     mockSpawnSync.mockReturnValue({
       stdout: "",
       status: 1,
-    } as any);
+    } as unknown);
 
     const result = resolveOsSummary();
 
@@ -167,7 +167,7 @@ describe("resolveOsSummary", () => {
     mockSpawnSync.mockReturnValue({
       stdout: "  13.5.2  ",
       status: 0,
-    } as any);
+    } as unknown);
 
     const result = resolveOsSummary();
 
@@ -197,7 +197,7 @@ describe("resolveOsSummary", () => {
   it("handles non-string release from os.release()", () => {
     mockOs.platform.mockReturnValue("linux");
     mockOs.arch.mockReturnValue("x64");
-    mockOs.release.mockReturnValue(null as any);
+    mockOs.release.mockReturnValue(null as unknown);
 
     const result = resolveOsSummary();
 
@@ -216,7 +216,7 @@ describe("resolveOsSummary", () => {
     mockSpawnSync.mockReturnValue({
       stdout: "14.2.1",
       status: 0,
-    } as any);
+    } as unknown);
 
     const result = resolveOsSummary();
 
@@ -230,7 +230,7 @@ describe("resolveOsSummary", () => {
     mockSpawnSync.mockReturnValue({
       stdout: "14",
       status: 0,
-    } as any);
+    } as unknown);
 
     const result = resolveOsSummary();
 

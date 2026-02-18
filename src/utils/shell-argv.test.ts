@@ -170,9 +170,9 @@ describe("splitShellArgs", () => {
   });
 
   it("should handle non-string inputs", () => {
-    expect(splitShellArgs(123 as any)).toEqual([]);
-    expect(splitShellArgs({} as any)).toEqual([]);
-    expect(splitShellArgs([] as any)).toEqual([]);
+    expect(splitShellArgs(123 as unknown)).toEqual([]);
+    expect(splitShellArgs({} as unknown)).toEqual([]);
+    expect(splitShellArgs([] as unknown)).toEqual([]);
   });
 
   it("should handle escaped Unicode sequences", () => {

@@ -114,8 +114,8 @@ describe("parseDurationMs", () => {
     });
 
     it("should throw error for null/undefined", () => {
-      expect(() => parseDurationMs(null as any)).toThrow("invalid duration (empty)");
-      expect(() => parseDurationMs(undefined as any)).toThrow("invalid duration (empty)");
+      expect(() => parseDurationMs(null as unknown)).toThrow("invalid duration (empty)");
+      expect(() => parseDurationMs(undefined as unknown)).toThrow("invalid duration (empty)");
     });
 
     it("should throw error for invalid format", () => {
@@ -167,8 +167,8 @@ describe("parseDurationMs", () => {
     });
 
     it("should handle string conversion", () => {
-      expect(parseDurationMs(100 as any)).toBe(100);
-      expect(parseDurationMs(1.5 as any)).toBe(2);
+      expect(parseDurationMs(100 as unknown)).toBe(100);
+      expect(parseDurationMs(1.5 as unknown)).toBe(2);
     });
   });
 });

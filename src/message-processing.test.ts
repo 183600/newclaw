@@ -1,15 +1,6 @@
 import fs from "node:fs";
-import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
-import {
-  assertWebChannel,
-  normalizePath,
-  ensureDir,
-  jidToE164,
-  normalizeE164,
-  resolveJidToE164,
-  toWhatsappJid,
-  withWhatsAppPrefix,
-} from "./utils.js";
+import { describe, expect, it, vi } from "vitest";
+import { toWhatsappJid, withWhatsAppPrefix, normalizeE164, jidToE164 } from "./utils.js";
 
 describe("Message Processing Utilities", () => {
   describe("WhatsApp Number Processing", () => {
@@ -175,8 +166,12 @@ describe("Message Processing Utilities", () => {
 
       // Simulate size formatting
       const formatSize = (bytes: number) => {
-        if (bytes < 1024) return `${bytes} B`;
-        if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+        if (bytes < 1024) {
+          return `${bytes} B`;
+        }
+        if (bytes < 1024 * 1024) {
+          return `${(bytes / 1024).toFixed(1)} KB`;
+        }
         return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
       };
 

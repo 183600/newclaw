@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 import { logDebug, logError, logInfo, logSuccess, logWarn } from "./logger.js";
 
 describe("logger - Additional Edge Cases", () => {

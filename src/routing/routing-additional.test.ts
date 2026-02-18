@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { OpenClawConfig } from "../config/config.js";
-import { resolveAgentRoute, type ResolveAgentRouteInput } from "./resolve-route.js";
+import { resolveAgentRoute } from "./resolve-route.js";
 
 describe("routing additional edge cases", () => {
   describe("resolveAgentRoute edge cases", () => {
@@ -22,9 +22,9 @@ describe("routing additional edge cases", () => {
       const cfg: OpenClawConfig = {
         agents: {
           bindings: [
-            null as any,
-            undefined as any,
-            "invalid" as any,
+            null as unknown,
+            undefined as unknown,
+            "invalid" as unknown,
             { match: null },
             { match: { channel: "test" }, agentId: "" },
           ],
@@ -299,7 +299,7 @@ describe("routing additional edge cases", () => {
 
       testCases.forEach(({ dmScope, expectedKey }) => {
         const cfg: OpenClawConfig = {
-          session: { dmScope: dmScope as any },
+          session: { dmScope: dmScope as unknown },
         };
         const route = resolveAgentRoute({
           cfg,

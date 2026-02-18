@@ -147,26 +147,26 @@ describe("parseTimeoutMs", () => {
 
   describe("type safety", () => {
     it("should handle boolean inputs", () => {
-      expect(parseTimeoutMs(true as any)).toBeUndefined();
-      expect(parseTimeoutMs(false as any)).toBeUndefined();
+      expect(parseTimeoutMs(true as unknown)).toBeUndefined();
+      expect(parseTimeoutMs(false as unknown)).toBeUndefined();
     });
 
     it("should handle object inputs", () => {
-      expect(parseTimeoutMs({} as any)).toBeUndefined();
-      expect(parseTimeoutMs({ value: 100 } as any)).toBeUndefined();
+      expect(parseTimeoutMs({} as unknown)).toBeUndefined();
+      expect(parseTimeoutMs({ value: 100 } as unknown)).toBeUndefined();
     });
 
     it("should handle array inputs", () => {
-      expect(parseTimeoutMs([] as any)).toBeUndefined();
-      expect(parseTimeoutMs([100] as any)).toBeUndefined();
+      expect(parseTimeoutMs([] as unknown)).toBeUndefined();
+      expect(parseTimeoutMs([100] as unknown)).toBeUndefined();
     });
 
     it("should handle function inputs", () => {
-      expect(parseTimeoutMs(() => 100 as any)).toBeUndefined();
+      expect(parseTimeoutMs(() => 100 as unknown)).toBeUndefined();
     });
 
     it("should handle symbol inputs", () => {
-      expect(parseTimeoutMs(Symbol("test") as any)).toBeUndefined();
+      expect(parseTimeoutMs(Symbol("test") as unknown)).toBeUndefined();
     });
   });
 });

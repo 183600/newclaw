@@ -3,7 +3,7 @@ import { formatDocsLink, formatDocsRootLink, DOCS_ROOT } from "./links.js";
 
 // Mock the formatTerminalLink function from utils
 vi.mock("../utils.js", () => ({
-  formatTerminalLink: vi.fn((label: string, url: string, opts?: any) => {
+  formatTerminalLink: vi.fn((label: string, url: string, _opts?: unknown) => {
     // Always return link format in tests to ensure consistent behavior
     return `[LINK:${label}->${url}]`;
   }),

@@ -307,7 +307,7 @@ export function validateConfigObjectWithPlugins(raw: unknown):
     if (enabled) {
       const memoryDecision = resolveMemorySlotDecision({
         id: pluginId,
-        kind: record.kind as "memory" | undefined,
+        kind: record.kind,
         slot: memorySlot || undefined,
         selectedId: selectedMemoryPluginId || undefined,
       });

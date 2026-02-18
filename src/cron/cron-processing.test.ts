@@ -104,7 +104,7 @@ describe("Cron Normalize", () => {
           at: "2023-01-01T00:00:00Z",
         },
       });
-      expect("at" in result?.schedule).toBe(false);
+      expect("at" in (result?.schedule ?? {})).toBe(false);
     });
 
     it("normalizes schedule with everyMs", () => {

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/unbound-method */
 import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
 import {
   registerActiveProgressLine,
@@ -26,7 +27,8 @@ describe("progress-line", () => {
       // We can't directly access the active stream, but we can test its behavior
       // by calling clearActiveProgressLine and checking if it writes to our stream
       clearActiveProgressLine();
-      expect(mockStream.write).toHaveBeenCalledWith("\r\x1b[2K");
+
+      expect(vi.mocked(mockStream.write)).toHaveBeenCalledWith("\r\x1b[2K");
     });
 
     it("should not register a non-TTY stream", () => {
@@ -34,7 +36,8 @@ describe("progress-line", () => {
       registerActiveProgressLine(mockStream);
       // Clearing should not write to a non-registered stream
       clearActiveProgressLine();
-      expect(mockStream.write).not.toHaveBeenCalled();
+
+      expect(vi.mocked(mockStream.write)).not.toHaveBeenCalled();
     });
   });
 
@@ -42,7 +45,8 @@ describe("progress-line", () => {
     it("should clear the active progress line on a TTY stream", () => {
       registerActiveProgressLine(mockStream);
       clearActiveProgressLine();
-      expect(mockStream.write).toHaveBeenCalledWith("\r\x1b[2K");
+
+      expect(vi.mocked(mockStream.write)).toHaveBeenCalledWith("\r\x1b[2K");
     });
 
     it("should not clear when no active stream is registered", () => {
@@ -56,7 +60,8 @@ describe("progress-line", () => {
       mockStream.isTTY = false;
       registerActiveProgressLine(mockStream);
       clearActiveProgressLine();
-      expect(mockStream.write).not.toHaveBeenCalled();
+
+      expect(vi.mocked(mockStream.write)).not.toHaveBeenCalled();
     });
   });
 
@@ -66,21 +71,24 @@ describe("progress-line", () => {
       unregisterActiveProgressLine();
       // After unregistering, clearing should not write to the stream
       clearActiveProgressLine();
-      expect(mockStream.write).not.toHaveBeenCalled();
+
+      expect(vi.mocked(mockStream.write)).not.toHaveBeenCalled();
     });
 
     it("should only unregister when the stream matches", () => {
       const anotherStream = {
         isTTY: true,
-        write: vi.fn(),
+        write: vi.fn().bind(anotherStream).bind(mockStream2).bind(mockStream),
       } as unknown as NodeJS.WriteStream;
 
       registerActiveProgressLine(mockStream);
       unregisterActiveProgressLine(anotherStream);
       // Should still be able to clear the original stream
       clearActiveProgressLine();
-      expect(mockStream.write).toHaveBeenCalledWith("\r\x1b[2K");
-      expect(anotherStream.write).not.toHaveBeenCalled();
+
+      expect(vi.mocked(mockStream.write)).toHaveBeenCalledWith("\r\x1b[2K");
+
+      expect(vi.mocked(anotherStream.write)).not.toHaveBeenCalled();
     });
 
     it("should handle unregistering when no stream is active", () => {
@@ -92,7 +100,8 @@ describe("progress-line", () => {
       unregisterActiveProgressLine();
       // After unregistering, clearing should not write to the stream
       clearActiveProgressLine();
-      expect(mockStream.write).not.toHaveBeenCalled();
+
+      expect(vi.mocked(mockStream.write)).not.toHaveBeenCalled();
     });
   });
 });

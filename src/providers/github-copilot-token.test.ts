@@ -19,7 +19,6 @@ vi.mock("../infra/json-file.js", () => ({
 import {
   deriveCopilotApiBaseUrlFromToken,
   resolveCopilotApiToken,
-  DEFAULT_COPILOT_API_BASE_URL,
 } from "./github-copilot-token.js";
 
 describe("github-copilot-token", () => {
@@ -61,7 +60,7 @@ describe("github-copilot-token", () => {
     it("returns null for empty token", () => {
       expect(deriveCopilotApiBaseUrlFromToken("")).toBeNull();
       expect(deriveCopilotApiBaseUrlFromToken("   ")).toBeNull();
-      expect(deriveCopilotApiBaseUrlFromToken(null as any)).toBeNull();
+      expect(deriveCopilotApiBaseUrlFromToken(null as unknown)).toBeNull();
     });
 
     it("handles token at start", () => {

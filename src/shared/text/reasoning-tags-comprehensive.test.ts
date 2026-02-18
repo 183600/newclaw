@@ -38,7 +38,7 @@ After thinking`;
     });
 
     it("should preserve reasoning tags within inline code", () => {
-      const text = "Before \`code with thinking\` after thinking";
+      const text = "Before `code with thinking` after thinking";
       const result = stripReasoningTagsFromText(text);
       expect(result).toContain("code with thinking");
       expect(result).not.toContain("after thinking");
@@ -189,12 +189,12 @@ After thinking`;
     });
 
     it("should handle null input", () => {
-      const result = stripReasoningTagsFromText(null as any);
+      const result = stripReasoningTagsFromText(null as unknown);
       expect(result).toBe(null);
     });
 
     it("should handle undefined input", () => {
-      const result = stripReasoningTagsFromText(undefined as any);
+      const result = stripReasoningTagsFromText(undefined as unknown);
       expect(result).toBe(undefined);
     });
 

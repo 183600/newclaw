@@ -1,4 +1,4 @@
-import { describe, expect, it, vi, beforeEach } from "vitest";
+import { describe, expect, it } from "vitest";
 import type { OpenClawConfig } from "./types.js";
 import { validateConfigObject, validateConfigObjectWithPlugins } from "./validation.js";
 

@@ -249,7 +249,7 @@ export function stripReasoningTagsFromText(
 
   // Handle unclosed HTML tags (e.g., "<thinking content")
   const UNCLOSED_HTML_RE = /<thinking[^>]*$/gi;
-  const UNCLOSED_SPECIAL_RE = /Đthinking.*$/gi;
+  const _UNCLOSED_SPECIAL_RE = /Đthinking.*$/gi;
   const unclosedMatches = [...cleaned.matchAll(UNCLOSED_THINKING_RE)];
   if (unclosedMatches.length > 0) {
     if (mode === "preserve") {

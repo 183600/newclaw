@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
+import { describe, expect, it, beforeEach, afterEach } from "vitest";
 import { parseConfigJson5 } from "./config/io.js";
 import { resolveConfigDir } from "./utils.js";
 

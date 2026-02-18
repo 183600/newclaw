@@ -12,8 +12,8 @@ describe("WhatsApp utilities - Additional Tests", () => {
   describe("withWhatsAppPrefix", () => {
     it("handles null and undefined inputs", () => {
       // The function doesn't handle null/undefined, so we expect it to throw
-      expect(() => withWhatsAppPrefix(null as any)).toThrow();
-      expect(() => withWhatsAppPrefix(undefined as any)).toThrow();
+      expect(() => withWhatsAppPrefix(null as unknown)).toThrow();
+      expect(() => withWhatsAppPrefix(undefined as unknown)).toThrow();
     });
 
     it("handles empty string", () => {
@@ -22,7 +22,7 @@ describe("WhatsApp utilities - Additional Tests", () => {
 
     it("handles numbers", () => {
       // The function expects a string, so passing a number should throw
-      expect(() => withWhatsAppPrefix(1234567890 as any)).toThrow();
+      expect(() => withWhatsAppPrefix(1234567890 as unknown)).toThrow();
     });
 
     it("handles already prefixed with different case", () => {
@@ -39,8 +39,8 @@ describe("WhatsApp utilities - Additional Tests", () => {
   describe("normalizeE164", () => {
     it("handles null and undefined inputs", () => {
       // The function doesn't handle null/undefined, so we expect it to throw
-      expect(() => normalizeE164(null as any)).toThrow();
-      expect(() => normalizeE164(undefined as any)).toThrow();
+      expect(() => normalizeE164(null as unknown)).toThrow();
+      expect(() => normalizeE164(undefined as unknown)).toThrow();
     });
 
     it("handles empty string", () => {
@@ -49,7 +49,7 @@ describe("WhatsApp utilities - Additional Tests", () => {
 
     it("handles numbers", () => {
       // The function expects a string, so passing a number should throw
-      expect(() => normalizeE164(1234567890 as any)).toThrow();
+      expect(() => normalizeE164(1234567890 as unknown)).toThrow();
     });
 
     it("handles international numbers with country codes", () => {
@@ -115,8 +115,8 @@ describe("WhatsApp utilities - Additional Tests", () => {
   describe("toWhatsappJid", () => {
     it("handles null and undefined inputs", () => {
       // The function doesn't handle null/undefined, so we expect it to throw
-      expect(() => toWhatsappJid(null as any)).toThrow();
-      expect(() => toWhatsappJid(undefined as any)).toThrow();
+      expect(() => toWhatsappJid(null as unknown)).toThrow();
+      expect(() => toWhatsappJid(undefined as unknown)).toThrow();
     });
 
     it("handles empty string", () => {
@@ -125,7 +125,7 @@ describe("WhatsApp utilities - Additional Tests", () => {
 
     it("handles numbers", () => {
       // The function expects a string, so passing a number should throw
-      expect(() => toWhatsappJid(1234567890 as any)).toThrow();
+      expect(() => toWhatsappJid(1234567890 as unknown)).toThrow();
     });
 
     it("handles JIDs with different domains", () => {
@@ -146,8 +146,8 @@ describe("WhatsApp utilities - Additional Tests", () => {
   describe("jidToE164", () => {
     it("handles null and undefined inputs", () => {
       // The function doesn't handle null/undefined, so we expect it to throw
-      expect(() => jidToE164(null as any)).toThrow();
-      expect(() => jidToE164(undefined as any)).toThrow();
+      expect(() => jidToE164(null as unknown)).toThrow();
+      expect(() => jidToE164(undefined as unknown)).toThrow();
     });
 
     it("handles empty string", () => {

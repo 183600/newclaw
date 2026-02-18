@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 import { normalizeVoiceWakeTriggers, formatError } from "./server-utils.js";
 
 describe("Gateway Server Utils", () => {
@@ -106,7 +106,7 @@ describe("Gateway Server Utils", () => {
     });
 
     it("handles circular references gracefully", () => {
-      const error: any = { name: "circular" };
+      const error: { name: string; self?: unknown } = { name: "circular" };
       error.self = error;
 
       // Should not throw an error

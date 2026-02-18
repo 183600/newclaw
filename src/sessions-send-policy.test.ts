@@ -1,11 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { SessionEntry, SessionChatType } from "./config/sessions.js";
 import type { OpenClawConfig } from "./config/types.js";
-import {
-  normalizeSendPolicy,
-  resolveSendPolicy,
-  type SessionSendPolicyDecision,
-} from "./sessions/send-policy.js";
+import { normalizeSendPolicy, resolveSendPolicy } from "./sessions/send-policy.js";
 
 describe("sessions send-policy", () => {
   describe("normalizeSendPolicy", () => {
@@ -34,7 +30,7 @@ describe("sessions send-policy", () => {
   });
 
   describe("resolveSendPolicy", () => {
-    const createMockConfig = (sessionPolicy?: any): OpenClawConfig =>
+    const createMockConfig = (sessionPolicy?: unknown): OpenClawConfig =>
       ({
         session: { sendPolicy: sessionPolicy },
       }) as OpenClawConfig;
@@ -311,7 +307,7 @@ describe("sessions send-policy", () => {
           rules: [{ action: "allow", match: { channel: "telegram" } }],
         });
         const entry = createMockEntry(undefined, undefined, undefined);
-        (entry as any).lastChannel = "telegram";
+        (entry as { lastChannel?: string }).lastChannel = "telegram";
 
         expect(resolveSendPolicy({ cfg, entry })).toBe("allow");
       });

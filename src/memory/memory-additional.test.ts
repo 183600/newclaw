@@ -440,7 +440,9 @@ describe("memory module - additional edge cases", () => {
         },
       ];
 
-      const keys = scenarios.map((scenario) => computeEmbeddingProviderKey(scenario.params as any));
+      const keys = scenarios.map((scenario) =>
+        computeEmbeddingProviderKey(scenario.params as unknown),
+      );
 
       // All keys should be defined and unique
       keys.forEach((key) => {

@@ -5,8 +5,6 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   DEFAULT_GATEWAY_PORT,
   resolveCanonicalConfigPath,
-  resolveConfigPath,
-  resolveConfigPathCandidate,
   resolveDefaultConfigCandidates,
   resolveGatewayLockDir,
   resolveGatewayPort,
@@ -192,7 +190,7 @@ describe("resolveDefaultConfigCandidates", () => {
 describe("resolveGatewayLockDir", () => {
   it("returns directory with uid when getuid is available", () => {
     const originalGetuid = process.getuid;
-    process.getuid = vi.fn(() => 1234) as any;
+    process.getuid = vi.fn(() => 1234) as unknown;
 
     const expected = path.join(os.tmpdir(), "openclaw-1234");
     expect(resolveGatewayLockDir()).toBe(expected);
@@ -202,7 +200,7 @@ describe("resolveGatewayLockDir", () => {
 
   it("returns directory without uid when getuid is not available", () => {
     const originalGetuid = process.getuid;
-    delete (process as any).getuid;
+    delete (process as { getuid?: unknown }).getuid;
 
     const expected = path.join(os.tmpdir(), "openclaw");
     expect(resolveGatewayLockDir()).toBe(expected);

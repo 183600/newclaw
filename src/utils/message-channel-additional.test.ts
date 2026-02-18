@@ -1,4 +1,4 @@
-import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 // Mock the dependencies
 vi.mock("../channels/registry.js", () => ({
@@ -48,7 +48,6 @@ vi.mock("../plugins/runtime.js", () => {
 import {
   INTERNAL_MESSAGE_CHANNEL,
   isGatewayCliClient,
-  isInternalMessageChannel,
   isWebchatClient,
   normalizeMessageChannel,
   listDeliverableMessageChannels,

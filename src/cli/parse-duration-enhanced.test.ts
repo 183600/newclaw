@@ -70,13 +70,13 @@ describe("CLI Parse Duration", () => {
     });
 
     it("handles number input", () => {
-      expect(parseDurationMs(100 as any)).toBe(100);
-      expect(parseDurationMs(1000 as any)).toBe(1000);
+      expect(parseDurationMs(100 as unknown)).toBe(100);
+      expect(parseDurationMs(1000 as unknown)).toBe(1000);
     });
 
     it("handles null/undefined input", () => {
-      expect(() => parseDurationMs(null as any)).toThrow("invalid duration (empty)");
-      expect(() => parseDurationMs(undefined as any)).toThrow("invalid duration (empty)");
+      expect(() => parseDurationMs(null as unknown)).toThrow("invalid duration (empty)");
+      expect(() => parseDurationMs(undefined as unknown)).toThrow("invalid duration (empty)");
     });
 
     it("throws for empty string", () => {

@@ -75,8 +75,6 @@ describe("Comprehensive Edge Cases Tests", () => {
 
   describe("formatRelativeTime edge cases", () => {
     it("handles system clock edge cases", () => {
-      const now = Date.now();
-
       // Test with very large timestamps
       expect(formatRelativeTime(Number.MAX_SAFE_INTEGER)).toMatch(/^[A-Za-z]{3} \d+$/);
 

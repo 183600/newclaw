@@ -25,7 +25,7 @@ describe("normalizeSendPolicy", () => {
 });
 
 describe("resolveSendPolicy", () => {
-  const mockConfig = (policy?: any): OpenClawConfig =>
+  const mockConfig = (policy?: unknown): OpenClawConfig =>
     ({
       session: {
         sendPolicy: policy,

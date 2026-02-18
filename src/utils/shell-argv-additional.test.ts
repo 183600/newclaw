@@ -4,23 +4,23 @@ import { splitShellArgs } from "./shell-argv.js";
 describe("splitShellArgs - Additional Tests", () => {
   it("handles null and undefined inputs", () => {
     // The function doesn't handle null/undefined, so we expect it to throw
-    expect(() => splitShellArgs(null as any)).toThrow();
-    expect(() => splitShellArgs(undefined as any)).toThrow();
+    expect(() => splitShellArgs(null as unknown)).toThrow();
+    expect(() => splitShellArgs(undefined as unknown)).toThrow();
   });
 
   it("handles numbers", () => {
     // The function expects a string, so passing a number returns empty array
-    expect(splitShellArgs(123 as any)).toEqual([]);
+    expect(splitShellArgs(123 as unknown)).toEqual([]);
   });
 
   it("handles objects", () => {
     // The function expects a string, so passing an object returns empty array
-    expect(splitShellArgs({} as any)).toEqual([]);
+    expect(splitShellArgs({} as unknown)).toEqual([]);
   });
 
   it("handles arrays", () => {
     // The function expects a string, so passing an array returns empty array
-    expect(splitShellArgs([] as any)).toEqual([]);
+    expect(splitShellArgs([] as unknown)).toEqual([]);
   });
 
   it("handles complex nested quotes", () => {

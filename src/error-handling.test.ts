@@ -1,5 +1,5 @@
 import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
-import { retryAsync, resolveRetryConfig, type RetryOptions } from "./infra/retry.js";
+import { retryAsync } from "./infra/retry.js";
 
 describe("Error Handling", () => {
   describe("Error Types", () => {
@@ -247,7 +247,7 @@ describe("Error Handling", () => {
 
       const circuitBreaker = {
         state: "closed",
-        execute: (operation: () => any) => {
+        execute: (operation: () => unknown) => {
           if (circuitBreaker.state === "open") {
             throw new Error("Circuit breaker is open");
           }
@@ -312,7 +312,7 @@ describe("Error Handling", () => {
         maxReportsPerMinute: 10,
         reportCount: 0,
         canReport: () => {
-          const now = Date.now();
+          const _now = Date.now();
           if (rateLimiter.reportCount >= rateLimiter.maxReportsPerMinute) {
             return false;
           }
@@ -337,11 +337,11 @@ describe("Error Handling", () => {
       const successFn = vi.fn().mockResolvedValue("success");
       const errorFn = vi.fn().mockRejectedValue(new Error("Test error"));
 
-      const withErrorHandling = async (fn: () => Promise<any>) => {
+      const withErrorHandling = async (fn: () => Promise<unknown>) => {
         try {
           return await fn();
         } catch (error) {
-          throw new Error(`Wrapped error: ${error.message}`);
+          throw new Error(`Wrapped error: ${error.message}`, { cause: error });
         }
       };
 
@@ -353,20 +353,22 @@ describe("Error Handling", () => {
       const errorFn = vi.fn().mockRejectedValue(new Error("Test error"));
       const operation = "test-operation";
 
-      const withErrorContext = async (fn: () => Promise<any>, operation: string) => {
+      const withErrorContext = async (fn: () => Promise<unknown>, operation: string) => {
         try {
           return await fn();
         } catch (error) {
           const wrappedError = new Error(`Error in ${operation}: ${error.message}`);
-          (wrappedError as any).context = { operation };
+          (wrappedError as { context?: { operation: string } }).context = { operation };
           throw wrappedError;
         }
       };
 
       try {
         await withErrorContext(errorFn, operation);
-      } catch (error: any) {
-        expect(error.context.operation).toBe("test-operation");
+      } catch (error: unknown) {
+        expect((error as { context?: { operation: string } }).context.operation).toBe(
+          "test-operation",
+        );
       }
     });
   });

@@ -34,7 +34,7 @@ describe("waitForever", () => {
     };
     mockSetInterval.mockReturnValue(mockInterval);
 
-    waitForever();
+    void waitForever();
 
     expect(mockInterval.unref).toHaveBeenCalled();
   });
@@ -63,7 +63,7 @@ describe("waitForever", () => {
   });
 
   it("should use a function that does nothing for interval callback", () => {
-    waitForever();
+    void waitForever();
 
     expect(mockSetInterval).toHaveBeenCalled();
     const callback = mockSetInterval.mock.calls[0][0];

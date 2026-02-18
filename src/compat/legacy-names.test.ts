@@ -1,6 +1,5 @@
 import { describe, expect, it } from "vitest";
 import {
-  LEGACY_CANVAS_HANDLER_NAMES,
   LEGACY_MACOS_APP_SOURCES_DIRS,
   LEGACY_MANIFEST_KEYS,
   LEGACY_PLUGIN_MANIFEST_FILENAMES,

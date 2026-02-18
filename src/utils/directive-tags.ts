@@ -17,14 +17,6 @@ type InlineDirectiveParseOptions = {
 const AUDIO_TAG_RE = /\[\[\s*audio_as_voice\s*\]\]/gi;
 const REPLY_TAG_RE = /\[\[\s*(?:reply_to_current|reply_to\s*:\s*([^\]\n]+))\s*(?:\]\]|$)/gi;
 
-function normalizeDirectiveWhitespace(text: string): string {
-  return text
-    .replace(/[ \t]+/g, " ") // Replace spaces and tabs with single space, but preserve newlines
-    .replace(/[ \t]*(\n)[ \t]*/g, "$1") // Remove spaces/tabs before and after newlines
-    .replace(/\n+/g, " ") // Replace newlines with single spaces
-    .trim();
-}
-
 export function parseInlineDirectives(
   text?: string,
   options: InlineDirectiveParseOptions = {},

@@ -49,7 +49,7 @@ vi.mock("../plugins/runtime.js", () => {
       console.log("Mock requireActivePluginRegistry called");
       return mockRegistry;
     },
-    setActivePluginRegistry: (registry: any) => {
+    setActivePluginRegistry: (registry: unknown) => {
       console.log("Mock setActivePluginRegistry called with:", registry);
       // Update the mockRegistry with the new registry
       mockRegistry.channels = registry.channels || [];

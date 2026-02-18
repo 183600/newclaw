@@ -79,8 +79,6 @@ export const normalizePluginsConfig = (
   // Check if config is explicitly provided but empty (e.g., {} passed explicitly)
   const isEmpty = config !== undefined && Object.keys(config).length === 0;
   // Check if memory slot is explicitly configured
-  const hasExplicitMemorySlot =
-    config?.slots && Object.prototype.hasOwnProperty.call(config.slots, "memory");
   return {
     enabled: isEmpty ? false : config?.enabled !== false,
     allow: normalizeList(config?.allow),
@@ -248,7 +246,8 @@ export function resolveMemorySlotDecisionLegacy(
   }
 
   // Check if plugin has memory slots
-  if (!(plugin as any).manifest?.memorySlots || (plugin as any).manifest.memorySlots.length === 0) {
+  const pluginManifest = (plugin as { manifest?: { memorySlots?: unknown[] } }).manifest;
+  if (!pluginManifest?.memorySlots || pluginManifest.memorySlots.length === 0) {
     return { slotId: null, reason: "no-slots" };
   }
 
@@ -258,12 +257,12 @@ export function resolveMemorySlotDecisionLegacy(
   }
 
   // Check if memory slot was explicitly configured
-  const hasExplicitMemorySlot =
+  const _hasExplicitMemorySlot =
     originalConfig?.slots && Object.prototype.hasOwnProperty.call(originalConfig.slots, "memory");
 
   // Use configured slot or default
   const slotId = config.slots.memory || "memory-core";
-  const reason = hasExplicitMemorySlot ? "configured" : "default";
+  const reason = _hasExplicitMemorySlot ? "configured" : "default";
 
   return { slotId, reason };
 }

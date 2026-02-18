@@ -29,7 +29,7 @@ function writePlugin(params: {
   const filename = params.filename ?? `${params.id}.js`;
   const file = path.join(dir, filename);
   fs.writeFileSync(file, params.body, "utf-8");
-  const manifest: any = {
+  const manifest: Record<string, unknown> = {
     id: params.id,
     configSchema: EMPTY_PLUGIN_SCHEMA,
   };

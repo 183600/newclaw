@@ -7,7 +7,6 @@ import {
   applyModelDefaults,
   applyAgentDefaults,
   applyLoggingDefaults,
-  applyContextPruningDefaults,
   applyCompactionDefaults,
   resetSessionDefaultsWarningForTests,
 } from "./defaults.js";

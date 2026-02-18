@@ -14,16 +14,16 @@ describe("formatRelativeTime - Additional Tests", () => {
     const now = Date.now();
     vi.setSystemTime(now);
 
-    expect(formatRelativeTime(null as any)).toMatch(/^[A-Za-z]{3} \d+$/);
-    expect(formatRelativeTime(undefined as any)).toMatch(/^[A-Za-z]{3} \d+$/);
+    expect(formatRelativeTime(null as unknown)).toMatch(/^[A-Za-z]{3} \d+$/);
+    expect(formatRelativeTime(undefined as unknown)).toMatch(/^[A-Za-z]{3} \d+$/);
   });
 
   it("handles string timestamps", () => {
     const now = Date.now();
     vi.setSystemTime(now);
 
-    expect(formatRelativeTime("1234567890" as any)).toMatch(/^[A-Za-z]{3} \d+$/);
-    expect(formatRelativeTime("invalid" as any)).toMatch(/^[A-Za-z]{3} \d+$/);
+    expect(formatRelativeTime("1234567890" as unknown)).toMatch(/^[A-Za-z]{3} \d+$/);
+    expect(formatRelativeTime("invalid" as unknown)).toMatch(/^[A-Za-z]{3} \d+$/);
   });
 
   it("handles extremely large positive timestamps", () => {

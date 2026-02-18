@@ -14,7 +14,7 @@ vi.mock("./agents/agent-scope.js", () => ({
 }));
 
 describe("routing bindings", () => {
-  const createMockConfig = (bindings: any[] = []): OpenClawConfig =>
+  const createMockConfig = (bindings: unknown[] = []): OpenClawConfig =>
     ({
       bindings,
     }) as OpenClawConfig;
@@ -26,10 +26,10 @@ describe("routing bindings", () => {
     });
 
     it("returns empty array when bindings is not array", () => {
-      const cfg = { bindings: null } as any;
+      const cfg = { bindings: null } as unknown;
       expect(listBindings(cfg)).toEqual([]);
 
-      const cfg2 = { bindings: "not-array" } as any;
+      const cfg2 = { bindings: "not-array" } as unknown;
       expect(listBindings(cfg2)).toEqual([]);
     });
 
@@ -44,8 +44,8 @@ describe("routing bindings", () => {
     it("returns empty array for invalid channel", () => {
       const cfg = createMockConfig();
       expect(listBoundAccountIds(cfg, "")).toEqual([]);
-      expect(listBoundAccountIds(cfg, null as any)).toEqual([]);
-      expect(listBoundAccountIds(cfg, undefined as any)).toEqual([]);
+      expect(listBoundAccountIds(cfg, null as unknown)).toEqual([]);
+      expect(listBoundAccountIds(cfg, undefined as unknown)).toEqual([]);
     });
 
     it("returns empty array when no bindings", () => {
@@ -134,8 +134,8 @@ describe("routing bindings", () => {
     it("returns null for invalid channel", () => {
       const cfg = createMockConfig();
       expect(resolveDefaultAgentBoundAccountId(cfg, "")).toBeNull();
-      expect(resolveDefaultAgentBoundAccountId(cfg, null as any)).toBeNull();
-      expect(resolveDefaultAgentBoundAccountId(cfg, undefined as any)).toBeNull();
+      expect(resolveDefaultAgentBoundAccountId(cfg, null as unknown)).toBeNull();
+      expect(resolveDefaultAgentBoundAccountId(cfg, undefined as unknown)).toBeNull();
     });
 
     it("returns null when no bindings", () => {

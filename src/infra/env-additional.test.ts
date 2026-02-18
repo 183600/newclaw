@@ -1,10 +1,8 @@
 import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
 import {
-  logAcceptedEnvOption,
   _logAcceptedEnvOptionInternal,
   normalizeZaiEnv,
   isTruthyEnvValue,
-  normalizeEnv,
   _resetLoggedEnvForTesting,
 } from "./env.js";
 

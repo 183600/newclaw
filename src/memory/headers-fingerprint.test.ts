@@ -7,7 +7,7 @@ describe("fingerprintHeaderNames", () => {
   });
 
   it("should return empty array for null headers", () => {
-    expect(fingerprintHeaderNames(null as any)).toEqual([]);
+    expect(fingerprintHeaderNames(null as unknown)).toEqual([]);
   });
 
   it("should normalize and sort header names", () => {
@@ -71,7 +71,7 @@ describe("fingerprintHeaderNames", () => {
       "1": "numeric",
       "Content-Type": "application/json",
       "2": "another numeric",
-    } as any;
+    } as unknown;
     const result = fingerprintHeaderNames(headers);
     expect(result).toEqual(["1", "2", "content-type"]);
   });
@@ -114,7 +114,7 @@ describe("fingerprintHeaderNames", () => {
       "X-Boolean": true,
       "X-Null": null,
       "X-Undefined": undefined,
-    } as any;
+    } as unknown;
     const result = fingerprintHeaderNames(headers);
     expect(result).toEqual(["content-type", "x-boolean", "x-null", "x-number", "x-undefined"]);
   });
