@@ -23,7 +23,7 @@ describe("restoreTerminalState", () => {
     // Mock process.stdin methods
     // Ensure setRawMode exists
     if (!process.stdin.setRawMode) {
-      (process.stdin as any).setRawMode = vi.fn();
+      (process.stdin as unknown as { setRawMode: (mode: boolean) => void }).setRawMode = vi.fn();
     }
     setRawModeSpy = vi.spyOn(process.stdin, "setRawMode").mockImplementation(() => {});
     isPausedSpy = vi.spyOn(process.stdin, "isPaused").mockReturnValue(false);
