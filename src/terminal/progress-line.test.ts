@@ -78,7 +78,7 @@ describe("progress-line", () => {
     it("should only unregister when the stream matches", () => {
       const anotherStream = {
         isTTY: true,
-        write: vi.fn().bind(anotherStream).bind(mockStream2).bind(mockStream),
+        write: vi.fn(),
       } as unknown as NodeJS.WriteStream;
 
       registerActiveProgressLine(mockStream);

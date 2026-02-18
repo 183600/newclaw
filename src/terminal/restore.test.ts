@@ -5,16 +5,13 @@ import { restoreTerminalState } from "./restore.js";
 describe("restoreTerminalState", () => {
   let stderrWriteSpy: vi.SpyInstance;
   let stdoutWriteSpy: vi.SpyInstance;
-  let originalStdinSetRawMode: unknown;
-  let originalStdinIsPaused: unknown;
-  let originalStdinResume: unknown;
+  let setRawModeSpy: vi.SpyInstance;
+  let isPausedSpy: vi.SpyInstance;
+  let resumeSpy: vi.SpyInstance;
   let originalStdoutIsTTY: unknown;
 
   beforeEach(() => {
-    // Save original methods
-    originalStdinSetRawMode = process.stdin.setRawMode.bind(process.stdin);
-    originalStdinIsPaused = process.stdin.isPaused.bind(process.stdin);
-    originalStdinResume = process.stdin.resume.bind(process.stdin);
+    // Save original stdout.isTTY
     originalStdoutIsTTY = process.stdout.isTTY;
 
     // Mock process.stderr.write
@@ -24,24 +21,30 @@ describe("restoreTerminalState", () => {
     stdoutWriteSpy = vi.spyOn(process.stdout, "write").mockImplementation(() => true);
 
     // Mock process.stdin methods
-    process.stdin.setRawMode = vi.fn().bind(process.stdin);
-    process.stdin.isPaused = vi.fn(() => false).bind(process.stdin);
-    process.stdin.resume = vi.fn().bind(process.stdin);
+    // Ensure setRawMode exists
+    if (!process.stdin.setRawMode) {
+      (process.stdin as any).setRawMode = vi.fn();
+    }
+    setRawModeSpy = vi.spyOn(process.stdin, "setRawMode").mockImplementation(() => {});
+    isPausedSpy = vi.spyOn(process.stdin, "isPaused").mockReturnValue(false);
+    resumeSpy = vi.spyOn(process.stdin, "resume").mockImplementation(() => {});
 
     // Mock process.stdout
     Object.defineProperty(process.stdout, "isTTY", { value: true, writable: true });
   });
 
   afterEach(() => {
-    // Restore original methods
-    process.stdin.setRawMode = originalStdinSetRawMode;
-    process.stdin.isPaused = originalStdinIsPaused;
-    process.stdin.resume = originalStdinResume;
-    Object.defineProperty(process.stdout, "isTTY", { value: originalStdoutIsTTY, writable: true });
-
     // Restore spies
     stderrWriteSpy.mockRestore();
     stdoutWriteSpy.mockRestore();
+    if (setRawModeSpy) {
+      setRawModeSpy.mockRestore();
+    }
+    isPausedSpy.mockRestore();
+    resumeSpy.mockRestore();
+
+    // Restore stdout.isTTY
+    Object.defineProperty(process.stdout, "isTTY", { value: originalStdoutIsTTY, writable: true });
   });
 
   it("should clear active progress line", () => {
@@ -61,21 +64,24 @@ describe("restoreTerminalState", () => {
     Object.defineProperty(process.stdin, "isTTY", { value: true, writable: true });
     restoreTerminalState();
 
-    expect(vi.mocked(process.stdin.setRawMode)).toHaveBeenCalledWith(false);
+    if (setRawModeSpy) {
+      expect(setRawModeSpy).toHaveBeenCalledWith(false);
+    }
   });
 
   it("should resume stdin if it was paused", () => {
-    (process.stdin.isPaused as vi.SpyInstance).mockReturnValue(true);
+    Object.defineProperty(process.stdin, "isTTY", { value: true, writable: true });
+    isPausedSpy.mockReturnValue(true);
     restoreTerminalState();
 
-    expect(vi.mocked(process.stdin.resume)).toHaveBeenCalled();
+    expect(resumeSpy).toHaveBeenCalled();
   });
 
   it("should not resume stdin if it was not paused", () => {
-    (process.stdin.isPaused as vi.SpyInstance).mockReturnValue(false);
+    isPausedSpy.mockReturnValue(false);
     restoreTerminalState();
 
-    expect(vi.mocked(process.stdin.resume)).not.toHaveBeenCalled();
+    expect(resumeSpy).not.toHaveBeenCalled();
   });
 
   it("should write reset sequence to stdout when it is TTY", () => {
@@ -96,7 +102,9 @@ describe("restoreTerminalState", () => {
     Object.defineProperty(process.stdin, "isTTY", { value: false, writable: true });
     restoreTerminalState();
 
-    expect(vi.mocked(process.stdin.setRawMode)).not.toHaveBeenCalled();
+    if (setRawModeSpy) {
+      expect(setRawModeSpy).not.toHaveBeenCalled();
+    }
   });
 
   it("should handle errors in clearActiveProgressLine", () => {
