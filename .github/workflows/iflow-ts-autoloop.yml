@@ -21,7 +21,7 @@ jobs:
       RUN_HOURS: 5
       WORK_BRANCH: main
 
-      # 去掉 typus：marker 文件改名
+      # marker 文件
       RELEASE_MARKER_FILE: .git/iflow_release_tag
 
       IFLOW_API_KEY: ${{ secrets.IFLOW_API_KEY }}
@@ -30,8 +30,7 @@ jobs:
 
       GH_TOKEN: ${{ github.token }}
 
-      # Gitee 镜像推送（可选）
-      GITEE_REMOTE_URL: ${{ secrets.GITEE_REMOTE_URL }}
+      # 👇 删除 GITEE_REMOTE_URL 环境变量
 
     steps:
       - name: Checkout with PAT
@@ -50,18 +49,15 @@ jobs:
           git config user.name "iflow-bot"
           git config user.email "iflow-bot@users.noreply.github.com"
 
-      # 👇 新增：先安装 pnpm
       - name: Setup pnpm
         uses: pnpm/action-setup@v2
         with:
-          version: 9 # 指定 pnpm 版本，例如 8 或 9
+          version: 9
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "22"
-          # 👇 删除了无效的 'package-manager' 参数
-          # 👇 保持缓存配置
           cache: "pnpm"
           cache-dependency-path: "pnpm-lock.yaml"
 
@@ -103,19 +99,13 @@ jobs:
           set -euo pipefail
           timeout --signal=TERM $(( RUN_HOURS * 3600 )) bash scripts/ts_loop.sh || true
 
-      - name: Commit & push once (GitHub + Gitee)
+      # 👇 修改这个步骤，删除 Gitee 推送相关代码
+      - name: Commit & push to GitHub
         if: always()
         shell: bash
         run: |
           set -euo pipefail
           BRANCH="${WORK_BRANCH:-main}"
-
-          # 确保 gitee 远端存在
-          if git remote get-url gitee >/dev/null 2>&1; then
-            git remote set-url gitee "${GITEE_REMOTE_URL}"
-          else
-            git remote add gitee "${GITEE_REMOTE_URL}"
-          fi
 
           # 最后统一提交一次
           git add -A
@@ -123,7 +113,7 @@ jobs:
             git commit -m "ci: ${RUN_HOURS}h batch update (run $GITHUB_RUN_ID)" || true
           fi
 
-          # 检查 release marker（去掉 typus）
+          # 检查 release marker
           MARKER_FILE="${RELEASE_MARKER_FILE}"
           if [[ ! -f "${MARKER_FILE}" ]]; then
             GIT_DIR_REAL="$(git rev-parse --git-dir 2>/dev/null || echo ".git")"
@@ -133,9 +123,5 @@ jobs:
             echo "Release tag prepared: $(cat "${MARKER_FILE}")"
           fi
 
-          # 推送
+          # 只推送到 GitHub
           git push origin "HEAD:${BRANCH}" --follow-tags --force
-          # 如果配置了 Gitee
-          if [[ -n "${GITEE_REMOTE_URL:-}" ]]; then
-            git push gitee "HEAD:${BRANCH}" --follow-tags --force
-          fi
