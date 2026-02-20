@@ -21,6 +21,7 @@ jobs:
       RUN_HOURS: 5
       WORK_BRANCH: main
 
+      # marker 文件
       RELEASE_MARKER_FILE: .git/iflow_release_tag
 
       IFLOW_API_KEY: ${{ secrets.IFLOW_API_KEY }}
@@ -28,6 +29,8 @@ jobs:
       IFLOW_MODEL_NAME: zai-org/GLM-5-FP8
 
       GH_TOKEN: ${{ github.token }}
+
+      # 👇 删除 GITEE_REMOTE_URL 环境变量
 
     steps:
       - name: Checkout with PAT
@@ -46,36 +49,17 @@ jobs:
           git config user.name "iflow-bot"
           git config user.email "iflow-bot@users.noreply.github.com"
 
-      # ── 1. Install pnpm FIRST ──
       - name: Setup pnpm
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@v2
         with:
           version: 9
-          run_install: false
 
-      # ── 2. Expose pnpm store path for caching ──
-      - name: Get pnpm store directory
-        id: pnpm-cache
-        shell: bash
-        run: |
-          echo "STORE_PATH=$(pnpm store path --silent)" >> "$GITHUB_OUTPUT"
-
-      # ── 3. Setup Node (with cache) AFTER pnpm is ready ──
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "22"
           cache: "pnpm"
           cache-dependency-path: "pnpm-lock.yaml"
-
-      # ── 4. Fallback: manual cache in case setup-node cache misses ──
-      - name: Cache pnpm store
-        uses: actions/cache@v4
-        with:
-          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
-          key: pnpm-store-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
-          restore-keys: |
-            pnpm-store-${{ runner.os }}-
 
       - name: Enable Corepack (pnpm)
         shell: bash
@@ -101,12 +85,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          if [ -f pnpm-lock.yaml ]; then
-            pnpm install --frozen-lockfile
-          else
-            echo "⚠️  No pnpm-lock.yaml found, running pnpm install (will generate lockfile)"
-            pnpm install
-          fi
+          pnpm install --frozen-lockfile
 
       - name: Make loop script executable
         shell: bash
@@ -120,6 +99,7 @@ jobs:
           set -euo pipefail
           timeout --signal=TERM $(( RUN_HOURS * 3600 )) bash scripts/ts_loop.sh || true
 
+      # 👇 修改这个步骤，删除 Gitee 推送相关代码
       - name: Commit & push to GitHub
         if: always()
         shell: bash
@@ -127,11 +107,13 @@ jobs:
           set -euo pipefail
           BRANCH="${WORK_BRANCH:-main}"
 
+          # 最后统一提交一次
           git add -A
           if ! git diff --cached --quiet; then
             git commit -m "ci: ${RUN_HOURS}h batch update (run $GITHUB_RUN_ID)" || true
           fi
 
+          # 检查 release marker
           MARKER_FILE="${RELEASE_MARKER_FILE}"
           if [[ ! -f "${MARKER_FILE}" ]]; then
             GIT_DIR_REAL="$(git rev-parse --git-dir 2>/dev/null || echo ".git")"
@@ -141,4 +123,5 @@ jobs:
             echo "Release tag prepared: $(cat "${MARKER_FILE}")"
           fi
 
+          # 只推送到 GitHub
           git push origin "HEAD:${BRANCH}" --follow-tags --force
