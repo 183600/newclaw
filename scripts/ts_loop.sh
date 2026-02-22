@@ -141,6 +141,7 @@ while true; do
 
   if [[ "$PNPM_STATUS" -eq 0 ]]; then
     # 请求增加测试用例（依然用 npm test 语义，但执行器是 pnpm test）
+iflow "这个项目是基于OpenClaw开发的NewClaw，修改一下项目里面各个地方的名称 think:high" --yolo || true
     iflow "给这个项目增加一些 pnpm test 测试用例，不要超过10个，使用标准的 Jest/Vitest/Mocha 测试语法 think:high" --yolo || true
 
     git add -A
