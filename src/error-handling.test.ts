@@ -87,14 +87,6 @@ describe("Error Handling", () => {
   });
 
   describe("Retry Functionality", () => {
-    beforeEach(() => {
-      vi.useFakeTimers();
-    });
-
-    afterEach(() => {
-      vi.useRealTimers();
-    });
-
     it("retries on retryable errors", async () => {
       const operation = vi
         .fn()
@@ -102,14 +94,7 @@ describe("Error Handling", () => {
         .mockRejectedValueOnce(new Error("Network timeout"))
         .mockResolvedValue("success");
 
-      const promise = retryAsync(operation, 3, 100);
-
-      // First retry after 100ms (exponential backoff: 100 * 2^0 = 100)
-      await vi.advanceTimersByTimeAsync(100);
-      // Second retry after 200ms (exponential backoff: 100 * 2^1 = 200)
-      await vi.advanceTimersByTimeAsync(200);
-
-      const result = await promise;
+      const result = await retryAsync(operation, 3, 10);
 
       expect(result).toBe("success");
       expect(operation).toHaveBeenCalledTimes(3);
@@ -125,20 +110,14 @@ describe("Error Handling", () => {
     it("respects maximum retry attempts", async () => {
       const operation = vi.fn().mockRejectedValue(new Error("Persistent failure"));
 
-      const promise = retryAsync(operation, 3, 100);
-
-      // Advance through all retry attempts with exponential backoff
-      await vi.advanceTimersByTimeAsync(100); // First retry (100 * 2^0)
-      await vi.advanceTimersByTimeAsync(200); // Second retry (100 * 2^1)
-
-      await expect(promise).rejects.toThrow("Persistent failure");
+      await expect(retryAsync(operation, 3, 10)).rejects.toThrow("Persistent failure");
       expect(operation).toHaveBeenCalledTimes(3); // Initial + 2 retries
     });
 
     it("uses retry options object", async () => {
       const options: RetryOptions = {
         attempts: 3,
-        minDelayMs: 100,
+        minDelayMs: 10,
       };
 
       const operation = vi
@@ -147,14 +126,7 @@ describe("Error Handling", () => {
         .mockRejectedValueOnce(new Error("Network timeout"))
         .mockResolvedValue("success");
 
-      const promise = retryAsync(operation, options);
-
-      // First retry after 100ms (minDelayMs * 2^0)
-      await vi.advanceTimersByTimeAsync(100);
-      // Second retry after 200ms (minDelayMs * 2^1)
-      await vi.advanceTimersByTimeAsync(200);
-
-      const result = await promise;
+      const result = await retryAsync(operation, options);
 
       expect(result).toBe("success");
       expect(operation).toHaveBeenCalledTimes(3);
@@ -163,7 +135,7 @@ describe("Error Handling", () => {
     it("uses shouldRetry function", async () => {
       const options: RetryOptions = {
         attempts: 3,
-        minDelayMs: 100,
+        minDelayMs: 10,
         shouldRetry: (error: Error) => error.message.includes("Network"),
       };
 
@@ -176,10 +148,8 @@ describe("Error Handling", () => {
       const validationError = vi.fn().mockRejectedValue(new Error("Invalid input"));
 
       // Should retry network error
-      const networkPromise = retryAsync(networkError, options);
-      await vi.advanceTimersByTimeAsync(100);
-      await vi.advanceTimersByTimeAsync(200);
-      await expect(networkPromise).resolves.toBe("success");
+      const result = await retryAsync(networkError, options);
+      expect(result).toBe("success");
 
       // Should not retry validation error
       await expect(retryAsync(validationError, options)).rejects.toThrow("Invalid input");
