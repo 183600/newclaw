@@ -67,6 +67,23 @@ function applyJitter(delayMs: number, jitter: number): number {
   return Math.max(0, Math.round(delayMs * (1 + offset)));
 }
 
+// Default patterns for non-retryable errors in number-argument mode
+const DEFAULT_NON_RETRYABLE_PATTERNS = [
+  "invalid input",
+  "unauthorized",
+  "not found",
+  "forbidden",
+  "bad request",
+];
+
+function isDefaultNonRetryableError(err: unknown): boolean {
+  if (!(err instanceof Error)) {
+    return false;
+  }
+  const message = err.message.toLowerCase();
+  return DEFAULT_NON_RETRYABLE_PATTERNS.some((pattern) => message.includes(pattern));
+}
+
 export async function retryAsync<T>(
   fn: () => Promise<T>,
   attemptsOrOptions: number | RetryOptions = 3,
@@ -80,6 +97,10 @@ export async function retryAsync<T>(
         return await fn();
       } catch (err) {
         lastErr = err;
+        // Stop retrying on non-retryable errors
+        if (isDefaultNonRetryableError(err)) {
+          break;
+        }
         if (i === attempts - 1) {
           break;
         }
