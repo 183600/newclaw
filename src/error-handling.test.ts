@@ -1,5 +1,5 @@
 import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
-import { retryAsync } from "./infra/retry.js";
+import { retryAsync, type RetryOptions } from "./infra/retry.js";
 
 describe("Error Handling", () => {
   describe("Error Types", () => {
@@ -104,10 +104,10 @@ describe("Error Handling", () => {
 
       const promise = retryAsync(operation, 3, 100);
 
-      // First retry after 100ms
-      vi.advanceTimersByTime(100);
-      // Second retry after 100ms
-      vi.advanceTimersByTime(100);
+      // First retry after 100ms (exponential backoff: 100 * 2^0 = 100)
+      await vi.advanceTimersByTimeAsync(100);
+      // Second retry after 200ms (exponential backoff: 100 * 2^1 = 200)
+      await vi.advanceTimersByTimeAsync(200);
 
       const result = await promise;
 
@@ -127,9 +127,9 @@ describe("Error Handling", () => {
 
       const promise = retryAsync(operation, 3, 100);
 
-      // Advance through all retry attempts
-      vi.advanceTimersByTime(100); // First retry
-      vi.advanceTimersByTime(100); // Second retry
+      // Advance through all retry attempts with exponential backoff
+      await vi.advanceTimersByTimeAsync(100); // First retry (100 * 2^0)
+      await vi.advanceTimersByTimeAsync(200); // Second retry (100 * 2^1)
 
       await expect(promise).rejects.toThrow("Persistent failure");
       expect(operation).toHaveBeenCalledTimes(3); // Initial + 2 retries
@@ -137,8 +137,8 @@ describe("Error Handling", () => {
 
     it("uses retry options object", async () => {
       const options: RetryOptions = {
-        maxAttempts: 3,
-        delayMs: 100,
+        attempts: 3,
+        minDelayMs: 100,
       };
 
       const operation = vi
@@ -149,10 +149,10 @@ describe("Error Handling", () => {
 
       const promise = retryAsync(operation, options);
 
-      // First retry after 100ms
-      vi.advanceTimersByTime(100);
-      // Second retry after 100ms
-      vi.advanceTimersByTime(100);
+      // First retry after 100ms (minDelayMs * 2^0)
+      await vi.advanceTimersByTimeAsync(100);
+      // Second retry after 200ms (minDelayMs * 2^1)
+      await vi.advanceTimersByTimeAsync(200);
 
       const result = await promise;
 
@@ -162,8 +162,8 @@ describe("Error Handling", () => {
 
     it("uses shouldRetry function", async () => {
       const options: RetryOptions = {
-        maxAttempts: 3,
-        delayMs: 100,
+        attempts: 3,
+        minDelayMs: 100,
         shouldRetry: (error: Error) => error.message.includes("Network"),
       };
 
@@ -177,8 +177,8 @@ describe("Error Handling", () => {
 
       // Should retry network error
       const networkPromise = retryAsync(networkError, options);
-      vi.advanceTimersByTime(100);
-      vi.advanceTimersByTime(100);
+      await vi.advanceTimersByTimeAsync(100);
+      await vi.advanceTimersByTimeAsync(200);
       await expect(networkPromise).resolves.toBe("success");
 
       // Should not retry validation error
