@@ -1,8 +1,8 @@
 import Foundation
 
 enum GatewaySettingsStore {
-    private static let gatewayService = "ai.openclaw.gateway"
-    private static let nodeService = "ai.openclaw.node"
+    private static let gatewayService = "ai.newclaw.gateway"
+    private static let nodeService = "ai.newclaw.node"
 
     private static let instanceIdDefaultsKey = "node.instanceId"
     private static let preferredGatewayStableIDDefaultsKey = "gateway.preferredStableID"

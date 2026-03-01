@@ -1,6 +1,6 @@
-package ai.openclaw.android.ui.chat
+package ai.newclaw.android.ui.chat
 
-import ai.openclaw.android.chat.ChatSessionEntry
+import ai.newclaw.android.chat.ChatSessionEntry
 import org.junit.Assert.assertEquals
 import org.junit.Test
 

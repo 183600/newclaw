@@ -247,13 +247,13 @@ importers:
 
   extensions/bluebubbles:
     devDependencies:
-      openclaw:
+      newclaw:
         specifier: workspace:*
         version: link:../..
 
   extensions/copilot-proxy:
     devDependencies:
-      openclaw:
+      newclaw:
         specifier: workspace:*
         version: link:../..
 
@@ -293,25 +293,25 @@ importers:
         specifier: ^1.39.0
         version: 1.39.0
     devDependencies:
-      openclaw:
+      newclaw:
         specifier: workspace:*
         version: link:../..
 
   extensions/discord:
     devDependencies:
-      openclaw:
+      newclaw:
         specifier: workspace:*
         version: link:../..
 
   extensions/google-antigravity-auth:
     devDependencies:
-      openclaw:
+      newclaw:
         specifier: workspace:*
         version: link:../..
 
   extensions/google-gemini-cli-auth:
     devDependencies:
-      openclaw:
+      newclaw:
         specifier: workspace:*
         version: link:../..
 
@@ -321,31 +321,31 @@ importers:
         specifier: ^10.5.0
         version: 10.5.0
     devDependencies:
-      openclaw:
+      newclaw:
         specifier: workspace:*
         version: link:../..
 
   extensions/imessage:
     devDependencies:
-      openclaw:
+      newclaw:
         specifier: workspace:*
         version: link:../..
 
   extensions/line:
     devDependencies:
-      openclaw:
+      newclaw:
         specifier: workspace:*
         version: link:../..
 
   extensions/llm-task:
     devDependencies:
-      openclaw:
+      newclaw:
         specifier: workspace:*
         version: link:../..
 
   extensions/lobster:
     devDependencies:
-      openclaw:
+      newclaw:
         specifier: workspace:*
         version: link:../..
 
@@ -367,19 +367,19 @@ importers:
         specifier: ^4.3.6
         version: 4.3.6
     devDependencies:
-      openclaw:
+      newclaw:
         specifier: workspace:*
         version: link:../..
 
   extensions/mattermost:
     devDependencies:
-      openclaw:
+      newclaw:
         specifier: workspace:*
         version: link:../..
 
   extensions/memory-core:
     devDependencies:
-      openclaw:
+      newclaw:
         specifier: workspace:*
         version: link:../..
 
@@ -395,13 +395,13 @@ importers:
         specifier: ^6.17.0
         version: 6.17.0(ws@8.19.0)(zod@4.3.6)
     devDependencies:
-      openclaw:
+      newclaw:
         specifier: workspace:*
         version: link:../..
 
   extensions/minimax-portal-auth:
     devDependencies:
-      openclaw:
+      newclaw:
         specifier: workspace:*
         version: link:../..
 
@@ -419,7 +419,7 @@ importers:
       express:
         specifier: ^5.2.1
         version: 5.2.1
-      openclaw:
+      newclaw:
         specifier: workspace:*
         version: link:../..
       proper-lockfile:
@@ -428,7 +428,7 @@ importers:
 
   extensions/nextcloud-talk:
     devDependencies:
-      openclaw:
+      newclaw:
         specifier: workspace:*
         version: link:../..
 
@@ -437,7 +437,7 @@ importers:
       nostr-tools:
         specifier: ^2.23.0
         version: 2.23.0(typescript@5.9.3)
-      openclaw:
+      newclaw:
         specifier: workspace:*
         version: link:../..
       zod:
@@ -446,25 +446,25 @@ importers:
 
   extensions/open-prose:
     devDependencies:
-      openclaw:
+      newclaw:
         specifier: workspace:*
         version: link:../..
 
   extensions/signal:
     devDependencies:
-      openclaw:
+      newclaw:
         specifier: workspace:*
         version: link:../..
 
   extensions/slack:
     devDependencies:
-      openclaw:
+      newclaw:
         specifier: workspace:*
         version: link:../..
 
   extensions/telegram:
     devDependencies:
-      openclaw:
+      newclaw:
         specifier: workspace:*
         version: link:../..
 
@@ -477,7 +477,7 @@ importers:
         specifier: ^3.0.0
         version: 3.0.0
     devDependencies:
-      openclaw:
+      newclaw:
         specifier: workspace:*
         version: link:../..
 
@@ -496,7 +496,7 @@ importers:
         specifier: ^4.3.6
         version: 4.3.6
     devDependencies:
-      openclaw:
+      newclaw:
         specifier: workspace:*
         version: link:../..
 
@@ -512,19 +512,19 @@ importers:
         specifier: ^4.3.6
         version: 4.3.6
     devDependencies:
-      openclaw:
+      newclaw:
         specifier: workspace:*
         version: link:../..
 
   extensions/whatsapp:
     devDependencies:
-      openclaw:
+      newclaw:
         specifier: workspace:*
         version: link:../..
 
   extensions/zalo:
     dependencies:
-      openclaw:
+      newclaw:
         specifier: workspace:*
         version: link:../..
       undici:
@@ -536,19 +536,19 @@ importers:
       '@sinclair/typebox':
         specifier: 0.34.47
         version: 0.34.47
-      openclaw:
+      newclaw:
         specifier: workspace:*
         version: link:../..
 
   packages/clawdbot:
     dependencies:
-      openclaw:
+      newclaw:
         specifier: workspace:*
         version: link:../..
 
   packages/moltbot:
     dependencies:
-      openclaw:
+      newclaw:
         specifier: workspace:*
         version: link:../..
 

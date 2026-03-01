@@ -1,14 +1,14 @@
 import { describe, expect, it, vi, beforeEach } from "vitest";
-import type { OpenClawConfig } from "../config/config.ts";
+import type { NewClawConfig } from "../config/config.ts";
 import { getMemorySearchManager } from "./search-manager.ts";
 
 describe("getMemorySearchManager", () => {
-  let mockConfig: OpenClawConfig;
+  let mockConfig: NewClawConfig;
 
   beforeEach(() => {
     mockConfig = {
       memory: {},
-    } as OpenClawConfig;
+    } as NewClawConfig;
   });
 
   it("returns error result when fallback manager fails", async () => {
@@ -66,7 +66,7 @@ describe("memory manager integration", () => {
             indexName: "test-index",
           },
         },
-      } as OpenClawConfig,
+      } as NewClawConfig,
       agentId: "test-agent",
     });
 

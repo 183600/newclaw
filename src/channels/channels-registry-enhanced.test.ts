@@ -159,7 +159,7 @@ describe("Chat Channel Registry", () => {
       expect(selection).toContain("Telegram");
       expect(selection).toContain("simplest way to get started");
       expect(selection).toContain("[/channels/telegram](/channels/telegram)");
-      expect(selection).toContain("https://openclaw.ai");
+      expect(selection).toContain("https://newclaw.ai");
       expect(selection).not.toContain("Docs:"); // telegram has selectionDocsOmitLabel: true
     });
 
@@ -172,7 +172,7 @@ describe("Chat Channel Registry", () => {
       expect(selection).toContain("very well supported");
       expect(selection).toContain("Docs:");
       expect(selection).toContain("[discord](/channels/discord)");
-      expect(selection).not.toContain("https://openclaw.ai");
+      expect(selection).not.toContain("https://newclaw.ai");
     });
   });
 });

@@ -1,13 +1,11 @@
+import { emptyPluginConfigSchema } from "newclaw/plugin-sdk";
 import { createHash, randomBytes } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { createServer } from "node:http";
-import { emptyPluginConfigSchema } from "openclaw/plugin-sdk";
 
 // OAuth constants - decoded from pi-ai's base64 encoded values to stay in sync
 const decode = (s: string) => Buffer.from(s, "base64").toString();
-const CLIENT_ID = decode(
-  "",
-);
+const CLIENT_ID = decode("");
 const CLIENT_SECRET = decode("R09DU1BYLUs1OEZXUjQ4NkxkTEoxbUxCOHNYQzR6NnFEQWY=");
 const REDIRECT_URI = "http://localhost:51121/oauth-callback";
 const AUTH_URL = "https://accounts.google.com/o/oauth2/v2/auth";
@@ -32,7 +30,7 @@ const RESPONSE_PAGE = `<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>OpenClaw Antigravity OAuth</title>
+    <title>NewClaw Antigravity OAuth</title>
   </head>
   <body>
     <main>

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { OpenClawConfig } from "../config/config.js";
+import type { NewClawConfig } from "../config/config.js";
 import {
   formatTokenCount,
   formatUsd,
@@ -106,7 +106,7 @@ describe("formatUsd", () => {
 
 describe("resolveModelCostConfig", () => {
   it("should return undefined for undefined provider", () => {
-    const config = {} as OpenClawConfig;
+    const config = {} as NewClawConfig;
     const result = resolveModelCostConfig({
       provider: undefined,
       model: "gpt-4",
@@ -116,7 +116,7 @@ describe("resolveModelCostConfig", () => {
   });
 
   it("should return undefined for null provider", () => {
-    const config = {} as OpenClawConfig;
+    const config = {} as NewClawConfig;
     const result = resolveModelCostConfig({
       provider: null,
       model: "gpt-4",
@@ -126,7 +126,7 @@ describe("resolveModelCostConfig", () => {
   });
 
   it("should return undefined for empty provider", () => {
-    const config = {} as OpenClawConfig;
+    const config = {} as NewClawConfig;
     const result = resolveModelCostConfig({
       provider: "",
       model: "gpt-4",
@@ -136,7 +136,7 @@ describe("resolveModelCostConfig", () => {
   });
 
   it("should return undefined for undefined model", () => {
-    const config = {} as OpenClawConfig;
+    const config = {} as NewClawConfig;
     const result = resolveModelCostConfig({
       provider: "openai",
       model: undefined,
@@ -146,7 +146,7 @@ describe("resolveModelCostConfig", () => {
   });
 
   it("should return undefined for null model", () => {
-    const config = {} as OpenClawConfig;
+    const config = {} as NewClawConfig;
     const result = resolveModelCostConfig({
       provider: "openai",
       model: null,
@@ -156,7 +156,7 @@ describe("resolveModelCostConfig", () => {
   });
 
   it("should return undefined for empty model", () => {
-    const config = {} as OpenClawConfig;
+    const config = {} as NewClawConfig;
     const result = resolveModelCostConfig({
       provider: "openai",
       model: "",
@@ -175,7 +175,7 @@ describe("resolveModelCostConfig", () => {
   });
 
   it("should return undefined for config without models", () => {
-    const config = {} as OpenClawConfig;
+    const config = {} as NewClawConfig;
     const result = resolveModelCostConfig({
       provider: "openai",
       model: "gpt-4",
@@ -185,7 +185,7 @@ describe("resolveModelCostConfig", () => {
   });
 
   it("should return undefined for config without providers", () => {
-    const config = { models: {} } as OpenClawConfig;
+    const config = { models: {} } as NewClawConfig;
     const result = resolveModelCostConfig({
       provider: "openai",
       model: "gpt-4",
@@ -208,7 +208,7 @@ describe("resolveModelCostConfig", () => {
           },
         },
       },
-    } as OpenClawConfig;
+    } as NewClawConfig;
     const result = resolveModelCostConfig({
       provider: "unknown",
       model: "gpt-4",
@@ -231,7 +231,7 @@ describe("resolveModelCostConfig", () => {
           },
         },
       },
-    } as OpenClawConfig;
+    } as NewClawConfig;
     const result = resolveModelCostConfig({
       provider: "openai",
       model: "unknown",
@@ -250,7 +250,7 @@ describe("resolveModelCostConfig", () => {
           },
         },
       },
-    } as OpenClawConfig;
+    } as NewClawConfig;
     const result = resolveModelCostConfig({
       provider: "openai",
       model: "gpt-4",
@@ -269,7 +269,7 @@ describe("resolveModelCostConfig", () => {
           },
         },
       },
-    } as OpenClawConfig;
+    } as NewClawConfig;
     const result = resolveModelCostConfig({
       provider: "  openai  ",
       model: "  gpt-4  ",

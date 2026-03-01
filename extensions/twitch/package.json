@@ -1,7 +1,7 @@
 {
-  "name": "@openclaw/twitch",
+  "name": "@newclaw/twitch",
   "version": "2026.2.2",
-  "description": "OpenClaw Twitch channel plugin",
+  "description": "NewClaw Twitch channel plugin",
   "type": "module",
   "dependencies": {
     "@twurple/api": "^8.0.3",
@@ -10,9 +10,9 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
-    "openclaw": "workspace:*"
+    "newclaw": "workspace:*"
   },
-  "openclaw": {
+  "newclaw": {
     "extensions": [
       "./index.ts"
     ]

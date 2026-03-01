@@ -39,11 +39,11 @@ x-i18n:
 ## CLI 工作流（适合无界面环境）
 
 ```bash
-openclaw nodes pending
-openclaw nodes approve <requestId>
-openclaw nodes reject <requestId>
-openclaw nodes status
-openclaw nodes rename --node <id|name|ip> --name "Living Room iPad"
+newclaw nodes pending
+newclaw nodes approve <requestId>
+newclaw nodes reject <requestId>
+newclaw nodes status
+newclaw nodes rename --node <id|name|ip> --name "Living Room iPad"
 ```
 
 `nodes status` 显示已配对/已连接的节点及其能力。
@@ -80,12 +80,12 @@ macOS 应用可在以下条件满足时选择性地尝试**静默批准**：
 
 ## 存储（本地，私有）
 
-配对状态存储在 Gateway网关状态目录下（默认 `~/.openclaw`）：
+配对状态存储在 Gateway网关状态目录下（默认 `~/.newclaw`）：
 
-- `~/.openclaw/nodes/paired.json`
-- `~/.openclaw/nodes/pending.json`
+- `~/.newclaw/nodes/paired.json`
+- `~/.newclaw/nodes/pending.json`
 
-如果你覆盖了 `OPENCLAW_STATE_DIR`，`nodes/` 文件夹会随之移动。
+如果你覆盖了 `NEWCLAW_STATE_DIR`，`nodes/` 文件夹会随之移动。
 
 安全注意事项：
 

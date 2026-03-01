@@ -189,7 +189,7 @@ describe("telegram inbound media", () => {
             first_name: "Test User",
           },
         },
-        me: { username: "openclaw_bot" },
+        me: { username: "newclaw_bot" },
         getFile: async () => ({ file_path: "unused" }),
       });
 
@@ -250,7 +250,7 @@ describe("telegram inbound media", () => {
             first_name: "Test User",
           },
         },
-        me: { username: "openclaw_bot" },
+        me: { username: "newclaw_bot" },
         getFile: async () => ({ file_path: "unused" }),
       });
 

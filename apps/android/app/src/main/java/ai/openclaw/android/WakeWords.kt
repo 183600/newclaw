@@ -1,4 +1,4 @@
-package ai.openclaw.android
+package ai.newclaw.android
 
 object WakeWords {
   const val maxWords: Int = 32

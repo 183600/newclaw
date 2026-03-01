@@ -107,50 +107,50 @@ describe("Path utility functions", () => {
   });
 
   describe("resolveConfigDir", () => {
-    it("should use OPENCLAW_STATE_DIR if set", () => {
-      const originalStateDir = process.env.OPENCLAW_STATE_DIR;
-      process.env.OPENCLAW_STATE_DIR = "/custom/state";
+    it("should use NEWCLAW_STATE_DIR if set", () => {
+      const originalStateDir = process.env.NEWCLAW_STATE_DIR;
+      process.env.NEWCLAW_STATE_DIR = "/custom/state";
 
       const result = resolveConfigDir();
       expect(result).toBe("/custom/state");
 
-      process.env.OPENCLAW_STATE_DIR = originalStateDir;
+      process.env.NEWCLAW_STATE_DIR = originalStateDir;
     });
 
-    it("should use CLAWDBOT_STATE_DIR if OPENCLAW_STATE_DIR is not set", () => {
-      const originalStateDir = process.env.OPENCLAW_STATE_DIR;
+    it("should use CLAWDBOT_STATE_DIR if NEWCLAW_STATE_DIR is not set", () => {
+      const originalStateDir = process.env.NEWCLAW_STATE_DIR;
       const originalClawdbotDir = process.env.CLAWDBOT_STATE_DIR;
-      delete process.env.OPENCLAW_STATE_DIR;
+      delete process.env.NEWCLAW_STATE_DIR;
       process.env.CLAWDBOT_STATE_DIR = "/clawdbot/state";
 
       const result = resolveConfigDir();
       expect(result).toBe("/clawdbot/state");
 
-      process.env.OPENCLAW_STATE_DIR = originalStateDir;
+      process.env.NEWCLAW_STATE_DIR = originalStateDir;
       process.env.CLAWDBOT_STATE_DIR = originalClawdbotDir;
     });
 
-    it("should fall back to default ~/.openclaw if no env vars are set", () => {
-      const originalStateDir = process.env.OPENCLAW_STATE_DIR;
+    it("should fall back to default ~/.newclaw if no env vars are set", () => {
+      const originalStateDir = process.env.NEWCLAW_STATE_DIR;
       const originalClawdbotDir = process.env.CLAWDBOT_STATE_DIR;
-      delete process.env.OPENCLAW_STATE_DIR;
+      delete process.env.NEWCLAW_STATE_DIR;
       delete process.env.CLAWDBOT_STATE_DIR;
 
       const result = resolveConfigDir();
-      expect(result).toBe(path.join(os.homedir(), ".openclaw"));
+      expect(result).toBe(path.join(os.homedir(), ".newclaw"));
 
-      process.env.OPENCLAW_STATE_DIR = originalStateDir;
+      process.env.NEWCLAW_STATE_DIR = originalStateDir;
       process.env.CLAWDBOT_STATE_DIR = originalClawdbotDir;
     });
 
     it("should handle whitespace in environment variables", () => {
-      const originalStateDir = process.env.OPENCLAW_STATE_DIR;
-      process.env.OPENCLAW_STATE_DIR = "  /custom/with/space  ";
+      const originalStateDir = process.env.NEWCLAW_STATE_DIR;
+      process.env.NEWCLAW_STATE_DIR = "  /custom/with/space  ";
 
       const result = resolveConfigDir();
       expect(result).toBe("/custom/with/space");
 
-      process.env.OPENCLAW_STATE_DIR = originalStateDir;
+      process.env.NEWCLAW_STATE_DIR = originalStateDir;
     });
   });
 
@@ -209,13 +209,13 @@ describe("Path utility functions", () => {
       expect(path.isAbsolute(CONFIG_DIR)).toBe(true);
     });
 
-    it("should default to ~/.openclaw", () => {
+    it("should default to ~/.newclaw", () => {
       // CONFIG_DIR is calculated at module load time, so it may use a different
       // home directory than the current test environment
-      const _expected = path.join(os.homedir(), ".openclaw");
+      const _expected = path.join(os.homedir(), ".newclaw");
       // Since CONFIG_DIR is calculated at module load time, we can't guarantee
       // it matches the current test environment's home directory
-      expect(CONFIG_DIR).toMatch(/\.openclaw$/);
+      expect(CONFIG_DIR).toMatch(/\.newclaw$/);
       expect(path.isAbsolute(CONFIG_DIR)).toBe(true);
     });
   });

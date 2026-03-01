@@ -1,4 +1,4 @@
-package ai.openclaw.android
+package ai.newclaw.android
 
 enum class CameraHudKind {
   Photo,

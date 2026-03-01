@@ -27,10 +27,10 @@ async function withTempHome<T>(fn: (home: string) => Promise<T>): Promise<T> {
     },
     {
       env: {
-        OPENCLAW_AGENT_DIR: (home) => path.join(home, ".openclaw", "agent"),
-        PI_CODING_AGENT_DIR: (home) => path.join(home, ".openclaw", "agent"),
+        NEWCLAW_AGENT_DIR: (home) => path.join(home, ".newclaw", "agent"),
+        PI_CODING_AGENT_DIR: (home) => path.join(home, ".newclaw", "agent"),
       },
-      prefix: "openclaw-reply-",
+      prefix: "newclaw-reply-",
     },
   );
 }
@@ -79,7 +79,7 @@ describe("directive behavior", () => {
           agents: {
             defaults: {
               model: "anthropic/claude-opus-4-5",
-              workspace: path.join(home, "openclaw"),
+              workspace: path.join(home, "newclaw"),
             },
           },
           tools: {
@@ -123,7 +123,7 @@ describe("directive behavior", () => {
           agents: {
             defaults: {
               model: "anthropic/claude-opus-4-5",
-              workspace: path.join(home, "openclaw"),
+              workspace: path.join(home, "newclaw"),
             },
             list: [
               {
@@ -161,7 +161,7 @@ describe("directive behavior", () => {
           agents: {
             defaults: {
               model: "anthropic/claude-opus-4-5",
-              workspace: path.join(home, "openclaw"),
+              workspace: path.join(home, "newclaw"),
             },
           },
           channels: { whatsapp: { allowFrom: ["*"] } },
@@ -194,7 +194,7 @@ describe("directive behavior", () => {
           agents: {
             defaults: {
               model: "anthropic/claude-opus-4-5",
-              workspace: path.join(home, "openclaw"),
+              workspace: path.join(home, "newclaw"),
             },
           },
           channels: { whatsapp: { allowFrom: ["*"] } },
@@ -228,7 +228,7 @@ describe("directive behavior", () => {
           agents: {
             defaults: {
               model: "anthropic/claude-opus-4-5",
-              workspace: path.join(home, "openclaw"),
+              workspace: path.join(home, "newclaw"),
             },
           },
           channels: { whatsapp: { allowFrom: ["*"] } },
@@ -243,7 +243,7 @@ describe("directive behavior", () => {
           agents: {
             defaults: {
               model: "anthropic/claude-opus-4-5",
-              workspace: path.join(home, "openclaw"),
+              workspace: path.join(home, "newclaw"),
             },
           },
           channels: { whatsapp: { allowFrom: ["*"] } },

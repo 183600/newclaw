@@ -1,6 +1,6 @@
 import { describe, expect, it, vi, beforeEach } from "vitest";
 import type { MsgContext } from "../auto-reply/templating.js";
-import type { OpenClawConfig } from "../config/config.js";
+import type { NewClawConfig } from "../config/config.js";
 import { runLinkUnderstanding } from "./runner.js";
 
 describe("Link Understanding - runLinkUnderstanding", () => {
@@ -9,13 +9,13 @@ describe("Link Understanding - runLinkUnderstanding", () => {
   });
 
   it("returns empty result when links are disabled", async () => {
-    const mockCfg: OpenClawConfig = {
+    const mockCfg: NewClawConfig = {
       tools: {
         links: {
           enabled: false,
         },
       },
-    } as OpenClawConfig;
+    } as NewClawConfig;
 
     const mockCtx: MsgContext = {
       Body: "Check this link: https://example.com",
@@ -28,7 +28,7 @@ describe("Link Understanding - runLinkUnderstanding", () => {
   });
 
   it("returns empty result when links config is missing", async () => {
-    const mockCfg: OpenClawConfig = {} as OpenClawConfig;
+    const mockCfg: NewClawConfig = {} as NewClawConfig;
 
     const mockCtx: MsgContext = {
       Body: "Check this link: https://example.com",
@@ -41,7 +41,7 @@ describe("Link Understanding - runLinkUnderstanding", () => {
   });
 
   it("returns empty result when scope decision is deny", async () => {
-    const mockCfg: OpenClawConfig = {
+    const mockCfg: NewClawConfig = {
       tools: {
         links: {
           enabled: true,
@@ -50,7 +50,7 @@ describe("Link Understanding - runLinkUnderstanding", () => {
           },
         },
       },
-    } as OpenClawConfig;
+    } as NewClawConfig;
 
     const mockCtx: MsgContext = {
       Body: "Check this link: https://example.com",
@@ -66,13 +66,13 @@ describe("Link Understanding - runLinkUnderstanding", () => {
   });
 
   it("returns empty result when no links are found", async () => {
-    const mockCfg: OpenClawConfig = {
+    const mockCfg: NewClawConfig = {
       tools: {
         links: {
           enabled: true,
         },
       },
-    } as OpenClawConfig;
+    } as NewClawConfig;
 
     const mockCtx: MsgContext = {
       Body: "No links here",
@@ -85,14 +85,14 @@ describe("Link Understanding - runLinkUnderstanding", () => {
   });
 
   it("returns URLs but no outputs when no models are configured", async () => {
-    const mockCfg: OpenClawConfig = {
+    const mockCfg: NewClawConfig = {
       tools: {
         links: {
           enabled: true,
           models: [],
         },
       },
-    } as OpenClawConfig;
+    } as NewClawConfig;
 
     const mockCtx: MsgContext = {
       Body: "Check this link: https://example.com",
@@ -105,7 +105,7 @@ describe("Link Understanding - runLinkUnderstanding", () => {
   });
 
   it("processes links with configured models", async () => {
-    const mockCfg: OpenClawConfig = {
+    const mockCfg: NewClawConfig = {
       tools: {
         links: {
           enabled: true,
@@ -118,7 +118,7 @@ describe("Link Understanding - runLinkUnderstanding", () => {
           ],
         },
       },
-    } as OpenClawConfig;
+    } as NewClawConfig;
 
     const mockCtx: MsgContext = {
       Body: "Check this link: https://example.com",
@@ -132,7 +132,7 @@ describe("Link Understanding - runLinkUnderstanding", () => {
   });
 
   it("handles multiple links", async () => {
-    const mockCfg: OpenClawConfig = {
+    const mockCfg: NewClawConfig = {
       tools: {
         links: {
           enabled: true,
@@ -145,7 +145,7 @@ describe("Link Understanding - runLinkUnderstanding", () => {
           ],
         },
       },
-    } as OpenClawConfig;
+    } as NewClawConfig;
 
     const mockCtx: MsgContext = {
       Body: "Check https://example.com and https://test.com",
@@ -159,7 +159,7 @@ describe("Link Understanding - runLinkUnderstanding", () => {
   });
 
   it("handles CLI command failures gracefully", async () => {
-    const mockCfg: OpenClawConfig = {
+    const mockCfg: NewClawConfig = {
       tools: {
         links: {
           enabled: true,
@@ -172,7 +172,7 @@ describe("Link Understanding - runLinkUnderstanding", () => {
           ],
         },
       },
-    } as OpenClawConfig;
+    } as NewClawConfig;
 
     const mockCtx: MsgContext = {
       Body: "Check this link: https://example.com",
@@ -185,7 +185,7 @@ describe("Link Understanding - runLinkUnderstanding", () => {
   });
 
   it("respects maxLinks configuration", async () => {
-    const mockCfg: OpenClawConfig = {
+    const mockCfg: NewClawConfig = {
       tools: {
         links: {
           enabled: true,
@@ -199,7 +199,7 @@ describe("Link Understanding - runLinkUnderstanding", () => {
           ],
         },
       },
-    } as OpenClawConfig;
+    } as NewClawConfig;
 
     const mockCtx: MsgContext = {
       Body: "Check https://a.com, https://b.com, and https://c.com",
@@ -212,7 +212,7 @@ describe("Link Understanding - runLinkUnderstanding", () => {
   });
 
   it("uses custom message parameter when provided", async () => {
-    const mockCfg: OpenClawConfig = {
+    const mockCfg: NewClawConfig = {
       tools: {
         links: {
           enabled: true,
@@ -225,7 +225,7 @@ describe("Link Understanding - runLinkUnderstanding", () => {
           ],
         },
       },
-    } as OpenClawConfig;
+    } as NewClawConfig;
 
     const mockCtx: MsgContext = {
       Body: "Original body",
@@ -244,7 +244,7 @@ describe("Link Understanding - runLinkUnderstanding", () => {
   });
 
   it("applies template variables to CLI arguments", async () => {
-    const mockCfg: OpenClawConfig = {
+    const mockCfg: NewClawConfig = {
       tools: {
         links: {
           enabled: true,
@@ -257,7 +257,7 @@ describe("Link Understanding - runLinkUnderstanding", () => {
           ],
         },
       },
-    } as OpenClawConfig;
+    } as NewClawConfig;
 
     const mockCtx: MsgContext = {
       Body: "Check this link: https://example.com",

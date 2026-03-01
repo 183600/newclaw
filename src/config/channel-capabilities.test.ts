@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "./config.js";
+import type { NewClawConfig } from "./config.js";
 import { resolveChannelCapabilities } from "./channel-capabilities.js";
 
 // Mock the dependencies
@@ -18,37 +18,37 @@ describe("resolveChannelCapabilities", () => {
   });
 
   it("should return undefined for undefined channel", () => {
-    const cfg = {} as OpenClawConfig;
+    const cfg = {} as NewClawConfig;
     const result = resolveChannelCapabilities({ cfg, channel: undefined });
     expect(result).toBeUndefined();
   });
 
   it("should return undefined for null channel", () => {
-    const cfg = {} as OpenClawConfig;
+    const cfg = {} as NewClawConfig;
     const result = resolveChannelCapabilities({ cfg, channel: null });
     expect(result).toBeUndefined();
   });
 
   it("should return undefined for empty string channel", () => {
-    const cfg = {} as OpenClawConfig;
+    const cfg = {} as NewClawConfig;
     const result = resolveChannelCapabilities({ cfg, channel: "" });
     expect(result).toBeUndefined();
   });
 
   it("should return undefined for config without channels", () => {
-    const cfg = {} as OpenClawConfig;
+    const cfg = {} as NewClawConfig;
     const result = resolveChannelCapabilities({ cfg, channel: "telegram" });
     expect(result).toBeUndefined();
   });
 
   it("should return undefined for config with empty channels", () => {
-    const cfg = { channels: {} } as OpenClawConfig;
+    const cfg = { channels: {} } as NewClawConfig;
     const result = resolveChannelCapabilities({ cfg, channel: "telegram" });
     expect(result).toBeUndefined();
   });
 
   it("should return undefined for channel without capabilities", () => {
-    const cfg = { channels: { telegram: {} } } as OpenClawConfig;
+    const cfg = { channels: { telegram: {} } } as NewClawConfig;
     const result = resolveChannelCapabilities({ cfg, channel: "telegram" });
     expect(result).toBeUndefined();
   });
@@ -60,7 +60,7 @@ describe("resolveChannelCapabilities", () => {
           capabilities: { inlineButtons: "dm" },
         },
       },
-    } as OpenClawConfig;
+    } as NewClawConfig;
     const result = resolveChannelCapabilities({ cfg, channel: "telegram" });
     expect(result).toBeUndefined();
   });
@@ -72,7 +72,7 @@ describe("resolveChannelCapabilities", () => {
           capabilities: ["inlineButtons", "reactions"],
         },
       },
-    } as OpenClawConfig;
+    } as NewClawConfig;
     const result = resolveChannelCapabilities({ cfg, channel: "telegram" });
     expect(result).toEqual(["inlineButtons", "reactions"]);
   });
@@ -84,7 +84,7 @@ describe("resolveChannelCapabilities", () => {
           capabilities: [" inlineButtons ", "reactions", "", "  "],
         },
       },
-    } as OpenClawConfig;
+    } as NewClawConfig;
     const result = resolveChannelCapabilities({ cfg, channel: "telegram" });
     expect(result).toEqual(["inlineButtons", "reactions"]);
   });
@@ -96,7 +96,7 @@ describe("resolveChannelCapabilities", () => {
           capabilities: [],
         },
       },
-    } as OpenClawConfig;
+    } as NewClawConfig;
     const result = resolveChannelCapabilities({ cfg, channel: "telegram" });
     expect(result).toBeUndefined();
   });
@@ -108,7 +108,7 @@ describe("resolveChannelCapabilities", () => {
           capabilities: ["  ", "", "\t"],
         },
       },
-    } as OpenClawConfig;
+    } as NewClawConfig;
     const result = resolveChannelCapabilities({ cfg, channel: "telegram" });
     expect(result).toBeUndefined();
   });
@@ -125,7 +125,7 @@ describe("resolveChannelCapabilities", () => {
           },
         },
       },
-    } as OpenClawConfig;
+    } as NewClawConfig;
     const result = resolveChannelCapabilities({
       cfg,
       channel: "telegram",
@@ -144,7 +144,7 @@ describe("resolveChannelCapabilities", () => {
           },
         },
       },
-    } as OpenClawConfig;
+    } as NewClawConfig;
     const result = resolveChannelCapabilities({
       cfg,
       channel: "telegram",
@@ -165,7 +165,7 @@ describe("resolveChannelCapabilities", () => {
           },
         },
       },
-    } as OpenClawConfig;
+    } as NewClawConfig;
     const result = resolveChannelCapabilities({
       cfg,
       channel: "telegram",
@@ -181,7 +181,7 @@ describe("resolveChannelCapabilities", () => {
           capabilities: ["inlineButtons", "reactions"],
         },
       },
-    } as OpenClawConfig;
+    } as NewClawConfig;
     const result = resolveChannelCapabilities({
       cfg,
       channel: "telegram",
@@ -197,7 +197,7 @@ describe("resolveChannelCapabilities", () => {
           capabilities: ["inlineButtons", "reactions"],
         },
       },
-    } as OpenClawConfig;
+    } as NewClawConfig;
     const result = resolveChannelCapabilities({ cfg, channel: "  TELEGRAM  " });
     expect(result).toEqual(["inlineButtons", "reactions"]);
   });
@@ -214,7 +214,7 @@ describe("resolveChannelCapabilities", () => {
           },
         },
       },
-    } as OpenClawConfig;
+    } as NewClawConfig;
     const result = resolveChannelCapabilities({
       cfg,
       channel: "telegram",
@@ -228,7 +228,7 @@ describe("resolveChannelCapabilities", () => {
       telegram: {
         capabilities: ["inlineButtons", "reactions"],
       },
-    } as OpenClawConfig;
+    } as NewClawConfig;
     const result = resolveChannelCapabilities({ cfg, channel: "telegram" });
     expect(result).toEqual(["inlineButtons", "reactions"]);
   });

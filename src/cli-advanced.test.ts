@@ -126,109 +126,105 @@ describe("parseDurationMs", () => {
 
 describe("formatCliCommand", () => {
   describe("basic formatting", () => {
-    it("passes through non-openclaw commands", () => {
+    it("passes through non-newclaw commands", () => {
       expect(formatCliCommand("git status")).toBe("git status");
       expect(formatCliCommand("npm run build")).toBe("npm run build");
       expect(formatCliCommand("ls -la")).toBe("ls -la");
     });
 
-    it("handles openclaw commands without profile", () => {
-      const env = { OPENCLAW_PROFILE: undefined };
-      expect(formatCliCommand("openclaw status", env)).toBe("openclaw status");
-      expect(formatCliCommand("pnpm openclaw status", env)).toBe("pnpm openclaw status");
-      expect(formatCliCommand("npm run openclaw status", env)).toBe("npm run openclaw status");
+    it("handles newclaw commands without profile", () => {
+      const env = { NEWCLAW_PROFILE: undefined };
+      expect(formatCliCommand("newclaw status", env)).toBe("newclaw status");
+      expect(formatCliCommand("pnpm newclaw status", env)).toBe("pnpm newclaw status");
+      expect(formatCliCommand("npm run newclaw status", env)).toBe("npm run newclaw status");
     });
 
-    it("adds profile flag when OPENCLAW_PROFILE is set", () => {
-      const env = { OPENCLAW_PROFILE: "test" };
-      expect(formatCliCommand("openclaw status", env)).toBe("openclaw --profile test status");
-      expect(formatCliCommand("pnpm openclaw status", env)).toBe(
-        "pnpm openclaw --profile test status",
+    it("adds profile flag when NEWCLAW_PROFILE is set", () => {
+      const env = { NEWCLAW_PROFILE: "test" };
+      expect(formatCliCommand("newclaw status", env)).toBe("newclaw --profile test status");
+      expect(formatCliCommand("pnpm newclaw status", env)).toBe(
+        "pnpm newclaw --profile test status",
       );
-      expect(formatCliCommand("npx openclaw status", env)).toBe(
-        "npx openclaw --profile test status",
-      );
-      expect(formatCliCommand("bunx openclaw status", env)).toBe(
-        "bunx openclaw --profile test status",
+      expect(formatCliCommand("npx newclaw status", env)).toBe("npx newclaw --profile test status");
+      expect(formatCliCommand("bunx newclaw status", env)).toBe(
+        "bunx newclaw --profile test status",
       );
     });
 
     it("handles different profile names", () => {
-      expect(formatCliCommand("openclaw status", { OPENCLAW_PROFILE: "prod" })).toBe(
-        "openclaw --profile prod status",
+      expect(formatCliCommand("newclaw status", { NEWCLAW_PROFILE: "prod" })).toBe(
+        "newclaw --profile prod status",
       );
-      expect(formatCliCommand("openclaw status", { OPENCLAW_PROFILE: "dev" })).toBe(
-        "openclaw --profile dev status",
+      expect(formatCliCommand("newclaw status", { NEWCLAW_PROFILE: "dev" })).toBe(
+        "newclaw --profile dev status",
       );
-      expect(formatCliCommand("openclaw status", { OPENCLAW_PROFILE: "staging" })).toBe(
-        "openclaw --profile staging status",
+      expect(formatCliCommand("newclaw status", { NEWCLAW_PROFILE: "staging" })).toBe(
+        "newclaw --profile staging status",
       );
     });
   });
 
   describe("existing flags", () => {
     it("doesn't add profile when --profile already exists", () => {
-      const env = { OPENCLAW_PROFILE: "test" };
-      expect(formatCliCommand("openclaw --profile prod status", env)).toBe(
-        "openclaw --profile prod status",
+      const env = { NEWCLAW_PROFILE: "test" };
+      expect(formatCliCommand("newclaw --profile prod status", env)).toBe(
+        "newclaw --profile prod status",
       );
-      expect(formatCliCommand("openclaw status --profile prod", env)).toBe(
-        "openclaw status --profile prod",
+      expect(formatCliCommand("newclaw status --profile prod", env)).toBe(
+        "newclaw status --profile prod",
       );
-      expect(formatCliCommand("pnpm openclaw --profile=prod status", env)).toBe(
-        "pnpm openclaw --profile=prod status",
+      expect(formatCliCommand("pnpm newclaw --profile=prod status", env)).toBe(
+        "pnpm newclaw --profile=prod status",
       );
     });
 
     it("doesn't add profile when --dev flag exists", () => {
-      const env = { OPENCLAW_PROFILE: "test" };
-      expect(formatCliCommand("openclaw --dev status", env)).toBe("openclaw --dev status");
-      expect(formatCliCommand("openclaw status --dev", env)).toBe("openclaw status --dev");
-      expect(formatCliCommand("pnpm openclaw --dev status", env)).toBe(
-        "pnpm openclaw --dev status",
-      );
+      const env = { NEWCLAW_PROFILE: "test" };
+      expect(formatCliCommand("newclaw --dev status", env)).toBe("newclaw --dev status");
+      expect(formatCliCommand("newclaw status --dev", env)).toBe("newclaw status --dev");
+      expect(formatCliCommand("pnpm newclaw --dev status", env)).toBe("pnpm newclaw --dev status");
     });
 
     it("handles multiple flags", () => {
-      const env = { OPENCLAW_PROFILE: "test" };
-      expect(formatCliCommand("openclaw --verbose --dev status", env)).toBe(
-        "openclaw --verbose --dev status",
+      const env = { NEWCLAW_PROFILE: "test" };
+      expect(formatCliCommand("newclaw --verbose --dev status", env)).toBe(
+        "newclaw --verbose --dev status",
       );
-      expect(formatCliCommand("openclaw --profile prod --dev status", env)).toBe(
-        "openclaw --profile prod --dev status",
+      expect(formatCliCommand("newclaw --profile prod --dev status", env)).toBe(
+        "newclaw --profile prod --dev status",
       );
     });
   });
 
   describe("edge cases", () => {
     it("handles empty commands", () => {
-      expect(formatCliCommand("", { OPENCLAW_PROFILE: "test" })).toBe("");
-      expect(formatCliCommand("   ", { OPENCLAW_PROFILE: "test" })).toBe("   ");
+      expect(formatCliCommand("", { NEWCLAW_PROFILE: "test" })).toBe("");
+      expect(formatCliCommand("   ", { NEWCLAW_PROFILE: "test" })).toBe("   ");
     });
 
-    it("handles commands with just openclaw", () => {
-      expect(formatCliCommand("openclaw", { OPENCLAW_PROFILE: "test" })).toBe(
-        "openclaw --profile test",
+    it("handles commands with just newclaw", () => {
+      expect(formatCliCommand("newclaw", { NEWCLAW_PROFILE: "test" })).toBe(
+        "newclaw --profile test",
       );
-      expect(formatCliCommand("pnpm openclaw", { OPENCLAW_PROFILE: "test" })).toBe(
-        "pnpm openclaw --profile test",
+      expect(formatCliCommand("pnpm newclaw", { NEWCLAW_PROFILE: "test" })).toBe(
+        "pnpm newclaw --profile test",
       );
     });
 
     it("handles complex command structures", () => {
       expect(
-        formatCliCommand("openclaw agent --mode interactive --verbose", {
-          OPENCLAW_PROFILE: "test",
+        formatCliCommand("newclaw agent --mode interactive --verbose", {
+          NEWCLAW_PROFILE: "test",
         }),
-      ).toBe("openclaw --profile test agent --mode interactive --verbose");
+      ).toBe("newclaw --profile test agent --mode interactive --verbose");
       expect(
-        formatCliCommand("pnpm openclaw gateway run --force", { OPENCLAW_PROFILE: "prod" }),
-      ).toBe("pnpm openclaw --profile prod gateway run --force");
+        formatCliCommand("pnpm newclaw gateway run --force", { NEWCLAW_PROFILE: "prod" }),
+      ).toBe("pnpm newclaw --profile prod gateway run --force");
     });
 
     it("handles multiple spaces", () => {
-      expect(formatCliCommand("openclaw  status  --verbose", { OPENCLAW_PROFILE: "test" })).toBe(
-        "openclaw --profile test  status  --verbose",
+      expect(formatCliCommand("newclaw  status  --verbose", { NEWCLAW_PROFILE: "test" })).toBe(
+        "newclaw --profile test  status  --verbose",
       );
     });
   });

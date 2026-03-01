@@ -266,8 +266,8 @@ describe("formatTerminalLink", () => {
     process.stdout.isTTY = true;
 
     try {
-      const result = formatTerminalLink("OpenClaw", "https://openclaw.ai");
-      expect(result).toContain("\u001b]8;;https://openclaw.ai\u0007OpenClaw\u001b]8;;\u0007");
+      const result = formatTerminalLink("NewClaw", "https://newclaw.ai");
+      expect(result).toContain("\u001b]8;;https://newclaw.ai\u0007NewClaw\u001b]8;;\u0007");
     } finally {
       process.stdout.isTTY = originalIsTTY;
     }
@@ -279,8 +279,8 @@ describe("formatTerminalLink", () => {
     process.stdout.isTTY = false;
 
     try {
-      const result = formatTerminalLink("OpenClaw", "https://openclaw.ai");
-      expect(result).toBe("OpenClaw (https://openclaw.ai)");
+      const result = formatTerminalLink("NewClaw", "https://newclaw.ai");
+      expect(result).toBe("NewClaw (https://newclaw.ai)");
     } finally {
       process.stdout.isTTY = originalIsTTY;
     }
@@ -292,7 +292,7 @@ describe("formatTerminalLink", () => {
     process.stdout.isTTY = false;
 
     try {
-      const result = formatTerminalLink("OpenClaw", "https://openclaw.ai", {
+      const result = formatTerminalLink("NewClaw", "https://newclaw.ai", {
         fallback: "Custom fallback",
       });
       expect(result).toBe("Custom fallback");
@@ -307,10 +307,10 @@ describe("formatTerminalLink", () => {
     process.stdout.isTTY = false;
 
     try {
-      const result = formatTerminalLink("OpenClaw", "https://openclaw.ai", {
+      const result = formatTerminalLink("NewClaw", "https://newclaw.ai", {
         force: true,
       });
-      expect(result).toContain("\u001b]8;;https://openclaw.ai\u0007OpenClaw\u001b]8;;\u0007");
+      expect(result).toContain("\u001b]8;;https://newclaw.ai\u0007NewClaw\u001b]8;;\u0007");
     } finally {
       process.stdout.isTTY = originalIsTTY;
     }

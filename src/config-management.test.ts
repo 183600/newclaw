@@ -11,8 +11,8 @@ describe("Configuration Management", () => {
   let configPath: string;
 
   beforeEach(() => {
-    tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-config-test-"));
-    configDir = path.join(tempDir, ".openclaw");
+    tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "newclaw-config-test-"));
+    configDir = path.join(tempDir, ".newclaw");
     configPath = path.join(configDir, "config.json5");
     fs.mkdirSync(configDir, { recursive: true });
   });
@@ -98,27 +98,27 @@ describe("Configuration Management", () => {
   });
 
   describe("resolveConfigDir", () => {
-    it("resolves to .openclaw directory by default", () => {
+    it("resolves to .newclaw directory by default", () => {
       const env = {};
 
       const resolved = resolveConfigDir(env, () => tempDir);
-      expect(resolved).toContain(".openclaw");
+      expect(resolved).toContain(".newclaw");
     });
 
-    it("prefers .openclaw when legacy dir is missing", () => {
+    it("prefers .newclaw when legacy dir is missing", () => {
       const env = {};
-      const openClawDir = path.join(tempDir, ".openclaw");
-      fs.mkdirSync(openClawDir, { recursive: true });
+      const newClawDir = path.join(tempDir, ".newclaw");
+      fs.mkdirSync(newClawDir, { recursive: true });
 
       const resolved = resolveConfigDir(env, () => tempDir);
-      expect(resolved).toBe(openClawDir);
+      expect(resolved).toBe(newClawDir);
     });
 
     it("handles environment variable override", () => {
       const customConfigDir = path.join(tempDir, "custom-config");
       fs.mkdirSync(customConfigDir, { recursive: true });
 
-      const env = { OPENCLAW_STATE_DIR: customConfigDir };
+      const env = { NEWCLAW_STATE_DIR: customConfigDir };
 
       const resolved = resolveConfigDir(env, () => tempDir);
       expect(resolved).toBe(customConfigDir);

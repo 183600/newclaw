@@ -5,7 +5,7 @@ import { resolveConfigDir, resolveUserPath } from "../utils.js";
 import { resolveBundledPluginsDir } from "./bundled-dir.js";
 import {
   getPackageManifestMetadata,
-  type OpenClawPackageManifest,
+  type NewClawPackageManifest,
   type PackageManifest,
 } from "./manifest.js";
 
@@ -21,7 +21,7 @@ export type PluginCandidate = {
   packageVersion?: string;
   packageDescription?: string;
   packageDir?: string;
-  packageManifest?: OpenClawPackageManifest;
+  packageManifest?: NewClawPackageManifest;
 };
 
 export type PluginDiscoveryResult = {
@@ -70,7 +70,7 @@ function deriveIdHint(params: {
   }
 
   // Prefer the unscoped name so config keys stay stable even when the npm
-  // package is scoped (example: @openclaw/voice-call -> voice-call).
+  // package is scoped (example: @newclaw/voice-call -> voice-call).
   const unscoped = rawPackageName.includes("/")
     ? (rawPackageName.split("/").pop() ?? rawPackageName)
     : rawPackageName;
@@ -180,8 +180,8 @@ function discoverInDirectory(params: {
       continue;
     }
 
-    // Check for openclaw.plugin.json
-    const pluginManifestPath = path.join(fullPath, "openclaw.plugin.json");
+    // Check for newclaw.plugin.json
+    const pluginManifestPath = path.join(fullPath, "newclaw.plugin.json");
     if (fs.existsSync(pluginManifestPath)) {
       addCandidate({
         candidates: params.candidates,
@@ -315,7 +315,7 @@ function discoverFromPath(params: {
   }
 }
 
-export function discoverOpenClawPlugins(params: {
+export function discoverNewClawPlugins(params: {
   workspaceDir?: string;
   extraPaths?: string[];
 }): PluginDiscoveryResult {
@@ -344,7 +344,7 @@ export function discoverOpenClawPlugins(params: {
   }
   if (workspaceDir) {
     const workspaceRoot = resolveUserPath(workspaceDir);
-    const workspaceExtDirs = [path.join(workspaceRoot, ".openclaw", "extensions")];
+    const workspaceExtDirs = [path.join(workspaceRoot, ".newclaw", "extensions")];
     for (const dir of workspaceExtDirs) {
       discoverInDirectory({
         dir,

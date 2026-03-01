@@ -1,4 +1,4 @@
-import type { OpenClawConfig } from "../config/config.js";
+import type { NewClawConfig } from "../config/config.js";
 import type { AgentModelListConfig } from "../config/types.js";
 
 export const OPENAI_CODEX_DEFAULT_MODEL = "openai-codex/gpt-5.2";
@@ -28,8 +28,8 @@ function resolvePrimaryModel(model?: AgentModelListConfig | string): string | un
   return undefined;
 }
 
-export function applyOpenAICodexModelDefault(cfg: OpenClawConfig): {
-  next: OpenClawConfig;
+export function applyOpenAICodexModelDefault(cfg: NewClawConfig): {
+  next: NewClawConfig;
   changed: boolean;
 } {
   const current = resolvePrimaryModel(cfg.agents?.defaults?.model);

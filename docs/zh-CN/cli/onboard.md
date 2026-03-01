@@ -1,7 +1,7 @@
 ---
 read_when:
   - 你想要通过引导式设置配置 Gateway网关、工作区、认证、渠道和 Skills
-summary: "`openclaw onboard`（交互式新手引导向导）的 CLI 参考"
+summary: "`newclaw onboard`（交互式新手引导向导）的 CLI 参考"
 title: onboard
 x-i18n:
   generated_at: "2026-02-01T20:21:15Z"
@@ -12,7 +12,7 @@ x-i18n:
   workflow: 14
 ---
 
-# `openclaw onboard`
+# `newclaw onboard`
 
 交互式新手引导向导（本地或远程 Gateway网关设置）。
 
@@ -23,14 +23,14 @@ x-i18n:
 ## 示例
 
 ```bash
-openclaw onboard
-openclaw onboard --flow quickstart
-openclaw onboard --flow manual
-openclaw onboard --mode remote --remote-url ws://gateway-host:18789
+newclaw onboard
+newclaw onboard --flow quickstart
+newclaw onboard --flow manual
+newclaw onboard --mode remote --remote-url ws://gateway-host:18789
 ```
 
 流程说明：
 
 - `quickstart`：最少提示，自动生成 Gateway网关令牌。
 - `manual`：完整的端口/绑定/认证提示（`advanced` 的别名）。
-- 最快开始聊天的方式：`openclaw dashboard`（控制台 UI，无需渠道设置）。
+- 最快开始聊天的方式：`newclaw dashboard`（控制台 UI，无需渠道设置）。

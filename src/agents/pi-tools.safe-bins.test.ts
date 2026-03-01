@@ -135,7 +135,7 @@ vi.mock("../plugins/hook-runner-global.js", () => ({
   getGlobalPluginRegistry: () => null,
 }));
 
-describe("createOpenClawCodingTools safeBins", () => {
+describe("createNewClawCodingTools safeBins", () => {
   it("threads tools.exec.safeBins into exec allowlist checks", async () => {
     // Set a shorter timeout for this test
     vi.setConfig({ testTimeout: 10000 });

@@ -1,6 +1,6 @@
 import { describe, expect, it, vi, beforeEach } from "vitest";
 import type { MsgContext } from "../auto-reply/templating.js";
-import type { OpenClawConfig } from "../config/config.js";
+import type { NewClawConfig } from "../config/config.js";
 import { applyLinkUnderstanding } from "./apply.js";
 
 // Mock the runner module
@@ -22,14 +22,14 @@ describe("Link Understanding - applyLinkUnderstanding", () => {
       LinkUnderstanding: [],
     } as MsgContext;
 
-    const mockCfg: OpenClawConfig = {
+    const mockCfg: NewClawConfig = {
       tools: {
         links: {
           enabled: true,
           models: [],
         },
       },
-    } as OpenClawConfig;
+    } as NewClawConfig;
 
     // Mock runLinkUnderstanding
     vi.mocked(runLinkUnderstanding).mockResolvedValue({
@@ -52,14 +52,14 @@ describe("Link Understanding - applyLinkUnderstanding", () => {
       LinkUnderstanding: [],
     } as MsgContext;
 
-    const mockCfg: OpenClawConfig = {
+    const mockCfg: NewClawConfig = {
       tools: {
         links: {
           enabled: true,
           models: [],
         },
       },
-    } as OpenClawConfig;
+    } as NewClawConfig;
 
     vi.mocked(runLinkUnderstanding).mockResolvedValue({
       urls: ["https://example.com"],

@@ -1,4 +1,4 @@
-import type { OpenClawConfig } from "../config/config.js";
+import type { NewClawConfig } from "../config/config.js";
 import type { PluginRecord } from "./registry.js";
 import type { PluginKind } from "./types.js";
 import { defaultSlotIdForKey } from "./slots.js";
@@ -71,7 +71,7 @@ const normalizePluginEntries = (entries: unknown): NormalizedPluginsConfig["entr
 };
 
 export const normalizePluginsConfig = (
-  config?: OpenClawConfig["plugins"] & { loadPaths?: unknown },
+  config?: NewClawConfig["plugins"] & { loadPaths?: unknown },
 ): NormalizedPluginsConfig => {
   const memorySlot = normalizeSlotValue(config?.slots?.memory);
   // Support both loadPaths (direct) and load.paths (nested) for backward compatibility
@@ -91,13 +91,13 @@ export const normalizePluginsConfig = (
   };
 };
 
-const hasExplicitMemorySlot = (plugins?: OpenClawConfig["plugins"]) =>
+const hasExplicitMemorySlot = (plugins?: NewClawConfig["plugins"]) =>
   Boolean(plugins?.slots && Object.prototype.hasOwnProperty.call(plugins.slots, "memory"));
 
-const hasExplicitMemoryEntry = (plugins?: OpenClawConfig["plugins"]) =>
+const hasExplicitMemoryEntry = (plugins?: NewClawConfig["plugins"]) =>
   Boolean(plugins?.entries && Object.prototype.hasOwnProperty.call(plugins.entries, "memory-core"));
 
-const hasExplicitPluginConfig = (plugins?: OpenClawConfig["plugins"]) => {
+const hasExplicitPluginConfig = (plugins?: NewClawConfig["plugins"]) => {
   if (!plugins) {
     return false;
   }
@@ -123,9 +123,9 @@ const hasExplicitPluginConfig = (plugins?: OpenClawConfig["plugins"]) => {
 };
 
 export function applyTestPluginDefaults(
-  cfg: OpenClawConfig,
+  cfg: NewClawConfig,
   env: NodeJS.ProcessEnv = process.env,
-): OpenClawConfig {
+): NewClawConfig {
   if (!env.VITEST) {
     return cfg;
   }
@@ -161,7 +161,7 @@ export function applyTestPluginDefaults(
 }
 
 export function isTestDefaultMemorySlotDisabled(
-  cfg: OpenClawConfig,
+  cfg: NewClawConfig,
   env: NodeJS.ProcessEnv = process.env,
 ): boolean {
   if (!env.VITEST) {
@@ -215,13 +215,13 @@ export function resolveMemorySlotDecisionLegacy(params: LegacyMemoryDecisionPara
 export function resolveMemorySlotDecisionLegacy(
   plugin: Partial<PluginRecord>,
   config: NormalizedPluginsConfig,
-  originalConfig?: OpenClawConfig["plugins"] & { loadPaths?: unknown },
+  originalConfig?: NewClawConfig["plugins"] & { loadPaths?: unknown },
 ): { slotId: string | null; reason: string };
 
 export function resolveMemorySlotDecisionLegacy(
   arg1: Partial<PluginRecord> | LegacyMemoryDecisionParams,
   config?: NormalizedPluginsConfig,
-  originalConfig?: OpenClawConfig["plugins"] & { loadPaths?: unknown },
+  originalConfig?: NewClawConfig["plugins"] & { loadPaths?: unknown },
 ):
   | { slotId: string | null; reason: string }
   | { enabled: boolean; selected: boolean; reason: string } {
@@ -272,7 +272,7 @@ export function resolveMemorySlotDecision(
     | Partial<PluginRecord>
     | { id: string; kind?: PluginKind; slot?: string; selectedId?: string },
   config?: NormalizedPluginsConfig,
-  originalConfig?: OpenClawConfig["plugins"] & { loadPaths?: unknown },
+  originalConfig?: NewClawConfig["plugins"] & { loadPaths?: unknown },
 ): { enabled: boolean; selected?: boolean; slotId?: string | null; reason?: string } {
   // Check if the first parameter is the old format
   if ("id" in pluginOrParams && !("manifest" in pluginOrParams)) {

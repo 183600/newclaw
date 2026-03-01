@@ -1,4 +1,4 @@
-import type { OpenClawApp } from "./app.ts";
+import type { NewClawApp } from "./app.ts";
 import { refreshChat } from "./app-chat.ts";
 import {
   startLogsPolling,
@@ -177,19 +177,19 @@ export async function refreshActiveTab(host: SettingsHost) {
     await loadChannelsTab(host);
   }
   if (host.tab === "instances") {
-    await loadPresence(host as unknown as OpenClawApp);
+    await loadPresence(host as unknown as NewClawApp);
   }
   if (host.tab === "sessions") {
-    await loadSessions(host as unknown as OpenClawApp);
+    await loadSessions(host as unknown as NewClawApp);
   }
   if (host.tab === "cron") {
     await loadCron(host);
   }
   if (host.tab === "skills") {
-    await loadSkills(host as unknown as OpenClawApp);
+    await loadSkills(host as unknown as NewClawApp);
   }
   if (host.tab === "agents") {
-    const app = host as unknown as OpenClawApp;
+    const app = host as unknown as NewClawApp;
     await loadAgents(app);
     await loadConfig(app);
     const agentIds = app.agentsList?.agents?.map((entry) => entry.id) ?? [];
@@ -212,10 +212,10 @@ export async function refreshActiveTab(host: SettingsHost) {
     }
   }
   if (host.tab === "nodes") {
-    await loadNodes(host as unknown as OpenClawApp);
-    await loadDevices(host as unknown as OpenClawApp);
-    await loadConfig(host as unknown as OpenClawApp);
-    await loadExecApprovals(host as unknown as OpenClawApp);
+    await loadNodes(host as unknown as NewClawApp);
+    await loadDevices(host as unknown as NewClawApp);
+    await loadConfig(host as unknown as NewClawApp);
+    await loadExecApprovals(host as unknown as NewClawApp);
   }
   if (host.tab === "chat") {
     await refreshChat(host as unknown as Parameters<typeof refreshChat>[0]);
@@ -225,16 +225,16 @@ export async function refreshActiveTab(host: SettingsHost) {
     );
   }
   if (host.tab === "config") {
-    await loadConfigSchema(host as unknown as OpenClawApp);
-    await loadConfig(host as unknown as OpenClawApp);
+    await loadConfigSchema(host as unknown as NewClawApp);
+    await loadConfig(host as unknown as NewClawApp);
   }
   if (host.tab === "debug") {
-    await loadDebug(host as unknown as OpenClawApp);
+    await loadDebug(host as unknown as NewClawApp);
     host.eventLog = host.eventLogBuffer;
   }
   if (host.tab === "logs") {
     host.logsAtBottom = true;
-    await loadLogs(host as unknown as OpenClawApp, { reset: true });
+    await loadLogs(host as unknown as NewClawApp, { reset: true });
     scheduleLogsScroll(host as unknown as Parameters<typeof scheduleLogsScroll>[0], true);
   }
 }
@@ -243,7 +243,7 @@ export function inferBasePath() {
   if (typeof window === "undefined") {
     return "";
   }
-  const configured = window.__OPENCLAW_CONTROL_UI_BASE_PATH__;
+  const configured = window.__NEWCLAW_CONTROL_UI_BASE_PATH__;
   if (typeof configured === "string" && configured.trim()) {
     return normalizeBasePath(configured);
   }
@@ -396,26 +396,26 @@ export function syncUrlWithSessionKey(sessionKey: string, replace: boolean) {
 
 export async function loadOverview(host: SettingsHost) {
   await Promise.all([
-    loadChannels(host as unknown as OpenClawApp, false),
-    loadPresence(host as unknown as OpenClawApp),
-    loadSessions(host as unknown as OpenClawApp),
-    loadCronStatus(host as unknown as OpenClawApp),
-    loadDebug(host as unknown as OpenClawApp),
+    loadChannels(host as unknown as NewClawApp, false),
+    loadPresence(host as unknown as NewClawApp),
+    loadSessions(host as unknown as NewClawApp),
+    loadCronStatus(host as unknown as NewClawApp),
+    loadDebug(host as unknown as NewClawApp),
   ]);
 }
 
 export async function loadChannelsTab(host: SettingsHost) {
   await Promise.all([
-    loadChannels(host as unknown as OpenClawApp, true),
-    loadConfigSchema(host as unknown as OpenClawApp),
-    loadConfig(host as unknown as OpenClawApp),
+    loadChannels(host as unknown as NewClawApp, true),
+    loadConfigSchema(host as unknown as NewClawApp),
+    loadConfig(host as unknown as NewClawApp),
   ]);
 }
 
 export async function loadCron(host: SettingsHost) {
   await Promise.all([
-    loadChannels(host as unknown as OpenClawApp, false),
-    loadCronStatus(host as unknown as OpenClawApp),
-    loadCronJobs(host as unknown as OpenClawApp),
+    loadChannels(host as unknown as NewClawApp, false),
+    loadCronStatus(host as unknown as NewClawApp),
+    loadCronJobs(host as unknown as NewClawApp),
   ]);
 }

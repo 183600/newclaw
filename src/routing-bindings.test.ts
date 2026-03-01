@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "./config/types.js";
+import type { NewClawConfig } from "./config/types.js";
 import {
   listBindings,
   listBoundAccountIds,
@@ -14,10 +14,10 @@ vi.mock("./agents/agent-scope.js", () => ({
 }));
 
 describe("routing bindings", () => {
-  const createMockConfig = (bindings: unknown[] = []): OpenClawConfig =>
+  const createMockConfig = (bindings: unknown[] = []): NewClawConfig =>
     ({
       bindings,
-    }) as OpenClawConfig;
+    }) as NewClawConfig;
 
   describe("listBindings", () => {
     it("returns empty array when no bindings", () => {
@@ -166,7 +166,7 @@ describe("routing bindings", () => {
         agents: {
           list: [{ id: "default-agent", default: true }, { id: "other-agent" }],
         },
-      } as OpenClawConfig;
+      } as NewClawConfig;
 
       expect(resolveDefaultAgentBoundAccountId(cfg, "telegram")).toBe("account1");
     });
@@ -181,7 +181,7 @@ describe("routing bindings", () => {
         agents: {
           list: [{ id: "default-agent", default: true }],
         },
-      } as OpenClawConfig;
+      } as NewClawConfig;
 
       expect(resolveDefaultAgentBoundAccountId(cfg, "telegram")).toBe("account1");
     });
@@ -208,7 +208,7 @@ describe("routing bindings", () => {
         agents: {
           list: [{ id: "default-agent", default: true }],
         },
-      } as OpenClawConfig;
+      } as NewClawConfig;
 
       expect(resolveDefaultAgentBoundAccountId(cfg, "telegram")).toBe("account1");
     });

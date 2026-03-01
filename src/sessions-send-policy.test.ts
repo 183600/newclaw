@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { SessionEntry, SessionChatType } from "./config/sessions.js";
-import type { OpenClawConfig } from "./config/types.js";
+import type { NewClawConfig } from "./config/types.js";
 import { normalizeSendPolicy, resolveSendPolicy } from "./sessions/send-policy.js";
 
 describe("sessions send-policy", () => {
@@ -30,10 +30,10 @@ describe("sessions send-policy", () => {
   });
 
   describe("resolveSendPolicy", () => {
-    const createMockConfig = (sessionPolicy?: unknown): OpenClawConfig =>
+    const createMockConfig = (sessionPolicy?: unknown): NewClawConfig =>
       ({
         session: { sendPolicy: sessionPolicy },
-      }) as OpenClawConfig;
+      }) as NewClawConfig;
 
     const createMockEntry = (
       sendPolicy?: string,

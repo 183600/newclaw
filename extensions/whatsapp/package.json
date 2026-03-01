@@ -1,12 +1,12 @@
 {
-  "name": "@openclaw/whatsapp",
+  "name": "@newclaw/whatsapp",
   "version": "2026.2.2",
-  "description": "OpenClaw WhatsApp channel plugin",
+  "description": "NewClaw WhatsApp channel plugin",
   "type": "module",
   "devDependencies": {
-    "openclaw": "workspace:*"
+    "newclaw": "workspace:*"
   },
-  "openclaw": {
+  "newclaw": {
     "extensions": [
       "./index.ts"
     ]

@@ -26,7 +26,7 @@ describe("image-ops", () => {
     vi.clearAllMocks();
     // Reset environment variables
     process.env = { ...originalEnv };
-    delete process.env.OPENCLAW_IMAGE_BACKEND;
+    delete process.env.NEWCLAW_IMAGE_BACKEND;
   });
 
   afterEach(() => {
@@ -81,7 +81,7 @@ describe("image-ops", () => {
   describe("normalizeExifOrientation", () => {
     it("returns processed buffer when using sharp", async () => {
       // Force sharp backend
-      process.env.OPENCLAW_IMAGE_BACKEND = "sharp";
+      process.env.NEWCLAW_IMAGE_BACKEND = "sharp";
 
       const processedBuffer = Buffer.from("processed-data");
       const mockSharpInstance = {
@@ -99,7 +99,7 @@ describe("image-ops", () => {
 
     it("returns original buffer when sharp is not available", async () => {
       // Force sharp backend
-      process.env.OPENCLAW_IMAGE_BACKEND = "sharp";
+      process.env.NEWCLAW_IMAGE_BACKEND = "sharp";
 
       mockSharp.mockImplementation(() => {
         throw new Error("Sharp not available");

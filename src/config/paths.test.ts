@@ -17,18 +17,18 @@ import {
 } from "./paths.js";
 
 describe("resolveIsNixMode", () => {
-  it("returns true when OPENCLAW_NIX_MODE is '1'", () => {
-    const env = { OPENCLAW_NIX_MODE: "1" };
+  it("returns true when NEWCLAW_NIX_MODE is '1'", () => {
+    const env = { NEWCLAW_NIX_MODE: "1" };
     expect(resolveIsNixMode(env)).toBe(true);
   });
 
-  it("returns false when OPENCLAW_NIX_MODE is not set", () => {
+  it("returns false when NEWCLAW_NIX_MODE is not set", () => {
     const env = {};
     expect(resolveIsNixMode(env)).toBe(false);
   });
 
-  it("returns false when OPENCLAW_NIX_MODE is not '1'", () => {
-    const env = { OPENCLAW_NIX_MODE: "0" };
+  it("returns false when NEWCLAW_NIX_MODE is not '1'", () => {
+    const env = { NEWCLAW_NIX_MODE: "0" };
     expect(resolveIsNixMode(env)).toBe(false);
   });
 });
@@ -71,14 +71,14 @@ describe("resolveUserPath", () => {
 });
 
 describe("resolveNewStateDir", () => {
-  it("returns ~/.openclaw", () => {
-    const expected = path.join(os.homedir(), ".openclaw");
+  it("returns ~/.newclaw", () => {
+    const expected = path.join(os.homedir(), ".newclaw");
     expect(resolveNewStateDir()).toBe(expected);
   });
 
   it("uses custom homedir function", () => {
     const customHome = "/custom/home";
-    const expected = path.join(customHome, ".openclaw");
+    const expected = path.join(customHome, ".newclaw");
     expect(resolveNewStateDir(() => customHome)).toBe(expected);
   });
 });
@@ -87,15 +87,15 @@ describe("resolveStateDir", () => {
   let tmpDir: string;
 
   beforeEach(() => {
-    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-test-"));
+    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "newclaw-test-"));
   });
 
   afterEach(() => {
     fs.rmSync(tmpDir, { recursive: true, force: true });
   });
 
-  it("uses OPENCLAW_STATE_DIR override", () => {
-    const env = { OPENCLAW_STATE_DIR: path.join(tmpDir, "custom-state") };
+  it("uses NEWCLAW_STATE_DIR override", () => {
+    const env = { NEWCLAW_STATE_DIR: path.join(tmpDir, "custom-state") };
     expect(resolveStateDir(env)).toBe(path.join(tmpDir, "custom-state"));
   });
 
@@ -104,13 +104,13 @@ describe("resolveStateDir", () => {
     expect(resolveStateDir(env)).toBe(path.join(tmpDir, "legacy-state"));
   });
 
-  it("prefers existing .openclaw directory", () => {
-    const openclawDir = path.join(tmpDir, ".openclaw");
-    fs.mkdirSync(openclawDir, { recursive: true });
+  it("prefers existing .newclaw directory", () => {
+    const newclawDir = path.join(tmpDir, ".newclaw");
+    fs.mkdirSync(newclawDir, { recursive: true });
 
     const env = {};
     const homedir = () => tmpDir;
-    expect(resolveStateDir(env, homedir)).toBe(openclawDir);
+    expect(resolveStateDir(env, homedir)).toBe(newclawDir);
   });
 
   it("falls back to legacy directory if it exists", () => {
@@ -125,14 +125,14 @@ describe("resolveStateDir", () => {
   it("returns new directory when none exist", () => {
     const env = {};
     const homedir = () => tmpDir;
-    const expected = path.join(tmpDir, ".openclaw");
+    const expected = path.join(tmpDir, ".newclaw");
     expect(resolveStateDir(env, homedir)).toBe(expected);
   });
 });
 
 describe("resolveCanonicalConfigPath", () => {
-  it("uses OPENCLAW_CONFIG_PATH override", () => {
-    const env = { OPENCLAW_CONFIG_PATH: "/custom/config.json" };
+  it("uses NEWCLAW_CONFIG_PATH override", () => {
+    const env = { NEWCLAW_CONFIG_PATH: "/custom/config.json" };
     expect(resolveCanonicalConfigPath(env)).toBe("/custom/config.json");
   });
 
@@ -143,7 +143,7 @@ describe("resolveCanonicalConfigPath", () => {
 
   it("returns default path in state directory", () => {
     const stateDir = "/test/state";
-    const expected = path.join(stateDir, "openclaw.json");
+    const expected = path.join(stateDir, "newclaw.json");
     expect(resolveCanonicalConfigPath({}, stateDir)).toBe(expected);
   });
 });
@@ -152,7 +152,7 @@ describe("resolveDefaultConfigCandidates", () => {
   let tmpDir: string;
 
   beforeEach(() => {
-    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-test-"));
+    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "newclaw-test-"));
   });
 
   afterEach(() => {
@@ -160,17 +160,17 @@ describe("resolveDefaultConfigCandidates", () => {
   });
 
   it("returns explicit config path when provided", () => {
-    const env = { OPENCLAW_CONFIG_PATH: "/explicit/config.json" };
+    const env = { NEWCLAW_CONFIG_PATH: "/explicit/config.json" };
     const candidates = resolveDefaultConfigCandidates(env, () => tmpDir);
     expect(candidates).toEqual(["/explicit/config.json"]);
   });
 
-  it("returns state directory candidates when OPENCLAW_STATE_DIR is set", () => {
+  it("returns state directory candidates when NEWCLAW_STATE_DIR is set", () => {
     const stateDir = path.join(tmpDir, "custom-state");
-    const env = { OPENCLAW_STATE_DIR: stateDir };
+    const env = { NEWCLAW_STATE_DIR: stateDir };
     const candidates = resolveDefaultConfigCandidates(env, () => tmpDir);
 
-    expect(candidates).toContain(path.join(stateDir, "openclaw.json"));
+    expect(candidates).toContain(path.join(stateDir, "newclaw.json"));
     expect(candidates).toContain(path.join(stateDir, "clawdbot.json"));
     expect(candidates).toContain(path.join(stateDir, "moltbot.json"));
     expect(candidates).toContain(path.join(stateDir, "moldbot.json"));
@@ -180,10 +180,10 @@ describe("resolveDefaultConfigCandidates", () => {
     const env = {};
     const candidates = resolveDefaultConfigCandidates(env, () => tmpDir);
 
-    expect(candidates).toContain(path.join(tmpDir, ".openclaw", "openclaw.json"));
-    expect(candidates).toContain(path.join(tmpDir, ".clawdbot", "openclaw.json"));
-    expect(candidates).toContain(path.join(tmpDir, ".moltbot", "openclaw.json"));
-    expect(candidates).toContain(path.join(tmpDir, ".moldbot", "openclaw.json"));
+    expect(candidates).toContain(path.join(tmpDir, ".newclaw", "newclaw.json"));
+    expect(candidates).toContain(path.join(tmpDir, ".clawdbot", "newclaw.json"));
+    expect(candidates).toContain(path.join(tmpDir, ".moltbot", "newclaw.json"));
+    expect(candidates).toContain(path.join(tmpDir, ".moldbot", "newclaw.json"));
   });
 });
 
@@ -192,7 +192,7 @@ describe("resolveGatewayLockDir", () => {
     const originalGetuid = process.getuid;
     process.getuid = vi.fn(() => 1234) as unknown;
 
-    const expected = path.join(os.tmpdir(), "openclaw-1234");
+    const expected = path.join(os.tmpdir(), "newclaw-1234");
     expect(resolveGatewayLockDir()).toBe(expected);
 
     process.getuid = originalGetuid;
@@ -202,7 +202,7 @@ describe("resolveGatewayLockDir", () => {
     const originalGetuid = process.getuid;
     delete (process as { getuid?: unknown }).getuid;
 
-    const expected = path.join(os.tmpdir(), "openclaw");
+    const expected = path.join(os.tmpdir(), "newclaw");
     expect(resolveGatewayLockDir()).toBe(expected);
 
     process.getuid = originalGetuid;
@@ -211,15 +211,15 @@ describe("resolveGatewayLockDir", () => {
   it("uses custom tmpdir function", () => {
     const customTmp = "/custom/tmp";
     const uid = typeof process.getuid === "function" ? process.getuid() : undefined;
-    const suffix = uid != null ? `openclaw-${uid}` : "openclaw";
+    const suffix = uid != null ? `newclaw-${uid}` : "newclaw";
     const expected = path.join(customTmp, suffix);
     expect(resolveGatewayLockDir(() => customTmp)).toBe(expected);
   });
 });
 
 describe("resolveOAuthDir", () => {
-  it("uses OPENCLAW_OAUTH_DIR override", () => {
-    const env = { OPENCLAW_OAUTH_DIR: "/custom/oauth" };
+  it("uses NEWCLAW_OAUTH_DIR override", () => {
+    const env = { NEWCLAW_OAUTH_DIR: "/custom/oauth" };
     expect(resolveOAuthDir(env)).toBe("/custom/oauth");
   });
 
@@ -239,8 +239,8 @@ describe("resolveOAuthPath", () => {
 });
 
 describe("resolveGatewayPort", () => {
-  it("uses OPENCLAW_GATEWAY_PORT env var", () => {
-    const env = { OPENCLAW_GATEWAY_PORT: "9000" };
+  it("uses NEWCLAW_GATEWAY_PORT env var", () => {
+    const env = { NEWCLAW_GATEWAY_PORT: "9000" };
     expect(resolveGatewayPort(undefined, env)).toBe(9000);
   });
 
@@ -259,12 +259,12 @@ describe("resolveGatewayPort", () => {
   });
 
   it("ignores invalid port numbers", () => {
-    const env = { OPENCLAW_GATEWAY_PORT: "invalid" };
+    const env = { NEWCLAW_GATEWAY_PORT: "invalid" };
     expect(resolveGatewayPort(undefined, env)).toBe(DEFAULT_GATEWAY_PORT);
   });
 
   it("ignores negative port numbers", () => {
-    const env = { OPENCLAW_GATEWAY_PORT: "-1" };
+    const env = { NEWCLAW_GATEWAY_PORT: "-1" };
     expect(resolveGatewayPort(undefined, env)).toBe(DEFAULT_GATEWAY_PORT);
   });
 

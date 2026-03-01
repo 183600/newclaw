@@ -26,14 +26,14 @@ when the container is created.
 Auth is per-agent: each agent reads from its own `agentDir` auth store at:
 
 ```
-~/.openclaw/agents/<agentId>/agent/auth-profiles.json
+~/.newclaw/agents/<agentId>/agent/auth-profiles.json
 ```
 
 Credentials are **not** shared between agents. Never reuse `agentDir` across agents.
 If you want to share creds, copy `auth-profiles.json` into the other agent's `agentDir`.
 
 For how sandboxing behaves at runtime, see [Sandboxing](/gateway/sandboxing).
-For debugging “why is this blocked?”, see [Sandbox vs Tool Policy vs Elevated](/gateway/sandbox-vs-tool-policy-vs-elevated) and `openclaw sandbox explain`.
+For debugging “why is this blocked?”, see [Sandbox vs Tool Policy vs Elevated](/gateway/sandbox-vs-tool-policy-vs-elevated) and `newclaw sandbox explain`.
 
 ---
 
@@ -49,13 +49,13 @@ For debugging “why is this blocked?”, see [Sandbox vs Tool Policy vs Elevate
         "id": "main",
         "default": true,
         "name": "Personal Assistant",
-        "workspace": "~/.openclaw/workspace",
+        "workspace": "~/.newclaw/workspace",
         "sandbox": { "mode": "off" }
       },
       {
         "id": "family",
         "name": "Family Bot",
-        "workspace": "~/.openclaw/workspace-family",
+        "workspace": "~/.newclaw/workspace-family",
         "sandbox": {
           "mode": "all",
           "scope": "agent"
@@ -98,12 +98,12 @@ For debugging “why is this blocked?”, see [Sandbox vs Tool Policy vs Elevate
     "list": [
       {
         "id": "personal",
-        "workspace": "~/.openclaw/workspace-personal",
+        "workspace": "~/.newclaw/workspace-personal",
         "sandbox": { "mode": "off" }
       },
       {
         "id": "work",
-        "workspace": "~/.openclaw/workspace-work",
+        "workspace": "~/.newclaw/workspace-work",
         "sandbox": {
           "mode": "all",
           "scope": "shared",
@@ -158,14 +158,14 @@ For debugging “why is this blocked?”, see [Sandbox vs Tool Policy vs Elevate
     "list": [
       {
         "id": "main",
-        "workspace": "~/.openclaw/workspace",
+        "workspace": "~/.newclaw/workspace",
         "sandbox": {
           "mode": "off" // Override: main never sandboxed
         }
       },
       {
         "id": "public",
-        "workspace": "~/.openclaw/workspace-public",
+        "workspace": "~/.newclaw/workspace-public",
         "sandbox": {
           "mode": "all", // Override: public always sandboxed
           "scope": "agent"
@@ -234,7 +234,7 @@ Tool policies (global, agent, sandbox) support `group:*` entries that expand to 
 - `group:automation`: `cron`, `gateway`
 - `group:messaging`: `message`
 - `group:nodes`: `nodes`
-- `group:openclaw`: all built-in OpenClaw tools (excludes provider plugins)
+- `group:newclaw`: all built-in NewClaw tools (excludes provider plugins)
 
 ### Elevated Mode
 
@@ -257,7 +257,7 @@ Mitigation patterns:
 {
   "agents": {
     "defaults": {
-      "workspace": "~/.openclaw/workspace",
+      "workspace": "~/.newclaw/workspace",
       "sandbox": {
         "mode": "non-main"
       }
@@ -283,7 +283,7 @@ Mitigation patterns:
       {
         "id": "main",
         "default": true,
-        "workspace": "~/.openclaw/workspace",
+        "workspace": "~/.newclaw/workspace",
         "sandbox": { "mode": "off" }
       }
     ]
@@ -291,7 +291,7 @@ Mitigation patterns:
 }
 ```
 
-Legacy `agent.*` configs are migrated by `openclaw doctor`; prefer `agents.defaults` + `agents.list` going forward.
+Legacy `agent.*` configs are migrated by `newclaw doctor`; prefer `agents.defaults` + `agents.list` going forward.
 
 ---
 
@@ -348,13 +348,13 @@ After configuring multi-agent sandbox and tools:
 1. **Check agent resolution:**
 
    ```exec
-   openclaw agents list --bindings
+   newclaw agents list --bindings
    ```
 
 2. **Verify sandbox containers:**
 
    ```exec
-   docker ps --filter "name=openclaw-sbx-"
+   docker ps --filter "name=newclaw-sbx-"
    ```
 
 3. **Test tool restrictions:**
@@ -363,7 +363,7 @@ After configuring multi-agent sandbox and tools:
 
 4. **Monitor logs:**
    ```exec
-   tail -f "${OPENCLAW_STATE_DIR:-$HOME/.openclaw}/logs/gateway.log" | grep -E "routing|sandbox|tools"
+   tail -f "${NEWCLAW_STATE_DIR:-$HOME/.newclaw}/logs/gateway.log" | grep -E "routing|sandbox|tools"
    ```
 
 ---

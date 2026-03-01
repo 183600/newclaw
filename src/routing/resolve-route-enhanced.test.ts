@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
-import type { OpenClawConfig } from "../config/config.js";
+import type { NewClawConfig } from "../config/config.js";
 import { resolveAgentRoute, buildAgentSessionKey, DEFAULT_ACCOUNT_ID } from "./resolve-route.js";
 
 describe("Routing Resolve Route", () => {
-  const createMockConfig = (overrides: Partial<OpenClawConfig> = {}): OpenClawConfig => ({
+  const createMockConfig = (overrides: Partial<NewClawConfig> = {}): NewClawConfig => ({
     agents: {
       list: [
         { id: "agent1", model: "gpt-4" },

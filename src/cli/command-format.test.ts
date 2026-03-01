@@ -3,111 +3,111 @@ import { formatCliCommand } from "./command-format.js";
 
 describe("formatCliCommand", () => {
   it("should return original command when no profile is set", () => {
-    const env = { OPENCLAW_PROFILE: "" };
-    const command = "openclaw --help";
+    const env = { NEWCLAW_PROFILE: "" };
+    const command = "newclaw --help";
     const result = formatCliCommand(command, env);
 
     expect(result).toBe(command);
   });
 
-  it("should return original command when OPENCLAW_PROFILE is undefined", () => {
+  it("should return original command when NEWCLAW_PROFILE is undefined", () => {
     const env = {};
-    const command = "openclaw --help";
+    const command = "newclaw --help";
     const result = formatCliCommand(command, env);
 
     expect(result).toBe(command);
   });
 
   it("should return original command when CLI prefix is not found", () => {
-    const env = { OPENCLAW_PROFILE: "dev" };
+    const env = { NEWCLAW_PROFILE: "dev" };
     const command = "some-other-command --help";
     const result = formatCliCommand(command, env);
 
     expect(result).toBe(command);
   });
 
-  it("should add profile flag to openclaw command", () => {
-    const env = { OPENCLAW_PROFILE: "dev" };
-    const command = "openclaw --help";
+  it("should add profile flag to newclaw command", () => {
+    const env = { NEWCLAW_PROFILE: "dev" };
+    const command = "newclaw --help";
     const result = formatCliCommand(command, env);
 
-    expect(result).toBe("openclaw --profile dev --help");
+    expect(result).toBe("newclaw --profile dev --help");
   });
 
-  it("should add profile flag to pnpm openclaw command", () => {
-    const env = { OPENCLAW_PROFILE: "prod" };
-    const command = "pnpm openclaw --help";
+  it("should add profile flag to pnpm newclaw command", () => {
+    const env = { NEWCLAW_PROFILE: "prod" };
+    const command = "pnpm newclaw --help";
     const result = formatCliCommand(command, env);
 
-    expect(result).toBe("pnpm openclaw --profile prod --help");
+    expect(result).toBe("pnpm newclaw --profile prod --help");
   });
 
-  it("should add profile flag to npm openclaw command", () => {
-    const env = { OPENCLAW_PROFILE: "staging" };
-    const command = "npm openclaw --help";
+  it("should add profile flag to npm newclaw command", () => {
+    const env = { NEWCLAW_PROFILE: "staging" };
+    const command = "npm newclaw --help";
     const result = formatCliCommand(command, env);
 
-    expect(result).toBe("npm openclaw --profile staging --help");
+    expect(result).toBe("npm newclaw --profile staging --help");
   });
 
-  it("should add profile flag to bunx openclaw command", () => {
-    const env = { OPENCLAW_PROFILE: "test" };
-    const command = "bunx openclaw --help";
+  it("should add profile flag to bunx newclaw command", () => {
+    const env = { NEWCLAW_PROFILE: "test" };
+    const command = "bunx newclaw --help";
     const result = formatCliCommand(command, env);
 
-    expect(result).toBe("bunx openclaw --profile test --help");
+    expect(result).toBe("bunx newclaw --profile test --help");
   });
 
-  it("should add profile flag to npx openclaw command", () => {
-    const env = { OPENCLAW_PROFILE: "custom" };
-    const command = "npx openclaw --help";
+  it("should add profile flag to npx newclaw command", () => {
+    const env = { NEWCLAW_PROFILE: "custom" };
+    const command = "npx newclaw --help";
     const result = formatCliCommand(command, env);
 
-    expect(result).toBe("npx openclaw --profile custom --help");
+    expect(result).toBe("npx newclaw --profile custom --help");
   });
 
   it("should not add profile flag when --profile flag already exists", () => {
-    const env = { OPENCLAW_PROFILE: "dev" };
-    const command = "openclaw --profile prod --help";
+    const env = { NEWCLAW_PROFILE: "dev" };
+    const command = "newclaw --profile prod --help";
     const result = formatCliCommand(command, env);
 
     expect(result).toBe(command);
   });
 
   it("should not add profile flag when --profile flag exists with equals", () => {
-    const env = { OPENCLAW_PROFILE: "dev" };
-    const command = "openclaw --profile=prod --help";
+    const env = { NEWCLAW_PROFILE: "dev" };
+    const command = "newclaw --profile=prod --help";
     const result = formatCliCommand(command, env);
 
     expect(result).toBe(command);
   });
 
   it("should not add profile flag when --dev flag exists", () => {
-    const env = { OPENCLAW_PROFILE: "dev" };
-    const command = "openclaw --dev --help";
+    const env = { NEWCLAW_PROFILE: "dev" };
+    const command = "newclaw --dev --help";
     const result = formatCliCommand(command, env);
 
     expect(result).toBe(command);
   });
 
   it("should handle command with multiple spaces", () => {
-    const env = { OPENCLAW_PROFILE: "dev" };
-    const command = "pnpm  openclaw  --help";
+    const env = { NEWCLAW_PROFILE: "dev" };
+    const command = "pnpm  newclaw  --help";
     const result = formatCliCommand(command, env);
 
-    expect(result).toBe("pnpm  openclaw --profile dev  --help");
+    expect(result).toBe("pnpm  newclaw --profile dev  --help");
   });
 
   it("should handle command with profile flag at end", () => {
-    const env = { OPENCLAW_PROFILE: "dev" };
-    const command = "openclaw --help --profile";
+    const env = { NEWCLAW_PROFILE: "dev" };
+    const command = "newclaw --help --profile";
     const result = formatCliCommand(command, env);
 
     expect(result).toBe(command);
   });
 
   it("should handle empty command", () => {
-    const env = { OPENCLAW_PROFILE: "dev" };
+    const env = { NEWCLAW_PROFILE: "dev" };
     const command = "";
     const result = formatCliCommand(command, env);
 
@@ -115,18 +115,18 @@ describe("formatCliCommand", () => {
   });
 
   it("should handle command with no arguments", () => {
-    const env = { OPENCLAW_PROFILE: "dev" };
-    const command = "openclaw";
+    const env = { NEWCLAW_PROFILE: "dev" };
+    const command = "newclaw";
     const result = formatCliCommand(command, env);
 
-    expect(result).toBe("openclaw --profile dev");
+    expect(result).toBe("newclaw --profile dev");
   });
 
   it("should handle command with complex arguments", () => {
-    const env = { OPENCLAW_PROFILE: "prod" };
-    const command = "pnpm openclaw agent --mode rpc --json";
+    const env = { NEWCLAW_PROFILE: "prod" };
+    const command = "pnpm newclaw agent --mode rpc --json";
     const result = formatCliCommand(command, env);
 
-    expect(result).toBe("pnpm openclaw --profile prod agent --mode rpc --json");
+    expect(result).toBe("pnpm newclaw --profile prod agent --mode rpc --json");
   });
 });

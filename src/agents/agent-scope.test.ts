@@ -1,5 +1,5 @@
 import { describe, expect, it, beforeEach, afterEach, vi } from "vitest";
-import type { OpenClawConfig } from "../config/types.js";
+import type { NewClawConfig } from "../config/types.js";
 import {
   listAgentIds,
   resolveDefaultAgentId,
@@ -54,7 +54,7 @@ describe("listAgentIds", () => {
   });
 
   it("should return default agent ID when no agents are configured", () => {
-    const config = {} as OpenClawConfig;
+    const config = {} as NewClawConfig;
     const result = listAgentIds(config);
 
     expect(result).toEqual(["main"]);
@@ -65,7 +65,7 @@ describe("listAgentIds", () => {
       agents: {
         list: [{ id: "agent1" }, { id: "agent2" }, { id: "agent3" }],
       },
-    } as OpenClawConfig;
+    } as NewClawConfig;
     const result = listAgentIds(config);
 
     expect(result).toEqual(["agent1", "agent2", "agent3"]);
@@ -76,7 +76,7 @@ describe("listAgentIds", () => {
       agents: {
         list: [{ id: "agent1" }, null, undefined, "invalid", { id: "agent2" }],
       },
-    } as OpenClawConfig;
+    } as NewClawConfig;
     const result = listAgentIds(config);
 
     expect(result).toEqual(["agent1", "agent2"]);
@@ -94,7 +94,7 @@ describe("listAgentIds", () => {
           { id: "AGENT2" },
         ],
       },
-    } as OpenClawConfig;
+    } as NewClawConfig;
     const result = listAgentIds(config);
 
     expect(result).toEqual(["agent1", "agent2"]);
@@ -105,7 +105,7 @@ describe("listAgentIds", () => {
       agents: {
         list: [],
       },
-    } as OpenClawConfig;
+    } as NewClawConfig;
     const result = listAgentIds(config);
 
     expect(result).toEqual(["main"]);
@@ -125,7 +125,7 @@ describe("resolveDefaultAgentId", () => {
   });
 
   it("should return default agent ID when no agents are configured", () => {
-    const config = {} as OpenClawConfig;
+    const config = {} as NewClawConfig;
     const result = resolveDefaultAgentId(config);
 
     expect(result).toBe("main");
@@ -136,7 +136,7 @@ describe("resolveDefaultAgentId", () => {
       agents: {
         list: [{ id: "agent1" }, { id: "agent2" }],
       },
-    } as OpenClawConfig;
+    } as NewClawConfig;
     const result = resolveDefaultAgentId(config);
 
     expect(result).toBe("agent1");
@@ -147,7 +147,7 @@ describe("resolveDefaultAgentId", () => {
       agents: {
         list: [{ id: "agent1" }, { id: "agent2", default: true }, { id: "agent3" }],
       },
-    } as OpenClawConfig;
+    } as NewClawConfig;
     const result = resolveDefaultAgentId(config);
 
     expect(result).toBe("agent2");
@@ -161,7 +161,7 @@ describe("resolveDefaultAgentId", () => {
           { id: "agent2", default: true },
         ],
       },
-    } as OpenClawConfig;
+    } as NewClawConfig;
     const result = resolveDefaultAgentId(config);
 
     expect(result).toBe("agent1");
@@ -178,7 +178,7 @@ describe("resolveDefaultAgentId", () => {
       agents: {
         list: [{ id: "  trimmed-agent  " }],
       },
-    } as OpenClawConfig;
+    } as NewClawConfig;
     const result = resolveDefaultAgentId(config);
 
     expect(result).toBe("trimmed-agent");
@@ -195,7 +195,7 @@ describe("resolveSessionAgentIds", () => {
       agents: {
         list: [{ id: "agent1" }],
       },
-    } as OpenClawConfig;
+    } as NewClawConfig;
     const result = resolveSessionAgentIds({ config });
 
     expect(result.defaultAgentId).toBe("agent1");
@@ -207,7 +207,7 @@ describe("resolveSessionAgentIds", () => {
       agents: {
         list: [{ id: "agent1" }],
       },
-    } as OpenClawConfig;
+    } as NewClawConfig;
     const result = resolveSessionAgentIds({
       sessionKey: "session:custom-agent",
       config,
@@ -226,7 +226,7 @@ describe("resolveSessionAgentIds", () => {
       agents: {
         list: [{ id: "agent1" }],
       },
-    } as OpenClawConfig;
+    } as NewClawConfig;
     const result = resolveSessionAgentIds({
       sessionKey: "session:invalid",
       config,
@@ -241,7 +241,7 @@ describe("resolveSessionAgentIds", () => {
       agents: {
         list: [{ id: "agent1" }],
       },
-    } as OpenClawConfig;
+    } as NewClawConfig;
     const result = resolveSessionAgentIds({
       sessionKey: "",
       config,
@@ -258,7 +258,7 @@ describe("resolveSessionAgentId", () => {
       agents: {
         list: [{ id: "agent1" }],
       },
-    } as OpenClawConfig;
+    } as NewClawConfig;
     const result = resolveSessionAgentId({ config });
 
     expect(result).toBe("agent1");
@@ -271,7 +271,7 @@ describe("resolveAgentConfig", () => {
       agents: {
         list: [{ id: "agent1" }],
       },
-    } as OpenClawConfig;
+    } as NewClawConfig;
     const result = resolveAgentConfig(config, "unknown-agent");
 
     expect(result).toBeUndefined();
@@ -299,7 +299,7 @@ describe("resolveAgentConfig", () => {
           },
         ],
       },
-    } as OpenClawConfig;
+    } as NewClawConfig;
     const result = resolveAgentConfig(config, "agent1");
 
     expect(result).toEqual({
@@ -332,7 +332,7 @@ describe("resolveAgentConfig", () => {
           },
         ],
       },
-    } as OpenClawConfig;
+    } as NewClawConfig;
     const result = resolveAgentConfig(config, "agent1");
 
     expect(result?.model).toEqual({
@@ -351,7 +351,7 @@ describe("resolveAgentConfig", () => {
           },
         ],
       },
-    } as OpenClawConfig;
+    } as NewClawConfig;
     const result = resolveAgentConfig(config, "agent1");
 
     expect(result?.skills).toEqual(["skill1", "skill2"]);
@@ -364,7 +364,7 @@ describe("resolveAgentSkillsFilter", () => {
       agents: {
         list: [{ id: "agent1" }],
       },
-    } as OpenClawConfig;
+    } as NewClawConfig;
     const result = resolveAgentSkillsFilter(config, "agent1");
 
     expect(result).toBeUndefined();
@@ -380,7 +380,7 @@ describe("resolveAgentSkillsFilter", () => {
           },
         ],
       },
-    } as OpenClawConfig;
+    } as NewClawConfig;
     const result = resolveAgentSkillsFilter(config, "agent1");
 
     expect(result).toEqual(["skill1", "skill2", "skill3"]);
@@ -396,7 +396,7 @@ describe("resolveAgentSkillsFilter", () => {
           },
         ],
       },
-    } as OpenClawConfig;
+    } as NewClawConfig;
     const result = resolveAgentSkillsFilter(config, "agent1");
 
     expect(result).toEqual(["skill1", "skill2"]);
@@ -409,7 +409,7 @@ describe("resolveAgentModelPrimary", () => {
       agents: {
         list: [{ id: "agent1" }],
       },
-    } as OpenClawConfig;
+    } as NewClawConfig;
     const result = resolveAgentModelPrimary(config, "agent1");
 
     expect(result).toBeUndefined();
@@ -425,7 +425,7 @@ describe("resolveAgentModelPrimary", () => {
           },
         ],
       },
-    } as OpenClawConfig;
+    } as NewClawConfig;
     const result = resolveAgentModelPrimary(config, "agent1");
 
     expect(result).toBe("gpt-4");
@@ -444,7 +444,7 @@ describe("resolveAgentModelPrimary", () => {
           },
         ],
       },
-    } as OpenClawConfig;
+    } as NewClawConfig;
     const result = resolveAgentModelPrimary(config, "agent1");
 
     expect(result).toBe("gpt-4");
@@ -460,7 +460,7 @@ describe("resolveAgentModelPrimary", () => {
           },
         ],
       },
-    } as OpenClawConfig;
+    } as NewClawConfig;
     const result = resolveAgentModelPrimary(config, "agent1");
 
     expect(result).toBeUndefined();
@@ -478,7 +478,7 @@ describe("resolveAgentModelFallbacksOverride", () => {
           },
         ],
       },
-    } as OpenClawConfig;
+    } as NewClawConfig;
     const result = resolveAgentModelFallbacksOverride(config, "agent1");
 
     expect(result).toBeUndefined();
@@ -496,7 +496,7 @@ describe("resolveAgentModelFallbacksOverride", () => {
           },
         ],
       },
-    } as OpenClawConfig;
+    } as NewClawConfig;
     const result = resolveAgentModelFallbacksOverride(config, "agent1");
 
     expect(result).toBeUndefined();
@@ -515,7 +515,7 @@ describe("resolveAgentModelFallbacksOverride", () => {
           },
         ],
       },
-    } as OpenClawConfig;
+    } as NewClawConfig;
     const result = resolveAgentModelFallbacksOverride(config, "agent1");
 
     expect(result).toEqual(["gpt-3.5", "claude"]);
@@ -534,7 +534,7 @@ describe("resolveAgentModelFallbacksOverride", () => {
           },
         ],
       },
-    } as OpenClawConfig;
+    } as NewClawConfig;
     const result = resolveAgentModelFallbacksOverride(config, "agent1");
 
     expect(result).toEqual([]);
@@ -556,7 +556,7 @@ describe("resolveAgentWorkspaceDir", () => {
           },
         ],
       },
-    } as OpenClawConfig;
+    } as NewClawConfig;
     const result = resolveAgentWorkspaceDir(config, "agent1");
 
     expect(result).toMatch(/custom-workspace$/);
@@ -570,7 +570,7 @@ describe("resolveAgentWorkspaceDir", () => {
         },
         list: [{ id: "agent1", default: true }],
       },
-    } as OpenClawConfig;
+    } as NewClawConfig;
     const result = resolveAgentWorkspaceDir(config, "agent1");
 
     expect(result).toMatch(/default-workspace$/);
@@ -581,10 +581,10 @@ describe("resolveAgentWorkspaceDir", () => {
       agents: {
         list: [{ id: "agent1" }],
       },
-    } as OpenClawConfig;
+    } as NewClawConfig;
     const result = resolveAgentWorkspaceDir(config, "agent1");
 
-    expect(result).toBe("/home/runner/.openclaw/workspace");
+    expect(result).toBe("/home/runner/.newclaw/workspace");
   });
 
   it("should return home directory pattern for non-default agents", () => {
@@ -592,10 +592,10 @@ describe("resolveAgentWorkspaceDir", () => {
       agents: {
         list: [{ id: "agent1" }, { id: "default-agent", default: true }],
       },
-    } as OpenClawConfig;
+    } as NewClawConfig;
     const result = resolveAgentWorkspaceDir(config, "agent1");
 
-    expect(result).toMatch(/\.openclaw\/workspace-agent1$/);
+    expect(result).toMatch(/\.newclaw\/workspace-agent1$/);
   });
 });
 
@@ -614,7 +614,7 @@ describe("resolveAgentDir", () => {
           },
         ],
       },
-    } as OpenClawConfig;
+    } as NewClawConfig;
     const result = resolveAgentDir(config, "agent1");
 
     expect(result).toMatch(/custom-agent-dir$/);
@@ -625,7 +625,7 @@ describe("resolveAgentDir", () => {
       agents: {
         list: [{ id: "agent1" }],
       },
-    } as OpenClawConfig;
+    } as NewClawConfig;
     const result = resolveAgentDir(config, "agent1");
 
     expect(result).toMatch(/\/agents\/agent1\/agent$/);

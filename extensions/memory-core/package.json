@@ -1,15 +1,15 @@
 {
-  "name": "@openclaw/memory-core",
+  "name": "@newclaw/memory-core",
   "version": "2026.2.2",
-  "description": "OpenClaw core memory search plugin",
+  "description": "NewClaw core memory search plugin",
   "type": "module",
   "devDependencies": {
-    "openclaw": "workspace:*"
+    "newclaw": "workspace:*"
   },
   "peerDependencies": {
-    "openclaw": ">=2026.1.26"
+    "newclaw": ">=2026.1.26"
   },
-  "openclaw": {
+  "newclaw": {
     "extensions": [
       "./index.ts"
     ]

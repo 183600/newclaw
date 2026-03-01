@@ -169,7 +169,7 @@ describe("type validation and edge cases", () => {
     it("validates LoggingConfig with all properties", () => {
       const config: LoggingConfig = {
         level: "debug",
-        file: "/var/log/openclaw.log",
+        file: "/var/log/newclaw.log",
         consoleLevel: "info",
         consoleStyle: "json",
         redactSensitive: "tools",
@@ -188,7 +188,7 @@ describe("type validation and edge cases", () => {
           enabled: true,
           endpoint: "http://localhost:4318",
           protocol: "http/protobuf",
-          serviceName: "openclaw",
+          serviceName: "newclaw",
           traces: true,
           metrics: true,
           logs: true,
@@ -205,7 +205,7 @@ describe("type validation and edge cases", () => {
       };
       expect(config.enabled).toBe(true);
       expect(config.flags).toContain("telegram.http");
-      expect(config.otel?.serviceName).toBe("openclaw");
+      expect(config.otel?.serviceName).toBe("newclaw");
       expect(config.cacheTrace?.includeMessages).toBe(true);
     });
 

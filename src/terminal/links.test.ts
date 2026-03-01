@@ -10,27 +10,27 @@ vi.mock("../utils.js", () => ({
 }));
 
 describe("DOCS_ROOT", () => {
-  it("should be https://docs.openclaw.ai", () => {
-    expect(DOCS_ROOT).toBe("https://docs.openclaw.ai");
+  it("should be https://docs.newclaw.ai", () => {
+    expect(DOCS_ROOT).toBe("https://docs.newclaw.ai");
   });
 });
 
 describe("formatDocsLink", () => {
   it("should format relative path with full URL", () => {
     const result = formatDocsLink("/configuration");
-    expect(result).toBe("[LINK:/configuration->https://docs.openclaw.ai/configuration]");
+    expect(result).toBe("[LINK:/configuration->https://docs.newclaw.ai/configuration]");
   });
 
   it("should format relative path without leading slash", () => {
     const result = formatDocsLink("configuration");
     expect(result).toBe(
-      "[LINK:https://docs.openclaw.ai/configuration->https://docs.openclaw.ai/configuration]",
+      "[LINK:https://docs.newclaw.ai/configuration->https://docs.newclaw.ai/configuration]",
     );
   });
 
   it("should use custom label", () => {
     const result = formatDocsLink("/configuration", "Config");
-    expect(result).toBe("[LINK:Config->https://docs.openclaw.ai/configuration]");
+    expect(result).toBe("[LINK:Config->https://docs.newclaw.ai/configuration]");
   });
 
   it("should handle absolute URL", () => {
@@ -45,31 +45,31 @@ describe("formatDocsLink", () => {
 
   it("should trim whitespace from path", () => {
     const result = formatDocsLink("  /configuration  ");
-    expect(result).toBe("[LINK:/configuration->https://docs.openclaw.ai/configuration]");
+    expect(result).toBe("[LINK:/configuration->https://docs.newclaw.ai/configuration]");
   });
 
   it("should use custom fallback", () => {
     const result = formatDocsLink("/configuration", "Config", {
       fallback: "Custom fallback",
     });
-    expect(result).toBe("[LINK:Config->https://docs.openclaw.ai/configuration]");
+    expect(result).toBe("[LINK:Config->https://docs.newclaw.ai/configuration]");
   });
 
   it("should force link display", () => {
     const result = formatDocsLink("/configuration", "Config", {
       force: true,
     });
-    expect(result).toBe("[LINK:Config->https://docs.openclaw.ai/configuration]");
+    expect(result).toBe("[LINK:Config->https://docs.newclaw.ai/configuration]");
   });
 
   it("should handle empty path", () => {
     const result = formatDocsLink("");
-    expect(result).toBe("[LINK:https://docs.openclaw.ai/->https://docs.openclaw.ai/]");
+    expect(result).toBe("[LINK:https://docs.newclaw.ai/->https://docs.newclaw.ai/]");
   });
 
   it("should handle whitespace-only path", () => {
     const result = formatDocsLink("   ");
-    expect(result).toBe("[LINK:https://docs.openclaw.ai/->https://docs.openclaw.ai/]");
+    expect(result).toBe("[LINK:https://docs.newclaw.ai/->https://docs.newclaw.ai/]");
   });
 
   it("should handle protocol-relative URL", () => {
@@ -85,7 +85,7 @@ describe("formatDocsRootLink", () => {
   });
 
   it("should format root link with custom label", () => {
-    const result = formatDocsRootLink("OpenClaw Docs");
-    expect(result).toBe(`[LINK:OpenClaw Docs->${DOCS_ROOT}]`);
+    const result = formatDocsRootLink("NewClaw Docs");
+    expect(result).toBe(`[LINK:NewClaw Docs->${DOCS_ROOT}]`);
   });
 });
