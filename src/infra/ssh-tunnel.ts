@@ -155,7 +155,7 @@ export async function startSshPortForward(opts: {
   args.push("--", userHost);
 
   const stderr: string[] = [];
-  const child = spawn("/usr/bin/ssh", args, {
+  const child = spawn("ssh", args, {
     stdio: ["ignore", "ignore", "pipe"],
   });
   child.stderr?.setEncoding("utf8");
