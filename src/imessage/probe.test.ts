@@ -30,11 +30,28 @@ beforeEach(() => {
 });
 
 describe("probeIMessage", () => {
-  it("marks unknown rpc subcommand as fatal", async () => {
+  // iMessage is only supported on macOS; skip these tests on other platforms
+  const describeMacOS = process.platform === "darwin" ? describe : describe.skip;
+
+  it("returns fatal error on non-macOS platforms", async () => {
+    if (process.platform === "darwin") {
+      // This test is for non-macOS; skip on macOS
+      return;
+    }
     const result = await probeIMessage(1000, { cliPath: "imsg" });
     expect(result.ok).toBe(false);
     expect(result.fatal).toBe(true);
-    expect(result.error).toMatch(/rpc/i);
+    expect(result.error).toBe("iMessage channel is only supported on macOS");
     expect(createIMessageRpcClientMock).not.toHaveBeenCalled();
+  });
+
+  describeMacOS("macOS-specific tests", () => {
+    it("marks unknown rpc subcommand as fatal", async () => {
+      const result = await probeIMessage(1000, { cliPath: "imsg" });
+      expect(result.ok).toBe(false);
+      expect(result.fatal).toBe(true);
+      expect(result.error).toMatch(/rpc/i);
+      expect(createIMessageRpcClientMock).not.toHaveBeenCalled();
+    });
   });
 });

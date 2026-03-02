@@ -60,6 +60,15 @@ export async function probeIMessage(
   timeoutMs = 2000,
   opts: IMessageProbeOptions = {},
 ): Promise<IMessageProbe> {
+  // iMessage channel requires macOS (imsg CLI is macOS-only)
+  if (process.platform !== "darwin") {
+    return {
+      ok: false,
+      error: "iMessage channel is only supported on macOS",
+      fatal: true,
+    };
+  }
+
   const cfg = opts.cliPath || opts.dbPath ? undefined : loadConfig();
   const cliPath = opts.cliPath?.trim() || cfg?.channels?.imessage?.cliPath?.trim() || "imsg";
   const dbPath = opts.dbPath?.trim() || cfg?.channels?.imessage?.dbPath?.trim();

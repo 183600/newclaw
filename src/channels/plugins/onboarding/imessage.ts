@@ -155,6 +155,17 @@ const dmPolicy: ChannelOnboardingDmPolicy = {
 export const imessageOnboardingAdapter: ChannelOnboardingAdapter = {
   channel,
   getStatus: async ({ cfg }) => {
+    // iMessage is only supported on macOS
+    if (process.platform !== "darwin") {
+      return {
+        channel,
+        configured: false,
+        statusLines: ["iMessage: not supported (macOS only)"],
+        selectionHint: "macOS only",
+        quickstartScore: 0,
+      };
+    }
+
     const configured = listIMessageAccountIds(cfg).some((accountId) => {
       const account = resolveIMessageAccount({ cfg, accountId });
       return Boolean(
