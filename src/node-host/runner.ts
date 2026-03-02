@@ -1126,7 +1126,9 @@ async function handleInvoke(
     }
   }
 
-  if (params.needsScreenRecording === true) {
+  // Screen recording permission check only applies to macOS.
+  // On Linux, this permission model does not exist, so we skip the check.
+  if (params.needsScreenRecording === true && process.platform === "darwin") {
     await sendNodeEvent(
       client,
       "exec.denied",
