@@ -111,6 +111,50 @@ function detectSystemTimeFormat(): boolean {
     }
   }
 
+  if (process.platform === "linux") {
+    // Check LC_TIME environment variable for 24-hour format hints
+    const lcTime = process.env.LC_TIME || process.env.LANG || "";
+    const lower = lcTime.toLowerCase();
+    // Common 24-hour locales: en_GB, en_DK, de_DE, fr_FR, etc.
+    // Common 12-hour locales: en_US, en_CA, etc.
+    if (lower.includes("en_us") || lower.includes("en_ca")) {
+      return false;
+    }
+    // Most other locales use 24-hour format
+    if (
+      lower.includes("en_gb") ||
+      lower.includes("en_dk") ||
+      lower.includes("_de") ||
+      lower.includes("_fr") ||
+      lower.includes("_es") ||
+      lower.includes("_it") ||
+      lower.includes("_nl")
+    ) {
+      return true;
+    }
+    // Try to detect via locale command
+    try {
+      const result = execSync("locale -k LC_TIME 2>/dev/null", {
+        encoding: "utf8",
+        timeout: 500,
+      });
+      // Check for t_fmt which indicates time format
+      if (result.includes("t_fmt=")) {
+        const match = result.match(/t_fmt=["']?([^"'\n]+)["']?/);
+        if (match?.[1]) {
+          // %H is 24-hour, %I is 12-hour
+          return match[1].includes("%H") || match[1].includes("%T");
+        }
+      }
+      // Check am_pm - if empty, likely 24-hour format
+      if (result.includes('am_pm=""') || result.includes("am_pm=''")) {
+        return true;
+      }
+    } catch {
+      // locale command not available, fall through
+    }
+  }
+
   if (process.platform === "win32") {
     try {
       const result = execSync(

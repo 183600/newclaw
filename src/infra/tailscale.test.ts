@@ -34,7 +34,23 @@ describe("tailscale helpers", () => {
     expect(host).toBe("100.2.2.2");
   });
 
-  it("ensureGoInstalled installs when missing and user agrees", async () => {
+  it("ensureGoInstalled installs when missing and user agrees (macOS only)", async () => {
+    // This test only applies to macOS where Homebrew is available
+    if (process.platform !== "darwin") {
+      const exec = vi.fn().mockRejectedValueOnce(new Error("no go"));
+      const prompt = vi.fn().mockResolvedValue(true);
+      const runtime = {
+        error: vi.fn(),
+        log: vi.fn(),
+        exit: ((code: number) => {
+          throw new Error(`exit ${code}`);
+        }) as (code: number) => never,
+      };
+      await expect(ensureGoInstalled(exec as never, prompt, runtime)).rejects.toThrow("exit 1");
+      expect(runtime.error).toHaveBeenCalledWith(expect.stringContaining("system package manager"));
+      return;
+    }
+
     const exec = vi.fn().mockRejectedValueOnce(new Error("no go")).mockResolvedValue({}); // brew install go
     const prompt = vi.fn().mockResolvedValue(true);
     const runtime = {
@@ -48,7 +64,25 @@ describe("tailscale helpers", () => {
     expect(exec).toHaveBeenCalledWith("brew", ["install", "go"]);
   });
 
-  it("ensureTailscaledInstalled installs when missing and user agrees", async () => {
+  it("ensureTailscaledInstalled installs when missing and user agrees (macOS only)", async () => {
+    // This test only applies to macOS where Homebrew is available
+    if (process.platform !== "darwin") {
+      const exec = vi.fn().mockRejectedValueOnce(new Error("missing"));
+      const prompt = vi.fn().mockResolvedValue(true);
+      const runtime = {
+        error: vi.fn(),
+        log: vi.fn(),
+        exit: ((code: number) => {
+          throw new Error(`exit ${code}`);
+        }) as (code: number) => never,
+      };
+      await expect(ensureTailscaledInstalled(exec as never, prompt, runtime)).rejects.toThrow(
+        "exit 1",
+      );
+      expect(runtime.error).toHaveBeenCalledWith(expect.stringContaining("system package manager"));
+      return;
+    }
+
     const exec = vi.fn().mockRejectedValueOnce(new Error("missing")).mockResolvedValue({});
     const prompt = vi.fn().mockResolvedValue(true);
     const runtime = {

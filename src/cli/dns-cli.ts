@@ -89,6 +89,65 @@ function detectBrewPrefix(): string {
   return prefix;
 }
 
+function detectLinuxCoreDNSPaths(): { etcDir: string; systemdService: string } | null {
+  // Common CoreDNS installation paths on Linux
+  const candidates = [
+    { etcDir: "/etc/coredns", systemdService: "coredns" },
+    { etcDir: "/etc/coredns", systemdService: "coredns.service" },
+    { etcDir: "/usr/local/etc/coredns", systemdService: "coredns" },
+  ];
+  for (const candidate of candidates) {
+    if (fs.existsSync(candidate.etcDir)) {
+      return candidate;
+    }
+  }
+  // Default to /etc/coredns if coredns binary exists
+  try {
+    run("which", ["coredns"], { allowFailure: true });
+    return { etcDir: "/etc/coredns", systemdService: "coredns" };
+  } catch {
+    return null;
+  }
+}
+
+function ensureCoreDNSInstalledLinux(): void {
+  // Check if coredns is already installed
+  try {
+    run("which", ["coredns"], { allowFailure: true });
+    return;
+  } catch {
+    // Not installed
+  }
+
+  // Try different package managers
+  const packageManagers = [
+    { cmd: "apt-get", args: ["install", "-y", "coredns"] },
+    { cmd: "dnf", args: ["install", "-y", "coredns"] },
+    { cmd: "yum", args: ["install", "-y", "coredns"] },
+    { cmd: "pacman", args: ["-S", "--noconfirm", "coredns"] },
+    { cmd: "apk", args: ["add", "coredns"] },
+  ];
+
+  for (const pm of packageManagers) {
+    try {
+      run("which", [pm.cmd], { allowFailure: true });
+      run("sudo", [pm.cmd, ...pm.args], { inherit: true });
+      return;
+    } catch {
+      continue;
+    }
+  }
+
+  throw new Error(
+    "CoreDNS not installed. Install it using your package manager:\n" +
+      "  Debian/Ubuntu: sudo apt install coredns\n" +
+      "  Fedora/RHEL:   sudo dnf install coredns\n" +
+      "  Arch Linux:    sudo pacman -S coredns\n" +
+      "  Alpine:        sudo apk add coredns\n" +
+      "Or download from: https://github.com/coredns/coredns/releases",
+  );
+}
+
 function ensureImportLine(corefilePath: string, importGlob: string): boolean {
   const existing = fs.readFileSync(corefilePath, "utf-8");
   if (existing.includes(importGlob)) {
@@ -179,25 +238,49 @@ export function registerDnsCli(program: Command) {
         return;
       }
 
-      if (process.platform !== "darwin") {
-        throw new Error("dns setup is currently supported on macOS only");
+      if (process.platform !== "darwin" && process.platform !== "linux") {
+        throw new Error("dns setup is currently supported on macOS and Linux only");
       }
       if (!tailnetIPv4 && !tailnetIPv6) {
         throw new Error("no tailnet IP detected; ensure Tailscale is running on this machine");
       }
 
-      const prefix = detectBrewPrefix();
-      const etcDir = path.join(prefix, "etc", "coredns");
-      const corefilePath = path.join(etcDir, "Corefile");
-      const confDir = path.join(etcDir, "conf.d");
-      const importGlob = path.join(confDir, "*.server");
-      const serverPath = path.join(confDir, `${wideAreaDomain.replace(/\.$/, "")}.server`);
+      let etcDir: string;
+      let corefilePath: string;
+      let confDir: string;
+      let importGlob: string;
+      let serverPath: string;
+      let systemdService: string | undefined;
 
-      run("brew", ["list", "coredns"], { allowFailure: true });
-      run("brew", ["install", "coredns"], {
-        inherit: true,
-        allowFailure: true,
-      });
+      if (process.platform === "darwin") {
+        const prefix = detectBrewPrefix();
+        etcDir = path.join(prefix, "etc", "coredns");
+        corefilePath = path.join(etcDir, "Corefile");
+        confDir = path.join(etcDir, "conf.d");
+        importGlob = path.join(confDir, "*.server");
+        serverPath = path.join(confDir, `${wideAreaDomain.replace(/\.$/, "")}.server`);
+
+        run("brew", ["list", "coredns"], { allowFailure: true });
+        run("brew", ["install", "coredns"], {
+          inherit: true,
+          allowFailure: true,
+        });
+      } else {
+        // Linux
+        ensureCoreDNSInstalledLinux();
+        const detected = detectLinuxCoreDNSPaths();
+        if (detected) {
+          etcDir = detected.etcDir;
+          systemdService = detected.systemdService;
+        } else {
+          etcDir = "/etc/coredns";
+          systemdService = "coredns";
+        }
+        corefilePath = path.join(etcDir, "Corefile");
+        confDir = path.join(etcDir, "conf.d");
+        importGlob = path.join(confDir, "*.server");
+        serverPath = path.join(confDir, `${wideAreaDomain.replace(/\.$/, "")}.server`);
+      }
 
       mkdirSudoIfNeeded(confDir);
 
@@ -246,9 +329,23 @@ export function registerDnsCli(program: Command) {
 
       defaultRuntime.log("");
       defaultRuntime.log(theme.heading("Starting CoreDNS (sudo)…"));
-      run("sudo", ["brew", "services", "restart", "coredns"], {
-        inherit: true,
-      });
+      if (process.platform === "darwin") {
+        run("sudo", ["brew", "services", "restart", "coredns"], {
+          inherit: true,
+        });
+      } else if (process.platform === "linux" && systemdService) {
+        // Try systemd restart on Linux
+        try {
+          run("sudo", ["systemctl", "restart", systemdService], { inherit: true });
+          run("sudo", ["systemctl", "enable", systemdService], { inherit: true });
+        } catch {
+          defaultRuntime.log(
+            theme.muted(
+              "Could not restart systemd service. You may need to restart CoreDNS manually.",
+            ),
+          );
+        }
+      }
 
       if (cfg.discovery?.wideArea?.enabled !== true) {
         defaultRuntime.log("");

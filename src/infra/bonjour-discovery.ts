@@ -307,7 +307,10 @@ async function discoverWideAreaViaTailnetDns(
   const startedAt = Date.now();
   const remainingMs = () => timeoutMs - (Date.now() - startedAt);
 
-  const tailscaleCandidates = ["tailscale", "/Applications/Tailscale.app/Contents/MacOS/Tailscale"];
+  const tailscaleCandidates =
+    process.platform === "darwin"
+      ? ["tailscale", "/Applications/Tailscale.app/Contents/MacOS/Tailscale"]
+      : ["tailscale"];
   let ips: string[] = [];
   for (const candidate of tailscaleCandidates) {
     try {

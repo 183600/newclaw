@@ -20,9 +20,9 @@ function parsePossiblyNoisyJsonObject(stdout: string): Record<string, unknown> {
 /**
  * Locate Tailscale binary using multiple strategies:
  * 1. PATH lookup (via which command)
- * 2. Known macOS app path
- * 3. find /Applications for Tailscale.app
- * 4. locate database (if available)
+ * 2. Known macOS app path (macOS only)
+ * 3. find /Applications for Tailscale.app (macOS only)
+ * 4. locate database (if available, macOS only)
  *
  * @returns Path to Tailscale binary or null if not found
  */
@@ -44,7 +44,7 @@ export async function findTailscaleBinary(): Promise<string | null> {
     }
   };
 
-  // Strategy 1: which command
+  // Strategy 1: which command (all platforms)
   try {
     const { stdout } = await runExec("which", ["tailscale"]);
     const fromPath = stdout.trim();
@@ -55,49 +55,52 @@ export async function findTailscaleBinary(): Promise<string | null> {
     // which failed, continue
   }
 
-  // Strategy 2: Known macOS app path
-  const macAppPath = "/Applications/Tailscale.app/Contents/MacOS/Tailscale";
-  if (await checkBinary(macAppPath)) {
-    return macAppPath;
-  }
-
-  // Strategy 3: find command in /Applications
-  try {
-    const { stdout } = await runExec(
-      "find",
-      [
-        "/Applications",
-        "-maxdepth",
-        "3",
-        "-name",
-        "Tailscale",
-        "-path",
-        "*/Tailscale.app/Contents/MacOS/Tailscale",
-      ],
-      { timeoutMs: 5000 },
-    );
-    const found = stdout.trim().split("\n")[0];
-    if (found && (await checkBinary(found))) {
-      return found;
+  // macOS-specific strategies
+  if (process.platform === "darwin") {
+    // Strategy 2: Known macOS app path
+    const macAppPath = "/Applications/Tailscale.app/Contents/MacOS/Tailscale";
+    if (await checkBinary(macAppPath)) {
+      return macAppPath;
     }
-  } catch {
-    // find failed, continue
-  }
 
-  // Strategy 4: locate command
-  try {
-    const { stdout } = await runExec("locate", ["Tailscale.app"]);
-    const candidates = stdout
-      .trim()
-      .split("\n")
-      .filter((line) => line.includes("/Tailscale.app/Contents/MacOS/Tailscale"));
-    for (const candidate of candidates) {
-      if (await checkBinary(candidate)) {
-        return candidate;
+    // Strategy 3: find command in /Applications
+    try {
+      const { stdout } = await runExec(
+        "find",
+        [
+          "/Applications",
+          "-maxdepth",
+          "3",
+          "-name",
+          "Tailscale",
+          "-path",
+          "*/Tailscale.app/Contents/MacOS/Tailscale",
+        ],
+        { timeoutMs: 5000 },
+      );
+      const found = stdout.trim().split("\n")[0];
+      if (found && (await checkBinary(found))) {
+        return found;
       }
+    } catch {
+      // find failed, continue
     }
-  } catch {
-    // locate failed, continue
+
+    // Strategy 4: locate command
+    try {
+      const { stdout } = await runExec("locate", ["Tailscale.app"]);
+      const candidates = stdout
+        .trim()
+        .split("\n")
+        .filter((line) => line.includes("/Tailscale.app/Contents/MacOS/Tailscale"));
+      for (const candidate of candidates) {
+        if (await checkBinary(candidate)) {
+          return candidate;
+        }
+      }
+    } catch {
+      // locate failed, continue
+    }
   }
 
   return null;
@@ -107,7 +110,9 @@ export async function getTailnetHostname(exec: typeof runExec = runExec, detecte
   // Derive tailnet hostname (or IP fallback) from tailscale status JSON.
   const candidates = detectedBinary
     ? [detectedBinary]
-    : ["tailscale", "/Applications/Tailscale.app/Contents/MacOS/Tailscale"];
+    : process.platform === "darwin"
+      ? ["tailscale", "/Applications/Tailscale.app/Contents/MacOS/Tailscale"]
+      : ["tailscale"];
   let lastError: unknown;
 
   for (const candidate of candidates) {
@@ -174,13 +179,21 @@ export async function ensureGoInstalled(
   prompt: typeof promptYesNo = promptYesNo,
   runtime: RuntimeEnv = defaultRuntime,
 ) {
-  // Ensure Go toolchain is present; offer Homebrew install if missing.
+  // Ensure Go toolchain is present; offer Homebrew install if missing (macOS only).
   const hasGo = await exec("go", ["version"]).then(
     () => true,
     () => false,
   );
   if (hasGo) {
     return;
+  }
+  if (process.platform !== "darwin") {
+    runtime.error("Go is not installed. Install Go using your system package manager:");
+    runtime.error("  Debian/Ubuntu: sudo apt install golang-go");
+    runtime.error("  Fedora/RHEL:   sudo dnf install golang");
+    runtime.error("  Arch Linux:    sudo pacman -S go");
+    runtime.error("  Alpine:        sudo apk add go");
+    runtime.exit(1);
   }
   const install = await prompt(
     "Go is not installed. Install via Homebrew (brew install go)?",
@@ -199,13 +212,25 @@ export async function ensureTailscaledInstalled(
   prompt: typeof promptYesNo = promptYesNo,
   runtime: RuntimeEnv = defaultRuntime,
 ) {
-  // Ensure tailscaled binary exists; install via Homebrew tailscale if missing.
+  // Ensure tailscaled binary exists; install via Homebrew tailscale if missing (macOS only).
   const hasTailscaled = await exec("tailscaled", ["--version"]).then(
     () => true,
     () => false,
   );
   if (hasTailscaled) {
     return;
+  }
+
+  if (process.platform !== "darwin") {
+    runtime.error(
+      "tailscaled is not installed. Install Tailscale using your system package manager:",
+    );
+    runtime.error("  Debian/Ubuntu: sudo apt install tailscale");
+    runtime.error("  Fedora/RHEL:   sudo dnf install tailscale");
+    runtime.error("  Arch Linux:    sudo pacman -S tailscale");
+    runtime.error("  Alpine:        sudo apk add tailscale");
+    runtime.error("  Or visit: https://tailscale.com/download/linux");
+    runtime.exit(1);
   }
 
   const install = await prompt(
@@ -312,16 +337,20 @@ export async function ensureFunnel(
           "Enable in admin console: https://login.tailscale.com/admin (see https://tailscale.com/kb/1223/funnel)",
         ),
       );
-      runtime.error(
-        info(
-          "macOS user-space tailscaled docs: https://github.com/tailscale/tailscale/wiki/Tailscaled-on-macOS",
-        ),
-      );
+      if (process.platform === "darwin") {
+        runtime.error(
+          info(
+            "macOS user-space tailscaled docs: https://github.com/tailscale/tailscale/wiki/Tailscaled-on-macOS",
+          ),
+        );
+      }
       const proceed = await prompt("Attempt local setup with user-space tailscaled?", true);
       if (!proceed) {
         runtime.exit(1);
       }
-      await ensureBinary("brew", exec, runtime);
+      if (process.platform === "darwin") {
+        await ensureBinary("brew", exec, runtime);
+      }
       await ensureGoInstalled(exec, prompt, runtime);
       await ensureTailscaledInstalled(exec, prompt, runtime);
     }
