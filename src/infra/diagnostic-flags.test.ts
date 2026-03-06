@@ -8,7 +8,7 @@ describe("diagnostic flags", () => {
       diagnostics: { flags: ["telegram.http", "cache.*"] },
     } as iFlowConfig;
     const env = {
-      IFLOW_DIAGNOSTICS: "foo,bar",
+      CLAW_DIAGNOSTICS: "foo,bar",
     } as NodeJS.ProcessEnv;
 
     const flags = resolveDiagnosticFlags(cfg, env);
@@ -19,12 +19,12 @@ describe("diagnostic flags", () => {
   });
 
   it("treats env true as wildcard", () => {
-    const env = { IFLOW_DIAGNOSTICS: "1" } as NodeJS.ProcessEnv;
+    const env = { CLAW_DIAGNOSTICS: "1" } as NodeJS.ProcessEnv;
     expect(isDiagnosticFlagEnabled("anything.here", undefined, env)).toBe(true);
   });
 
   it("treats env false as disabled", () => {
-    const env = { IFLOW_DIAGNOSTICS: "0" } as NodeJS.ProcessEnv;
+    const env = { CLAW_DIAGNOSTICS: "0" } as NodeJS.ProcessEnv;
     expect(isDiagnosticFlagEnabled("telegram.http", undefined, env)).toBe(false);
   });
 });

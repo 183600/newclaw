@@ -12,7 +12,7 @@ const prevBundledDir = process.env.IFLOW_BUNDLED_PLUGINS_DIR;
 const EMPTY_PLUGIN_SCHEMA = { type: "object", additionalProperties: false, properties: {} };
 
 function makeTempDir() {
-  const dir = path.join(os.tmpdir(), `iflow-plugin-${randomUUID()}`);
+  const dir = path.join(os.tmpdir(), `claw-plugin-${randomUUID()}`);
   fs.mkdirSync(dir, { recursive: true });
   tempDirs.push(dir);
   return dir;
@@ -177,7 +177,7 @@ describe("loadiFlowPlugins", () => {
         name: "@iflow/memory-core",
         version: "1.2.3",
         description: "Memory plugin package",
-        iflow: { extensions: ["./index.ts"] },
+        claw: { extensions: ["./index.ts"] },
       }),
       "utf-8",
     );

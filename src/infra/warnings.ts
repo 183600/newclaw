@@ -1,4 +1,4 @@
-const warningFilterKey = Symbol.for("iflow.warning-filter");
+const warningFilterKey = Symbol.for("claw.warning-filter");
 
 type Warning = Error & {
   code?: string;

@@ -31,7 +31,7 @@ export async function installChromeExtension(opts?: {
 }): Promise<{ path: string }> {
   const src = opts?.sourceDir ?? bundledExtensionRootDir();
   if (!hasManifest(src)) {
-    throw new Error("Bundled Chrome extension is missing. Reinstall iFlow and try again.");
+    throw new Error("Bundled Chrome extension is missing. Reinstall Claw and try again.");
   }
 
   const stateDir = opts?.stateDir ?? STATE_DIR;
@@ -86,7 +86,7 @@ export function registerBrowserExtensionCommands(
             "Next:",
             `- Chrome → chrome://extensions → enable “Developer mode”`,
             `- “Load unpacked” → select: ${displayPath}`,
-            `- Pin “iFlow Browser Relay”, then click it on the tab (badge shows ON)`,
+            `- Pin “Claw Browser Relay”, then click it on the tab (badge shows ON)`,
             "",
             `${theme.muted("Docs:")} ${formatDocsLink("/tools/chrome-extension", "docs.iflow.ai/tools/chrome-extension")}`,
           ].join("\n"),

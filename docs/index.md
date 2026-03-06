@@ -69,7 +69,7 @@ WhatsApp / Telegram / Discord / iMessage (+ plugins)
   │          Gateway          │  ws://127.0.0.1:18789 (loopback-only)
   │     (single source)       │
   │                           │  http://<gateway-host>:18793
-  │                           │    /__iflow__/canvas/ (Canvas host)
+  │                           │    /__claw__/canvas/ (Canvas host)
   └───────────┬───────────────┘
               │
               ├─ Pi agent (RPC)
@@ -89,7 +89,7 @@ Most operations flow through the **Gateway** (`iflow gateway`), a single long-ru
   - The wizard now generates a gateway token by default (even for loopback).
   - For Tailnet access, run `iflow gateway --bind tailnet --token ...` (token is required for non-loopback binds).
 - **Nodes**: connect to the Gateway WebSocket (LAN/tailnet/SSH as needed); legacy TCP bridge is deprecated/removed.
-- **Canvas host**: HTTP file server on `canvasHost.port` (default `18793`), serving `/__iflow__/canvas/` for node WebViews; see [Gateway configuration](/gateway/configuration) (`canvasHost`).
+- **Canvas host**: HTTP file server on `canvasHost.port` (default `18793`), serving `/__claw__/canvas/` for node WebViews; see [Gateway configuration](/gateway/configuration) (`canvasHost`).
 - **Remote use**: SSH tunnel or tailnet/VPN; see [Remote access](/gateway/remote) and [Discovery](/gateway/discovery).
 
 ## Features (high level)

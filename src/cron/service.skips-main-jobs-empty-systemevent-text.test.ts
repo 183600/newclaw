@@ -12,7 +12,7 @@ const noopLogger = {
 };
 
 async function makeStorePath() {
-  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-cron-"));
+  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "claw-cron-"));
   return {
     storePath: path.join(dir, "cron", "jobs.json"),
     cleanup: async () => {

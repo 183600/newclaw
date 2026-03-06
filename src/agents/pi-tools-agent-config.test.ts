@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import "./test-helpers/fast-coding-tools.js";
 import type { iFlowConfig } from "../config/config.js";
 import type { SandboxDockerConfig } from "./sandbox.js";
-import { createiFlowCodingTools } from "./pi-tools.js";
+import { createClawCodingTools } from "./pi-tools.js";
 
 describe("Agent-specific tool filtering", () => {
   it("should apply global tool policy when no agent-specific policy exists", () => {
@@ -15,13 +15,13 @@ describe("Agent-specific tool filtering", () => {
         list: [
           {
             id: "main",
-            workspace: "~/iflow",
+            workspace: "~/claw",
           },
         ],
       },
     };
 
-    const tools = createiFlowCodingTools({
+    const tools = createClawCodingTools({
       config: cfg,
       sessionKey: "agent:main:main",
       workspaceDir: "/tmp/test",
@@ -44,7 +44,7 @@ describe("Agent-specific tool filtering", () => {
         list: [
           {
             id: "main",
-            workspace: "~/iflow",
+            workspace: "~/claw",
             tools: {
               elevated: {
                 enabled: true,
@@ -56,7 +56,7 @@ describe("Agent-specific tool filtering", () => {
       },
     };
 
-    const tools = createiFlowCodingTools({
+    const tools = createClawCodingTools({
       config: cfg,
       sessionKey: "agent:main:main",
       workspaceDir: "/tmp/test",
@@ -80,7 +80,7 @@ describe("Agent-specific tool filtering", () => {
       },
     };
 
-    const tools = createiFlowCodingTools({
+    const tools = createClawCodingTools({
       config: cfg,
       sessionKey: "agent:main:main",
       workspaceDir: "/tmp/test",
@@ -105,7 +105,7 @@ describe("Agent-specific tool filtering", () => {
         list: [
           {
             id: "restricted",
-            workspace: "~/iflow-restricted",
+            workspace: "~/claw-restricted",
             tools: {
               allow: ["read"], // Agent override: only read
               deny: ["exec", "write", "edit"],
@@ -115,7 +115,7 @@ describe("Agent-specific tool filtering", () => {
       },
     };
 
-    const tools = createiFlowCodingTools({
+    const tools = createClawCodingTools({
       config: cfg,
       sessionKey: "agent:restricted:main",
       workspaceDir: "/tmp/test-restricted",
@@ -142,7 +142,7 @@ describe("Agent-specific tool filtering", () => {
       },
     };
 
-    const tools = createiFlowCodingTools({
+    const tools = createClawCodingTools({
       config: cfg,
       sessionKey: "agent:main:main",
       workspaceDir: "/tmp/test-provider",
@@ -170,7 +170,7 @@ describe("Agent-specific tool filtering", () => {
       },
     };
 
-    const tools = createiFlowCodingTools({
+    const tools = createClawCodingTools({
       config: cfg,
       sessionKey: "agent:main:main",
       workspaceDir: "/tmp/test-provider-profile",
@@ -189,12 +189,12 @@ describe("Agent-specific tool filtering", () => {
         list: [
           {
             id: "main",
-            workspace: "~/iflow",
+            workspace: "~/claw",
             // No tools restriction - all tools available
           },
           {
             id: "family",
-            workspace: "~/iflow-family",
+            workspace: "~/claw-family",
             tools: {
               allow: ["read"],
               deny: ["exec", "write", "edit", "process"],
@@ -205,7 +205,7 @@ describe("Agent-specific tool filtering", () => {
     };
 
     // main agent: all tools
-    const mainTools = createiFlowCodingTools({
+    const mainTools = createClawCodingTools({
       config: cfg,
       sessionKey: "agent:main:main",
       workspaceDir: "/tmp/test-main",
@@ -218,7 +218,7 @@ describe("Agent-specific tool filtering", () => {
     expect(mainToolNames).not.toContain("apply_patch");
 
     // family agent: restricted
-    const familyTools = createiFlowCodingTools({
+    const familyTools = createClawCodingTools({
       config: cfg,
       sessionKey: "agent:family:whatsapp:group:123",
       workspaceDir: "/tmp/test-family",
@@ -248,7 +248,7 @@ describe("Agent-specific tool filtering", () => {
       },
     };
 
-    const trustedTools = createiFlowCodingTools({
+    const trustedTools = createClawCodingTools({
       config: cfg,
       sessionKey: "agent:main:whatsapp:group:trusted",
       messageProvider: "whatsapp",
@@ -259,7 +259,7 @@ describe("Agent-specific tool filtering", () => {
     expect(trustedNames).toContain("read");
     expect(trustedNames).toContain("exec");
 
-    const defaultTools = createiFlowCodingTools({
+    const defaultTools = createClawCodingTools({
       config: cfg,
       sessionKey: "agent:main:whatsapp:group:unknown",
       messageProvider: "whatsapp",
@@ -287,7 +287,7 @@ describe("Agent-specific tool filtering", () => {
       },
     };
 
-    const aliceTools = createiFlowCodingTools({
+    const aliceTools = createClawCodingTools({
       config: cfg,
       sessionKey: "agent:main:whatsapp:group:family",
       senderId: "alice",
@@ -298,7 +298,7 @@ describe("Agent-specific tool filtering", () => {
     expect(aliceNames).toContain("read");
     expect(aliceNames).toContain("exec");
 
-    const bobTools = createiFlowCodingTools({
+    const bobTools = createClawCodingTools({
       config: cfg,
       sessionKey: "agent:main:whatsapp:group:family",
       senderId: "bob",
@@ -328,7 +328,7 @@ describe("Agent-specific tool filtering", () => {
       },
     };
 
-    const adminTools = createiFlowCodingTools({
+    const adminTools = createClawCodingTools({
       config: cfg,
       sessionKey: "agent:main:whatsapp:group:locked",
       senderId: "admin",
@@ -353,7 +353,7 @@ describe("Agent-specific tool filtering", () => {
       },
     };
 
-    const tools = createiFlowCodingTools({
+    const tools = createClawCodingTools({
       config: cfg,
       sessionKey: "agent:main:telegram:group:123:topic:456",
       messageProvider: "telegram",
@@ -378,7 +378,7 @@ describe("Agent-specific tool filtering", () => {
       },
     };
 
-    const tools = createiFlowCodingTools({
+    const tools = createClawCodingTools({
       config: cfg,
       sessionKey: "agent:main:subagent:test",
       spawnedBy: "agent:main:whatsapp:group:trusted",
@@ -399,7 +399,7 @@ describe("Agent-specific tool filtering", () => {
         list: [
           {
             id: "work",
-            workspace: "~/iflow-work",
+            workspace: "~/claw-work",
             tools: {
               deny: ["exec", "process"], // Agent deny (override)
             },
@@ -408,7 +408,7 @@ describe("Agent-specific tool filtering", () => {
       },
     };
 
-    const tools = createiFlowCodingTools({
+    const tools = createClawCodingTools({
       config: cfg,
       sessionKey: "agent:work:slack:dm:user123",
       workspaceDir: "/tmp/test-work",
@@ -435,7 +435,7 @@ describe("Agent-specific tool filtering", () => {
         list: [
           {
             id: "restricted",
-            workspace: "~/iflow-restricted",
+            workspace: "~/claw-restricted",
             sandbox: {
               mode: "all",
               scope: "agent",
@@ -457,7 +457,7 @@ describe("Agent-specific tool filtering", () => {
       },
     };
 
-    const tools = createiFlowCodingTools({
+    const tools = createClawCodingTools({
       config: cfg,
       sessionKey: "agent:restricted:main",
       workspaceDir: "/tmp/test-restricted",
@@ -503,7 +503,7 @@ describe("Agent-specific tool filtering", () => {
       },
     };
 
-    const tools = createiFlowCodingTools({
+    const tools = createClawCodingTools({
       config: cfg,
       sessionKey: "agent:main:main",
       workspaceDir: "/tmp/test-main",

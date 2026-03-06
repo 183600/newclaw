@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-INSTALL_URL="${IFLOW_INSTALL_URL:-${CLAWDBOT_INSTALL_URL:-https://iflow.bot/install.sh}}"
+INSTALL_URL="${IFLOW_INSTALL_URL:-${CLAWDBOT_INSTALL_URL:-https://claw.bot/install.sh}}"
 MODELS_MODE="${IFLOW_E2E_MODELS:-${CLAWDBOT_E2E_MODELS:-both}}" # both|openai|anthropic
 INSTALL_TAG="${IFLOW_INSTALL_TAG:-${CLAWDBOT_INSTALL_TAG:-latest}}"
 E2E_PREVIOUS_VERSION="${IFLOW_INSTALL_E2E_PREVIOUS:-${CLAWDBOT_INSTALL_E2E_PREVIOUS:-}}"
@@ -521,11 +521,11 @@ run_profile() {
 }
 
 if [[ "$MODELS_MODE" == "openai" || "$MODELS_MODE" == "both" ]]; then
-  run_profile "e2e-openai" "18789" "/tmp/iflow-e2e-openai" "openai"
+  run_profile "e2e-openai" "18789" "/tmp/claw-e2e-openai" "openai"
 fi
 
 if [[ "$MODELS_MODE" == "anthropic" || "$MODELS_MODE" == "both" ]]; then
-  run_profile "e2e-anthropic" "18799" "/tmp/iflow-e2e-anthropic" "anthropic"
+  run_profile "e2e-anthropic" "18799" "/tmp/claw-e2e-anthropic" "anthropic"
 fi
 
 echo "OK"

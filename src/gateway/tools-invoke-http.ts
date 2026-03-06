@@ -1,5 +1,5 @@
 import type { IncomingMessage, ServerResponse } from "node:http";
-import { createiFlowTools } from "../agents/iflow-tools.js";
+import { createClawTools } from "../agents/iflow-tools.js";
 import {
   filterToolsByPolicy,
   resolveEffectiveToolPolicy,
@@ -169,8 +169,8 @@ export async function handleToolsInvokeHttpRequest(
     !rawSessionKey || rawSessionKey === "main" ? resolveMainSessionKey(cfg) : rawSessionKey;
 
   // Resolve message channel/account hints (optional headers) for policy inheritance.
-  const messageChannel = normalizeMessageChannel(getHeader(req, "x-iflow-message-channel") ?? "");
-  const accountId = getHeader(req, "x-iflow-account-id")?.trim() || undefined;
+  const messageChannel = normalizeMessageChannel(getHeader(req, "x-claw-message-channel") ?? "");
+  const accountId = getHeader(req, "x-claw-account-id")?.trim() || undefined;
 
   const {
     agentId,
@@ -209,7 +209,7 @@ export async function handleToolsInvokeHttpRequest(
     : undefined;
 
   // Build tool list (core + plugin tools).
-  const allTools = createiFlowTools({
+  const allTools = createClawTools({
     agentSessionKey: sessionKey,
     agentChannel: messageChannel ?? undefined,
     agentAccountId: accountId,

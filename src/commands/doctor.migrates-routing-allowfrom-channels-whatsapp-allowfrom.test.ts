@@ -26,7 +26,7 @@ beforeEach(() => {
 
   readConfigFileSnapshot.mockReset();
   writeConfigFile.mockReset().mockResolvedValue(undefined);
-  resolveiFlowPackageRoot.mockReset().mockResolvedValue(null);
+  resolveClawPackageRoot.mockReset().mockResolvedValue(null);
   runGatewayUpdate.mockReset().mockResolvedValue({
     status: "skipped",
     mode: "unknown",
@@ -78,7 +78,7 @@ beforeEach(() => {
   originalStateDir = process.env.IFLOW_STATE_DIR;
   originalUpdateInProgress = process.env.IFLOW_UPDATE_IN_PROGRESS;
   process.env.IFLOW_UPDATE_IN_PROGRESS = "1";
-  tempStateDir = fs.mkdtempSync(path.join(os.tmpdir(), "iflow-doctor-state-"));
+  tempStateDir = fs.mkdtempSync(path.join(os.tmpdir(), "claw-doctor-state-"));
   process.env.IFLOW_STATE_DIR = tempStateDir;
   fs.mkdirSync(path.join(tempStateDir, "agents", "main", "sessions"), {
     recursive: true,
@@ -109,7 +109,7 @@ const confirm = vi.fn().mockResolvedValue(true);
 const select = vi.fn().mockResolvedValue("node");
 const note = vi.fn();
 const writeConfigFile = vi.fn().mockResolvedValue(undefined);
-const resolveiFlowPackageRoot = vi.fn().mockResolvedValue(null);
+const resolveClawPackageRoot = vi.fn().mockResolvedValue(null);
 const runGatewayUpdate = vi.fn().mockResolvedValue({
   status: "skipped",
   mode: "unknown",
@@ -216,7 +216,7 @@ vi.mock("../process/exec.js", () => ({
 }));
 
 vi.mock("../infra/iflow-root.js", () => ({
-  resolveiFlowPackageRoot,
+  resolveClawPackageRoot,
 }));
 
 vi.mock("../infra/update-runner.js", () => ({
@@ -408,8 +408,8 @@ describe("doctor command", () => {
   it("offers to update first for git checkouts", async () => {
     delete process.env.IFLOW_UPDATE_IN_PROGRESS;
 
-    const root = "/tmp/iflow";
-    resolveiFlowPackageRoot.mockResolvedValueOnce(root);
+    const root = "/tmp/claw";
+    resolveClawPackageRoot.mockResolvedValueOnce(root);
     runCommandWithTimeout.mockResolvedValueOnce({
       stdout: `${root}\n`,
       stderr: "",

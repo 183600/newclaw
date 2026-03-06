@@ -156,7 +156,7 @@ describe("provider timeouts (e2e)", () => {
       };
       (globalThis as unknown as { fetch: unknown }).fetch = fetchImpl;
 
-      const tempHome = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-timeout-e2e-"));
+      const tempHome = await fs.mkdtemp(path.join(os.tmpdir(), "claw-timeout-e2e-"));
       process.env.HOME = tempHome;
       process.env.IFLOW_SKIP_CHANNELS = "1";
       process.env.IFLOW_SKIP_GMAIL_WATCHER = "1";

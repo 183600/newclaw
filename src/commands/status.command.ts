@@ -377,7 +377,7 @@ export async function statusCommand(
     },
   ];
 
-  runtime.log(theme.heading("iFlow status"));
+  runtime.log(theme.heading("Claw status"));
   runtime.log("");
   runtime.log(theme.heading("Overview"));
   runtime.log(

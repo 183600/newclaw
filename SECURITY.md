@@ -20,9 +20,9 @@ The best way to help the project right now is by sending PRs.
 
 ## Operational Guidance
 
-For threat model + hardening guidance (including `iflow security audit --deep` and `--fix`), see:
+For threat model + hardening guidance (including `claw security audit --deep` and `--fix`), see:
 
-- `https://docs.iflow.ai/gateway/security`
+- `https://docs.claw.dev/gateway/security`
 
 ### Web Interface Safety
 
@@ -55,8 +55,8 @@ Example secure Docker run:
 
 ```bash
 docker run --read-only --cap-drop=ALL \
-  -v iflow-data:/app/data \
-  iflow/iflow:latest
+  -v claw-data:/app/data \
+  claw/claw:latest
 ```
 
 ## Security Scanning

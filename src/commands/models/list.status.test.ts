@@ -29,8 +29,8 @@ const mocks = vi.hoisted(() => {
 
   return {
     store,
-    resolveiFlowAgentDir: vi.fn().mockReturnValue("/tmp/iflow-agent"),
-    resolveAgentDir: vi.fn().mockReturnValue("/tmp/iflow-agent"),
+    resolveiFlowAgentDir: vi.fn().mockReturnValue("/tmp/claw-agent"),
+    resolveAgentDir: vi.fn().mockReturnValue("/tmp/claw-agent"),
     resolveAgentModelPrimary: vi.fn().mockReturnValue(undefined),
     resolveAgentModelFallbacksOverride: vi.fn().mockReturnValue(undefined),
     listAgentIds: vi.fn().mockReturnValue(["main", "jeremiah"]),
@@ -41,7 +41,7 @@ const mocks = vi.hoisted(() => {
         .map(([id]) => id);
     }),
     resolveAuthProfileDisplayLabel: vi.fn(({ profileId }: { profileId: string }) => profileId),
-    resolveAuthStorePathForDisplay: vi.fn().mockReturnValue("/tmp/iflow-agent/auth-profiles.json"),
+    resolveAuthStorePathForDisplay: vi.fn().mockReturnValue("/tmp/claw-agent/auth-profiles.json"),
     resolveEnvApiKey: vi.fn((provider: string) => {
       if (provider === "openai") {
         return {
@@ -128,7 +128,7 @@ describe("modelsStatusCommand auth overview", () => {
 
     expect(mocks.resolveiFlowAgentDir).toHaveBeenCalled();
     expect(payload.defaultModel).toBe("anthropic/claude-opus-4-5");
-    expect(payload.auth.storePath).toBe("/tmp/iflow-agent/auth-profiles.json");
+    expect(payload.auth.storePath).toBe("/tmp/claw-agent/auth-profiles.json");
     expect(payload.auth.shellEnvFallback.enabled).toBe(true);
     expect(payload.auth.shellEnvFallback.appliedKeys).toContain("OPENAI_API_KEY");
     expect(payload.auth.missingProvidersInUse).toEqual([]);
@@ -169,14 +169,14 @@ describe("modelsStatusCommand auth overview", () => {
 
     mocks.resolveAgentModelPrimary.mockReturnValue("openai/gpt-4");
     mocks.resolveAgentModelFallbacksOverride.mockReturnValue(["openai/gpt-3.5"]);
-    mocks.resolveAgentDir.mockReturnValue("/tmp/iflow-agent-custom");
+    mocks.resolveAgentDir.mockReturnValue("/tmp/claw-agent-custom");
 
     try {
       await modelsStatusCommand({ json: true, agent: "Jeremiah" }, localRuntime as never);
       expect(mocks.resolveAgentDir).toHaveBeenCalledWith(expect.anything(), "jeremiah");
       const payload = JSON.parse(String((localRuntime.log as vi.Mock).mock.calls[0][0]));
       expect(payload.agentId).toBe("jeremiah");
-      expect(payload.agentDir).toBe("/tmp/iflow-agent-custom");
+      expect(payload.agentDir).toBe("/tmp/claw-agent-custom");
       expect(payload.defaultModel).toBe("openai/gpt-4");
       expect(payload.fallbacks).toEqual(["openai/gpt-3.5"]);
       expect(payload.modelConfig).toEqual({

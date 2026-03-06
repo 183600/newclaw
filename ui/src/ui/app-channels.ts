@@ -1,4 +1,4 @@
-import type { iFlowApp } from "./app.ts";
+import type { ClawApp } from "./app.ts";
 import type { NostrProfile } from "./types.ts";
 import {
   loadChannels,
@@ -9,28 +9,28 @@ import {
 import { loadConfig, saveConfig } from "./controllers/config.ts";
 import { createNostrProfileFormState } from "./views/channels.nostr-profile-form.ts";
 
-export async function handleWhatsAppStart(host: iFlowApp, force: boolean) {
+export async function handleWhatsAppStart(host: ClawApp, force: boolean) {
   await startWhatsAppLogin(host, force);
   await loadChannels(host, true);
 }
 
-export async function handleWhatsAppWait(host: iFlowApp) {
+export async function handleWhatsAppWait(host: ClawApp) {
   await waitWhatsAppLogin(host);
   await loadChannels(host, true);
 }
 
-export async function handleWhatsAppLogout(host: iFlowApp) {
+export async function handleWhatsAppLogout(host: ClawApp) {
   await logoutWhatsApp(host);
   await loadChannels(host, true);
 }
 
-export async function handleChannelConfigSave(host: iFlowApp) {
+export async function handleChannelConfigSave(host: ClawApp) {
   await saveConfig(host);
   await loadConfig(host);
   await loadChannels(host, true);
 }
 
-export async function handleChannelConfigReload(host: iFlowApp) {
+export async function handleChannelConfigReload(host: ClawApp) {
   await loadConfig(host);
   await loadChannels(host, true);
 }
@@ -57,7 +57,7 @@ function parseValidationErrors(details: unknown): Record<string, string> {
   return errors;
 }
 
-function resolveNostrAccountId(host: iFlowApp): string {
+function resolveNostrAccountId(host: ClawApp): string {
   const accounts = host.channelsSnapshot?.channelAccounts?.nostr ?? [];
   return accounts[0]?.accountId ?? host.nostrProfileAccountId ?? "default";
 }
@@ -67,7 +67,7 @@ function buildNostrProfileUrl(accountId: string, suffix = ""): string {
 }
 
 export function handleNostrProfileEdit(
-  host: iFlowApp,
+  host: ClawApp,
   accountId: string,
   profile: NostrProfile | null,
 ) {
@@ -75,13 +75,13 @@ export function handleNostrProfileEdit(
   host.nostrProfileFormState = createNostrProfileFormState(profile ?? undefined);
 }
 
-export function handleNostrProfileCancel(host: iFlowApp) {
+export function handleNostrProfileCancel(host: ClawApp) {
   host.nostrProfileFormState = null;
   host.nostrProfileAccountId = null;
 }
 
 export function handleNostrProfileFieldChange(
-  host: iFlowApp,
+  host: ClawApp,
   field: keyof NostrProfile,
   value: string,
 ) {
@@ -102,7 +102,7 @@ export function handleNostrProfileFieldChange(
   };
 }
 
-export function handleNostrProfileToggleAdvanced(host: iFlowApp) {
+export function handleNostrProfileToggleAdvanced(host: ClawApp) {
   const state = host.nostrProfileFormState;
   if (!state) {
     return;
@@ -113,7 +113,7 @@ export function handleNostrProfileToggleAdvanced(host: iFlowApp) {
   };
 }
 
-export async function handleNostrProfileSave(host: iFlowApp) {
+export async function handleNostrProfileSave(host: ClawApp) {
   const state = host.nostrProfileFormState;
   if (!state || state.saving) {
     return;
@@ -184,7 +184,7 @@ export async function handleNostrProfileSave(host: iFlowApp) {
   }
 }
 
-export async function handleNostrProfileImport(host: iFlowApp) {
+export async function handleNostrProfileImport(host: ClawApp) {
   const state = host.nostrProfileFormState;
   if (!state || state.importing) {
     return;

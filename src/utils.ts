@@ -356,5 +356,5 @@ export function formatTerminalLink(
   return `\u001b]8;;${safeUrl}\u0007${safeLabel}\u001b]8;;\u0007`;
 }
 
-// Configuration root; can be overridden via IFLOW_STATE_DIR.
+// Configuration root; can be overridden via CLAW_STATE_DIR.
 export const CONFIG_DIR = resolveConfigDir(process.env, os.homedir);

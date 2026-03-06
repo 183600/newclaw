@@ -8,21 +8,21 @@ import { replaceCliName, resolveCliName } from "../cli-name.js";
 const CLI_NAME = resolveCliName();
 
 const EXAMPLES = [
-  ["iflow channels login --verbose", "Link personal WhatsApp Web and show QR + connection logs."],
+  ["claw channels login --verbose", "Link personal WhatsApp Web and show QR + connection logs."],
   [
-    'iflow message send --target +15555550123 --message "Hi" --json',
+    'claw message send --target +15555550123 --message "Hi" --json',
     "Send via your web session and print JSON result.",
   ],
-  ["iflow gateway --port 18789", "Run the WebSocket Gateway locally."],
-  ["iflow --dev gateway", "Run a dev Gateway (isolated state/config) on ws://127.0.0.1:19001."],
-  ["iflow gateway --force", "Kill anything bound to the default gateway port, then start it."],
-  ["iflow gateway ...", "Gateway control via WebSocket."],
+  ["claw gateway --port 18789", "Run the WebSocket Gateway locally."],
+  ["claw --dev gateway", "Run a dev Gateway (isolated state/config) on ws://127.0.0.1:19001."],
+  ["claw gateway --force", "Kill anything bound to the default gateway port, then start it."],
+  ["claw gateway ...", "Gateway control via WebSocket."],
   [
-    'iflow agent --to +15555550123 --message "Run summary" --deliver',
+    'claw agent --to +15555550123 --message "Run summary" --deliver',
     "Talk directly to the agent using the Gateway; optionally send the WhatsApp reply.",
   ],
   [
-    'iflow message send --channel telegram --target @mychat --message "Hi"',
+    'claw message send --channel telegram --target @mychat --message "Hi"',
     "Send via your Telegram bot.",
   ],
 ] as const;
@@ -38,7 +38,7 @@ export function configureProgramHelp(program: Command, ctx: ProgramContext) {
     )
     .option(
       "--profile <name>",
-      "Use a named profile (isolates IFLOW_STATE_DIR/IFLOW_CONFIG_PATH under ~/.iflow-<name>)",
+      "Use a named profile (isolates CLAW_STATE_DIR/CLAW_CONFIG_PATH under ~/.iflow-<name>)",
     );
 
   program.option("--no-color", "Disable ANSI colors", false);

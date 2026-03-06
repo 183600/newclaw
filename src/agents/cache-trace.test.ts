@@ -79,7 +79,7 @@ describe("createCacheTrace", () => {
         },
       },
       env: {
-        IFLOW_CACHE_TRACE: "0",
+        CLAW_CACHE_TRACE: "0",
       },
       writer: {
         filePath: "memory",

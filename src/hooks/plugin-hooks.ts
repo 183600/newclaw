@@ -25,7 +25,7 @@ function normalizePluginHookEntry(api: iFlowPluginApi, entry: HookEntry): HookEn
     ...entry,
     hook: {
       ...entry.hook,
-      source: "iflow-plugin",
+      source: "claw-plugin",
       pluginId: api.id,
     },
     metadata: {
@@ -64,7 +64,7 @@ export async function registerPluginHooksFromDir(
   const resolvedDir = resolveHookDir(api, dir);
   const hooks = loadHookEntriesFromDir({
     dir: resolvedDir,
-    source: "iflow-plugin",
+    source: "claw-plugin",
     pluginId: api.id,
   });
 

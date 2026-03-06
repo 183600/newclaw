@@ -47,7 +47,7 @@ export function resolveMessagePrefix(
     return "";
   }
 
-  return resolveIdentityNamePrefix(cfg, agentId) ?? opts?.fallback ?? "[iflow]";
+  return resolveIdentityNamePrefix(cfg, agentId) ?? opts?.fallback ?? "[claw]";
 }
 
 export function resolveResponsePrefix(cfg: iFlowConfig, agentId: string): string | undefined {

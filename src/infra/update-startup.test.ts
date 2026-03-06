@@ -5,7 +5,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { UpdateCheckResult } from "./update-check.js";
 
 vi.mock("./iflow-root.js", () => ({
-  resolveiFlowPackageRoot: vi.fn(),
+  resolveClawPackageRoot: vi.fn(),
 }));
 
 vi.mock("./update-check.js", async () => {
@@ -29,7 +29,7 @@ describe("update-startup", () => {
   beforeEach(async () => {
     vi.useFakeTimers();
     vi.setSystemTime(new Date("2026-01-17T10:00:00Z"));
-    tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-update-check-"));
+    tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "claw-update-check-"));
     process.env.IFLOW_STATE_DIR = tempDir;
     delete process.env.VITEST;
     process.env.NODE_ENV = "test";
@@ -42,13 +42,13 @@ describe("update-startup", () => {
   });
 
   it("logs update hint for npm installs when newer tag exists", async () => {
-    const { resolveiFlowPackageRoot } = await import("./iflow-root.js");
+    const { resolveClawPackageRoot } = await import("./iflow-root.js");
     const { checkUpdateStatus, resolveNpmChannelTag } = await import("./update-check.js");
     const { runGatewayUpdateCheck } = await import("./update-startup.js");
 
-    vi.mocked(resolveiFlowPackageRoot).mockResolvedValue("/opt/iflow");
+    vi.mocked(resolveClawPackageRoot).mockResolvedValue("/opt/claw");
     vi.mocked(checkUpdateStatus).mockResolvedValue({
-      root: "/opt/iflow",
+      root: "/opt/claw",
       installKind: "package",
       packageManager: "npm",
     } satisfies UpdateCheckResult);
@@ -76,13 +76,13 @@ describe("update-startup", () => {
   });
 
   it("uses latest when beta tag is older than release", async () => {
-    const { resolveiFlowPackageRoot } = await import("./iflow-root.js");
+    const { resolveClawPackageRoot } = await import("./iflow-root.js");
     const { checkUpdateStatus, resolveNpmChannelTag } = await import("./update-check.js");
     const { runGatewayUpdateCheck } = await import("./update-startup.js");
 
-    vi.mocked(resolveiFlowPackageRoot).mockResolvedValue("/opt/iflow");
+    vi.mocked(resolveClawPackageRoot).mockResolvedValue("/opt/claw");
     vi.mocked(checkUpdateStatus).mockResolvedValue({
-      root: "/opt/iflow",
+      root: "/opt/claw",
       installKind: "package",
       packageManager: "npm",
     } satisfies UpdateCheckResult);

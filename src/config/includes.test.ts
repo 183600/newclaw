@@ -9,7 +9,7 @@ import {
 
 const ROOT_DIR = path.parse(process.cwd()).root;
 const CONFIG_DIR = path.join(ROOT_DIR, "config");
-const ETC_IFLOW_DIR = path.join(ROOT_DIR, "etc", "iflow");
+const ETC_CLAW_DIR = path.join(ROOT_DIR, "etc", "claw");
 const SHARED_DIR = path.join(ROOT_DIR, "shared");
 
 const DEFAULT_BASE_PATH = path.join(CONFIG_DIR, "iflow.json");
@@ -18,8 +18,8 @@ function configPath(...parts: string[]) {
   return path.join(CONFIG_DIR, ...parts);
 }
 
-function etciFlowPath(...parts: string[]) {
-  return path.join(ETC_IFLOW_DIR, ...parts);
+function etcClawPath(...parts: string[]) {
+  return path.join(ETC_CLAW_DIR, ...parts);
 }
 
 function sharedPath(...parts: string[]) {
@@ -68,7 +68,7 @@ describe("resolveConfigIncludes", () => {
   });
 
   it("resolves absolute path $include", () => {
-    const absolute = etciFlowPath("agents.json");
+    const absolute = etcClawPath("agents.json");
     const files = { [absolute]: { list: [{ id: "main" }] } };
     const obj = { agents: { $include: absolute } };
     expect(resolve(obj, files)).toEqual({

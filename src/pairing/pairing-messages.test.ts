@@ -50,9 +50,9 @@ describe("buildPairingReply", () => {
       const text = buildPairingReply(testCase);
       expect(text).toContain(testCase.idLine);
       expect(text).toContain(`Pairing code: ${testCase.code}`);
-      // CLI commands should respect IFLOW_PROFILE when set (most tests run with isolated profile)
+      // CLI commands should respect CLAW_PROFILE when set (most tests run with isolated profile)
       const commandRe = new RegExp(
-        `(?:iflow|iflow) --profile isolated pairing approve ${testCase.channel} <code>`,
+        `(?:claw|claw) --profile isolated pairing approve ${testCase.channel} <code>`,
       );
       expect(text).toMatch(commandRe);
     });

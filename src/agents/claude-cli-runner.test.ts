@@ -47,7 +47,7 @@ describe("runClaudeCliAgent", () => {
     });
 
     await runClaudeCliAgent({
-      sessionId: "iflow-session",
+      sessionId: "claw-session",
       sessionFile: "/tmp/session.jsonl",
       workspaceDir: "/tmp",
       prompt: "hi",
@@ -73,7 +73,7 @@ describe("runClaudeCliAgent", () => {
     });
 
     await runClaudeCliAgent({
-      sessionId: "iflow-session",
+      sessionId: "claw-session",
       sessionFile: "/tmp/session.jsonl",
       workspaceDir: "/tmp",
       prompt: "hi",

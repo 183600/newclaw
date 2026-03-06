@@ -168,6 +168,17 @@ export function buildServiceEnvironment(params: {
     IFLOW_SERVICE_MARKER: GATEWAY_SERVICE_MARKER,
     IFLOW_SERVICE_KIND: GATEWAY_SERVICE_KIND,
     IFLOW_SERVICE_VERSION: VERSION,
+    // Backward compatibility: also set legacy CLAW_ variables
+    CLAW_PROFILE: profile,
+    CLAW_STATE_DIR: stateDir,
+    CLAW_CONFIG_PATH: configPath,
+    CLAW_GATEWAY_PORT: String(port),
+    CLAW_GATEWAY_TOKEN: token,
+    CLAW_LAUNCHD_LABEL: resolvedLaunchdLabel,
+    CLAW_SYSTEMD_UNIT: systemdUnit,
+    CLAW_SERVICE_MARKER: GATEWAY_SERVICE_MARKER,
+    CLAW_SERVICE_KIND: GATEWAY_SERVICE_KIND,
+    CLAW_SERVICE_VERSION: VERSION,
   };
 }
 
@@ -190,5 +201,16 @@ export function buildNodeServiceEnvironment(params: {
     IFLOW_SERVICE_MARKER: NODE_SERVICE_MARKER,
     IFLOW_SERVICE_KIND: NODE_SERVICE_KIND,
     IFLOW_SERVICE_VERSION: VERSION,
+    // Backward compatibility: also set legacy CLAW_ variables
+    CLAW_STATE_DIR: stateDir,
+    CLAW_CONFIG_PATH: configPath,
+    CLAW_LAUNCHD_LABEL: resolveNodeLaunchAgentLabel(),
+    CLAW_SYSTEMD_UNIT: resolveNodeSystemdServiceName(),
+    CLAW_WINDOWS_TASK_NAME: resolveNodeWindowsTaskName(),
+    CLAW_TASK_SCRIPT_NAME: NODE_WINDOWS_TASK_SCRIPT_NAME,
+    CLAW_LOG_PREFIX: "node",
+    CLAW_SERVICE_MARKER: NODE_SERVICE_MARKER,
+    CLAW_SERVICE_KIND: NODE_SERVICE_KIND,
+    CLAW_SERVICE_VERSION: VERSION,
   };
 }

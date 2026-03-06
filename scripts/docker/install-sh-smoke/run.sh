@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-INSTALL_URL="${IFLOW_INSTALL_URL:-https://iflow.bot/install.sh}"
+INSTALL_URL="${IFLOW_INSTALL_URL:-https://claw.bot/install.sh}"
 SMOKE_PREVIOUS_VERSION="${IFLOW_INSTALL_SMOKE_PREVIOUS:-}"
 SKIP_PREVIOUS="${IFLOW_INSTALL_SMOKE_SKIP_PREVIOUS:-0}"
-DEFAULT_PACKAGE="iflow"
+DEFAULT_PACKAGE="claw"
 PACKAGE_NAME="${IFLOW_INSTALL_PACKAGE:-$DEFAULT_PACKAGE}"
 
 echo "==> Resolve npm versions"

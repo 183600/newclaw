@@ -9,7 +9,7 @@ import { extractArchive, resolveArchiveKind, resolvePackedRootDir } from "./arch
 const tempDirs: string[] = [];
 
 async function makeTempDir() {
-  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-archive-"));
+  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "claw-archive-"));
   tempDirs.push(dir);
   return dir;
 }

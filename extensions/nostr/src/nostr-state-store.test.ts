@@ -12,7 +12,7 @@ import { setNostrRuntime } from "./runtime.js";
 
 async function withTempStateDir<T>(fn: (dir: string) => Promise<T>) {
   const previous = process.env.IFLOW_STATE_DIR;
-  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-nostr-"));
+  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "claw-nostr-"));
   process.env.IFLOW_STATE_DIR = dir;
   setNostrRuntime({
     state: {

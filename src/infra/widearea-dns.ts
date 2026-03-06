@@ -74,7 +74,7 @@ function extractSerial(zoneText: string): number | null {
 }
 
 function extractContentHash(zoneText: string): string | null {
-  const match = zoneText.match(/^\s*;\s*iflow-content-hash:\s*(\S+)\s*$/m);
+  const match = zoneText.match(/^\s*;\s*claw-content-hash:\s*(\S+)\s*$/m);
   return match?.[1] ?? null;
 }
 
@@ -104,9 +104,9 @@ export type WideAreaGatewayZoneOpts = {
 };
 
 function renderZone(opts: WideAreaGatewayZoneOpts & { serial: number }): string {
-  const hostname = os.hostname().split(".")[0] ?? "iflow";
-  const hostLabel = dnsLabel(opts.hostLabel ?? hostname, "iflow");
-  const instanceLabel = dnsLabel(opts.instanceLabel ?? `${hostname}-gateway`, "iflow-gw");
+  const hostname = os.hostname().split(".")[0] ?? "claw";
+  const hostLabel = dnsLabel(opts.hostLabel ?? hostname, "claw");
+  const instanceLabel = dnsLabel(opts.instanceLabel ?? `${hostname}-gateway`, "claw-gw");
   const domain = normalizeWideAreaDomain(opts.domain) ?? "local.";
 
   const txt = [
@@ -156,7 +156,7 @@ function renderZone(opts: WideAreaGatewayZoneOpts & { serial: number }): string 
     .join("\n")}\n`;
   const contentHash = computeContentHash(hashBody);
 
-  return `; iflow-content-hash: ${contentHash}\n${contentBody}`;
+  return `; claw-content-hash: ${contentHash}\n${contentBody}`;
 }
 
 export function renderWideAreaGatewayZoneText(

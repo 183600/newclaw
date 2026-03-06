@@ -72,7 +72,7 @@ export function collectBlueBubblesStatusIssues(
         accountId,
         kind: "config",
         message: "Not configured (missing serverUrl or password).",
-        fix: "Run: iflow channels add bluebubbles --http-url <server-url> --password <password>",
+        fix: "Run: claw channels add bluebubbles --http-url <server-url> --password <password>",
       });
       continue;
     }

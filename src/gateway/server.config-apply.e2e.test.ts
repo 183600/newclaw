@@ -51,7 +51,7 @@ describe("gateway config.apply", () => {
           id,
           method: "config.apply",
           params: {
-            raw: '{ "agents": { "list": [{ "id": "main", "workspace": "~/iflow" }] } }',
+            raw: '{ "agents": { "list": [{ "id": "main", "workspace": "~/claw" }] } }',
             sessionKey: "agent:main:whatsapp:dm:+15555550123",
             restartDelayMs: 0,
           },

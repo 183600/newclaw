@@ -129,7 +129,7 @@ describe("Enhanced Logger Tests", () => {
 
 describe("Path and Directory Operations", () => {
   it("creates nested directories efficiently", async () => {
-    const tmpDir = path.join(os.tmpdir(), `iflow-test-${Date.now()}`);
+    const tmpDir = path.join(os.tmpdir(), `claw-test-${Date.now()}`);
     const nestedPath = path.join(tmpDir, "level1", "level2", "level3");
 
     try {

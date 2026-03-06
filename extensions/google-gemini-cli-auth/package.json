@@ -1,12 +1,12 @@
 {
-  "name": "@iflow/google-gemini-cli-auth",
+  "name": "@claw/google-gemini-cli-auth",
   "version": "2026.2.2",
-  "description": "iFlow Gemini CLI OAuth provider plugin",
+  "description": "Claw Gemini CLI OAuth provider plugin",
   "type": "module",
   "devDependencies": {
     "iflow": "workspace:*"
   },
-  "iflow": {
+  "claw": {
     "extensions": [
       "./index.ts"
     ]

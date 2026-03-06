@@ -36,7 +36,7 @@ describe("ports helpers", () => {
     expect(
       classifyPortListener(
         {
-          commandLine: "node /Users/me/Projects/iflow/dist/entry.js gateway",
+          commandLine: "node /Users/me/Projects/claw/dist/entry.js gateway",
         },
         18789,
       ),

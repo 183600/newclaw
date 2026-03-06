@@ -30,7 +30,7 @@ import { normalizeConfigPaths } from "./normalize-paths.js";
 import { resolveConfigPath, resolveDefaultConfigCandidates, resolveStateDir } from "./paths.js";
 import { applyConfigOverrides } from "./runtime-overrides.js";
 import { validateConfigObjectWithPlugins } from "./validation.js";
-import { compareiFlowVersions } from "./version.js";
+import { compareClawVersions } from "./version.js";
 
 // Re-export for backwards compatibility
 export { CircularIncludeError, ConfigIncludeError } from "./includes.js";
@@ -150,13 +150,13 @@ function warnIfConfigFromFuture(cfg: iFlowConfig, logger: Pick<typeof console, "
   if (!touched) {
     return;
   }
-  const cmp = compareiFlowVersions(VERSION, touched);
+  const cmp = compareClawVersions(VERSION, touched);
   if (cmp === null) {
     return;
   }
   if (cmp < 0) {
     logger.warn(
-      `Config was last written by a newer iFlow (${touched}); current version is ${VERSION}.`,
+      `Config was last written by a newer Claw (${touched}); current version is ${VERSION}.`,
     );
   }
 }
@@ -545,7 +545,7 @@ export function createConfigIO(overrides: ConfigIoDeps = {}) {
 }
 
 // NOTE: These wrappers intentionally do *not* cache the resolved config path at
-// module scope. `IFLOW_CONFIG_PATH` (and friends) are expected to work even
+// module scope. `CLAW_CONFIG_PATH` (and friends) are expected to work even
 // when set after the module has been imported (tests, one-off scripts, etc.).
 const DEFAULT_CONFIG_CACHE_MS = 200;
 let configCache: {

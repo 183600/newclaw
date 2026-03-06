@@ -47,11 +47,11 @@ You can gate them via `metadata.iflow.requires.config` on the plugin’s config
 entry. See [Plugins](/plugin) for discovery/config and [Tools](/tools) for the
 tool surface those skills teach.
 
-## ClawHub (install + sync)
+## iFlowHub (install + sync)
 
-ClawHub is the public skills registry for iFlow. Browse at
-https://clawhub.com. Use it to discover, install, update, and back up skills.
-Full guide: [ClawHub](/tools/clawhub).
+iFlowHub is the public skills registry for iFlow. Browse at
+https://iflowhub.com. Use it to discover, install, update, and back up skills.
+Full guide: [iFlowHub](/tools/clawhub).
 
 Common flows:
 
@@ -295,6 +295,6 @@ See [Skills config](/tools/skills-config) for the full configuration schema.
 
 ## Looking for more skills?
 
-Browse https://clawhub.com.
+Browse https://iflowhub.com.
 
 ---

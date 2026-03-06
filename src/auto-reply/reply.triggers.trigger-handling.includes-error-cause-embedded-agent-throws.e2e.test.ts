@@ -69,7 +69,7 @@ async function withTempHome<T>(fn: (home: string) => Promise<T>): Promise<T> {
       vi.mocked(abortEmbeddedPiRun).mockClear();
       return await fn(home);
     },
-    { prefix: "iflow-triggers-" },
+    { prefix: "claw-triggers-" },
   );
 }
 
@@ -78,7 +78,7 @@ function makeCfg(home: string) {
     agents: {
       defaults: {
         model: "anthropic/claude-opus-4-5",
-        workspace: join(home, "iflow"),
+        workspace: join(home, "claw"),
       },
     },
     channels: {
@@ -111,7 +111,7 @@ describe("trigger handling", () => {
 
       const text = Array.isArray(res) ? res[0]?.text : res?.text;
       expect(text).toBe(
-        "⚠️ Agent failed before reply: sandbox is not defined.\nLogs: iflow logs --follow",
+        "⚠️ Agent failed before reply: sandbox is not defined.\nLogs: claw logs --follow",
       );
       expect(runEmbeddedPiAgent).toHaveBeenCalledOnce();
     });

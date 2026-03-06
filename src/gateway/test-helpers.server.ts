@@ -83,7 +83,7 @@ async function setupGatewayTestHome() {
   previousSkipBrowserControl = process.env.IFLOW_SKIP_BROWSER_CONTROL_SERVER;
   previousSkipGmailWatcher = process.env.IFLOW_SKIP_GMAIL_WATCHER;
   previousSkipCanvasHost = process.env.IFLOW_SKIP_CANVAS_HOST;
-  tempHome = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-gateway-home-"));
+  tempHome = await fs.mkdtemp(path.join(os.tmpdir(), "claw-gateway-home-"));
   process.env.HOME = tempHome;
   process.env.USERPROFILE = tempHome;
   process.env.IFLOW_STATE_DIR = path.join(tempHome, ".iflow");
@@ -105,7 +105,7 @@ async function resetGatewayTestState(options: { uniqueConfigRoot: boolean }) {
   }
   applyGatewaySkipEnv();
   tempConfigRoot = options.uniqueConfigRoot
-    ? await fs.mkdtemp(path.join(tempHome, "iflow-test-"))
+    ? await fs.mkdtemp(path.join(tempHome, "claw-test-"))
     : path.join(tempHome, ".iflow-test");
   setTestConfigRoot(tempConfigRoot);
   sessionStoreSaveDelayMs.value = 0;

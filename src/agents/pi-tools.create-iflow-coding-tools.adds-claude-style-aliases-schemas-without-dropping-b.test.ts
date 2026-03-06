@@ -1,11 +1,11 @@
 import { describe, expect, it } from "vitest";
 import type { iFlowConfig } from "../config/config.js";
 import "./test-helpers/fast-coding-tools.js";
-import { createiFlowCodingTools } from "./pi-tools.js";
+import { createClawCodingTools } from "./pi-tools.js";
 
-const defaultTools = createiFlowCodingTools();
+const defaultTools = createClawCodingTools();
 
-describe("createiFlowCodingTools", () => {
+describe("createClawCodingTools", () => {
   it("preserves action enums in normalized schemas", () => {
     const toolNames = ["browser", "canvas", "nodes", "cron", "gateway", "message"];
 
@@ -64,14 +64,14 @@ describe("createiFlowCodingTools", () => {
         },
       },
     };
-    const openAiTools = createiFlowCodingTools({
+    const openAiTools = createClawCodingTools({
       config,
       modelProvider: "openai",
       modelId: "gpt-5.2",
     });
     expect(openAiTools.some((tool) => tool.name === "apply_patch")).toBe(true);
 
-    const anthropicTools = createiFlowCodingTools({
+    const anthropicTools = createClawCodingTools({
       config,
       modelProvider: "anthropic",
       modelId: "claude-opus-4-5",
@@ -86,14 +86,14 @@ describe("createiFlowCodingTools", () => {
         },
       },
     };
-    const allowed = createiFlowCodingTools({
+    const allowed = createClawCodingTools({
       config,
       modelProvider: "openai",
       modelId: "gpt-5.2",
     });
     expect(allowed.some((tool) => tool.name === "apply_patch")).toBe(true);
 
-    const denied = createiFlowCodingTools({
+    const denied = createClawCodingTools({
       config,
       modelProvider: "openai",
       modelId: "gpt-5-mini",
@@ -101,7 +101,7 @@ describe("createiFlowCodingTools", () => {
     expect(denied.some((tool) => tool.name === "apply_patch")).toBe(false);
   });
   it("keeps canonical tool names for Anthropic OAuth (pi-ai remaps on the wire)", () => {
-    const tools = createiFlowCodingTools({
+    const tools = createClawCodingTools({
       modelProvider: "anthropic",
       modelAuthMode: "oauth",
     });
@@ -113,7 +113,7 @@ describe("createiFlowCodingTools", () => {
     expect(names.has("apply_patch")).toBe(false);
   });
   it("provides top-level object schemas for all tools", () => {
-    const tools = createiFlowCodingTools();
+    const tools = createClawCodingTools();
     const offenders = tools
       .map((tool) => {
         const schema =

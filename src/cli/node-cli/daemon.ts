@@ -588,7 +588,7 @@ export async function runNodeDaemonStatus(opts: NodeDaemonStatusOptions = {}) {
   };
   const hintEnv = {
     ...baseEnv,
-    IFLOW_LOG_PREFIX: baseEnv.IFLOW_LOG_PREFIX ?? "node",
+    CLAW_LOG_PREFIX: baseEnv.CLAW_LOG_PREFIX ?? "node",
   } as NodeJS.ProcessEnv;
 
   if (runtime?.missingUnit) {

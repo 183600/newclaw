@@ -29,7 +29,7 @@ class NodeForegroundService : Service() {
   override fun onCreate() {
     super.onCreate()
     ensureChannel()
-    val initial = buildNotification(title = "iFlow Node", text = "Starting…")
+    val initial = buildNotification(title = "Claw Node", text = "Starting…")
     startForegroundWithTypes(notification = initial, requiresMic = false)
 
     val runtime = (application as NodeApp).runtime
@@ -44,7 +44,7 @@ class NodeForegroundService : Service() {
         ) { status, server, connected, voiceMode, voiceListening ->
           Quint(status, server, connected, voiceMode, voiceListening)
         }.collect { (status, server, connected, voiceMode, voiceListening) ->
-          val title = if (connected) "iFlow Node · Connected" else "iFlow Node"
+          val title = if (connected) "Claw Node · Connected" else "Claw Node"
           val voiceSuffix =
             if (voiceMode == VoiceWakeMode.Always) {
               if (voiceListening) " · Voice Wake: Listening" else " · Voice Wake: Paused"
@@ -91,7 +91,7 @@ class NodeForegroundService : Service() {
         "Connection",
         NotificationManager.IMPORTANCE_LOW,
       ).apply {
-        description = "iFlow node connection status"
+        description = "Claw node connection status"
         setShowBadge(false)
       }
     mgr.createNotificationChannel(channel)
@@ -163,7 +163,7 @@ class NodeForegroundService : Service() {
     private const val CHANNEL_ID = "connection"
     private const val NOTIFICATION_ID = 1
 
-    private const val ACTION_STOP = "ai.iflow.android.action.STOP"
+    private const val ACTION_STOP = "ai.claw.android.action.STOP"
 
     fun start(context: Context) {
       val intent = Intent(context, NodeForegroundService::class.java)

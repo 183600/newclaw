@@ -82,7 +82,7 @@ export async function resolveGatewayRuntimeConfig(params: {
   assertGatewayAuthConfigured(resolvedAuth);
   if (tailscaleMode === "funnel" && authMode !== "password") {
     throw new Error(
-      "tailscale funnel requires gateway auth mode=password (set gateway.auth.password or IFLOW_GATEWAY_PASSWORD)",
+      "tailscale funnel requires gateway auth mode=password (set gateway.auth.password or CLAW_GATEWAY_PASSWORD)",
     );
   }
   if (tailscaleMode !== "off" && !isLoopbackHost(bindHost)) {
@@ -90,7 +90,7 @@ export async function resolveGatewayRuntimeConfig(params: {
   }
   if (!isLoopbackHost(bindHost) && !hasSharedSecret) {
     throw new Error(
-      `refusing to bind gateway to ${bindHost}:${params.port} without auth (set gateway.auth.token/password, or set IFLOW_GATEWAY_TOKEN/IFLOW_GATEWAY_PASSWORD)`,
+      `refusing to bind gateway to ${bindHost}:${params.port} without auth (set gateway.auth.token/password, or set CLAW_GATEWAY_TOKEN/CLAW_GATEWAY_PASSWORD)`,
     );
   }
 

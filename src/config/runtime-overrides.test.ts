@@ -15,7 +15,7 @@ describe("runtime overrides", () => {
 
   it("sets and applies nested overrides", () => {
     const cfg = {
-      messages: { responsePrefix: "[iflow]" },
+      messages: { responsePrefix: "[claw]" },
     } as iFlowConfig;
     setConfigOverride("messages.responsePrefix", "[debug]");
     const next = applyConfigOverrides(cfg);

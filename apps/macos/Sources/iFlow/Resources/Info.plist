@@ -5,13 +5,13 @@
     <key>CFBundleDevelopmentRegion</key>
     <string>en</string>
     <key>CFBundleExecutable</key>
-    <string>iFlow</string>
+    <string>Claw</string>
     <key>CFBundleIdentifier</key>
-    <string>ai.iflow.mac</string>
+    <string>ai.claw.mac</string>
     <key>CFBundleInfoDictionaryVersion</key>
     <string>6.0</string>
     <key>CFBundleName</key>
-    <string>iFlow</string>
+    <string>Claw</string>
     <key>CFBundlePackageType</key>
     <string>APPL</string>
     <key>CFBundleShortVersionString</key>
@@ -19,15 +19,15 @@
     <key>CFBundleVersion</key>
     <string>202602020</string>
     <key>CFBundleIconFile</key>
-    <string>iFlow</string>
+    <string>Claw</string>
     <key>CFBundleURLTypes</key>
     <array>
         <dict>
             <key>CFBundleURLName</key>
-            <string>ai.iflow.mac.deeplink</string>
+            <string>ai.claw.mac.deeplink</string>
             <key>CFBundleURLSchemes</key>
             <array>
-                <string>iflow</string>
+                <string>claw</string>
             </array>
         </dict>
     </array>
@@ -36,29 +36,29 @@
     <key>LSUIElement</key>
     <true/>
 
-    <key>iFlowBuildTimestamp</key>
+    <key>ClawBuildTimestamp</key>
     <string></string>
-    <key>iFlowGitCommit</key>
+    <key>ClawGitCommit</key>
     <string></string>
 
     <key>NSUserNotificationUsageDescription</key>
-    <string>iFlow needs notification permission to show alerts for agent actions.</string>
+    <string>Claw needs notification permission to show alerts for agent actions.</string>
     <key>NSScreenCaptureDescription</key>
-    <string>iFlow captures the screen when the agent needs screenshots for context.</string>
+    <string>Claw captures the screen when the agent needs screenshots for context.</string>
     <key>NSCameraUsageDescription</key>
-    <string>iFlow can capture photos or short video clips when requested by the agent.</string>
+    <string>Claw can capture photos or short video clips when requested by the agent.</string>
 	<key>NSLocationUsageDescription</key>
-	<string>iFlow can share your location when requested by the agent.</string>
+	<string>Claw can share your location when requested by the agent.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>iFlow can share your location when requested by the agent.</string>
+	<string>Claw can share your location when requested by the agent.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>iFlow can share your location when requested by the agent.</string>
+	<string>Claw can share your location when requested by the agent.</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>iFlow needs the mic for Voice Wake tests and agent audio capture.</string>
+	<string>Claw needs the mic for Voice Wake tests and agent audio capture.</string>
     <key>NSSpeechRecognitionUsageDescription</key>
-    <string>iFlow uses speech recognition to detect your Voice Wake trigger phrase.</string>
+    <string>Claw uses speech recognition to detect your Voice Wake trigger phrase.</string>
     <key>NSAppleEventsUsageDescription</key>
-    <string>iFlow needs Automation (AppleScript) permission to drive Terminal and other apps for agent actions.</string>
+    <string>Claw needs Automation (AppleScript) permission to drive Terminal and other apps for agent actions.</string>
 
     <key>NSAppTransportSecurity</key>
     <dict>

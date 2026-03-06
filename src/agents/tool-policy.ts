@@ -34,8 +34,8 @@ export const TOOL_GROUPS: Record<string, string[]> = {
   "group:messaging": ["message"],
   // Nodes + device tools
   "group:nodes": ["nodes"],
-  // All iFlow native tools (excludes provider plugins).
-  "group:iflow": [
+  // All Claw native tools (excludes provider plugins).
+  "group:claw": [
     "browser",
     "canvas",
     "nodes",

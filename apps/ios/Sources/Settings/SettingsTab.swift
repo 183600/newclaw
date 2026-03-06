@@ -213,7 +213,7 @@ struct SettingsTab: View {
 
                 Section("Screen") {
                     Toggle("Prevent Sleep", isOn: self.$preventSleep)
-                    Text("Keeps the screen awake while iFlow is open.")
+                    Text("Keeps the screen awake while Claw is open.")
                         .font(.footnote)
                         .foregroundStyle(.secondary)
                 }

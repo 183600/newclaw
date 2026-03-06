@@ -7,7 +7,7 @@ import { isTruthyEnvValue, normalizeEnv } from "./infra/env.js";
 import { installProcessWarningFilter } from "./infra/warnings.js";
 import { attachChildProcessBridge } from "./process/child-process-bridge.js";
 
-process.title = "iflow";
+process.title = "claw";
 installProcessWarningFilter();
 normalizeEnv();
 
@@ -57,7 +57,7 @@ function ensureExperimentalWarningSuppressed(): boolean {
 
   child.once("error", (error) => {
     console.error(
-      "[iflow] Failed to respawn CLI:",
+      "[claw] Failed to respawn CLI:",
       error instanceof Error ? (error.stack ?? error.message) : error,
     );
     process.exit(1);
@@ -140,7 +140,7 @@ if (!ensureExperimentalWarningSuppressed()) {
   const parsed = parseCliProfileArgs(process.argv);
   if (!parsed.ok) {
     // Keep it simple; Commander will handle rich help/errors after we strip flags.
-    console.error(`[iflow] ${parsed.error}`);
+    console.error(`[claw] ${parsed.error}`);
     process.exit(2);
   }
 
@@ -154,7 +154,7 @@ if (!ensureExperimentalWarningSuppressed()) {
     .then(({ runCli }) => runCli(process.argv))
     .catch((error) => {
       console.error(
-        "[iflow] Failed to start CLI:",
+        "[claw] Failed to start CLI:",
         error instanceof Error ? (error.stack ?? error.message) : error,
       );
       process.exitCode = 1;

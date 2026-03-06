@@ -1,4 +1,4 @@
-# Google Antigravity Auth (iFlow plugin)
+# Google Antigravity Auth (Claw plugin)
 
 OAuth provider plugin for **Google Antigravity** (Cloud Code Assist).
 
@@ -7,7 +7,7 @@ OAuth provider plugin for **Google Antigravity** (Cloud Code Assist).
 Bundled plugins are disabled by default. Enable this one:
 
 ```bash
-iflow plugins enable google-antigravity-auth
+claw plugins enable google-antigravity-auth
 ```
 
 Restart the Gateway after enabling.
@@ -15,7 +15,7 @@ Restart the Gateway after enabling.
 ## Authenticate
 
 ```bash
-iflow models auth login --provider google-antigravity --set-default
+claw models auth login --provider google-antigravity --set-default
 ```
 
 ## Notes

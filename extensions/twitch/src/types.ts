@@ -2,7 +2,7 @@
  * Twitch channel plugin types.
  *
  * This file defines Twitch-specific types. Generic channel types are imported
- * from iFlow core.
+ * from Claw core.
  */
 
 import type {

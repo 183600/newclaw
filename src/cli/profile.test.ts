@@ -5,44 +5,44 @@ import { applyCliProfileEnv, parseCliProfileArgs } from "./profile.js";
 
 describe("parseCliProfileArgs", () => {
   it("leaves gateway --dev for subcommands", () => {
-    const res = parseCliProfileArgs(["node", "iflow", "gateway", "--dev", "--allow-unconfigured"]);
+    const res = parseCliProfileArgs(["node", "claw", "gateway", "--dev", "--allow-unconfigured"]);
     if (!res.ok) {
       throw new Error(res.error);
     }
     expect(res.profile).toBeNull();
-    expect(res.argv).toEqual(["node", "iflow", "gateway", "--dev", "--allow-unconfigured"]);
+    expect(res.argv).toEqual(["node", "claw", "gateway", "--dev", "--allow-unconfigured"]);
   });
 
   it("still accepts global --dev before subcommand", () => {
-    const res = parseCliProfileArgs(["node", "iflow", "--dev", "gateway"]);
+    const res = parseCliProfileArgs(["node", "claw", "--dev", "gateway"]);
     if (!res.ok) {
       throw new Error(res.error);
     }
     expect(res.profile).toBe("dev");
-    expect(res.argv).toEqual(["node", "iflow", "gateway"]);
+    expect(res.argv).toEqual(["node", "claw", "gateway"]);
   });
 
   it("parses --profile value and strips it", () => {
-    const res = parseCliProfileArgs(["node", "iflow", "--profile", "work", "status"]);
+    const res = parseCliProfileArgs(["node", "claw", "--profile", "work", "status"]);
     if (!res.ok) {
       throw new Error(res.error);
     }
     expect(res.profile).toBe("work");
-    expect(res.argv).toEqual(["node", "iflow", "status"]);
+    expect(res.argv).toEqual(["node", "claw", "status"]);
   });
 
   it("rejects missing profile value", () => {
-    const res = parseCliProfileArgs(["node", "iflow", "--profile"]);
+    const res = parseCliProfileArgs(["node", "claw", "--profile"]);
     expect(res.ok).toBe(false);
   });
 
   it("rejects combining --dev with --profile (dev first)", () => {
-    const res = parseCliProfileArgs(["node", "iflow", "--dev", "--profile", "work", "status"]);
+    const res = parseCliProfileArgs(["node", "claw", "--dev", "--profile", "work", "status"]);
     expect(res.ok).toBe(false);
   });
 
   it("rejects combining --dev with --profile (profile first)", () => {
-    const res = parseCliProfileArgs(["node", "iflow", "--profile", "work", "--dev", "status"]);
+    const res = parseCliProfileArgs(["node", "claw", "--profile", "work", "--dev", "status"]);
     expect(res.ok).toBe(false);
   });
 });
@@ -64,8 +64,8 @@ describe("applyCliProfileEnv", () => {
 
   it("does not override explicit env values", () => {
     const env: Record<string, string | undefined> = {
-      IFLOW_STATE_DIR: "/custom",
-      IFLOW_GATEWAY_PORT: "19099",
+      CLAW_STATE_DIR: "/custom",
+      CLAW_GATEWAY_PORT: "19099",
     };
     applyCliProfileEnv({
       profile: "dev",
@@ -80,58 +80,58 @@ describe("applyCliProfileEnv", () => {
 
 describe("formatCliCommand", () => {
   it("returns command unchanged when no profile is set", () => {
-    expect(formatCliCommand("iflow doctor --fix", {})).toBe("iflow doctor --fix");
+    expect(formatCliCommand("iflow doctor --fix", {})).toBe("claw doctor --fix");
   });
 
   it("returns command unchanged when profile is default", () => {
-    expect(formatCliCommand("iflow doctor --fix", { IFLOW_PROFILE: "default" })).toBe(
-      "iflow doctor --fix",
+    expect(formatCliCommand("iflow doctor --fix", { CLAW_PROFILE: "default" })).toBe(
+      "claw doctor --fix",
     );
   });
 
   it("returns command unchanged when profile is Default (case-insensitive)", () => {
-    expect(formatCliCommand("iflow doctor --fix", { IFLOW_PROFILE: "Default" })).toBe(
-      "iflow doctor --fix",
+    expect(formatCliCommand("iflow doctor --fix", { CLAW_PROFILE: "Default" })).toBe(
+      "claw doctor --fix",
     );
   });
 
   it("returns command unchanged when profile is invalid", () => {
-    expect(formatCliCommand("iflow doctor --fix", { IFLOW_PROFILE: "bad profile" })).toBe(
-      "iflow doctor --fix",
+    expect(formatCliCommand("iflow doctor --fix", { CLAW_PROFILE: "bad profile" })).toBe(
+      "claw doctor --fix",
     );
   });
 
   it("returns command unchanged when --profile is already present", () => {
-    expect(formatCliCommand("iflow --profile work doctor --fix", { IFLOW_PROFILE: "work" })).toBe(
-      "iflow --profile work doctor --fix",
+    expect(formatCliCommand("iflow --profile work doctor --fix", { CLAW_PROFILE: "work" })).toBe(
+      "claw --profile work doctor --fix",
     );
   });
 
   it("returns command unchanged when --dev is already present", () => {
-    expect(formatCliCommand("iflow --dev doctor", { IFLOW_PROFILE: "dev" })).toBe(
-      "iflow --dev doctor",
+    expect(formatCliCommand("iflow --dev doctor", { CLAW_PROFILE: "dev" })).toBe(
+      "claw --dev doctor",
     );
   });
 
   it("inserts --profile flag when profile is set", () => {
-    expect(formatCliCommand("iflow doctor --fix", { IFLOW_PROFILE: "work" })).toBe(
-      "iflow --profile work doctor --fix",
+    expect(formatCliCommand("iflow doctor --fix", { CLAW_PROFILE: "work" })).toBe(
+      "claw --profile work doctor --fix",
     );
   });
 
   it("trims whitespace from profile", () => {
-    expect(formatCliCommand("iflow doctor --fix", { IFLOW_PROFILE: "  jbiflow  " })).toBe(
-      "iflow --profile jbiflow doctor --fix",
+    expect(formatCliCommand("iflow doctor --fix", { CLAW_PROFILE: "  jbiflow  " })).toBe(
+      "claw --profile jbiflow doctor --fix",
     );
   });
 
-  it("handles command with no args after iflow", () => {
-    expect(formatCliCommand("iflow", { IFLOW_PROFILE: "test" })).toBe("iflow --profile test");
+  it("handles command with no args after claw", () => {
+    expect(formatCliCommand("claw", { CLAW_PROFILE: "test" })).toBe("claw --profile test");
   });
 
   it("handles pnpm wrapper", () => {
-    expect(formatCliCommand("pnpm iflow doctor", { IFLOW_PROFILE: "work" })).toBe(
-      "pnpm iflow --profile work doctor",
+    expect(formatCliCommand("pnpm claw doctor", { CLAW_PROFILE: "work" })).toBe(
+      "pnpm claw --profile work doctor",
     );
   });
 });

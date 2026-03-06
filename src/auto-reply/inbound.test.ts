@@ -258,7 +258,7 @@ describe("createInboundDebouncer", () => {
 
 describe("initSessionState sender meta", () => {
   it("injects sender meta into BodyStripped for group chats", async () => {
-    const root = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-sender-meta-"));
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), "claw-sender-meta-"));
     const storePath = path.join(root, "sessions.json");
     const cfg = { session: { store: storePath } } as iFlowConfig;
 
@@ -279,7 +279,7 @@ describe("initSessionState sender meta", () => {
   });
 
   it("does not inject sender meta for direct chats", async () => {
-    const root = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-sender-meta-direct-"));
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), "claw-sender-meta-direct-"));
     const storePath = path.join(root, "sessions.json");
     const cfg = { session: { store: storePath } } as iFlowConfig;
 
@@ -307,18 +307,18 @@ describe("mention helpers", () => {
       },
     });
     expect(regexes).toHaveLength(1);
-    expect(regexes[0]?.test("iflow")).toBe(true);
+    expect(regexes[0]?.test("claw")).toBe(true);
   });
 
   it("normalizes zero-width characters", () => {
-    expect(normalizeMentionText("i\u200bflow")).toBe("iflow");
+    expect(normalizeMentionText("i\u200bflow")).toBe("claw");
   });
 
   it("matches patterns case-insensitively", () => {
     const regexes = buildMentionRegexes({
       messages: { groupChat: { mentionPatterns: ["\\biflow\\b"] } },
     });
-    expect(matchesMentionPatterns("IFLOW: hi", regexes)).toBe(true);
+    expect(matchesMentionPatterns("CLAW: hi", regexes)).toBe(true);
   });
 
   it("uses per-agent mention patterns when configured", () => {

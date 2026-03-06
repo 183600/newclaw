@@ -65,21 +65,21 @@ export function installTestEnv(): { cleanup: () => void; tempHome: string } {
   }
 
   const restore: RestoreEntry[] = [
-    { key: "IFLOW_TEST_FAST", value: process.env.IFLOW_TEST_FAST },
+    { key: "CLAW_TEST_FAST", value: process.env.IFLOW_TEST_FAST },
     { key: "HOME", value: process.env.HOME },
     { key: "USERPROFILE", value: process.env.USERPROFILE },
     { key: "XDG_CONFIG_HOME", value: process.env.XDG_CONFIG_HOME },
     { key: "XDG_DATA_HOME", value: process.env.XDG_DATA_HOME },
     { key: "XDG_STATE_HOME", value: process.env.XDG_STATE_HOME },
     { key: "XDG_CACHE_HOME", value: process.env.XDG_CACHE_HOME },
-    { key: "IFLOW_STATE_DIR", value: process.env.IFLOW_STATE_DIR },
-    { key: "IFLOW_CONFIG_PATH", value: process.env.IFLOW_CONFIG_PATH },
-    { key: "IFLOW_GATEWAY_PORT", value: process.env.IFLOW_GATEWAY_PORT },
-    { key: "IFLOW_BRIDGE_ENABLED", value: process.env.IFLOW_BRIDGE_ENABLED },
-    { key: "IFLOW_BRIDGE_HOST", value: process.env.IFLOW_BRIDGE_HOST },
-    { key: "IFLOW_BRIDGE_PORT", value: process.env.IFLOW_BRIDGE_PORT },
-    { key: "IFLOW_CANVAS_HOST_PORT", value: process.env.IFLOW_CANVAS_HOST_PORT },
-    { key: "IFLOW_TEST_HOME", value: process.env.IFLOW_TEST_HOME },
+    { key: "CLAW_STATE_DIR", value: process.env.IFLOW_STATE_DIR },
+    { key: "CLAW_CONFIG_PATH", value: process.env.IFLOW_CONFIG_PATH },
+    { key: "CLAW_GATEWAY_PORT", value: process.env.IFLOW_GATEWAY_PORT },
+    { key: "CLAW_BRIDGE_ENABLED", value: process.env.IFLOW_BRIDGE_ENABLED },
+    { key: "CLAW_BRIDGE_HOST", value: process.env.IFLOW_BRIDGE_HOST },
+    { key: "CLAW_BRIDGE_PORT", value: process.env.IFLOW_BRIDGE_PORT },
+    { key: "CLAW_CANVAS_HOST_PORT", value: process.env.IFLOW_CANVAS_HOST_PORT },
+    { key: "CLAW_TEST_HOME", value: process.env.IFLOW_TEST_HOME },
     { key: "TELEGRAM_BOT_TOKEN", value: process.env.TELEGRAM_BOT_TOKEN },
     { key: "DISCORD_BOT_TOKEN", value: process.env.DISCORD_BOT_TOKEN },
     { key: "SLACK_BOT_TOKEN", value: process.env.SLACK_BOT_TOKEN },
@@ -91,7 +91,7 @@ export function installTestEnv(): { cleanup: () => void; tempHome: string } {
     { key: "NODE_OPTIONS", value: process.env.NODE_OPTIONS },
   ];
 
-  const tempHome = fs.mkdtempSync(path.join(os.tmpdir(), "iflow-test-home-"));
+  const tempHome = fs.mkdtempSync(path.join(os.tmpdir(), "claw-test-home-"));
 
   process.env.HOME = tempHome;
   process.env.USERPROFILE = tempHome;

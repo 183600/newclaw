@@ -494,7 +494,7 @@ export async function autoMigrateLegacyStateDir(params: {
           `State dir moved but failed to link legacy path (${legacyDir ?? "unknown"} → ${targetDir}): ${String(fallbackErr)}`,
         );
         warnings.push(
-          `Rollback failed; set IFLOW_STATE_DIR=${targetDir} to avoid split state: ${String(rollbackErr)}`,
+          `Rollback failed; set CLAW_STATE_DIR=${targetDir} to avoid split state: ${String(rollbackErr)}`,
         );
         changes.push(`State dir: ${legacyDir ?? "unknown"} → ${targetDir}`);
       }

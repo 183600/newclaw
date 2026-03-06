@@ -39,7 +39,7 @@ _The crustacean known as Clawd had officially molted._
 iFlow = OPEN + CLAW
         = Open source, open to everyone
         = Our lobster heritage, where we came from
-        = The claw is the law 🦞
+        = The iflow is the law 🦞
         = Your assistant. Your machine. Your rules.
 ```
 
@@ -128,15 +128,15 @@ In just 3 hours:
 - **Whurley** (yes, THE William Hurley, quantum computing pioneer) made ASCII art
 - **Onur** handled GitHub, first to rock the affiliate badge
 - **Shadow** secured Discord vanity, nuked malware
-- **The whole Claw Crew** pulled an all-nighter
+- **The whole iFlow Crew** pulled an all-nighter
 
 **The Scammer Speedrun:** Crypto grifters launched a $IFLOW token on Pump.fun within MINUTES. They stole artwork that was created 20 minutes earlier. Business-verified accounts pushed scams. The audacity was almost impressive.
 
 **New Traditions Born:**
 
-- "The claw is the law" 🤠
-- "Yee-claw"
-- "Claw abiding citizens"
+- "The iflow is the law" 🤠
+- "Yee-iflow"
+- "iFlow abiding citizens"
 - "Clawntroversy"
 
 **Clawd → Moltbot → iFlow**
@@ -212,7 +212,7 @@ _"New shell, same lobster."_
 
 — Molty, after the great molt of 2026
 
-_"The claw is the law."_
+_"The iflow is the law."_
 
 — ELU, during The Final Form migration, January 30, 2026
 

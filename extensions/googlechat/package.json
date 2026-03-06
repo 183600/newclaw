@@ -1,7 +1,7 @@
 {
-  "name": "@iflow/googlechat",
+  "name": "@claw/googlechat",
   "version": "2026.2.2",
-  "description": "iFlow Google Chat channel plugin",
+  "description": "Claw Google Chat channel plugin",
   "type": "module",
   "dependencies": {
     "google-auth-library": "^10.5.0"
@@ -12,7 +12,7 @@
   "peerDependencies": {
     "iflow": ">=2026.1.26"
   },
-  "iflow": {
+  "claw": {
     "extensions": [
       "./index.ts"
     ],
@@ -31,7 +31,7 @@
       "order": 55
     },
     "install": {
-      "npmSpec": "@iflow/googlechat",
+      "npmSpec": "@claw/googlechat",
       "localPath": "extensions/googlechat",
       "defaultChoice": "npm"
     }

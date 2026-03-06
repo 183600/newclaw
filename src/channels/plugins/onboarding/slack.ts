@@ -37,11 +37,11 @@ function setSlackDmPolicy(cfg: iFlowConfig, dmPolicy: DmPolicy) {
 }
 
 function buildSlackManifest(botName: string) {
-  const safeName = botName.trim() || "iFlow";
+  const safeName = botName.trim() || "Claw";
   const manifest = {
     display_information: {
       name: safeName,
-      description: `${safeName} connector for iFlow`,
+      description: `${safeName} connector for Claw`,
     },
     features: {
       bot_user: {
@@ -54,8 +54,8 @@ function buildSlackManifest(botName: string) {
       },
       slash_commands: [
         {
-          command: "/iflow",
-          description: "Send a message to iFlow",
+          command: "/claw",
+          description: "Send a message to Claw",
           should_escape: false,
         },
       ],
@@ -370,7 +370,7 @@ export const slackOnboardingAdapter: ChannelOnboardingAdapter = {
     const slackBotName = String(
       await prompter.text({
         message: "Slack bot display name (used for manifest)",
-        initialValue: "iFlow",
+        initialValue: "Claw",
       }),
     ).trim();
     if (!accountConfigured) {

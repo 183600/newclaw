@@ -149,7 +149,7 @@ describe("utils - Additional Edge Cases", () => {
     });
 
     it("should handle LID mappings in jidToE164", () => {
-      const authDir = fs.mkdtempSync(path.join(os.tmpdir(), "iflow-test-"));
+      const authDir = fs.mkdtempSync(path.join(os.tmpdir(), "claw-test-"));
       const mappingPath = path.join(authDir, "lid-mapping-123_reverse.json");
 
       // Create a valid mapping file
@@ -270,7 +270,7 @@ describe("utils - Additional Edge Cases", () => {
 
   describe("File system operations", () => {
     it("should handle nested directory creation in ensureDir", async () => {
-      const tmpDir = await fs.promises.mkdtemp(path.join(os.tmpdir(), "iflow-test-"));
+      const tmpDir = await fs.promises.mkdtemp(path.join(os.tmpdir(), "claw-test-"));
       const nestedDir = path.join(tmpDir, "level1", "level2", "level3");
 
       await ensureDir(nestedDir);
@@ -287,7 +287,7 @@ describe("utils - Additional Edge Cases", () => {
     it("should handle permission errors gracefully in ensureDir", async () => {
       // This test would require mocking fs.promises.mkdir to throw an error
       // For now, we just test the success case
-      const tmpDir = await fs.promises.mkdtemp(path.join(os.tmpdir(), "iflow-test-"));
+      const tmpDir = await fs.promises.mkdtemp(path.join(os.tmpdir(), "claw-test-"));
       const testDir = path.join(tmpDir, "test");
 
       await expect(ensureDir(testDir)).resolves.not.toThrow();

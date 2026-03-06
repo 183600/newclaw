@@ -28,7 +28,7 @@ ${body ?? `# ${name}\n`}
 
 describe("loadWorkspaceSkillEntries", () => {
   it("handles an empty managed skills dir without throwing", async () => {
-    const workspaceDir = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-"));
+    const workspaceDir = await fs.mkdtemp(path.join(os.tmpdir(), "claw-"));
     const managedDir = path.join(workspaceDir, ".managed");
     await fs.mkdir(managedDir, { recursive: true });
 
@@ -42,7 +42,7 @@ describe("loadWorkspaceSkillEntries", () => {
   });
 
   it("includes plugin-shipped skills when the plugin is enabled", async () => {
-    const workspaceDir = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-"));
+    const workspaceDir = await fs.mkdtemp(path.join(os.tmpdir(), "claw-"));
     const managedDir = path.join(workspaceDir, ".managed");
     const bundledDir = path.join(workspaceDir, ".bundled");
     const pluginRoot = path.join(workspaceDir, ".iflow", "extensions", "open-prose");
@@ -81,7 +81,7 @@ describe("loadWorkspaceSkillEntries", () => {
   });
 
   it("excludes plugin-shipped skills when the plugin is not allowed", async () => {
-    const workspaceDir = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-"));
+    const workspaceDir = await fs.mkdtemp(path.join(os.tmpdir(), "claw-"));
     const managedDir = path.join(workspaceDir, ".managed");
     const bundledDir = path.join(workspaceDir, ".bundled");
     const pluginRoot = path.join(workspaceDir, ".iflow", "extensions", "open-prose");

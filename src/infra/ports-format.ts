@@ -3,7 +3,7 @@ import { formatCliCommand } from "../cli/command-format.js";
 
 export function classifyPortListener(listener: PortListener, port: number): PortListenerKind {
   const raw = `${listener.commandLine ?? ""} ${listener.command ?? ""}`.trim().toLowerCase();
-  if (raw.includes("iflow")) {
+  if (raw.includes("claw")) {
     return "gateway";
   }
   if (raw.includes("ssh")) {

@@ -103,7 +103,7 @@ export function createGatewayReloadHandlers(params: {
           params.logHooks.error(`gmail watcher failed to start: ${String(err)}`);
         }
       } else {
-        params.logHooks.info("skipping gmail watcher restart (IFLOW_SKIP_GMAIL_WATCHER=1)");
+        params.logHooks.info("skipping gmail watcher restart (CLAW_SKIP_GMAIL_WATCHER=1)");
       }
     }
 
@@ -113,7 +113,7 @@ export function createGatewayReloadHandlers(params: {
         isTruthyEnvValue(process.env.IFLOW_SKIP_PROVIDERS)
       ) {
         params.logChannels.info(
-          "skipping channel reload (IFLOW_SKIP_CHANNELS=1 or IFLOW_SKIP_PROVIDERS=1)",
+          "skipping channel reload (CLAW_SKIP_CHANNELS=1 or CLAW_SKIP_PROVIDERS=1)",
         );
       } else {
         const restartChannel = async (name: ChannelKind) => {

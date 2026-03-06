@@ -6,7 +6,7 @@ import { resetInboundDedupe } from "../auto-reply/reply/inbound-dedupe.js";
 import { createTelegramBot } from "./bot.js";
 
 const { sessionStorePath } = vi.hoisted(() => ({
-  sessionStorePath: `/tmp/iflow-telegram-reply-threading-${Math.random()
+  sessionStorePath: `/tmp/claw-telegram-reply-threading-${Math.random()
     .toString(16)
     .slice(2)}.json`,
 }));
@@ -333,7 +333,7 @@ describe("createTelegramBot", () => {
     onSpy.mockReset();
     const replySpy = replyModule.__replySpy as unknown as ReturnType<typeof vi.fn>;
     replySpy.mockReset();
-    const storeDir = fs.mkdtempSync(path.join(os.tmpdir(), "iflow-telegram-"));
+    const storeDir = fs.mkdtempSync(path.join(os.tmpdir(), "claw-telegram-"));
     const storePath = path.join(storeDir, "sessions.json");
     fs.writeFileSync(
       storePath,

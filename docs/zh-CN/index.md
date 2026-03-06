@@ -80,7 +80,7 @@ WhatsApp / Telegram / Discord / iMessage (+ plugins)
   │          Gateway网关          │  ws://127.0.0.1:18789 (loopback-only)
   │     (single source)       │
   │                           │  http://<gateway-host>:18793
-  │                           │    /__iflow__/canvas/ (Canvas host)
+  │                           │    /__claw__/canvas/ (Canvas host)
   └───────────┬───────────────┘
               │
               ├─ Pi agent (RPC)
@@ -100,7 +100,7 @@ WhatsApp / Telegram / Discord / iMessage (+ plugins)
   - 向导现在默认会生成一个 Gateway网关令牌（即使在 local loopback 模式下也是如此）。
   - 如需 Tailnet 访问，请运行 `iflow gateway --bind tailnet --token ...` （非 local loopback 绑定时必须提供令牌）。
 - **节点**：通过 WebSocket 连接到 Gateway网关（根据需要使用局域网/Tailnet/SSH）；旧版 TCP 桥接已弃用/移除。
-- **Canvas 主机**：HTTP 文件服务器运行在 `canvasHost.port` （默认 `18793`），提供 `/__iflow__/canvas/` 用于节点 WebView；请参阅 [Gateway网关配置](/gateway/configuration) （`canvasHost`）。
+- **Canvas 主机**：HTTP 文件服务器运行在 `canvasHost.port` （默认 `18793`），提供 `/__claw__/canvas/` 用于节点 WebView；请参阅 [Gateway网关配置](/gateway/configuration) （`canvasHost`）。
 - **远程使用**：SSH 隧道或 Tailnet/VPN；请参阅 [远程访问](/gateway/remote) 和 [发现机制](/gateway/discovery).
 
 ## 功能特性（概览）

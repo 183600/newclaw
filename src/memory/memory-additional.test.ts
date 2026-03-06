@@ -410,7 +410,7 @@ describe("memory module - additional edge cases", () => {
                 "Content-Type": "application/json",
                 Authorization: "Bearer custom-token",
                 "X-Custom-Header": "custom-value",
-                "User-Agent": "iFlow/1.0",
+                "User-Agent": "Claw/1.0",
               },
             },
           },

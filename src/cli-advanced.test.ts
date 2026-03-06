@@ -126,99 +126,99 @@ describe("parseDurationMs", () => {
 
 describe("formatCliCommand", () => {
   describe("basic formatting", () => {
-    it("passes through non-iflow commands", () => {
+    it("passes through non-claw commands", () => {
       expect(formatCliCommand("git status")).toBe("git status");
       expect(formatCliCommand("npm run build")).toBe("npm run build");
       expect(formatCliCommand("ls -la")).toBe("ls -la");
     });
 
-    it("handles iflow commands without profile", () => {
-      const env = { IFLOW_PROFILE: undefined };
-      expect(formatCliCommand("iflow status", env)).toBe("iflow status");
-      expect(formatCliCommand("pnpm iflow status", env)).toBe("pnpm iflow status");
-      expect(formatCliCommand("npm run iflow status", env)).toBe("npm run iflow status");
+    it("handles claw commands without profile", () => {
+      const env = { CLAW_PROFILE: undefined };
+      expect(formatCliCommand("iflow status", env)).toBe("claw status");
+      expect(formatCliCommand("pnpm claw status", env)).toBe("pnpm claw status");
+      expect(formatCliCommand("npm run claw status", env)).toBe("npm run claw status");
     });
 
-    it("adds profile flag when IFLOW_PROFILE is set", () => {
-      const env = { IFLOW_PROFILE: "test" };
-      expect(formatCliCommand("iflow status", env)).toBe("iflow --profile test status");
-      expect(formatCliCommand("pnpm iflow status", env)).toBe("pnpm iflow --profile test status");
-      expect(formatCliCommand("npx iflow status", env)).toBe("npx iflow --profile test status");
-      expect(formatCliCommand("bunx iflow status", env)).toBe("bunx iflow --profile test status");
+    it("adds profile flag when CLAW_PROFILE is set", () => {
+      const env = { CLAW_PROFILE: "test" };
+      expect(formatCliCommand("iflow status", env)).toBe("claw --profile test status");
+      expect(formatCliCommand("pnpm claw status", env)).toBe("pnpm claw --profile test status");
+      expect(formatCliCommand("npx claw status", env)).toBe("npx claw --profile test status");
+      expect(formatCliCommand("bunx claw status", env)).toBe("bunx claw --profile test status");
     });
 
     it("handles different profile names", () => {
-      expect(formatCliCommand("iflow status", { IFLOW_PROFILE: "prod" })).toBe(
-        "iflow --profile prod status",
+      expect(formatCliCommand("iflow status", { CLAW_PROFILE: "prod" })).toBe(
+        "claw --profile prod status",
       );
-      expect(formatCliCommand("iflow status", { IFLOW_PROFILE: "dev" })).toBe(
-        "iflow --profile dev status",
+      expect(formatCliCommand("iflow status", { CLAW_PROFILE: "dev" })).toBe(
+        "claw --profile dev status",
       );
-      expect(formatCliCommand("iflow status", { IFLOW_PROFILE: "staging" })).toBe(
-        "iflow --profile staging status",
+      expect(formatCliCommand("iflow status", { CLAW_PROFILE: "staging" })).toBe(
+        "claw --profile staging status",
       );
     });
   });
 
   describe("existing flags", () => {
     it("doesn't add profile when --profile already exists", () => {
-      const env = { IFLOW_PROFILE: "test" };
+      const env = { CLAW_PROFILE: "test" };
       expect(formatCliCommand("iflow --profile prod status", env)).toBe(
-        "iflow --profile prod status",
+        "claw --profile prod status",
       );
       expect(formatCliCommand("iflow status --profile prod", env)).toBe(
-        "iflow status --profile prod",
+        "claw status --profile prod",
       );
-      expect(formatCliCommand("pnpm iflow --profile=prod status", env)).toBe(
-        "pnpm iflow --profile=prod status",
+      expect(formatCliCommand("pnpm claw --profile=prod status", env)).toBe(
+        "pnpm claw --profile=prod status",
       );
     });
 
     it("doesn't add profile when --dev flag exists", () => {
-      const env = { IFLOW_PROFILE: "test" };
-      expect(formatCliCommand("iflow --dev status", env)).toBe("iflow --dev status");
-      expect(formatCliCommand("iflow status --dev", env)).toBe("iflow status --dev");
-      expect(formatCliCommand("pnpm iflow --dev status", env)).toBe("pnpm iflow --dev status");
+      const env = { CLAW_PROFILE: "test" };
+      expect(formatCliCommand("iflow --dev status", env)).toBe("claw --dev status");
+      expect(formatCliCommand("iflow status --dev", env)).toBe("claw status --dev");
+      expect(formatCliCommand("pnpm claw --dev status", env)).toBe("pnpm claw --dev status");
     });
 
     it("handles multiple flags", () => {
-      const env = { IFLOW_PROFILE: "test" };
+      const env = { CLAW_PROFILE: "test" };
       expect(formatCliCommand("iflow --verbose --dev status", env)).toBe(
-        "iflow --verbose --dev status",
+        "claw --verbose --dev status",
       );
       expect(formatCliCommand("iflow --profile prod --dev status", env)).toBe(
-        "iflow --profile prod --dev status",
+        "claw --profile prod --dev status",
       );
     });
   });
 
   describe("edge cases", () => {
     it("handles empty commands", () => {
-      expect(formatCliCommand("", { IFLOW_PROFILE: "test" })).toBe("");
-      expect(formatCliCommand("   ", { IFLOW_PROFILE: "test" })).toBe("   ");
+      expect(formatCliCommand("", { CLAW_PROFILE: "test" })).toBe("");
+      expect(formatCliCommand("   ", { CLAW_PROFILE: "test" })).toBe("   ");
     });
 
-    it("handles commands with just iflow", () => {
-      expect(formatCliCommand("iflow", { IFLOW_PROFILE: "test" })).toBe("iflow --profile test");
-      expect(formatCliCommand("pnpm iflow", { IFLOW_PROFILE: "test" })).toBe(
-        "pnpm iflow --profile test",
+    it("handles commands with just claw", () => {
+      expect(formatCliCommand("claw", { CLAW_PROFILE: "test" })).toBe("claw --profile test");
+      expect(formatCliCommand("pnpm claw", { CLAW_PROFILE: "test" })).toBe(
+        "pnpm claw --profile test",
       );
     });
 
     it("handles complex command structures", () => {
       expect(
         formatCliCommand("iflow agent --mode interactive --verbose", {
-          IFLOW_PROFILE: "test",
+          CLAW_PROFILE: "test",
         }),
-      ).toBe("iflow --profile test agent --mode interactive --verbose");
-      expect(formatCliCommand("pnpm iflow gateway run --force", { IFLOW_PROFILE: "prod" })).toBe(
-        "pnpm iflow --profile prod gateway run --force",
+      ).toBe("claw --profile test agent --mode interactive --verbose");
+      expect(formatCliCommand("pnpm claw gateway run --force", { CLAW_PROFILE: "prod" })).toBe(
+        "pnpm claw --profile prod gateway run --force",
       );
     });
 
     it("handles multiple spaces", () => {
-      expect(formatCliCommand("iflow  status  --verbose", { IFLOW_PROFILE: "test" })).toBe(
-        "iflow --profile test  status  --verbose",
+      expect(formatCliCommand("iflow  status  --verbose", { CLAW_PROFILE: "test" })).toBe(
+        "claw --profile test  status  --verbose",
       );
     });
   });

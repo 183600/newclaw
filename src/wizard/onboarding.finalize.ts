@@ -306,8 +306,8 @@ export async function finalizeOnboardingWizard(
     await prompter.note(
       [
         "Gateway token: shared auth for the Gateway + Control UI.",
-        "Stored in: ~/.iflow/iflow.json (gateway.auth.token) or IFLOW_GATEWAY_TOKEN.",
-        "Web UI stores a copy in this browser's localStorage (iflow.control.settings.v1).",
+        "Stored in: ~/.iflow/iflow.json (gateway.auth.token) or CLAW_GATEWAY_TOKEN.",
+        "Web UI stores a copy in this browser's localStorage (claw.control.settings.v1).",
         `Get the tokenized link anytime: ${formatCliCommand("iflow dashboard --no-open")}`,
       ].join("\n"),
       "Token",
@@ -356,8 +356,8 @@ export async function finalizeOnboardingWizard(
         [
           `Dashboard link (with token): ${authedUrl}`,
           controlUiOpened
-            ? "Opened in your browser. Keep that tab to control iFlow."
-            : "Copy/paste this URL in a browser on this machine to control iFlow.",
+            ? "Opened in your browser. Keep that tab to control Claw."
+            : "Copy/paste this URL in a browser on this machine to control Claw.",
           controlUiOpenHint,
         ]
           .filter(Boolean)
@@ -414,8 +414,8 @@ export async function finalizeOnboardingWizard(
       [
         `Dashboard link (with token): ${authedUrl}`,
         controlUiOpened
-          ? "Opened in your browser. Keep that tab to control iFlow."
-          : "Copy/paste this URL in a browser on this machine to control iFlow.",
+          ? "Opened in your browser. Keep that tab to control Claw."
+          : "Copy/paste this URL in a browser on this machine to control Claw.",
         controlUiOpenHint,
       ]
         .filter(Boolean)
@@ -440,7 +440,7 @@ export async function finalizeOnboardingWizard(
       : [
           "If you want your agent to be able to search the web, you’ll need an API key.",
           "",
-          "iFlow uses Brave Search for the `web_search` tool. Without a Brave Search API key, web search won’t work.",
+          "Claw uses Brave Search for the `web_search` tool. Without a Brave Search API key, web search won’t work.",
           "",
           "Set it up interactively:",
           `- Run: ${formatCliCommand("iflow configure --section web")}`,
@@ -459,10 +459,10 @@ export async function finalizeOnboardingWizard(
 
   await prompter.outro(
     controlUiOpened
-      ? "Onboarding complete. Dashboard opened with your token; keep that tab to control iFlow."
+      ? "Onboarding complete. Dashboard opened with your token; keep that tab to control Claw."
       : seededInBackground
         ? "Onboarding complete. Web UI seeded in the background; open it anytime with the tokenized link above."
-        : "Onboarding complete. Use the tokenized dashboard link above to control iFlow.",
+        : "Onboarding complete. Use the tokenized dashboard link above to control Claw.",
   );
 
   return { launchedTui };

@@ -11,7 +11,7 @@ describe("normalizeConfigPaths", () => {
       const cfg = normalizeConfigPaths({
         tools: { exec: { pathPrepend: ["~/bin"] } },
         plugins: { load: { paths: ["~/plugins/a"] } },
-        logging: { file: "~/.iflow/logs/iflow.log" },
+        logging: { file: "~/.iflow/logs/claw.log" },
         hooks: {
           path: "~/.iflow/hooks.json5",
           transformsDir: "~/hooks-xform",
@@ -45,7 +45,7 @@ describe("normalizeConfigPaths", () => {
       });
 
       expect(cfg.plugins?.load?.paths?.[0]).toBe(path.join(home, "plugins", "a"));
-      expect(cfg.logging?.file).toBe(path.join(home, ".iflow", "logs", "iflow.log"));
+      expect(cfg.logging?.file).toBe(path.join(home, ".iflow", "logs", "claw.log"));
       expect(cfg.hooks?.path).toBe(path.join(home, ".iflow", "hooks.json5"));
       expect(cfg.hooks?.transformsDir).toBe(path.join(home, "hooks-xform"));
       expect(cfg.tools?.exec?.pathPrepend?.[0]).toBe(path.join(home, "bin"));

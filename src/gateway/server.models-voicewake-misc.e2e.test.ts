@@ -139,12 +139,12 @@ describe("gateway server models + voicewake", () => {
     "voicewake.get returns defaults and voicewake.set broadcasts",
     { timeout: 60_000 },
     async () => {
-      const homeDir = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-home-"));
+      const homeDir = await fs.mkdtemp(path.join(os.tmpdir(), "claw-home-"));
       const restoreHome = setTempHome(homeDir);
 
       const initial = await rpcReq<{ triggers: string[] }>(ws, "voicewake.get");
       expect(initial.ok).toBe(true);
-      expect(initial.payload?.triggers).toEqual(["iflow", "claude", "computer"]);
+      expect(initial.payload?.triggers).toEqual(["claw", "claude", "computer"]);
 
       const changedP = onceMessage<{
         type: "event";
@@ -180,7 +180,7 @@ describe("gateway server models + voicewake", () => {
   );
 
   test("pushes voicewake.changed to nodes on connect and on updates", async () => {
-    const homeDir = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-home-"));
+    const homeDir = await fs.mkdtemp(path.join(os.tmpdir(), "claw-home-"));
     const restoreHome = setTempHome(homeDir);
 
     const nodeWs = new WebSocket(`ws://127.0.0.1:${port}`);
@@ -202,7 +202,7 @@ describe("gateway server models + voicewake", () => {
     const first = await firstEventP;
     expect(first.event).toBe("voicewake.changed");
     expect((first.payload as { triggers?: unknown } | undefined)?.triggers).toEqual([
-      "iflow",
+      "claw",
       "claude",
       "computer",
     ]);
@@ -212,14 +212,14 @@ describe("gateway server models + voicewake", () => {
       (o) => o.type === "event" && o.event === "voicewake.changed",
     );
     const setRes = await rpcReq<{ triggers: string[] }>(ws, "voicewake.set", {
-      triggers: ["iflow", "computer"],
+      triggers: ["claw", "computer"],
     });
     expect(setRes.ok).toBe(true);
 
     const broadcast = await broadcastP;
     expect(broadcast.event).toBe("voicewake.changed");
     expect((broadcast.payload as { triggers?: unknown } | undefined)?.triggers).toEqual([
-      "iflow",
+      "claw",
       "computer",
     ]);
 
@@ -376,7 +376,7 @@ describe("gateway server misc", () => {
   test("auto-enables configured channel plugins on startup", async () => {
     const configPath = process.env.IFLOW_CONFIG_PATH;
     if (!configPath) {
-      throw new Error("Missing IFLOW_CONFIG_PATH");
+      throw new Error("Missing CLAW_CONFIG_PATH");
     }
     await fs.mkdir(path.dirname(configPath), { recursive: true });
     await fs.writeFile(

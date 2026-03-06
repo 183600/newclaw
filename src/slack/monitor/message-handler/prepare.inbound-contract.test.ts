@@ -39,7 +39,7 @@ describe("slack prepareSlackMessage inbound contract", () => {
       threadInheritParent: false,
       slashCommand: {
         enabled: false,
-        name: "iflow",
+        name: "claw",
         sessionPrefix: "slack:slash",
         ephemeral: true,
       },
@@ -109,7 +109,7 @@ describe("slack prepareSlackMessage inbound contract", () => {
       threadInheritParent: false,
       slashCommand: {
         enabled: false,
-        name: "iflow",
+        name: "claw",
         sessionPrefix: "slack:slash",
         ephemeral: true,
       },

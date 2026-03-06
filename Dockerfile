@@ -8,10 +8,10 @@ RUN corepack enable
 
 WORKDIR /app
 
-ARG IFLOW_DOCKER_APT_PACKAGES=""
-RUN if [ -n "$IFLOW_DOCKER_APT_PACKAGES" ]; then \
+ARG CLAW_DOCKER_APT_PACKAGES=""
+RUN if [ -n "$CLAW_DOCKER_APT_PACKAGES" ]; then \
       apt-get update && \
-      DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends $IFLOW_DOCKER_APT_PACKAGES && \
+      DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends $CLAW_DOCKER_APT_PACKAGES && \
       apt-get clean && \
       rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*; \
     fi
@@ -24,9 +24,9 @@ COPY scripts ./scripts
 RUN pnpm install --frozen-lockfile
 
 COPY . .
-RUN IFLOW_A2UI_SKIP_MISSING=1 pnpm build
+RUN CLAW_A2UI_SKIP_MISSING=1 pnpm build
 # Force pnpm for UI build (Bun may fail on ARM/Synology architectures)
-ENV IFLOW_PREFER_PNPM=1
+ENV CLAW_PREFER_PNPM=1
 RUN pnpm ui:build
 
 ENV NODE_ENV=production

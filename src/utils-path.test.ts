@@ -107,7 +107,7 @@ describe("Path utility functions", () => {
   });
 
   describe("resolveConfigDir", () => {
-    it("should use IFLOW_STATE_DIR if set", () => {
+    it("should use CLAW_STATE_DIR if set", () => {
       const originalStateDir = process.env.IFLOW_STATE_DIR;
       process.env.IFLOW_STATE_DIR = "/custom/state";
 
@@ -117,7 +117,7 @@ describe("Path utility functions", () => {
       process.env.IFLOW_STATE_DIR = originalStateDir;
     });
 
-    it("should use CLAWDBOT_STATE_DIR if IFLOW_STATE_DIR is not set", () => {
+    it("should use CLAWDBOT_STATE_DIR if CLAW_STATE_DIR is not set", () => {
       const originalStateDir = process.env.IFLOW_STATE_DIR;
       const originalClawdbotDir = process.env.CLAWDBOT_STATE_DIR;
       delete process.env.IFLOW_STATE_DIR;

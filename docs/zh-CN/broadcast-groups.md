@@ -410,7 +410,7 @@ tail -f ~/.iflow/logs/gateway.log | grep broadcast
 ### 配置模式
 
 ```typescript
-interface iFlowConfig {
+interface ClawConfig {
   broadcast?: {
     strategy?: "parallel" | "sequential";
     [peerId: string]: string[];

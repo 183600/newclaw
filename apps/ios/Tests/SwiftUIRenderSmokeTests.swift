@@ -2,7 +2,7 @@ import iFlowKit
 import SwiftUI
 import Testing
 import UIKit
-@testable import iFlow
+@testable import Claw
 
 @Suite struct SwiftUIRenderSmokeTests {
     @MainActor private static func host(_ view: some View) -> UIWindow {

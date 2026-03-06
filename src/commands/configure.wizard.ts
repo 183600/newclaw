@@ -175,7 +175,7 @@ export async function runConfigureWizard(
 ) {
   try {
     printWizardHeader(runtime);
-    intro(opts.command === "update" ? "iFlow update wizard" : "iFlow configure");
+    intro(opts.command === "update" ? "Claw update wizard" : "Claw configure");
     const prompter = createClackPrompter();
 
     const snapshot = await readConfigFileSnapshot();

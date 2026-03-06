@@ -1,12 +1,12 @@
 {
-  "name": "@iflow/copilot-proxy",
+  "name": "@claw/copilot-proxy",
   "version": "2026.2.2",
-  "description": "iFlow Copilot Proxy provider plugin",
+  "description": "Claw Copilot Proxy provider plugin",
   "type": "module",
   "devDependencies": {
     "iflow": "workspace:*"
   },
-  "iflow": {
+  "claw": {
     "extensions": [
       "./index.ts"
     ]

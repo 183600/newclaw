@@ -17,18 +17,18 @@ import {
 } from "./paths.js";
 
 describe("resolveIsNixMode", () => {
-  it("returns true when IFLOW_NIX_MODE is '1'", () => {
-    const env = { IFLOW_NIX_MODE: "1" };
+  it("returns true when CLAW_NIX_MODE is '1'", () => {
+    const env = { CLAW_NIX_MODE: "1" };
     expect(resolveIsNixMode(env)).toBe(true);
   });
 
-  it("returns false when IFLOW_NIX_MODE is not set", () => {
+  it("returns false when CLAW_NIX_MODE is not set", () => {
     const env = {};
     expect(resolveIsNixMode(env)).toBe(false);
   });
 
-  it("returns false when IFLOW_NIX_MODE is not '1'", () => {
-    const env = { IFLOW_NIX_MODE: "0" };
+  it("returns false when CLAW_NIX_MODE is not '1'", () => {
+    const env = { CLAW_NIX_MODE: "0" };
     expect(resolveIsNixMode(env)).toBe(false);
   });
 });
@@ -87,15 +87,15 @@ describe("resolveStateDir", () => {
   let tmpDir: string;
 
   beforeEach(() => {
-    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "iflow-test-"));
+    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "claw-test-"));
   });
 
   afterEach(() => {
     fs.rmSync(tmpDir, { recursive: true, force: true });
   });
 
-  it("uses IFLOW_STATE_DIR override", () => {
-    const env = { IFLOW_STATE_DIR: path.join(tmpDir, "custom-state") };
+  it("uses CLAW_STATE_DIR override", () => {
+    const env = { CLAW_STATE_DIR: path.join(tmpDir, "custom-state") };
     expect(resolveStateDir(env)).toBe(path.join(tmpDir, "custom-state"));
   });
 
@@ -114,7 +114,7 @@ describe("resolveStateDir", () => {
   });
 
   it("falls back to legacy directory if it exists", () => {
-    const legacyDir = path.join(tmpDir, ".clawdbot");
+    const legacyDir = path.join(tmpDir, ".iflowdbot");
     fs.mkdirSync(legacyDir, { recursive: true });
 
     const env = {};
@@ -131,8 +131,8 @@ describe("resolveStateDir", () => {
 });
 
 describe("resolveCanonicalConfigPath", () => {
-  it("uses IFLOW_CONFIG_PATH override", () => {
-    const env = { IFLOW_CONFIG_PATH: "/custom/config.json" };
+  it("uses CLAW_CONFIG_PATH override", () => {
+    const env = { CLAW_CONFIG_PATH: "/custom/config.json" };
     expect(resolveCanonicalConfigPath(env)).toBe("/custom/config.json");
   });
 
@@ -152,7 +152,7 @@ describe("resolveDefaultConfigCandidates", () => {
   let tmpDir: string;
 
   beforeEach(() => {
-    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "iflow-test-"));
+    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "claw-test-"));
   });
 
   afterEach(() => {
@@ -160,14 +160,14 @@ describe("resolveDefaultConfigCandidates", () => {
   });
 
   it("returns explicit config path when provided", () => {
-    const env = { IFLOW_CONFIG_PATH: "/explicit/config.json" };
+    const env = { CLAW_CONFIG_PATH: "/explicit/config.json" };
     const candidates = resolveDefaultConfigCandidates(env, () => tmpDir);
     expect(candidates).toEqual(["/explicit/config.json"]);
   });
 
-  it("returns state directory candidates when IFLOW_STATE_DIR is set", () => {
+  it("returns state directory candidates when CLAW_STATE_DIR is set", () => {
     const stateDir = path.join(tmpDir, "custom-state");
-    const env = { IFLOW_STATE_DIR: stateDir };
+    const env = { CLAW_STATE_DIR: stateDir };
     const candidates = resolveDefaultConfigCandidates(env, () => tmpDir);
 
     expect(candidates).toContain(path.join(stateDir, "iflow.json"));
@@ -181,7 +181,7 @@ describe("resolveDefaultConfigCandidates", () => {
     const candidates = resolveDefaultConfigCandidates(env, () => tmpDir);
 
     expect(candidates).toContain(path.join(tmpDir, ".iflow", "iflow.json"));
-    expect(candidates).toContain(path.join(tmpDir, ".clawdbot", "iflow.json"));
+    expect(candidates).toContain(path.join(tmpDir, ".iflowdbot", "iflow.json"));
     expect(candidates).toContain(path.join(tmpDir, ".moltbot", "iflow.json"));
     expect(candidates).toContain(path.join(tmpDir, ".moldbot", "iflow.json"));
   });
@@ -218,8 +218,8 @@ describe("resolveGatewayLockDir", () => {
 });
 
 describe("resolveOAuthDir", () => {
-  it("uses IFLOW_OAUTH_DIR override", () => {
-    const env = { IFLOW_OAUTH_DIR: "/custom/oauth" };
+  it("uses CLAW_OAUTH_DIR override", () => {
+    const env = { CLAW_OAUTH_DIR: "/custom/oauth" };
     expect(resolveOAuthDir(env)).toBe("/custom/oauth");
   });
 
@@ -239,8 +239,8 @@ describe("resolveOAuthPath", () => {
 });
 
 describe("resolveGatewayPort", () => {
-  it("uses IFLOW_GATEWAY_PORT env var", () => {
-    const env = { IFLOW_GATEWAY_PORT: "9000" };
+  it("uses CLAW_GATEWAY_PORT env var", () => {
+    const env = { CLAW_GATEWAY_PORT: "9000" };
     expect(resolveGatewayPort(undefined, env)).toBe(9000);
   });
 
@@ -259,12 +259,12 @@ describe("resolveGatewayPort", () => {
   });
 
   it("ignores invalid port numbers", () => {
-    const env = { IFLOW_GATEWAY_PORT: "invalid" };
+    const env = { CLAW_GATEWAY_PORT: "invalid" };
     expect(resolveGatewayPort(undefined, env)).toBe(DEFAULT_GATEWAY_PORT);
   });
 
   it("ignores negative port numbers", () => {
-    const env = { IFLOW_GATEWAY_PORT: "-1" };
+    const env = { CLAW_GATEWAY_PORT: "-1" };
     expect(resolveGatewayPort(undefined, env)).toBe(DEFAULT_GATEWAY_PORT);
   });
 

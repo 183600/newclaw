@@ -285,7 +285,7 @@ Preferred:
 
 Human label only.
 
-- Example: `scarlet-claw`, `saltwave`, `mantis-pinch`.
+- Example: `scarlet-iflow`, `saltwave`, `mantis-pinch`.
 - Stored in gateway registry, editable.
 - Collision handling: `-2`, `-3`.
 

@@ -1,7 +1,7 @@
 import fs from "node:fs/promises";
 import { describe, expect, it, vi } from "vitest";
 import type { iFlowConfig } from "../config/config.js";
-import { ensureiFlowModelsJson } from "./models-config.js";
+import { ensureClawModelsJson } from "./models-config.js";
 import { getDmHistoryLimitFromSessionKey } from "./pi-embedded-runner.js";
 
 vi.mock("@mariozechner/pi-ai", async () => {
@@ -69,7 +69,7 @@ const _makeOpenAiConfig = (modelIds: string[]) =>
     },
   }) satisfies iFlowConfig;
 
-const _ensureModels = (cfg: iFlowConfig, agentDir: string) => ensureiFlowModelsJson(cfg, agentDir);
+const _ensureModels = (cfg: iFlowConfig, agentDir: string) => ensureClawModelsJson(cfg, agentDir);
 
 const _textFromContent = (content: unknown) => {
   if (typeof content === "string") {

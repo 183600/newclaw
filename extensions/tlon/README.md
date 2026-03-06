@@ -1,5 +1,5 @@
-# Tlon (iFlow plugin)
+# Tlon (Claw plugin)
 
-Tlon/Urbit channel plugin for iFlow. Supports DMs, group mentions, and thread replies.
+Tlon/Urbit channel plugin for Claw. Supports DMs, group mentions, and thread replies.
 
-Docs: https://docs.iflow.ai/channels/tlon
+Docs: https://docs.claw.ai/channels/tlon

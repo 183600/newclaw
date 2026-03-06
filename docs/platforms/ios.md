@@ -69,12 +69,12 @@ In Settings, enable **Manual Host** and enter the gateway host + port (default `
 The iOS node renders a WKWebView canvas. Use `node.invoke` to drive it:
 
 ```bash
-iflow nodes invoke --node "iOS Node" --command canvas.navigate --params '{"url":"http://<gateway-host>:18793/__iflow__/canvas/"}'
+iflow nodes invoke --node "iOS Node" --command canvas.navigate --params '{"url":"http://<gateway-host>:18793/__claw__/canvas/"}'
 ```
 
 Notes:
 
-- The Gateway canvas host serves `/__iflow__/canvas/` and `/__iflow__/a2ui/`.
+- The Gateway canvas host serves `/__claw__/canvas/` and `/__claw__/a2ui/`.
 - The iOS node auto-navigates to A2UI on connect when a canvas host URL is advertised.
 - Return to the built-in scaffold with `canvas.navigate` and `{"url":""}`.
 

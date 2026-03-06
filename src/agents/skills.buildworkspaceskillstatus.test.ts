@@ -28,7 +28,7 @@ ${body ?? `# ${name}\n`}
 
 describe("buildWorkspaceSkillStatus", () => {
   it("reports missing requirements and install options", async () => {
-    const workspaceDir = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-"));
+    const workspaceDir = await fs.mkdtemp(path.join(os.tmpdir(), "claw-"));
     const skillDir = path.join(workspaceDir, "skills", "status-skill");
 
     await writeSkill({
@@ -36,7 +36,7 @@ describe("buildWorkspaceSkillStatus", () => {
       name: "status-skill",
       description: "Needs setup",
       metadata:
-        '{"iflow":{"requires":{"bins":["fakebin"],"env":["ENV_KEY"],"config":["browser.enabled"]},"install":[{"id":"brew","kind":"brew","formula":"fakebin","bins":["fakebin"],"label":"Install fakebin"}]}}',
+        '{"claw":{"requires":{"bins":["fakebin"],"env":["ENV_KEY"],"config":["browser.enabled"]},"install":[{"id":"brew","kind":"brew","formula":"fakebin","bins":["fakebin"],"label":"Install fakebin"}]}}',
     });
 
     const report = buildWorkspaceSkillStatus(workspaceDir, {
@@ -53,14 +53,14 @@ describe("buildWorkspaceSkillStatus", () => {
     expect(skill?.install[0]?.id).toBe("brew");
   });
   it("respects OS-gated skills", async () => {
-    const workspaceDir = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-"));
+    const workspaceDir = await fs.mkdtemp(path.join(os.tmpdir(), "claw-"));
     const skillDir = path.join(workspaceDir, "skills", "os-skill");
 
     await writeSkill({
       dir: skillDir,
       name: "os-skill",
       description: "Darwin only",
-      metadata: '{"iflow":{"os":["darwin"]}}',
+      metadata: '{"claw":{"os":["darwin"]}}',
     });
 
     const report = buildWorkspaceSkillStatus(workspaceDir, {
@@ -78,7 +78,7 @@ describe("buildWorkspaceSkillStatus", () => {
     }
   });
   it("marks bundled skills blocked by allowlist", async () => {
-    const workspaceDir = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-"));
+    const workspaceDir = await fs.mkdtemp(path.join(os.tmpdir(), "claw-"));
     const bundledDir = path.join(workspaceDir, ".bundled");
     const bundledSkillDir = path.join(bundledDir, "peekaboo");
     const originalBundled = process.env.IFLOW_BUNDLED_SKILLS_DIR;
@@ -111,7 +111,7 @@ describe("buildWorkspaceSkillStatus", () => {
   });
 
   it("filters install options by OS", async () => {
-    const workspaceDir = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-"));
+    const workspaceDir = await fs.mkdtemp(path.join(os.tmpdir(), "claw-"));
     const skillDir = path.join(workspaceDir, "skills", "install-skill");
 
     await writeSkill({
@@ -119,7 +119,7 @@ describe("buildWorkspaceSkillStatus", () => {
       name: "install-skill",
       description: "OS-specific installs",
       metadata:
-        '{"iflow":{"requires":{"bins":["missing-bin"]},"install":[{"id":"mac","kind":"download","os":["darwin"],"url":"https://example.com/mac.tar.bz2"},{"id":"linux","kind":"download","os":["linux"],"url":"https://example.com/linux.tar.bz2"},{"id":"win","kind":"download","os":["win32"],"url":"https://example.com/win.tar.bz2"}]}}',
+        '{"claw":{"requires":{"bins":["missing-bin"]},"install":[{"id":"mac","kind":"download","os":["darwin"],"url":"https://example.com/mac.tar.bz2"},{"id":"linux","kind":"download","os":["linux"],"url":"https://example.com/linux.tar.bz2"},{"id":"win","kind":"download","os":["win32"],"url":"https://example.com/win.tar.bz2"}]}}',
     });
 
     const report = buildWorkspaceSkillStatus(workspaceDir, {

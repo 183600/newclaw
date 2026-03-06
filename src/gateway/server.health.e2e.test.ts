@@ -219,7 +219,7 @@ describe("gateway server health/presence", () => {
   });
 
   test("presence includes client fingerprint", async () => {
-    const identityPath = path.join(os.tmpdir(), `iflow-device-${randomUUID()}.json`);
+    const identityPath = path.join(os.tmpdir(), `claw-device-${randomUUID()}.json`);
     const identity = loadOrCreateDeviceIdentity(identityPath);
     const role = "operator";
     const scopes: string[] = [];

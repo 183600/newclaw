@@ -1,7 +1,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { type iFlowConfig, loadConfig } from "../config/config.js";
-import { resolveiFlowAgentDir } from "./agent-paths.js";
+import { resolveClawAgentDir } from "./agent-paths.js";
 import {
   normalizeProviders,
   type ProviderConfig,
@@ -81,12 +81,12 @@ async function readJson(pathname: string): Promise<unknown> {
   }
 }
 
-export async function ensureiFlowModelsJson(
+export async function ensureClawModelsJson(
   config?: iFlowConfig,
   agentDirOverride?: string,
 ): Promise<{ agentDir: string; wrote: boolean }> {
   const cfg = config ?? loadConfig();
-  const agentDir = agentDirOverride?.trim() ? agentDirOverride.trim() : resolveiFlowAgentDir();
+  const agentDir = agentDirOverride?.trim() ? agentDirOverride.trim() : resolveClawAgentDir();
 
   const explicitProviders = cfg.models?.providers ?? {};
   const implicitProviders = await resolveImplicitProviders({ agentDir });

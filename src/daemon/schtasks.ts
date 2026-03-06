@@ -16,19 +16,20 @@ const formatLine = (label: string, value: string) => {
 };
 
 function resolveTaskName(env: Record<string, string | undefined>): string {
-  const override = env.IFLOW_WINDOWS_TASK_NAME?.trim();
+  const override = env.IFLOW_WINDOWS_TASK_NAME?.trim() || env.CLAW_WINDOWS_TASK_NAME?.trim();
   if (override) {
     return override;
   }
-  return resolveGatewayWindowsTaskName(env.IFLOW_PROFILE);
+  return resolveGatewayWindowsTaskName(env.IFLOW_PROFILE ?? env.CLAW_PROFILE);
 }
 
 export function resolveTaskScriptPath(env: Record<string, string | undefined>): string {
-  const override = env.IFLOW_TASK_SCRIPT?.trim();
+  const override = env.IFLOW_TASK_SCRIPT?.trim() || env.CLAW_TASK_SCRIPT?.trim();
   if (override) {
     return override;
   }
-  const scriptName = env.IFLOW_TASK_SCRIPT_NAME?.trim() || "gateway.cmd";
+  const scriptName =
+    env.IFLOW_TASK_SCRIPT_NAME?.trim() || env.CLAW_TASK_SCRIPT_NAME?.trim() || "gateway.cmd";
   const stateDir = resolveGatewayStateDir(env);
   return path.join(stateDir, scriptName);
 }
@@ -259,7 +260,10 @@ export async function installScheduledTask({
     description ??
     formatGatewayServiceDescription({
       profile: env.IFLOW_PROFILE,
-      version: environment?.IFLOW_SERVICE_VERSION ?? env.IFLOW_SERVICE_VERSION,
+      version:
+        environment?.IFLOW_SERVICE_VERSION ??
+        environment?.CLAW_SERVICE_VERSION ??
+        env.IFLOW_SERVICE_VERSION,
     });
   const script = buildTaskScript({
     description: taskDescription,

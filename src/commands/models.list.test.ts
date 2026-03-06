@@ -1,14 +1,14 @@
 import { describe, expect, it, vi } from "vitest";
 
 const loadConfig = vi.fn();
-const ensureiFlowModelsJson = vi.fn().mockResolvedValue(undefined);
-const resolveiFlowAgentDir = vi.fn().mockReturnValue("/tmp/iflow-agent");
+const ensureClawModelsJson = vi.fn().mockResolvedValue(undefined);
+const resolveClawAgentDir = vi.fn().mockReturnValue("/tmp/claw-agent");
 const ensureAuthProfileStore = vi.fn().mockReturnValue({ version: 1, profiles: {} });
 const listProfilesForProvider = vi.fn().mockReturnValue([]);
 const resolveAuthProfileDisplayLabel = vi.fn(({ profileId }: { profileId: string }) => profileId);
 const resolveAuthStorePathForDisplay = vi
   .fn()
-  .mockReturnValue("/tmp/iflow-agent/auth-profiles.json");
+  .mockReturnValue("/tmp/claw-agent/auth-profiles.json");
 const resolveProfileUnusableUntilForDisplay = vi.fn().mockReturnValue(null);
 const resolveEnvApiKey = vi.fn().mockReturnValue(undefined);
 const resolveAwsSdkEnvVarName = vi.fn().mockReturnValue(undefined);
@@ -20,16 +20,16 @@ const modelRegistryState = {
 
 vi.mock("../config/config.js", () => ({
   CONFIG_PATH: "/tmp/iflow.json",
-  STATE_DIR: "/tmp/iflow-state",
+  STATE_DIR: "/tmp/claw-state",
   loadConfig,
 }));
 
 vi.mock("../agents/models-config.js", () => ({
-  ensureiFlowModelsJson,
+  ensureClawModelsJson,
 }));
 
 vi.mock("../agents/agent-paths.js", () => ({
-  resolveiFlowAgentDir,
+  resolveClawAgentDir,
 }));
 
 vi.mock("../agents/auth-profiles.js", () => ({

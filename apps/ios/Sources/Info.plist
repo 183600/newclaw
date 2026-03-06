@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>iFlow</string>
+	<string>Claw</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIconName</key>
@@ -32,17 +32,17 @@
 		<string>_iflow-gw._tcp</string>
 	</array>
 	<key>NSCameraUsageDescription</key>
-	<string>iFlow can capture photos or short video clips when requested via the gateway.</string>
+	<string>Claw can capture photos or short video clips when requested via the gateway.</string>
 	<key>NSLocalNetworkUsageDescription</key>
-	<string>iFlow discovers and connects to your iFlow gateway on the local network.</string>
+	<string>Claw discovers and connects to your Claw gateway on the local network.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>iFlow can share your location in the background when you enable Always.</string>
+	<string>Claw can share your location in the background when you enable Always.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>iFlow uses your location when you allow location sharing.</string>
+	<string>Claw uses your location when you allow location sharing.</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>iFlow needs microphone access for voice wake.</string>
+	<string>Claw needs microphone access for voice wake.</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
-	<string>iFlow uses on-device speech recognition for voice wake.</string>
+	<string>Claw uses on-device speech recognition for voice wake.</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

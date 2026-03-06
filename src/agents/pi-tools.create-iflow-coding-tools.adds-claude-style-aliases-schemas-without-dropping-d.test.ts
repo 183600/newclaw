@@ -4,16 +4,16 @@ import path from "node:path";
 import sharp from "sharp";
 import { describe, expect, it } from "vitest";
 import "./test-helpers/fast-coding-tools.js";
-import { createiFlowCodingTools } from "./pi-tools.js";
+import { createClawCodingTools } from "./pi-tools.js";
 
-const defaultTools = createiFlowCodingTools();
+const defaultTools = createClawCodingTools();
 
-describe("createiFlowCodingTools", () => {
+describe("createClawCodingTools", () => {
   it("keeps read tool image metadata intact", async () => {
     const readTool = defaultTools.find((tool) => tool.name === "read");
     expect(readTool).toBeDefined();
 
-    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-read-"));
+    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "claw-read-"));
     try {
       const imagePath = path.join(tmpDir, "sample.png");
       const png = await sharp({
@@ -46,14 +46,14 @@ describe("createiFlowCodingTools", () => {
     }
   });
   it("returns text content without image blocks for text files", async () => {
-    const tools = createiFlowCodingTools();
+    const tools = createClawCodingTools();
     const readTool = tools.find((tool) => tool.name === "read");
     expect(readTool).toBeDefined();
 
-    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-read-"));
+    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "claw-read-"));
     try {
       const textPath = path.join(tmpDir, "sample.txt");
-      const contents = "Hello from iflow read tool.";
+      const contents = "Hello from claw read tool.";
       await fs.writeFile(textPath, contents, "utf8");
 
       const result = await readTool?.execute("tool-2", {
@@ -75,14 +75,14 @@ describe("createiFlowCodingTools", () => {
     const sandbox = {
       enabled: true,
       sessionKey: "sandbox:test",
-      workspaceDir: path.join(os.tmpdir(), "iflow-sandbox"),
-      agentWorkspaceDir: path.join(os.tmpdir(), "iflow-workspace"),
+      workspaceDir: path.join(os.tmpdir(), "claw-sandbox"),
+      agentWorkspaceDir: path.join(os.tmpdir(), "claw-workspace"),
       workspaceAccess: "none",
-      containerName: "iflow-sbx-test",
+      containerName: "claw-sbx-test",
       containerWorkdir: "/workspace",
       docker: {
-        image: "iflow-sandbox:bookworm-slim",
-        containerPrefix: "iflow-sbx-",
+        image: "claw-sandbox:bookworm-slim",
+        containerPrefix: "claw-sbx-",
         workdir: "/workspace",
         readOnlyRoot: true,
         tmpfs: [],
@@ -97,7 +97,7 @@ describe("createiFlowCodingTools", () => {
       },
       browserAllowHostControl: false,
     };
-    const tools = createiFlowCodingTools({ sandbox });
+    const tools = createClawCodingTools({ sandbox });
     expect(tools.some((tool) => tool.name === "exec")).toBe(true);
     expect(tools.some((tool) => tool.name === "read")).toBe(false);
     expect(tools.some((tool) => tool.name === "browser")).toBe(false);
@@ -106,14 +106,14 @@ describe("createiFlowCodingTools", () => {
     const sandbox = {
       enabled: true,
       sessionKey: "sandbox:test",
-      workspaceDir: path.join(os.tmpdir(), "iflow-sandbox"),
-      agentWorkspaceDir: path.join(os.tmpdir(), "iflow-workspace"),
+      workspaceDir: path.join(os.tmpdir(), "claw-sandbox"),
+      agentWorkspaceDir: path.join(os.tmpdir(), "claw-workspace"),
       workspaceAccess: "ro",
-      containerName: "iflow-sbx-test",
+      containerName: "claw-sbx-test",
       containerWorkdir: "/workspace",
       docker: {
-        image: "iflow-sandbox:bookworm-slim",
-        containerPrefix: "iflow-sbx-",
+        image: "claw-sandbox:bookworm-slim",
+        containerPrefix: "claw-sbx-",
         workdir: "/workspace",
         readOnlyRoot: true,
         tmpfs: [],
@@ -128,13 +128,13 @@ describe("createiFlowCodingTools", () => {
       },
       browserAllowHostControl: false,
     };
-    const tools = createiFlowCodingTools({ sandbox });
+    const tools = createClawCodingTools({ sandbox });
     expect(tools.some((tool) => tool.name === "read")).toBe(true);
     expect(tools.some((tool) => tool.name === "write")).toBe(false);
     expect(tools.some((tool) => tool.name === "edit")).toBe(false);
   });
   it("filters tools by agent tool policy even without sandbox", () => {
-    const tools = createiFlowCodingTools({
+    const tools = createClawCodingTools({
       config: { tools: { deny: ["browser"] } },
     });
     expect(tools.some((tool) => tool.name === "exec")).toBe(true);

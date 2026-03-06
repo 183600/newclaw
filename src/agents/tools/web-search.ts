@@ -324,7 +324,7 @@ async function runPerplexitySearch(params: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${params.apiKey}`,
       "HTTP-Referer": "https://iflow.ai",
-      "X-Title": "iFlow Web Search",
+      "X-Title": "Claw Web Search",
     },
     body: JSON.stringify({
       model: params.model,

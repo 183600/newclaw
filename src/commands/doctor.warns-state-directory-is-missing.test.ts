@@ -78,7 +78,7 @@ beforeEach(() => {
   originalStateDir = process.env.IFLOW_STATE_DIR;
   originalUpdateInProgress = process.env.IFLOW_UPDATE_IN_PROGRESS;
   process.env.IFLOW_UPDATE_IN_PROGRESS = "1";
-  tempStateDir = fs.mkdtempSync(path.join(os.tmpdir(), "iflow-doctor-state-"));
+  tempStateDir = fs.mkdtempSync(path.join(os.tmpdir(), "claw-doctor-state-"));
   process.env.IFLOW_STATE_DIR = tempStateDir;
   fs.mkdirSync(path.join(tempStateDir, "agents", "main", "sessions"), {
     recursive: true,
@@ -342,7 +342,7 @@ describe("doctor command", () => {
       legacyIssues: [],
     });
 
-    const missingDir = fs.mkdtempSync(path.join(os.tmpdir(), "iflow-missing-state-"));
+    const missingDir = fs.mkdtempSync(path.join(os.tmpdir(), "claw-missing-state-"));
     fs.rmSync(missingDir, { recursive: true, force: true });
     process.env.IFLOW_STATE_DIR = missingDir;
     note.mockClear();
@@ -392,7 +392,7 @@ describe("doctor command", () => {
     expect(warned).toBe(true);
   });
 
-  it("skips gateway auth warning when IFLOW_GATEWAY_TOKEN is set", async () => {
+  it("skips gateway auth warning when CLAW_GATEWAY_TOKEN is set", async () => {
     readConfigFileSnapshot.mockResolvedValue({
       path: "/tmp/iflow.json",
       exists: true,

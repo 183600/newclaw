@@ -1,7 +1,7 @@
 {
-  "name": "@iflow/nostr",
+  "name": "@claw/nostr",
   "version": "2026.2.2",
-  "description": "iFlow Nostr channel plugin for NIP-04 encrypted DMs",
+  "description": "Claw Nostr channel plugin for NIP-04 encrypted DMs",
   "type": "module",
   "dependencies": {
     "iflow": "workspace:*",
@@ -11,7 +11,7 @@
   "devDependencies": {
     "iflow": "workspace:*"
   },
-  "iflow": {
+  "claw": {
     "extensions": [
       "./index.ts"
     ],
@@ -26,7 +26,7 @@
       "quickstartAllowFrom": true
     },
     "install": {
-      "npmSpec": "@iflow/nostr",
+      "npmSpec": "@claw/nostr",
       "localPath": "extensions/nostr",
       "defaultChoice": "npm"
     }

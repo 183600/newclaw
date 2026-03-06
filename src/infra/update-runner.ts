@@ -69,7 +69,7 @@ const DEFAULT_TIMEOUT_MS = 20 * 60_000;
 const MAX_LOG_CHARS = 8000;
 const PREFLIGHT_MAX_COMMITS = 10;
 const START_DIRS = ["cwd", "argv1", "process"];
-const DEFAULT_PACKAGE_NAME = "iflow";
+const DEFAULT_PACKAGE_NAME = "claw";
 const CORE_PACKAGE_NAMES = new Set([DEFAULT_PACKAGE_NAME]);
 
 function normalizeDir(value?: string | null) {
@@ -344,8 +344,8 @@ function normalizeTag(tag?: string) {
   if (!trimmed) {
     return "latest";
   }
-  if (trimmed.startsWith("iflow@")) {
-    return trimmed.slice("iflow@".length);
+  if (trimmed.startsWith("claw@")) {
+    return trimmed.slice("claw@".length);
   }
   if (trimmed.startsWith(`${DEFAULT_PACKAGE_NAME}@`)) {
     return trimmed.slice(`${DEFAULT_PACKAGE_NAME}@`.length);
@@ -402,7 +402,7 @@ export async function runGatewayUpdate(opts: UpdateRunnerOptions = {}): Promise<
       status: "error",
       mode: "unknown",
       root: gitRoot,
-      reason: "not-iflow-root",
+      reason: "not-claw-root",
       steps: [],
       durationMs: Date.now() - startedAt,
     };
@@ -557,7 +557,7 @@ export async function runGatewayUpdate(opts: UpdateRunnerOptions = {}): Promise<
       }
 
       const manager = await detectPackageManager(gitRoot);
-      const preflightRoot = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-update-preflight-"));
+      const preflightRoot = await fs.mkdtemp(path.join(os.tmpdir(), "claw-update-preflight-"));
       const worktreeDir = path.join(preflightRoot, "worktree");
       const worktreeStep = await runStep(
         step(
@@ -752,10 +752,10 @@ export async function runGatewayUpdate(opts: UpdateRunnerOptions = {}): Promise<
 
     const doctorStep = await runStep(
       step(
-        "iflow doctor",
-        managerScriptArgs(manager, "iflow", ["doctor", "--non-interactive"]),
+        "claw doctor",
+        managerScriptArgs(manager, "claw", ["doctor", "--non-interactive"]),
         gitRoot,
-        { IFLOW_UPDATE_IN_PROGRESS: "1" },
+        { CLAW_UPDATE_IN_PROGRESS: "1" },
       ),
     );
     steps.push(doctorStep);

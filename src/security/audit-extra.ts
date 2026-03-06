@@ -130,7 +130,7 @@ export function collectSyncedFolderFindings(params: {
       severity: "warn",
       title: "State/config path looks like a synced folder",
       detail: `stateDir=${params.stateDir}, configPath=${params.configPath}. Synced folders (iCloud/Dropbox/OneDrive/Google Drive) can leak tokens and transcripts onto other devices.`,
-      remediation: `Keep IFLOW_STATE_DIR on a local-only volume and re-run "${formatCliCommand("iflow security audit --fix")}".`,
+      remediation: `Keep IFLOW_STATE_DIR (or CLAW_STATE_DIR) on a local-only volume and re-run "${formatCliCommand("iflow security audit --fix")}".`,
     });
   }
   return findings;
@@ -153,7 +153,7 @@ export function collectSecretsInConfigFindings(cfg: iFlowConfig): SecurityAuditF
       detail:
         "gateway.auth.password is set in the config file; prefer environment variables for secrets when possible.",
       remediation:
-        "Prefer IFLOW_GATEWAY_PASSWORD (env) and remove gateway.auth.password from disk.",
+        "Prefer IFLOW_GATEWAY_PASSWORD (or CLAW_GATEWAY_PASSWORD) env variable and remove gateway.auth.password from disk.",
     });
   }
 

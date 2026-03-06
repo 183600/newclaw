@@ -1,7 +1,7 @@
 {
-  "name": "@iflow/msteams",
+  "name": "@claw/msteams",
   "version": "2026.2.2",
-  "description": "iFlow Microsoft Teams channel plugin",
+  "description": "Claw Microsoft Teams channel plugin",
   "type": "module",
   "dependencies": {
     "@microsoft/agents-hosting": "^1.2.3",
@@ -14,7 +14,7 @@
   "devDependencies": {
     "iflow": "workspace:*"
   },
-  "iflow": {
+  "claw": {
     "extensions": [
       "./index.ts"
     ],
@@ -31,7 +31,7 @@
       "order": 60
     },
     "install": {
-      "npmSpec": "@iflow/msteams",
+      "npmSpec": "@claw/msteams",
       "localPath": "extensions/msteams",
       "defaultChoice": "npm"
     }

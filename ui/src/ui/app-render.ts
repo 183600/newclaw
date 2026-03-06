@@ -3,7 +3,7 @@ import type { AppViewState } from "./app-view-state.ts";
 import { parseAgentSessionKey } from "../../../src/routing/session-key.js";
 import { ChatHost, refreshChatAvatar } from "./app-chat.ts";
 import { renderChatControls, renderTab, renderThemeToggle } from "./app-render.helpers.ts";
-import { iFlowApp } from "./app.ts";
+import { ClawApp } from "./app.ts";
 import { loadAgentFileContent, loadAgentFiles, saveAgentFile } from "./controllers/agent-files.ts";
 import { loadAgentIdentities, loadAgentIdentity } from "./controllers/agent-identity.ts";
 import { loadAgentSkills } from "./controllers/agent-skills.ts";
@@ -124,10 +124,10 @@ export function renderApp(state: AppViewState) {
           </button>
           <div class="brand">
             <div class="brand-logo">
-              <img src="/favicon.svg" alt="iFlow" />
+              <img src="/favicon.svg" alt="Claw" />
             </div>
             <div class="brand-text">
-              <div class="brand-title">IFLOW</div>
+              <div class="brand-title">CLAW</div>
               <div class="brand-sub">Gateway Dashboard</div>
             </div>
           </div>
@@ -175,7 +175,7 @@ export function renderApp(state: AppViewState) {
           <div class="nav-group__items">
             <a
               class="nav-item nav-item--external"
-              href="https://docs.iflow.ai"
+              href="https://docs.claw.dev"
               target="_blank"
               rel="noreferrer"
               title="Docs (opens in new tab)"
@@ -216,7 +216,7 @@ export function renderApp(state: AppViewState) {
                 onSessionKeyChange: (next) => {
                   state.sessionKey = next;
                   state.chatMessage = "";
-                  (state as unknown as iFlowApp).resetToolStream();
+                  (state as unknown as ClawApp).resetToolStream();
                   state.applySettings({
                     ...state.settings,
                     sessionKey: next,
@@ -828,10 +828,10 @@ export function renderApp(state: AppViewState) {
                   state.chatAttachments = [];
                   state.chatStream = null;
                   state.chatRunId = null;
-                  (state as unknown as iFlowApp).chatStreamStartedAt = null;
+                  (state as unknown as ClawApp).chatStreamStartedAt = null;
                   state.chatQueue = [];
-                  (state as unknown as iFlowApp).resetToolStream();
-                  (state as unknown as iFlowApp).resetChatScroll();
+                  (state as unknown as ClawApp).resetToolStream();
+                  (state as unknown as ClawApp).resetChatScroll();
                   state.applySettings({
                     ...state.settings,
                     sessionKey: next,
@@ -873,28 +873,28 @@ export function renderApp(state: AppViewState) {
                     chatFocusMode: !state.settings.chatFocusMode,
                   });
                 },
-                onChatScroll: (event) => (state as unknown as iFlowApp).handleChatScroll(event),
+                onChatScroll: (event) => (state as unknown as ClawApp).handleChatScroll(event),
                 onDraftChange: (next) => (state.chatMessage = next),
                 attachments: state.chatAttachments,
                 onAttachmentsChange: (next) => (state.chatAttachments = next),
-                onSend: () => (state as unknown as iFlowApp).handleSendChat(),
+                onSend: () => (state as unknown as ClawApp).handleSendChat(),
                 canAbort: Boolean(state.chatRunId),
-                onAbort: () => void (state as unknown as iFlowApp).handleAbortChat(),
-                onQueueRemove: (id) => (state as unknown as iFlowApp).removeQueuedMessage(id),
+                onAbort: () => void (state as unknown as ClawApp).handleAbortChat(),
+                onQueueRemove: (id) => (state as unknown as ClawApp).removeQueuedMessage(id),
                 onNewSession: () =>
-                  (state as unknown as iFlowApp).handleSendChat("/new", { restoreDraft: true }),
+                  (state as unknown as ClawApp).handleSendChat("/new", { restoreDraft: true }),
                 showNewMessages: state.chatNewMessagesBelow,
                 onScrollToBottom: () => state.scrollToBottom(),
                 // Sidebar props for tool output viewing
-                sidebarOpen: (state as unknown as iFlowApp).sidebarOpen,
-                sidebarContent: (state as unknown as iFlowApp).sidebarContent,
-                sidebarError: (state as unknown as iFlowApp).sidebarError,
-                splitRatio: (state as unknown as iFlowApp).splitRatio,
+                sidebarOpen: (state as unknown as ClawApp).sidebarOpen,
+                sidebarContent: (state as unknown as ClawApp).sidebarContent,
+                sidebarError: (state as unknown as ClawApp).sidebarError,
+                splitRatio: (state as unknown as ClawApp).splitRatio,
                 onOpenSidebar: (content: string) =>
-                  (state as unknown as iFlowApp).handleOpenSidebar(content),
-                onCloseSidebar: () => (state as unknown as iFlowApp).handleCloseSidebar(),
+                  (state as unknown as ClawApp).handleOpenSidebar(content),
+                onCloseSidebar: () => (state as unknown as ClawApp).handleCloseSidebar(),
                 onSplitRatioChange: (ratio: number) =>
-                  (state as unknown as iFlowApp).handleSplitRatioChange(ratio),
+                  (state as unknown as ClawApp).handleSplitRatioChange(ratio),
                 assistantName: state.assistantName,
                 assistantAvatar: state.assistantAvatar,
               })
@@ -919,27 +919,27 @@ export function renderApp(state: AppViewState) {
                 formMode: state.configFormMode,
                 formValue: state.configForm,
                 originalValue: state.configFormOriginal,
-                searchQuery: (state as unknown as iFlowApp).configSearchQuery,
-                activeSection: (state as unknown as iFlowApp).configActiveSection,
-                activeSubsection: (state as unknown as iFlowApp).configActiveSubsection,
+                searchQuery: (state as unknown as ClawApp).configSearchQuery,
+                activeSection: (state as unknown as ClawApp).configActiveSection,
+                activeSubsection: (state as unknown as ClawApp).configActiveSubsection,
                 onRawChange: (next) => {
                   state.configRaw = next;
                 },
                 onFormModeChange: (mode) => (state.configFormMode = mode),
                 onFormPatch: (path, value) =>
-                  updateConfigFormValue(state as unknown as iFlowApp, path, value),
+                  updateConfigFormValue(state as unknown as ClawApp, path, value),
                 onSearchChange: (query) =>
-                  ((state as unknown as iFlowApp).configSearchQuery = query),
+                  ((state as unknown as ClawApp).configSearchQuery = query),
                 onSectionChange: (section) => {
-                  (state as unknown as iFlowApp).configActiveSection = section;
-                  (state as unknown as iFlowApp).configActiveSubsection = null;
+                  (state as unknown as ClawApp).configActiveSection = section;
+                  (state as unknown as ClawApp).configActiveSubsection = null;
                 },
                 onSubsectionChange: (section) =>
-                  ((state as unknown as iFlowApp).configActiveSubsection = section),
-                onReload: () => loadConfig(state as unknown as iFlowApp),
-                onSave: () => saveConfig(state as unknown as iFlowApp),
-                onApply: () => applyConfig(state as unknown as iFlowApp),
-                onUpdate: () => runUpdate(state as unknown as iFlowApp),
+                  ((state as unknown as ClawApp).configActiveSubsection = section),
+                onReload: () => loadConfig(state as unknown as ClawApp),
+                onSave: () => saveConfig(state as unknown as ClawApp),
+                onApply: () => applyConfig(state as unknown as ClawApp),
+                onUpdate: () => runUpdate(state as unknown as ClawApp),
               })
             : nothing
         }
@@ -982,8 +982,8 @@ export function renderApp(state: AppViewState) {
                 },
                 onToggleAutoFollow: (next) => (state.logsAutoFollow = next),
                 onRefresh: () => loadLogs(state as unknown as LogsState, { reset: true }),
-                onExport: (lines, label) => (state as unknown as iFlowApp).exportLogs(lines, label),
-                onScroll: (event) => (state as unknown as iFlowApp).handleLogsScroll(event),
+                onExport: (lines, label) => (state as unknown as ClawApp).exportLogs(lines, label),
+                onScroll: (event) => (state as unknown as ClawApp).handleLogsScroll(event),
               })
             : nothing
         }

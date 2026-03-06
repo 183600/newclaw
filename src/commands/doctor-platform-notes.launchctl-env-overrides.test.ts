@@ -25,7 +25,7 @@ describe("noteMacLaunchctlGatewayEnvOverrides", () => {
     expect(title).toBe("Gateway (macOS)");
     expect(message).toContain("launchctl environment overrides detected");
     expect(message).toContain("IFLOW_GATEWAY_TOKEN");
-    expect(message).toContain("launchctl unsetenv IFLOW_GATEWAY_TOKEN");
+    expect(message).toContain("launchctl unsetenv CLAW_GATEWAY_TOKEN");
     expect(message).not.toContain("IFLOW_GATEWAY_PASSWORD");
   });
 

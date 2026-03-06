@@ -12,7 +12,7 @@ import { minimaxUnderstandImage } from "../minimax-vlm.js";
 import { getApiKeyForModel, requireApiKey, resolveEnvApiKey } from "../model-auth.js";
 import { runWithImageModelFallback } from "../model-fallback.js";
 import { resolveConfiguredModelRef } from "../model-selection.js";
-import { ensureiFlowModelsJson } from "../models-config.js";
+import { ensureClawModelsJson } from "../models-config.js";
 import { discoverAuthStorage, discoverModels } from "../pi-model-discovery.js";
 import { assertSandboxPath } from "../sandbox-paths.js";
 import {
@@ -236,7 +236,7 @@ async function runImagePrompt(params: {
       }
     : undefined;
 
-  await ensureiFlowModelsJson(effectiveCfg, params.agentDir);
+  await ensureClawModelsJson(effectiveCfg, params.agentDir);
   const authStorage = discoverAuthStorage(params.agentDir);
   const modelRegistry = discoverModels(authStorage, params.agentDir);
 

@@ -131,14 +131,14 @@ describe("DiscordMessageListener", () => {
 
 describe("discord allowlist helpers", () => {
   it("normalizes slugs", () => {
-    expect(normalizeDiscordSlug("Friends of iFlow")).toBe("friends-of-iflow");
+    expect(normalizeDiscordSlug("Friends of Claw")).toBe("friends-of-claw");
     expect(normalizeDiscordSlug("#General")).toBe("general");
     expect(normalizeDiscordSlug("Dev__Chat")).toBe("dev-chat");
   });
 
   it("matches ids or names", () => {
     const allow = normalizeDiscordAllowList(
-      ["123", "steipete", "Friends of iFlow"],
+      ["123", "steipete", "Friends of Claw"],
       ["discord:", "user:", "guild:", "channel:"],
     );
     expect(allow).not.toBeNull();
@@ -147,7 +147,7 @@ describe("discord allowlist helpers", () => {
     }
     expect(allowListMatches(allow, { id: "123" })).toBe(true);
     expect(allowListMatches(allow, { name: "steipete" })).toBe(true);
-    expect(allowListMatches(allow, { name: "friends-of-iflow" })).toBe(true);
+    expect(allowListMatches(allow, { name: "friends-of-claw" })).toBe(true);
     expect(allowListMatches(allow, { name: "other" })).toBe(false);
   });
 
@@ -165,26 +165,26 @@ describe("discord allowlist helpers", () => {
 describe("discord guild/channel resolution", () => {
   it("resolves guild entry by id", () => {
     const guildEntries = makeEntries({
-      "123": { slug: "friends-of-iflow" },
+      "123": { slug: "friends-of-claw" },
     });
     const resolved = resolveDiscordGuildEntry({
-      guild: fakeGuild("123", "Friends of iFlow"),
+      guild: fakeGuild("123", "Friends of Claw"),
       guildEntries,
     });
     expect(resolved?.id).toBe("123");
-    expect(resolved?.slug).toBe("friends-of-iflow");
+    expect(resolved?.slug).toBe("friends-of-claw");
   });
 
   it("resolves guild entry by slug key", () => {
     const guildEntries = makeEntries({
-      "friends-of-iflow": { slug: "friends-of-iflow" },
+      "friends-of-claw": { slug: "friends-of-claw" },
     });
     const resolved = resolveDiscordGuildEntry({
-      guild: fakeGuild("123", "Friends of iFlow"),
+      guild: fakeGuild("123", "Friends of Claw"),
       guildEntries,
     });
     expect(resolved?.id).toBe("123");
-    expect(resolved?.slug).toBe("friends-of-iflow");
+    expect(resolved?.slug).toBe("friends-of-claw");
   });
 
   it("falls back to wildcard guild entry", () => {
@@ -192,7 +192,7 @@ describe("discord guild/channel resolution", () => {
       "*": { requireMention: false },
     });
     const resolved = resolveDiscordGuildEntry({
-      guild: fakeGuild("123", "Friends of iFlow"),
+      guild: fakeGuild("123", "Friends of Claw"),
       guildEntries,
     });
     expect(resolved?.id).toBe("123");
@@ -558,15 +558,15 @@ describe("discord group DM gating", () => {
   it("matches group DM allowlist", () => {
     expect(
       resolveGroupDmAllow({
-        channels: ["iflow-dm"],
+        channels: ["claw-dm"],
         channelId: "1",
-        channelName: "iFlow DM",
-        channelSlug: "iflow-dm",
+        channelName: "Claw DM",
+        channelSlug: "claw-dm",
       }),
     ).toBe(true);
     expect(
       resolveGroupDmAllow({
-        channels: ["iflow-dm"],
+        channels: ["claw-dm"],
         channelId: "1",
         channelName: "Other",
         channelSlug: "other",

@@ -23,7 +23,7 @@ export type AcpServerOptions = {
 };
 
 export const ACP_AGENT_INFO = {
-  name: "iflow-acp",
-  title: "iFlow ACP Gateway",
+  name: "claw-acp",
+  title: "Claw ACP Gateway",
   version: VERSION,
 };

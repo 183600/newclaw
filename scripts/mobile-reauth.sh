@@ -69,11 +69,11 @@ if claude setup-token; then
     echo ""
     "$SCRIPT_DIR/claude-auth-status.sh" full
 
-    # Restart iflow service if running
-    if systemctl --user is-active iflow >/dev/null 2>&1; then
+    # Restart claw service if running
+    if systemctl --user is-active claw >/dev/null 2>&1; then
         echo ""
-        echo "Restarting iflow service..."
-        systemctl --user restart iflow
+        echo "Restarting claw service..."
+        systemctl --user restart claw
         echo -e "${GREEN}Service restarted.${NC}"
     fi
 else

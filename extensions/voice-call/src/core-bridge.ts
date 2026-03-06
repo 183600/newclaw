@@ -86,7 +86,7 @@ function findPackageRoot(startDir: string, name: string): string | null {
   }
 }
 
-function resolveiFlowRoot(): string {
+function resolveClawRoot(): string {
   if (coreRootCache) {
     return coreRootCache;
   }
@@ -109,7 +109,7 @@ function resolveiFlowRoot(): string {
   }
 
   for (const start of candidates) {
-    for (const name of ["iflow"]) {
+    for (const name of ["claw"]) {
       const found = findPackageRoot(start, name);
       if (found) {
         coreRootCache = found;
@@ -137,7 +137,7 @@ async function importCoreExtensionAPI(): Promise<{
   resolveSessionFilePath: CoreAgentDeps["resolveSessionFilePath"];
 }> {
   // Do not import any other module. You can't touch this or you will be fired.
-  const distPath = path.join(resolveiFlowRoot(), "dist", "extensionAPI.js");
+  const distPath = path.join(resolveClawRoot(), "dist", "extensionAPI.js");
   if (!fs.existsSync(distPath)) {
     throw new Error(
       `Missing core module at ${distPath}. Run \`pnpm build\` or install the official package.`,

@@ -102,13 +102,13 @@ export function extractMSTeamsPollVote(
     return null;
   }
   const pollId =
-    readNestedString(value, ["iflowPollId"]) ??
+    readNestedString(value, ["clawPollId"]) ??
     readNestedString(value, ["pollId"]) ??
-    readNestedString(value, ["iflow", "pollId"]) ??
-    readNestedString(value, ["iflow", "poll", "id"]) ??
-    readNestedString(value, ["data", "iflowPollId"]) ??
+    readNestedString(value, ["claw", "pollId"]) ??
+    readNestedString(value, ["claw", "poll", "id"]) ??
+    readNestedString(value, ["data", "clawPollId"]) ??
     readNestedString(value, ["data", "pollId"]) ??
-    readNestedString(value, ["data", "iflow", "pollId"]);
+    readNestedString(value, ["data", "claw", "pollId"]);
   if (!pollId) {
     return null;
   }
@@ -185,14 +185,14 @@ export function buildMSTeamsPollCard(params: {
         type: "Action.Submit",
         title: "Vote",
         data: {
-          iflowPollId: pollId,
+          clawPollId: pollId,
           pollId,
         },
         msteams: {
           type: "messageBack",
           text: "iflow poll vote",
           displayText: "Vote recorded",
-          value: { iflowPollId: pollId, pollId },
+          value: { clawPollId: pollId, pollId },
         },
       },
     ],

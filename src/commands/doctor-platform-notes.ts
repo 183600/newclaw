@@ -82,7 +82,7 @@ export async function noteMacLaunchctlGatewayEnvOverrides(
     const lines = [
       "- Deprecated launchctl environment variables detected (ignored).",
       ...deprecatedLaunchctlEntries.map(
-        ([key]) => `- \`${key}\` is set; use \`IFLOW_${key.slice(key.indexOf("_") + 1)}\` instead.`,
+        ([key]) => `- \`${key}\` is set; use \`CLAW_${key.slice(key.indexOf("_") + 1)}\` instead.`,
       ),
     ];
     (deps?.noteFn ?? note)(lines.join("\n"), "Gateway (macOS)");
@@ -134,10 +134,10 @@ export function noteDeprecatedLegacyEnvVars(
 
   const lines = [
     "- Deprecated legacy environment variables detected (ignored).",
-    "- Use IFLOW_* equivalents instead:",
+    "- Use CLAW_* equivalents instead:",
     ...entries.map((key) => {
       const suffix = key.slice(key.indexOf("_") + 1);
-      return `  ${key} -> IFLOW_${suffix}`;
+      return `  ${key} -> CLAW_${suffix}`;
     }),
   ];
   (deps?.noteFn ?? note)(lines.join("\n"), "Environment");

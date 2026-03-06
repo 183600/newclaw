@@ -76,7 +76,7 @@ x-i18n:
 
 1. 创建一个专用的 Apple ID（例如：`my-cool-bot@icloud.com`）。
    - Apple 可能需要手机号码进行验证/双重认证。
-2. 创建一个 macOS 用户（例如：`iflowhome`）并登录。
+2. 创建一个 macOS 用户（例如：`clawhome`）并登录。
 3. 在该 macOS 用户中打开"信息"并使用机器人 Apple ID 登录 iMessage。
 4. 启用远程登录（系统设置 → 通用 → 共享 → 远程登录）。
 5. 安装 `imsg`：

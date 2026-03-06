@@ -7,7 +7,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 const tempDirs: string[] = [];
 
 function makeTempDir() {
-  const dir = path.join(os.tmpdir(), `iflow-plugins-${randomUUID()}`);
+  const dir = path.join(os.tmpdir(), `claw-plugins-${randomUUID()}`);
   fs.mkdirSync(dir, { recursive: true });
   tempDirs.push(dir);
   return dir;
@@ -78,7 +78,7 @@ describe("discoveriFlowPlugins", () => {
       path.join(globalExt, "package.json"),
       JSON.stringify({
         name: "pack",
-        iflow: { extensions: ["./src/one.ts", "./src/two.ts"] },
+        claw: { extensions: ["./src/one.ts", "./src/two.ts"] },
       }),
       "utf-8",
     );
@@ -112,7 +112,7 @@ describe("discoveriFlowPlugins", () => {
       path.join(globalExt, "package.json"),
       JSON.stringify({
         name: "@iflow/voice-call",
-        iflow: { extensions: ["./src/index.ts"] },
+        claw: { extensions: ["./src/index.ts"] },
       }),
       "utf-8",
     );
@@ -140,7 +140,7 @@ describe("discoveriFlowPlugins", () => {
       path.join(packDir, "package.json"),
       JSON.stringify({
         name: "@iflow/demo-plugin-dir",
-        iflow: { extensions: ["./index.js"] },
+        claw: { extensions: ["./index.js"] },
       }),
       "utf-8",
     );

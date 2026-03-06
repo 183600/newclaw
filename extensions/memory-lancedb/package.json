@@ -1,7 +1,7 @@
 {
-  "name": "@iflow/memory-lancedb",
+  "name": "@claw/memory-lancedb",
   "version": "2026.2.2",
-  "description": "iFlow LanceDB-backed long-term memory plugin with auto-recall/capture",
+  "description": "Claw LanceDB-backed long-term memory plugin with auto-recall/capture",
   "type": "module",
   "dependencies": {
     "@lancedb/lancedb": "^0.23.0",
@@ -11,7 +11,7 @@
   "devDependencies": {
     "iflow": "workspace:*"
   },
-  "iflow": {
+  "claw": {
     "extensions": [
       "./index.ts"
     ]

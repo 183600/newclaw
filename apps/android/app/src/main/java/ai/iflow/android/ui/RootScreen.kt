@@ -333,7 +333,7 @@ private fun CanvasView(viewModel: MainViewModel, modifier: Modifier = Modifier) 
           disableForceDarkIfSupported(settings)
         }
         if (isDebuggable) {
-          Log.d("iFlowWebView", "userAgent: ${settings.userAgentString}")
+          Log.d("ClawWebView", "userAgent: ${settings.userAgentString}")
         }
         isScrollContainer = true
         overScrollMode = View.OVER_SCROLL_IF_CONTENT_SCROLLS
@@ -348,7 +348,7 @@ private fun CanvasView(viewModel: MainViewModel, modifier: Modifier = Modifier) 
             ) {
               if (!isDebuggable) return
               if (!request.isForMainFrame) return
-              Log.e("iFlowWebView", "onReceivedError: ${error.errorCode} ${error.description} ${request.url}")
+              Log.e("ClawWebView", "onReceivedError: ${error.errorCode} ${error.description} ${request.url}")
             }
 
             override fun onReceivedHttpError(
@@ -359,14 +359,14 @@ private fun CanvasView(viewModel: MainViewModel, modifier: Modifier = Modifier) 
               if (!isDebuggable) return
               if (!request.isForMainFrame) return
               Log.e(
-                "iFlowWebView",
+                "ClawWebView",
                 "onReceivedHttpError: ${errorResponse.statusCode} ${errorResponse.reasonPhrase} ${request.url}",
               )
             }
 
             override fun onPageFinished(view: WebView, url: String?) {
               if (isDebuggable) {
-                Log.d("iFlowWebView", "onPageFinished: $url")
+                Log.d("ClawWebView", "onPageFinished: $url")
               }
               viewModel.canvas.onPageFinished()
             }
@@ -377,7 +377,7 @@ private fun CanvasView(viewModel: MainViewModel, modifier: Modifier = Modifier) 
             ): Boolean {
               if (isDebuggable) {
                 Log.e(
-                  "iFlowWebView",
+                  "ClawWebView",
                   "onRenderProcessGone didCrash=${detail.didCrash()} priorityAtExit=${detail.rendererPriorityAtExit()}",
                 )
               }
@@ -390,7 +390,7 @@ private fun CanvasView(viewModel: MainViewModel, modifier: Modifier = Modifier) 
               if (!isDebuggable) return false
               val msg = consoleMessage ?: return false
               Log.d(
-                "iFlowWebView",
+                "ClawWebView",
                 "console ${msg.messageLevel()} @ ${msg.sourceId()}:${msg.lineNumber()} ${msg.message()}",
               )
               return false
@@ -424,6 +424,6 @@ private class CanvasA2UIActionBridge(private val onMessage: (String) -> Unit) {
   }
 
   companion object {
-    const val interfaceName: String = "iflowCanvasA2UIAction"
+    const val interfaceName: String = "clawCanvasA2UIAction"
   }
 }

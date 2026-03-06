@@ -14,7 +14,7 @@
 <p align="center">
   <a href="https://github.com/iflow/iflow/actions/workflows/ci.yml?branch=main"><img src="https://img.shields.io/github/actions/workflow/status/iflow/iflow/ci.yml?branch=main&style=for-the-badge" alt="CI status"></a>
   <a href="https://github.com/iflow/iflow/releases"><img src="https://img.shields.io/github/v/release/iflow/iflow?include_prereleases&style=for-the-badge" alt="GitHub release"></a>
-  <a href="https://discord.gg/clawd"><img src="https://img.shields.io/discord/1456350064065904867?label=Discord&logo=discord&logoColor=white&color=5865F2&style=for-the-badge" alt="Discord"></a>
+  <a href="https://discord.gg/iflow"><img src="https://img.shields.io/discord/1456350064065904867?label=Discord&logo=discord&logoColor=white&color=5865F2&style=for-the-badge" alt="Discord"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge" alt="MIT License"></a>
 </p>
 
@@ -23,7 +23,7 @@ It answers you on the channels you already use (WhatsApp, Telegram, Slack, Disco
 
 If you want a personal, single-user assistant that feels local, fast, and always-on, this is it.
 
-[Website](https://iflow.ai) · [Docs](https://docs.iflow.ai) · [DeepWiki](https://deepwiki.com/iflow/iflow) · [Getting Started](https://docs.iflow.ai/start/getting-started) · [Updating](https://docs.iflow.ai/install/updating) · [Showcase](https://docs.iflow.ai/start/showcase) · [FAQ](https://docs.iflow.ai/start/faq) · [Wizard](https://docs.iflow.ai/start/wizard) · [Nix](https://github.com/iflow/nix-clawdbot) · [Docker](https://docs.iflow.ai/install/docker) · [Discord](https://discord.gg/clawd)
+[Website](https://iflow.ai) · [Docs](https://docs.iflow.ai) · [Getting Started](https://docs.iflow.ai/start/getting-started) · [Updating](https://docs.iflow.ai/install/updating) · [Showcase](https://docs.iflow.ai/start/showcase) · [FAQ](https://docs.iflow.ai/start/faq) · [Wizard](https://docs.iflow.ai/start/wizard) · [Docker](https://docs.iflow.ai/install/docker) · [Discord](https://discord.gg/iflow)
 
 Preferred setup: run the onboarding wizard (`iflow onboard`). It walks through gateway, workspace, channels, and skills. The CLI wizard is the recommended path and works on **macOS, Linux, and Windows (via WSL2; strongly recommended)**.
 Works with npm, pnpm, or bun.
@@ -473,7 +473,7 @@ Use these when you’re past the onboarding flow and want the deeper reference.
 iFlow was built for **Molty**, a space lobster AI assistant. 🦞
 by Peter Steinberger and the community.
 
-- [iflow.ai](https://iflow.ai)
+- [iflow.dev](https://iflow.dev)
 - [soul.md](https://soul.md)
 - [steipete.me](https://steipete.me)
 - [@iflow](https://x.com/iflow)

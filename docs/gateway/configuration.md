@@ -3231,9 +3231,9 @@ The server:
 
 - serves files under `canvasHost.root`
 - injects a tiny live-reload client into served HTML
-- watches the directory and broadcasts reloads over a WebSocket endpoint at `/__iflow__/ws`
+- watches the directory and broadcasts reloads over a WebSocket endpoint at `/__claw__/ws`
 - auto-creates a starter `index.html` when the directory is empty (so you see something immediately)
-- also serves A2UI at `/__iflow__/a2ui/` and is advertised to nodes as `canvasHostUrl`
+- also serves A2UI at `/__claw__/a2ui/` and is advertised to nodes as `canvasHostUrl`
   (always used by nodes for Canvas/A2UI)
 
 Disable live reload (and file watching) if the directory is large or you hit `EMFILE`:

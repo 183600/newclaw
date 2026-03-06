@@ -68,7 +68,7 @@ export function collectZalouserStatusIssues(
           accountId,
           kind: "auth",
           message: "Not authenticated (no zca session).",
-          fix: "Run: iflow channels login --channel zalouser",
+          fix: "Run: claw channels login --channel zalouser",
         });
       }
       continue;

@@ -21,7 +21,7 @@ describe("buildLineMessageContext", () => {
   };
 
   beforeEach(async () => {
-    tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-line-context-"));
+    tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "claw-line-context-"));
     storePath = path.join(tmpDir, "sessions.json");
     cfg = { session: { store: storePath } };
   });

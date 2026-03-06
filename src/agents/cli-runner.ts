@@ -26,7 +26,7 @@ import {
   resolveSystemPromptUsage,
   writeCliImages,
 } from "./cli-runner/helpers.js";
-import { resolveiFlowDocsPath } from "./docs-path.js";
+import { resolveClawDocsPath } from "./docs-path.js";
 import { FailoverError, resolveFailoverStatus } from "./failover-error.js";
 import { classifyFailoverReason, isFailoverErrorMessage } from "./pi-embedded-helpers.js";
 
@@ -86,7 +86,7 @@ export async function runCliAgent(params: {
     sessionAgentId === defaultAgentId
       ? resolveHeartbeatPrompt(params.config?.agents?.defaults?.heartbeat?.prompt)
       : undefined;
-  const docsPath = await resolveiFlowDocsPath({
+  const docsPath = await resolveClawDocsPath({
     workspaceDir,
     argv1: process.argv[1],
     cwd: process.cwd(),

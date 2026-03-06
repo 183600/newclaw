@@ -15,7 +15,7 @@
     },
     "dbPath": {
       "label": "Database Path",
-      "placeholder": "~/.iflow/memory/lancedb",
+      "placeholder": "~/.claw/memory/lancedb",
       "advanced": true
     },
     "autoCapture": {

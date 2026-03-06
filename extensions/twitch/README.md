@@ -1,17 +1,17 @@
-# @iflow/twitch
+# @claw/twitch
 
-Twitch channel plugin for iFlow.
+Twitch channel plugin for Claw.
 
 ## Install (local checkout)
 
 ```bash
-iflow plugins install ./extensions/twitch
+claw plugins install ./extensions/twitch
 ```
 
 ## Install (npm)
 
 ```bash
-iflow plugins install @iflow/twitch
+claw plugins install @claw/twitch
 ```
 
 Onboarding: select Twitch and confirm the install prompt to fetch the plugin automatically.
@@ -27,7 +27,7 @@ Minimal config (simplified single-account):
   channels: {
     twitch: {
       enabled: true,
-      username: "iflow",
+      username: "claw",
       accessToken: "oauth:abc123...", // OAuth Access Token (add oauth: prefix)
       clientId: "xyz789...", // Client ID from Token Generator
       channel: "vevisk", // Channel to join (required)
@@ -52,13 +52,13 @@ Multi-account config (advanced):
       enabled: true,
       accounts: {
         default: {
-          username: "iflow",
+          username: "claw",
           accessToken: "oauth:abc123...",
           clientId: "xyz789...",
           channel: "vevisk",
         },
         channel2: {
-          username: "iflow",
+          username: "claw",
           accessToken: "oauth:def456...",
           clientId: "uvw012...",
           channel: "secondchannel",
@@ -80,7 +80,7 @@ Multi-account config (advanced):
 
 ## Full documentation
 
-See https://docs.iflow.ai/channels/twitch for:
+See https://docs.claw.ai/channels/twitch for:
 
 - Token refresh setup
 - Access control patterns

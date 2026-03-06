@@ -4,9 +4,9 @@ set -euo pipefail
 # Build the mac app bundle, then create a zip (Sparkle) + styled DMG (humans).
 #
 # Output:
-# - dist/iFlow.app
-# - dist/iFlow-<version>.zip
-# - dist/iFlow-<version>.dmg
+# - dist/Claw.app
+# - dist/Claw-<version>.zip
+# - dist/Claw-<version>.dmg
 
 ROOT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 
@@ -15,16 +15,16 @@ export BUILD_ARCHS="${BUILD_ARCHS:-all}"
 
 "$ROOT_DIR/scripts/package-mac-app.sh"
 
-APP="$ROOT_DIR/dist/iFlow.app"
+APP="$ROOT_DIR/dist/Claw.app"
 if [[ ! -d "$APP" ]]; then
   echo "Error: missing app bundle at $APP" >&2
   exit 1
 fi
 
 VERSION=$(/usr/libexec/PlistBuddy -c "Print CFBundleShortVersionString" "$APP/Contents/Info.plist" 2>/dev/null || echo "0.0.0")
-ZIP="$ROOT_DIR/dist/iFlow-$VERSION.zip"
-DMG="$ROOT_DIR/dist/iFlow-$VERSION.dmg"
-NOTARY_ZIP="$ROOT_DIR/dist/iFlow-$VERSION.notary.zip"
+ZIP="$ROOT_DIR/dist/Claw-$VERSION.zip"
+DMG="$ROOT_DIR/dist/Claw-$VERSION.dmg"
+NOTARY_ZIP="$ROOT_DIR/dist/Claw-$VERSION.notary.zip"
 SKIP_NOTARIZE="${SKIP_NOTARIZE:-0}"
 NOTARIZE=1
 

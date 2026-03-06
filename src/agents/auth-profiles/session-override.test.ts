@@ -22,7 +22,7 @@ async function writeAuthStore(agentDir: string) {
 
 describe("resolveSessionAuthProfileOverride", () => {
   it("keeps user override when provider alias differs", async () => {
-    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-auth-"));
+    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "claw-auth-"));
     const prevStateDir = process.env.IFLOW_STATE_DIR;
     process.env.IFLOW_STATE_DIR = tmpDir;
     try {

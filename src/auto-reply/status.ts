@@ -456,7 +456,7 @@ export function buildStatusMessage(args: StatusArgs): string {
   const authLabel = authLabelValue ? ` · 🔑 ${authLabelValue}` : "";
   const modelLine = `🧠 Model: ${modelLabel}${authLabel}`;
   const commit = resolveCommitHash();
-  const versionLine = `🦞 iFlow ${VERSION}${commit ? ` (${commit})` : ""}`;
+  const versionLine = `🦞 Claw ${VERSION}${commit ? ` (${commit})` : ""}`;
   const usagePair = formatUsagePair(inputTokens, outputTokens);
   const costLine = costLabel ? `💵 Cost: ${costLabel}` : null;
   const usageCostLine =

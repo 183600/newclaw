@@ -45,9 +45,9 @@ Skills 从**三个**位置加载：
 
 插件可以通过在 `iflow.plugin.json` 中列出 `skills` 目录（相对于插件根目录的路径）来附带自己的 Skills。插件 Skills 在插件启用时加载，并参与正常的 Skills 优先级规则。你可以通过插件配置项上的 `metadata.iflow.requires.config` 进行门控。参见[插件](/plugin)了解发现/配置，参见[工具](/tools)了解这些 Skills 教授的工具功能。
 
-## ClawHub（安装 + 同步）
+## iFlowHub（安装 + 同步）
 
-ClawHub 是 iFlow 的公共 Skills 注册中心。浏览地址：[clawhub.com](https://clawhub.com)。使用它来发现、安装、更新和备份 Skills。完整指南：[ClawHub](/tools/clawhub)。
+iFlowHub 是 iFlow 的公共 Skills 注册中心。浏览地址：[iflowhub.com](https://iflowhub.com)。使用它来发现、安装、更新和备份 Skills。完整指南：[iFlowHub](/tools/clawhub)。
 
 常用流程：
 
@@ -279,6 +279,6 @@ iFlow 将一组基线 Skills 作为**内置 Skills**随安装包（npm 包或 iF
 
 ## 想要更多 Skills？
 
-浏览 https://clawhub.com。
+浏览 https://iflowhub.com。
 
 ---

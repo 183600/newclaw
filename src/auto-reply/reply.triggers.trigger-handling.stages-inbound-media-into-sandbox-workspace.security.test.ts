@@ -14,7 +14,7 @@ import { ensureSandboxWorkspaceForSession } from "../agents/sandbox.js";
 import { stageSandboxMedia } from "./reply/stage-sandbox-media.js";
 
 async function withTempHome<T>(fn: (home: string) => Promise<T>): Promise<T> {
-  return withTempHomeBase(async (home) => await fn(home), { prefix: "iflow-triggers-bypass-" });
+  return withTempHomeBase(async (home) => await fn(home), { prefix: "claw-triggers-bypass-" });
 }
 
 afterEach(() => {
@@ -54,7 +54,7 @@ describe("stageSandboxMedia security", () => {
           agents: {
             defaults: {
               model: "anthropic/claude-opus-4-5",
-              workspace: join(home, "iflow"),
+              workspace: join(home, "claw"),
               sandbox: {
                 mode: "non-main",
                 workspaceRoot: join(home, "sandboxes"),
@@ -65,7 +65,7 @@ describe("stageSandboxMedia security", () => {
           session: { store: join(home, "sessions.json") },
         },
         sessionKey: "agent:main:main",
-        workspaceDir: join(home, "iflow"),
+        workspaceDir: join(home, "claw"),
       });
 
       const stagedFullPath = join(sandboxDir, "media", "inbound", basename(sensitiveFile));

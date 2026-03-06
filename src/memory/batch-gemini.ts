@@ -87,7 +87,7 @@ function buildGeminiUploadBody(params: { jsonl: string; displayName: string }): 
   body: Blob;
   contentType: string;
 } {
-  const boundary = `iflow-${hashText(params.displayName)}`;
+  const boundary = `claw-${hashText(params.displayName)}`;
   const jsonPart = JSON.stringify({
     file: {
       displayName: params.displayName,

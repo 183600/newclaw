@@ -94,7 +94,7 @@ vi.mock("../memory/manager.js", () => ({
         files: 2,
         chunks: 3,
         dirty: false,
-        workspaceDir: "/tmp/iflow",
+        workspaceDir: "/tmp/claw",
         dbPath: "/tmp/memory.sqlite",
         provider: "openai",
         model: "text-embedding-3-small",
@@ -210,7 +210,7 @@ vi.mock("../gateway/session-utils.js", () => ({
   listAgentsForGateway: mocks.listAgentsForGateway,
 }));
 vi.mock("../infra/iflow-root.js", () => ({
-  resolveiFlowPackageRoot: vi.fn().mockResolvedValue("/tmp/iflow"),
+  resolveClawPackageRoot: vi.fn().mockResolvedValue("/tmp/claw"),
 }));
 vi.mock("../infra/os-summary.js", () => ({
   resolveOsSummary: () => ({
@@ -222,11 +222,11 @@ vi.mock("../infra/os-summary.js", () => ({
 }));
 vi.mock("../infra/update-check.js", () => ({
   checkUpdateStatus: vi.fn().mockResolvedValue({
-    root: "/tmp/iflow",
+    root: "/tmp/claw",
     installKind: "git",
     packageManager: "pnpm",
     git: {
-      root: "/tmp/iflow",
+      root: "/tmp/claw",
       branch: "main",
       upstream: "origin/main",
       dirty: false,
@@ -237,8 +237,8 @@ vi.mock("../infra/update-check.js", () => ({
     deps: {
       manager: "pnpm",
       status: "ok",
-      lockfilePath: "/tmp/iflow/pnpm-lock.yaml",
-      markerPath: "/tmp/iflow/node_modules/.modules.yaml",
+      lockfilePath: "/tmp/claw/pnpm-lock.yaml",
+      markerPath: "/tmp/claw/node_modules/.modules.yaml",
     },
     registry: { latestVersion: "0.0.0" },
   }),
@@ -315,7 +315,7 @@ describe("statusCommand", () => {
     (runtime.log as vi.Mock).mockClear();
     await statusCommand({}, runtime as never);
     const logs = (runtime.log as vi.Mock).mock.calls.map((c) => String(c[0]));
-    expect(logs.some((l) => l.includes("iFlow status"))).toBe(true);
+    expect(logs.some((l) => l.includes("Claw status"))).toBe(true);
     expect(logs.some((l) => l.includes("Overview"))).toBe(true);
     expect(logs.some((l) => l.includes("Security audit"))).toBe(true);
     expect(logs.some((l) => l.includes("Summary:"))).toBe(true);
@@ -335,10 +335,10 @@ describe("statusCommand", () => {
     expect(
       logs.some(
         (l) =>
-          l.includes("iflow status --all") ||
-          l.includes("iflow --profile isolated status --all") ||
-          l.includes("iflow status --all") ||
-          l.includes("iflow --profile isolated status --all"),
+          l.includes("claw status --all") ||
+          l.includes("claw --profile isolated status --all") ||
+          l.includes("claw status --all") ||
+          l.includes("claw --profile isolated status --all"),
       ),
     ).toBe(true);
   });

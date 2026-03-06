@@ -246,12 +246,12 @@ describe("resolveConfigEnvVars", () => {
       const config = {
         gateway: {
           auth: {
-            token: "${IFLOW_GATEWAY_TOKEN}",
+            token: "${CLAW_GATEWAY_TOKEN}",
           },
         },
       };
       const result = resolveConfigEnvVars(config, {
-        IFLOW_GATEWAY_TOKEN: "secret-token",
+        CLAW_GATEWAY_TOKEN: "secret-token",
       });
       expect(result).toEqual({
         gateway: {

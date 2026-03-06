@@ -7,13 +7,13 @@ import org.junit.Test
 class VoiceWakeCommandExtractorTest {
   @Test
   fun extractsCommandAfterTriggerWord() {
-    val res = VoiceWakeCommandExtractor.extractCommand("Claude take a photo", listOf("iflow", "claude"))
+    val res = VoiceWakeCommandExtractor.extractCommand("Claude take a photo", listOf("claw", "claude"))
     assertEquals("take a photo", res)
   }
 
   @Test
   fun extractsCommandWithPunctuation() {
-    val res = VoiceWakeCommandExtractor.extractCommand("hey iflow, what's the weather?", listOf("iflow"))
+    val res = VoiceWakeCommandExtractor.extractCommand("hey claw, what's the weather?", listOf("claw"))
     assertEquals("what's the weather?", res)
   }
 

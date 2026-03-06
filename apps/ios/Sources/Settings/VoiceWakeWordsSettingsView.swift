@@ -36,7 +36,7 @@ struct VoiceWakeWordsSettingsView: View {
                 Text("Wake Words")
             } footer: {
                 Text(
-                    "iFlow reacts when any trigger appears in a transcription. "
+                    "Claw reacts when any trigger appears in a transcription. "
                         + "Keep them short to avoid false positives.")
             }
         }

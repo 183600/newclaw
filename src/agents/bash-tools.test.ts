@@ -346,15 +346,15 @@ describe("buildDockerExecArgs", () => {
 
     const commandArg = args[args.length - 1];
     expect(args).toContain("IFLOW_PREPEND_PATH=/custom/bin:/usr/local/bin:/usr/bin");
-    expect(commandArg).toContain('export PATH="${IFLOW_PREPEND_PATH}:$PATH"');
+    expect(commandArg).toContain('export PATH="${CLAW_PREPEND_PATH}:$PATH"');
     expect(commandArg).toContain("echo hello");
     expect(commandArg).toBe(
-      'export PATH="${IFLOW_PREPEND_PATH}:$PATH"; unset IFLOW_PREPEND_PATH; echo hello',
+      'export PATH="${CLAW_PREPEND_PATH}:$PATH"; unset CLAW_PREPEND_PATH; echo hello',
     );
   });
 
   it("does not interpolate PATH into the shell command", () => {
-    const injectedPath = "$(touch /tmp/iflow-path-injection)";
+    const injectedPath = "$(touch /tmp/claw-path-injection)";
     const args = buildDockerExecArgs({
       containerName: "test-container",
       command: "echo hello",
@@ -366,7 +366,7 @@ describe("buildDockerExecArgs", () => {
     });
 
     const commandArg = args[args.length - 1];
-    expect(args).toContain(`IFLOW_PREPEND_PATH=${injectedPath}`);
+    expect(args).toContain(`CLAW_PREPEND_PATH=${injectedPath}`);
     expect(commandArg).not.toContain(injectedPath);
     expect(commandArg).toContain("IFLOW_PREPEND_PATH");
   });

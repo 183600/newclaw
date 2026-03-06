@@ -134,13 +134,13 @@ Android 节点的聊天界面使用 Gateway网关的**主会话键**（`main`）
 2. 将节点导航到该地址（局域网）：
 
 ```bash
-iflow nodes invoke --node "<Android Node>" --command canvas.navigate --params '{"url":"http://<gateway-hostname>.local:18793/__iflow__/canvas/"}'
+iflow nodes invoke --node "<Android Node>" --command canvas.navigate --params '{"url":"http://<gateway-hostname>.local:18793/__claw__/canvas/"}'
 ```
 
-Tailnet（可选）：如果两台设备都在 Tailscale 上，使用 MagicDNS 名称或 tailnet IP 替代 `.local`，例如 `http://<gateway-magicdns>:18793/__iflow__/canvas/`。
+Tailnet（可选）：如果两台设备都在 Tailscale 上，使用 MagicDNS 名称或 tailnet IP 替代 `.local`，例如 `http://<gateway-magicdns>:18793/__claw__/canvas/`。
 
 该服务器会向 HTML 注入实时重载客户端，并在文件变更时重新加载。
-A2UI 主机位于 `http://<gateway-host>:18793/__iflow__/a2ui/`。
+A2UI 主机位于 `http://<gateway-host>:18793/__claw__/a2ui/`。
 
 Canvas 命令（仅前台）：
 

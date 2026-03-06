@@ -12,12 +12,12 @@ import {
 describe("legacy-names constants", () => {
   describe("PROJECT_NAME", () => {
     it("exports the correct project name", () => {
-      expect(PROJECT_NAME).toBe("iflow");
+      expect(PROJECT_NAME).toBe("claw");
     });
 
     it("is a const assertion", () => {
       const projectName = PROJECT_NAME;
-      expect(projectName).toBe("iflow");
+      expect(projectName).toBe("claw");
     });
   });
 
@@ -38,7 +38,7 @@ describe("legacy-names constants", () => {
     });
 
     it("exports the correct manifest key", () => {
-      expect(MANIFEST_KEY).toBe("iflow");
+      expect(MANIFEST_KEY).toBe("claw");
     });
   });
 
@@ -65,12 +65,12 @@ describe("legacy-names constants", () => {
 
   describe("MACOS_APP_SOURCES_DIR", () => {
     it("exports the correct macOS app sources directory", () => {
-      expect(MACOS_APP_SOURCES_DIR).toBe("apps/macos/Sources/iFlow");
+      expect(MACOS_APP_SOURCES_DIR).toBe("apps/macos/Sources/Claw");
     });
 
     it("is a const assertion", () => {
       const sourcesDir = MACOS_APP_SOURCES_DIR;
-      expect(sourcesDir).toBe("apps/macos/Sources/iFlow");
+      expect(sourcesDir).toBe("apps/macos/Sources/Claw");
     });
   });
 

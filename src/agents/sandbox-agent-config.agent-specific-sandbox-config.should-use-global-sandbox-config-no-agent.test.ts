@@ -89,7 +89,7 @@ describe("Agent-specific sandbox config", () => {
           list: [
             {
               id: "main",
-              workspace: "~/iflow",
+              workspace: "~/claw",
             },
           ],
         },
@@ -122,7 +122,7 @@ describe("Agent-specific sandbox config", () => {
         list: [
           {
             id: "work",
-            workspace: "~/iflow-work",
+            workspace: "~/claw-work",
             sandbox: {
               mode: "all",
               scope: "agent",
@@ -170,7 +170,7 @@ describe("Agent-specific sandbox config", () => {
         list: [
           {
             id: "work",
-            workspace: "~/iflow-work",
+            workspace: "~/claw-work",
             sandbox: {
               mode: "all",
               scope: "shared",

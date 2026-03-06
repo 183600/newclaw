@@ -38,7 +38,7 @@ describe("gateway e2e", () => {
 
       const { baseUrl: openaiBaseUrl, restore } = installOpenAiResponsesMock();
 
-      const tempHome = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-gw-mock-home-"));
+      const tempHome = await fs.mkdtemp(path.join(os.tmpdir(), "claw-gw-mock-home-"));
       process.env.HOME = tempHome;
       process.env.IFLOW_SKIP_CHANNELS = "1";
       process.env.IFLOW_SKIP_GMAIL_WATCHER = "1";
@@ -49,7 +49,7 @@ describe("gateway e2e", () => {
       const token = `test-${randomUUID()}`;
       process.env.IFLOW_GATEWAY_TOKEN = token;
 
-      const workspaceDir = path.join(tempHome, "iflow");
+      const workspaceDir = path.join(tempHome, "claw");
       await fs.mkdir(workspaceDir, { recursive: true });
 
       const nonceA = randomUUID();
@@ -170,7 +170,7 @@ describe("gateway e2e", () => {
     process.env.IFLOW_SKIP_BROWSER_CONTROL_SERVER = "1";
     delete process.env.IFLOW_GATEWAY_TOKEN;
 
-    const tempHome = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-wizard-home-"));
+    const tempHome = await fs.mkdtemp(path.join(os.tmpdir(), "claw-wizard-home-"));
     process.env.HOME = tempHome;
     delete process.env.IFLOW_STATE_DIR;
     delete process.env.IFLOW_CONFIG_PATH;

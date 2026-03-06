@@ -1,7 +1,7 @@
 {
-  "name": "@iflow/tlon",
+  "name": "@claw/tlon",
   "version": "2026.2.2",
-  "description": "iFlow Tlon/Urbit channel plugin",
+  "description": "Claw Tlon/Urbit channel plugin",
   "type": "module",
   "dependencies": {
     "@urbit/aura": "^3.0.0",
@@ -10,7 +10,7 @@
   "devDependencies": {
     "iflow": "workspace:*"
   },
-  "iflow": {
+  "claw": {
     "extensions": [
       "./index.ts"
     ],
@@ -25,7 +25,7 @@
       "quickstartAllowFrom": true
     },
     "install": {
-      "npmSpec": "@iflow/tlon",
+      "npmSpec": "@claw/tlon",
       "localPath": "extensions/tlon",
       "defaultChoice": "npm"
     }

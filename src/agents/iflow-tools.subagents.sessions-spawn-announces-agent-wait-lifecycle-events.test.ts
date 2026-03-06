@@ -23,10 +23,10 @@ vi.mock("../config/config.js", async (importOriginal) => {
 
 import "./test-helpers/fast-core-tools.js";
 import { sleep } from "../utils.js";
-import { createiFlowTools } from "./iflow-tools.js";
+import { createClawTools } from "./iflow-tools.js";
 import { resetSubagentRegistryForTests } from "./subagent-registry.js";
 
-describe("iflow-tools: subagents", () => {
+describe("claw-tools: subagents", () => {
   beforeEach(() => {
     configOverride = {
       session: {
@@ -90,7 +90,7 @@ describe("iflow-tools: subagents", () => {
       return {};
     });
 
-    const tool = createiFlowTools({
+    const tool = createClawTools({
       agentSessionKey: "discord:group:req",
       agentChannel: "discord",
     }).find((candidate) => candidate.name === "sessions_spawn");

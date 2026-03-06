@@ -161,7 +161,7 @@ describe("Session Store Cache", () => {
     expect(loaded2["session:1"].displayName).toBe("Updated Session 1");
   });
 
-  it("should respect IFLOW_SESSION_CACHE_TTL_MS=0 to disable cache", async () => {
+  it("should respect CLAW_SESSION_CACHE_TTL_MS=0 to disable cache", async () => {
     process.env.IFLOW_SESSION_CACHE_TTL_MS = "0";
     clearSessionStoreCacheForTest();
 

@@ -87,7 +87,7 @@ describe("applyExtraParamsToAgent", () => {
     expect(calls).toHaveLength(1);
     expect(calls[0]?.headers).toEqual({
       "HTTP-Referer": "https://iflow.ai",
-      "X-Title": "iFlow",
+      "X-Title": "Claw",
       "X-Custom": "1",
     });
   });

@@ -328,9 +328,9 @@ describe("provider usage loading", () => {
       },
       {
         env: {
-          IFLOW_STATE_DIR: (home) => path.join(home, ".iflow"),
+          CLAW_STATE_DIR: (home) => path.join(home, ".iflow"),
         },
-        prefix: "iflow-provider-usage-",
+        prefix: "claw-provider-usage-",
       },
     );
   });

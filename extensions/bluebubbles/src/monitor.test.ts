@@ -223,7 +223,7 @@ function createMockRuntime(): PluginRuntime {
     },
     state: {
       resolveStateDir: vi.fn(
-        () => "/tmp/iflow",
+        () => "/tmp/claw",
       ) as unknown as PluginRuntime["state"]["resolveStateDir"],
     },
   };

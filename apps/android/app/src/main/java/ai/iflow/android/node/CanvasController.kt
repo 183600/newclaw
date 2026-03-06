@@ -84,12 +84,12 @@ class CanvasController {
     withWebViewOnMain { wv ->
       if (currentUrl == null) {
         if (BuildConfig.DEBUG) {
-          Log.d("iFlowCanvas", "load scaffold: $scaffoldAssetUrl")
+          Log.d("ClawCanvas", "load scaffold: $scaffoldAssetUrl")
         }
         wv.loadUrl(scaffoldAssetUrl)
       } else {
         if (BuildConfig.DEBUG) {
-          Log.d("iFlowCanvas", "load url: $currentUrl")
+          Log.d("ClawCanvas", "load url: $currentUrl")
         }
         wv.loadUrl(currentUrl)
       }
@@ -106,7 +106,7 @@ class CanvasController {
       val js = """
         (() => {
           try {
-            const api = globalThis.__iflow;
+            const api = globalThis.__claw;
             if (!api) return;
             if (typeof api.setDebugStatusEnabled === 'function') {
               api.setDebugStatusEnabled(${if (enabled) "true" else "false"});

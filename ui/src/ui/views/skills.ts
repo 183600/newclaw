@@ -10,10 +10,10 @@ type SkillGroup = {
 };
 
 const SKILL_SOURCE_GROUPS: Array<{ id: string; label: string; sources: string[] }> = [
-  { id: "workspace", label: "Workspace Skills", sources: ["iflow-workspace"] },
-  { id: "built-in", label: "Built-in Skills", sources: ["iflow-bundled"] },
-  { id: "installed", label: "Installed Skills", sources: ["iflow-managed"] },
-  { id: "extra", label: "Extra Skills", sources: ["iflow-extra"] },
+  { id: "workspace", label: "Workspace Skills", sources: ["claw-workspace"] },
+  { id: "built-in", label: "Built-in Skills", sources: ["claw-bundled"] },
+  { id: "installed", label: "Installed Skills", sources: ["claw-managed"] },
+  { id: "extra", label: "Extra Skills", sources: ["claw-extra"] },
 ];
 
 function groupSkills(skills: SkillStatusEntry[]): SkillGroup[] {

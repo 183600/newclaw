@@ -17,7 +17,7 @@ describe("channel plugin catalog", () => {
   });
 
   it("includes external catalog entries", () => {
-    const dir = fs.mkdtempSync(path.join(os.tmpdir(), "iflow-catalog-"));
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), "claw-catalog-"));
     const catalogPath = path.join(dir, "catalog.json");
     fs.writeFileSync(
       catalogPath,
@@ -25,7 +25,7 @@ describe("channel plugin catalog", () => {
         entries: [
           {
             name: "@iflow/demo-channel",
-            iflow: {
+            claw: {
               channel: {
                 id: "demo-channel",
                 label: "Demo Channel",

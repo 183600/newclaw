@@ -72,7 +72,7 @@ describe("subtitleForTab", () => {
 
   it("returns descriptive subtitles", () => {
     expect(subtitleForTab("chat")).toContain("chat session");
-    expect(subtitleForTab("config")).toContain("iflow.json");
+    expect(subtitleForTab("config")).toContain("claw.json");
   });
 });
 
@@ -94,7 +94,7 @@ describe("normalizeBasePath", () => {
   });
 
   it("handles nested paths", () => {
-    expect(normalizeBasePath("/apps/iflow")).toBe("/apps/iflow");
+    expect(normalizeBasePath("/apps/claw")).toBe("/apps/claw");
   });
 });
 
@@ -121,7 +121,7 @@ describe("pathForTab", () => {
 
   it("prepends base path", () => {
     expect(pathForTab("chat", "/ui")).toBe("/ui/chat");
-    expect(pathForTab("sessions", "/apps/iflow")).toBe("/apps/iflow/sessions");
+    expect(pathForTab("sessions", "/apps/claw")).toBe("/apps/claw/sessions");
   });
 });
 
@@ -138,7 +138,7 @@ describe("tabFromPath", () => {
 
   it("handles base paths", () => {
     expect(tabFromPath("/ui/chat", "/ui")).toBe("chat");
-    expect(tabFromPath("/apps/iflow/sessions", "/apps/iflow")).toBe("sessions");
+    expect(tabFromPath("/apps/claw/sessions", "/apps/claw")).toBe("sessions");
   });
 
   it("returns null for unknown path", () => {
@@ -163,7 +163,7 @@ describe("inferBasePathFromPathname", () => {
 
   it("infers base path from nested paths", () => {
     expect(inferBasePathFromPathname("/ui/chat")).toBe("/ui");
-    expect(inferBasePathFromPathname("/apps/iflow/sessions")).toBe("/apps/iflow");
+    expect(inferBasePathFromPathname("/apps/claw/sessions")).toBe("/apps/claw");
   });
 
   it("handles index.html suffix", () => {

@@ -29,7 +29,7 @@ vi.mock("../../auto-reply/reply/reply-dispatcher.js", () => ({
 const { processDiscordMessage } = await import("./message-handler.process.js");
 
 async function createBaseContext(overrides: Record<string, unknown> = {}) {
-  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-discord-"));
+  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "claw-discord-"));
   const storePath = path.join(dir, "sessions.json");
   return {
     cfg: { messages: { ackReaction: "👀" }, session: { store: storePath } },

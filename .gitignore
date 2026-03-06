@@ -34,6 +34,7 @@ apps/ios/.swiftpm/
 vendor/
 apps/ios/Clawdbot.xcodeproj/
 apps/ios/Clawdbot.xcodeproj/**
+.claw/
 apps/macos/.build/**
 **/*.bun-build
 apps/ios/*.xcfilelist

@@ -66,7 +66,7 @@ export type iFlowConfig = {
   };
   browser?: BrowserConfig;
   ui?: {
-    /** Accent color for iFlow UI chrome (hex). */
+    /** Accent color for Claw UI chrome (hex). */
     seamColor?: string;
     assistant?: {
       /** Assistant display name for UI surfaces. */

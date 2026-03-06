@@ -26,7 +26,7 @@ beforeEach(() => {
 
   readConfigFileSnapshot.mockReset();
   writeConfigFile.mockReset().mockResolvedValue(undefined);
-  resolveiFlowPackageRoot.mockReset().mockResolvedValue(null);
+  resolveClawPackageRoot.mockReset().mockResolvedValue(null);
   runGatewayUpdate.mockReset().mockResolvedValue({
     status: "skipped",
     mode: "unknown",
@@ -78,7 +78,7 @@ beforeEach(() => {
   originalStateDir = process.env.IFLOW_STATE_DIR;
   originalUpdateInProgress = process.env.IFLOW_UPDATE_IN_PROGRESS;
   process.env.IFLOW_UPDATE_IN_PROGRESS = "1";
-  tempStateDir = fs.mkdtempSync(path.join(os.tmpdir(), "iflow-doctor-state-"));
+  tempStateDir = fs.mkdtempSync(path.join(os.tmpdir(), "claw-doctor-state-"));
   process.env.IFLOW_STATE_DIR = tempStateDir;
   fs.mkdirSync(path.join(tempStateDir, "agents", "main", "sessions"), {
     recursive: true,
@@ -109,7 +109,7 @@ const confirm = vi.fn().mockResolvedValue(true);
 const select = vi.fn().mockResolvedValue("node");
 const note = vi.fn();
 const writeConfigFile = vi.fn().mockResolvedValue(undefined);
-const resolveiFlowPackageRoot = vi.fn().mockResolvedValue(null);
+const resolveClawPackageRoot = vi.fn().mockResolvedValue(null);
 const runGatewayUpdate = vi.fn().mockResolvedValue({
   status: "skipped",
   mode: "unknown",
@@ -216,7 +216,7 @@ vi.mock("../process/exec.js", () => ({
 }));
 
 vi.mock("../infra/iflow-root.js", () => ({
-  resolveiFlowPackageRoot,
+  resolveClawPackageRoot,
 }));
 
 vi.mock("../infra/update-runner.js", () => ({
@@ -344,7 +344,7 @@ describe("doctor command", () => {
           list: [
             {
               id: "work",
-              workspace: "~/iflow-work",
+              workspace: "~/claw-work",
               sandbox: {
                 mode: "all",
                 scope: "shared",
@@ -393,7 +393,7 @@ describe("doctor command", () => {
       parsed: {},
       valid: true,
       config: {
-        agents: { defaults: { workspace: "/Users/steipete/iflow" } },
+        agents: { defaults: { workspace: "/Users/steipete/claw" } },
       },
       issues: [],
       legacyIssues: [],
@@ -402,10 +402,10 @@ describe("doctor command", () => {
     note.mockClear();
     const homedirSpy = vi.spyOn(os, "homedir").mockReturnValue("/Users/steipete");
     const realExists = fs.existsSync;
-    const legacyPath = path.join("/Users/steipete", "iflow");
+    const legacyPath = path.join("/Users/steipete", "claw");
     const legacyAgentsPath = path.join(legacyPath, "AGENTS.md");
     const existsSpy = vi.spyOn(fs, "existsSync").mockImplementation((value) => {
-      if (value === "/Users/steipete/iflow" || value === legacyPath || value === legacyAgentsPath) {
+      if (value === "/Users/steipete/claw" || value === legacyPath || value === legacyAgentsPath) {
         return true;
       }
       return realExists(value as never);

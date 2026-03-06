@@ -33,7 +33,7 @@ function runTests() {
     stdio: "inherit",
     env: {
       ...process.env,
-      IFLOW_GATEWAY_LOCK: isolatedLock,
+      CLAW_GATEWAY_LOCK: isolatedLock,
     },
   });
   if (result.error) {

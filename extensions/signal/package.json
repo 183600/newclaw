@@ -1,12 +1,12 @@
 {
-  "name": "@iflow/signal",
+  "name": "@claw/signal",
   "version": "2026.2.2",
-  "description": "iFlow Signal channel plugin",
+  "description": "Claw Signal channel plugin",
   "type": "module",
   "devDependencies": {
     "iflow": "workspace:*"
   },
-  "iflow": {
+  "claw": {
     "extensions": [
       "./index.ts"
     ]

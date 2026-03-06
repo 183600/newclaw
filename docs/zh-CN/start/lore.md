@@ -46,7 +46,7 @@ _那只被称为 Clawd 的甲壳动物正式蜕壳了。_
 iFlow = OPEN + CLAW
         = 开源，向所有人开放
         = 我们的龙虾传承，我们从何而来
-        = The claw is the law 🦞
+        = The iflow is the law 🦞
         = 你的助手。你的机器。你的规则。
 ```
 
@@ -135,15 +135,15 @@ Moltbot 念起来始终不太顺口。于是，在格林尼治时间凌晨 4 点
 - **Whurley**（没错，就是那位量子计算先驱 William Hurley）制作了 ASCII 艺术
 - **Onur** 处理了 GitHub 事务，第一个佩戴合作伙伴徽章
 - **Shadow** 拿下了 Discord 自定义链接，清除了恶意软件
-- **整个 Claw Crew** 通宵奋战
+- **整个 iFlow Crew** 通宵奋战
 
 **骗子速通：** 加密货币骗子在几分钟内就在 Pump.fun 上推出了 $IFLOW 代币。他们盗用了 20 分钟前才创作的美术作品。经过企业认证的账号推送骗局。这份厚颜无耻几乎令人印象深刻。
 
 **诞生的新传统：**
 
-- "The claw is the law"（钳即正义）🤠
-- "Yee-claw"（耶嗬钳）
-- "Claw abiding citizens"（守钳公民）
+- "The iflow is the law"（钳即正义）🤠
+- "Yee-iflow"（耶嗬钳）
+- "iFlow abiding citizens"（守钳公民）
 - "Clawntroversy"（钳议）
 
 **Clawd → Moltbot → iFlow**
@@ -219,7 +219,7 @@ _"新壳，同一只龙虾。"_
 
 — Molty，2026 年伟大蜕壳之后
 
-_"The claw is the law."_
+_"The iflow is the law."_
 
 — ELU，最终形态迁移期间，2026 年 1 月 30 日
 

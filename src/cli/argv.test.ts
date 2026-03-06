@@ -14,117 +14,113 @@ import {
 
 describe("argv helpers", () => {
   it("detects help/version flags", () => {
-    expect(hasHelpOrVersion(["node", "iflow", "--help"])).toBe(true);
-    expect(hasHelpOrVersion(["node", "iflow", "-V"])).toBe(true);
-    expect(hasHelpOrVersion(["node", "iflow", "status"])).toBe(false);
+    expect(hasHelpOrVersion(["node", "claw", "--help"])).toBe(true);
+    expect(hasHelpOrVersion(["node", "claw", "-V"])).toBe(true);
+    expect(hasHelpOrVersion(["node", "claw", "status"])).toBe(false);
   });
 
   it("extracts command path ignoring flags and terminator", () => {
-    expect(getCommandPath(["node", "iflow", "status", "--json"], 2)).toEqual(["status"]);
-    expect(getCommandPath(["node", "iflow", "agents", "list"], 2)).toEqual(["agents", "list"]);
-    expect(getCommandPath(["node", "iflow", "status", "--", "ignored"], 2)).toEqual(["status"]);
+    expect(getCommandPath(["node", "claw", "status", "--json"], 2)).toEqual(["status"]);
+    expect(getCommandPath(["node", "claw", "agents", "list"], 2)).toEqual(["agents", "list"]);
+    expect(getCommandPath(["node", "claw", "status", "--", "ignored"], 2)).toEqual(["status"]);
   });
 
   it("returns primary command", () => {
-    expect(getPrimaryCommand(["node", "iflow", "agents", "list"])).toBe("agents");
-    expect(getPrimaryCommand(["node", "iflow"])).toBeNull();
+    expect(getPrimaryCommand(["node", "claw", "agents", "list"])).toBe("agents");
+    expect(getPrimaryCommand(["node", "claw"])).toBeNull();
   });
 
   it("parses boolean flags and ignores terminator", () => {
-    expect(hasFlag(["node", "iflow", "status", "--json"], "--json")).toBe(true);
-    expect(hasFlag(["node", "iflow", "--", "--json"], "--json")).toBe(false);
+    expect(hasFlag(["node", "claw", "status", "--json"], "--json")).toBe(true);
+    expect(hasFlag(["node", "claw", "--", "--json"], "--json")).toBe(false);
   });
 
   it("extracts flag values with equals and missing values", () => {
-    expect(getFlagValue(["node", "iflow", "status", "--timeout", "5000"], "--timeout")).toBe(
-      "5000",
-    );
-    expect(getFlagValue(["node", "iflow", "status", "--timeout=2500"], "--timeout")).toBe("2500");
-    expect(getFlagValue(["node", "iflow", "status", "--timeout"], "--timeout")).toBeNull();
-    expect(getFlagValue(["node", "iflow", "status", "--timeout", "--json"], "--timeout")).toBe(
-      null,
-    );
-    expect(getFlagValue(["node", "iflow", "--", "--timeout=99"], "--timeout")).toBeUndefined();
+    expect(getFlagValue(["node", "claw", "status", "--timeout", "5000"], "--timeout")).toBe("5000");
+    expect(getFlagValue(["node", "claw", "status", "--timeout=2500"], "--timeout")).toBe("2500");
+    expect(getFlagValue(["node", "claw", "status", "--timeout"], "--timeout")).toBeNull();
+    expect(getFlagValue(["node", "claw", "status", "--timeout", "--json"], "--timeout")).toBe(null);
+    expect(getFlagValue(["node", "claw", "--", "--timeout=99"], "--timeout")).toBeUndefined();
   });
 
   it("parses verbose flags", () => {
-    expect(getVerboseFlag(["node", "iflow", "status", "--verbose"])).toBe(true);
-    expect(getVerboseFlag(["node", "iflow", "status", "--debug"])).toBe(false);
-    expect(getVerboseFlag(["node", "iflow", "status", "--debug"], { includeDebug: true })).toBe(
+    expect(getVerboseFlag(["node", "claw", "status", "--verbose"])).toBe(true);
+    expect(getVerboseFlag(["node", "claw", "status", "--debug"])).toBe(false);
+    expect(getVerboseFlag(["node", "claw", "status", "--debug"], { includeDebug: true })).toBe(
       true,
     );
   });
 
   it("parses positive integer flag values", () => {
-    expect(getPositiveIntFlagValue(["node", "iflow", "status"], "--timeout")).toBeUndefined();
+    expect(getPositiveIntFlagValue(["node", "claw", "status"], "--timeout")).toBeUndefined();
     expect(
-      getPositiveIntFlagValue(["node", "iflow", "status", "--timeout"], "--timeout"),
+      getPositiveIntFlagValue(["node", "claw", "status", "--timeout"], "--timeout"),
     ).toBeNull();
     expect(
-      getPositiveIntFlagValue(["node", "iflow", "status", "--timeout", "5000"], "--timeout"),
+      getPositiveIntFlagValue(["node", "claw", "status", "--timeout", "5000"], "--timeout"),
     ).toBe(5000);
     expect(
-      getPositiveIntFlagValue(["node", "iflow", "status", "--timeout", "nope"], "--timeout"),
+      getPositiveIntFlagValue(["node", "claw", "status", "--timeout", "nope"], "--timeout"),
     ).toBeUndefined();
   });
 
   it("builds parse argv from raw args", () => {
     const nodeArgv = buildParseArgv({
-      programName: "iflow",
-      rawArgs: ["node", "iflow", "status"],
+      programName: "claw",
+      rawArgs: ["node", "claw", "status"],
     });
-    expect(nodeArgv).toEqual(["node", "iflow", "status"]);
+    expect(nodeArgv).toEqual(["node", "claw", "status"]);
 
     const versionedNodeArgv = buildParseArgv({
-      programName: "iflow",
-      rawArgs: ["node-22", "iflow", "status"],
+      programName: "claw",
+      rawArgs: ["node-22", "claw", "status"],
     });
-    expect(versionedNodeArgv).toEqual(["node-22", "iflow", "status"]);
+    expect(versionedNodeArgv).toEqual(["node-22", "claw", "status"]);
 
     const versionedNodeWindowsArgv = buildParseArgv({
-      programName: "iflow",
-      rawArgs: ["node-22.2.0.exe", "iflow", "status"],
+      programName: "claw",
+      rawArgs: ["node-22.2.0.exe", "claw", "status"],
     });
-    expect(versionedNodeWindowsArgv).toEqual(["node-22.2.0.exe", "iflow", "status"]);
+    expect(versionedNodeWindowsArgv).toEqual(["node-22.2.0.exe", "claw", "status"]);
 
     const versionedNodePatchlessArgv = buildParseArgv({
-      programName: "iflow",
-      rawArgs: ["node-22.2", "iflow", "status"],
+      programName: "claw",
+      rawArgs: ["node-22.2", "claw", "status"],
     });
-    expect(versionedNodePatchlessArgv).toEqual(["node-22.2", "iflow", "status"]);
+    expect(versionedNodePatchlessArgv).toEqual(["node-22.2", "claw", "status"]);
 
     const versionedNodeWindowsPatchlessArgv = buildParseArgv({
-      programName: "iflow",
-      rawArgs: ["node-22.2.exe", "iflow", "status"],
+      programName: "claw",
+      rawArgs: ["node-22.2.exe", "claw", "status"],
     });
-    expect(versionedNodeWindowsPatchlessArgv).toEqual(["node-22.2.exe", "iflow", "status"]);
+    expect(versionedNodeWindowsPatchlessArgv).toEqual(["node-22.2.exe", "claw", "status"]);
 
     const versionedNodeWithPathArgv = buildParseArgv({
-      programName: "iflow",
-      rawArgs: ["/usr/bin/node-22.2.0", "iflow", "status"],
+      programName: "claw",
+      rawArgs: ["/usr/bin/node-22.2.0", "claw", "status"],
     });
-    expect(versionedNodeWithPathArgv).toEqual(["/usr/bin/node-22.2.0", "iflow", "status"]);
+    expect(versionedNodeWithPathArgv).toEqual(["/usr/bin/node-22.2.0", "claw", "status"]);
 
     const nodejsArgv = buildParseArgv({
-      programName: "iflow",
-      rawArgs: ["nodejs", "iflow", "status"],
+      programName: "claw",
+      rawArgs: ["nodejs", "claw", "status"],
     });
-    expect(nodejsArgv).toEqual(["nodejs", "iflow", "status"]);
+    expect(nodejsArgv).toEqual(["nodejs", "claw", "status"]);
 
     const nonVersionedNodeArgv = buildParseArgv({
-      programName: "iflow",
-      rawArgs: ["node-dev", "iflow", "status"],
+      programName: "claw",
+      rawArgs: ["node-dev", "claw", "status"],
     });
-    expect(nonVersionedNodeArgv).toEqual(["node", "iflow", "node-dev", "iflow", "status"]);
+    expect(nonVersionedNodeArgv).toEqual(["node", "claw", "node-dev", "claw", "status"]);
 
     const directArgv = buildParseArgv({
-      programName: "iflow",
-      rawArgs: ["iflow", "status"],
+      programName: "claw",
+      rawArgs: ["claw", "status"],
     });
-    expect(directArgv).toEqual(["node", "iflow", "status"]);
+    expect(directArgv).toEqual(["node", "claw", "status"]);
 
     const bunArgv = buildParseArgv({
-      programName: "iflow",
+      programName: "claw",
       rawArgs: ["bun", "src/entry.ts", "status"],
     });
     expect(bunArgv).toEqual(["bun", "src/entry.ts", "status"]);
@@ -132,20 +128,20 @@ describe("argv helpers", () => {
 
   it("builds parse argv from fallback args", () => {
     const fallbackArgv = buildParseArgv({
-      programName: "iflow",
+      programName: "claw",
       fallbackArgv: ["status"],
     });
-    expect(fallbackArgv).toEqual(["node", "iflow", "status"]);
+    expect(fallbackArgv).toEqual(["node", "claw", "status"]);
   });
 
   it("decides when to migrate state", () => {
-    expect(shouldMigrateState(["node", "iflow", "status"])).toBe(false);
-    expect(shouldMigrateState(["node", "iflow", "health"])).toBe(false);
-    expect(shouldMigrateState(["node", "iflow", "sessions"])).toBe(false);
-    expect(shouldMigrateState(["node", "iflow", "memory", "status"])).toBe(false);
-    expect(shouldMigrateState(["node", "iflow", "agent", "--message", "hi"])).toBe(false);
-    expect(shouldMigrateState(["node", "iflow", "agents", "list"])).toBe(true);
-    expect(shouldMigrateState(["node", "iflow", "message", "send"])).toBe(true);
+    expect(shouldMigrateState(["node", "claw", "status"])).toBe(false);
+    expect(shouldMigrateState(["node", "claw", "health"])).toBe(false);
+    expect(shouldMigrateState(["node", "claw", "sessions"])).toBe(false);
+    expect(shouldMigrateState(["node", "claw", "memory", "status"])).toBe(false);
+    expect(shouldMigrateState(["node", "claw", "agent", "--message", "hi"])).toBe(false);
+    expect(shouldMigrateState(["node", "claw", "agents", "list"])).toBe(true);
+    expect(shouldMigrateState(["node", "claw", "message", "send"])).toBe(true);
   });
 
   it("reuses command path for migrate state decisions", () => {

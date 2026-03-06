@@ -226,7 +226,7 @@ export const nostrPlugin: ChannelPlugin<ResolvedNostrAccount> = {
         onMessage: async (senderPubkey, text, reply) => {
           ctx.log?.debug(`[${account.accountId}] DM from ${senderPubkey}: ${text.slice(0, 50)}...`);
 
-          // Forward to iFlow's message pipeline
+          // Forward to Claw's message pipeline
           await runtime.channel.reply.handleInboundMessage({
             channel: "nostr",
             accountId: account.accountId,

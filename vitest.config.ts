@@ -28,7 +28,7 @@ export default defineConfig({
       "apps/macos/.build/**",
       "**/node_modules/**",
       "**/vendor/**",
-      "dist/iFlow.app/**",
+      "dist/Claw.app/**",
       "**/*.live.test.ts",
       "**/*.e2e.test.ts",
     ],

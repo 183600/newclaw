@@ -34,7 +34,7 @@ function restoreEnv(snapshot: EnvSnapshot) {
   restoreKey("USERPROFILE", snapshot.userProfile);
   restoreKey("HOMEDRIVE", snapshot.homeDrive);
   restoreKey("HOMEPATH", snapshot.homePath);
-  restoreKey("IFLOW_STATE_DIR", snapshot.stateDir);
+  restoreKey("CLAW_STATE_DIR", snapshot.stateDir);
 }
 
 function snapshotExtraEnv(keys: string[]): Record<string, string | undefined> {
@@ -75,7 +75,7 @@ export async function withTempHome<T>(
   fn: (home: string) => Promise<T>,
   opts: { env?: Record<string, EnvValue>; prefix?: string } = {},
 ): Promise<T> {
-  const base = await fs.mkdtemp(path.join(os.tmpdir(), opts.prefix ?? "iflow-test-home-"));
+  const base = await fs.mkdtemp(path.join(os.tmpdir(), opts.prefix ?? "claw-test-home-"));
   const snapshot = snapshotEnv();
   const envKeys = Object.keys(opts.env ?? {});
   for (const key of envKeys) {

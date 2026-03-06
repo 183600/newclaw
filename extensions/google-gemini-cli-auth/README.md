@@ -1,4 +1,4 @@
-# Google Gemini CLI Auth (iFlow plugin)
+# Google Gemini CLI Auth (Claw plugin)
 
 OAuth provider plugin for **Gemini CLI** (Google Code Assist).
 
@@ -7,7 +7,7 @@ OAuth provider plugin for **Gemini CLI** (Google Code Assist).
 Bundled plugins are disabled by default. Enable this one:
 
 ```bash
-iflow plugins enable google-gemini-cli-auth
+claw plugins enable google-gemini-cli-auth
 ```
 
 Restart the Gateway after enabling.
@@ -15,7 +15,7 @@ Restart the Gateway after enabling.
 ## Authenticate
 
 ```bash
-iflow models auth login --provider google-gemini-cli --set-default
+claw models auth login --provider google-gemini-cli --set-default
 ```
 
 ## Requirements

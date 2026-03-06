@@ -1,12 +1,12 @@
 {
-  "name": "@iflow/google-antigravity-auth",
+  "name": "@claw/google-antigravity-auth",
   "version": "2026.2.2",
-  "description": "iFlow Google Antigravity OAuth provider plugin",
+  "description": "Claw Google Antigravity OAuth provider plugin",
   "type": "module",
   "devDependencies": {
     "iflow": "workspace:*"
   },
-  "iflow": {
+  "claw": {
     "extensions": [
       "./index.ts"
     ]

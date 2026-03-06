@@ -7,7 +7,7 @@ import type { GetReplyOptions, ReplyPayload } from "../types.js";
 import type { InlineDirectives } from "./directive-handling.js";
 import type { createModelSelectionState } from "./model-selection.js";
 import type { TypingController } from "./typing.js";
-import { createiFlowTools } from "../../agents/iflow-tools.js";
+import { createClawTools } from "../../agents/iflow-tools.js";
 import { getChannelDock } from "../../channels/dock.js";
 import { logVerbose } from "../../globals.js";
 import { resolveGatewayMessageChannel } from "../../utils/message-channel.js";
@@ -171,7 +171,7 @@ export async function handleInlineActions(params: {
         resolveGatewayMessageChannel(ctx.Provider) ??
         undefined;
 
-      const tools = createiFlowTools({
+      const tools = createClawTools({
         agentSessionKey: sessionKey,
         agentChannel: channel,
         agentAccountId: (ctx as { AccountId?: string }).AccountId,

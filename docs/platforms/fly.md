@@ -32,7 +32,7 @@ cd iflow
 fly apps create my-iflow
 
 # Create a persistent volume (1GB is usually enough)
-fly volumes create iflow_data --size 1 --region iad
+fly volumes create claw_data --size 1 --region iad
 ```
 
 **Tip:** Choose a region close to you. Common options: `lhr` (London), `iad` (Virginia), `sjc` (San Jose).
@@ -72,7 +72,7 @@ primary_region = "iad"
   memory = "2048mb"
 
 [mounts]
-  source = "iflow_data"
+  source = "claw_data"
   destination = "/data"
 ```
 

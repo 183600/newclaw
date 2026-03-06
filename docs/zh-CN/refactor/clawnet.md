@@ -292,7 +292,7 @@ x-i18n:
 
 仅作为人类标签。
 
-- 示例：`scarlet-claw`、`saltwave`、`mantis-pinch`。
+- 示例：`scarlet-iflow`、`saltwave`、`mantis-pinch`。
 - 存储在 Gateway网关注册表中，可编辑。
 - 冲突处理：`-2`、`-3`。
 

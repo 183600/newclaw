@@ -61,6 +61,6 @@ object iFlowCanvasA2UIAction {
     val err = (error ?: "").replace("\\", "\\\\").replace("\"", "\\\"")
     val okLiteral = if (ok) "true" else "false"
     val idEscaped = actionId.replace("\\", "\\\\").replace("\"", "\\\"")
-    return "window.dispatchEvent(new CustomEvent('iflow:a2ui-action-status', { detail: { id: \"${idEscaped}\", ok: ${okLiteral}, error: \"${err}\" } }));"
+    return "window.dispatchEvent(new CustomEvent('claw:a2ui-action-status', { detail: { id: \"${idEscaped}\", ok: ${okLiteral}, error: \"${err}\" } }));"
   }
 }

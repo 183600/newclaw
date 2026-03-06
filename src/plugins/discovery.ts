@@ -5,8 +5,8 @@ import { resolveConfigDir, resolveUserPath } from "../utils.js";
 import { resolveBundledPluginsDir } from "./bundled-dir.js";
 import {
   getPackageManifestMetadata,
-  type iFlowPackageManifest,
   type PackageManifest,
+  type iFlowPackageManifest,
 } from "./manifest.js";
 
 const EXTENSION_EXTS = new Set([".ts", ".js", ".mts", ".cts", ".mjs", ".cjs"]);

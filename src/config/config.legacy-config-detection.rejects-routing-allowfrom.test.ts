@@ -89,12 +89,12 @@ describe("legacy config detection", () => {
     vi.resetModules();
     const { migrateLegacyConfig } = await import("./config.js");
     const res = migrateLegacyConfig({
-      routing: { groupChat: { mentionPatterns: ["@iflow"] } },
+      routing: { groupChat: { mentionPatterns: ["@claw"] } },
     });
     expect(res.changes).toContain(
       "Moved routing.groupChat.mentionPatterns → messages.groupChat.mentionPatterns.",
     );
-    expect(res.config?.messages?.groupChat?.mentionPatterns).toEqual(["@iflow"]);
+    expect(res.config?.messages?.groupChat?.mentionPatterns).toEqual(["@claw"]);
     expect(res.config?.routing?.groupChat?.mentionPatterns).toBeUndefined();
   });
   it("migrates routing agentToAgent/queue/transcribeAudio to tools/messages/media", async () => {
@@ -198,7 +198,7 @@ describe("legacy config detection", () => {
         list: [
           {
             id: "work",
-            workspace: "~/iflow-work",
+            workspace: "~/claw-work",
             tools: {
               elevated: {
                 enabled: false,

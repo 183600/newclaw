@@ -11,7 +11,7 @@ describe("Configuration Management", () => {
   let configPath: string;
 
   beforeEach(() => {
-    tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "iflow-config-test-"));
+    tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "claw-config-test-"));
     configDir = path.join(tempDir, ".iflow");
     configPath = path.join(configDir, "config.json5");
     fs.mkdirSync(configDir, { recursive: true });
@@ -118,7 +118,7 @@ describe("Configuration Management", () => {
       const customConfigDir = path.join(tempDir, "custom-config");
       fs.mkdirSync(customConfigDir, { recursive: true });
 
-      const env = { IFLOW_STATE_DIR: customConfigDir };
+      const env = { CLAW_STATE_DIR: customConfigDir };
 
       const resolved = resolveConfigDir(env, () => tempDir);
       expect(resolved).toBe(customConfigDir);

@@ -1,4 +1,4 @@
-# Pre-commit hooks for iflow
+# Pre-commit hooks for claw
 # Install: prek install
 # Run manually: prek run --all-files
 #
@@ -41,6 +41,8 @@ repos:
           - '"gateway\.auth\.password"'
           - --exclude-lines
           - '"talk\.apiKey"'
+          - --exclude-lines
+          - '"clawdbot"'
           - --exclude-lines
           - '=== "string"'
           - --exclude-lines

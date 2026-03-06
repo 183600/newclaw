@@ -64,7 +64,7 @@ Troubleshooting and beacon details: [Bonjour](/gateway/bonjour).
   - `gatewayPort=18789` (Gateway WS + HTTP)
   - `gatewayTls=1` (only when TLS is enabled)
   - `gatewayTlsSha256=<sha256>` (only when TLS is enabled and fingerprint is available)
-  - `canvasPort=18793` (default canvas host port; serves `/__iflow__/canvas/`)
+  - `canvasPort=18793` (default canvas host port; serves `/__claw__/canvas/`)
   - `cliPath=<path>` (optional; absolute path to a runnable `iflow` entrypoint or binary)
   - `tailnetDns=<magicdns>` (optional hint; auto-detected when Tailscale is available)
 

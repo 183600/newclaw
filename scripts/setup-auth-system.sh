@@ -1,5 +1,5 @@
 #!/bin/bash
-# Setup iFlow Auth Management System
+# Setup Claw Auth Management System
 # Run this once to set up:
 # 1. Long-lived Claude Code token
 # 2. Auth monitoring with notifications
@@ -9,7 +9,7 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-echo "=== iFlow Auth System Setup ==="
+echo "=== Claw Auth System Setup ==="
 echo ""
 
 # Step 1: Check current auth status
@@ -49,19 +49,19 @@ echo ""
 # Check for ntfy
 echo "  ntfy.sh: Free push notifications to your phone"
 echo "  1. Install ntfy app on your phone"
-echo "  2. Subscribe to a topic (e.g., 'iflow-alerts')"
+echo "  2. Subscribe to a topic (e.g., 'claw-alerts')"
 echo ""
 echo "Enter ntfy.sh topic (or leave blank to skip):"
 read -r NTFY_TOPIC
 
 # Phone notification
 echo ""
-echo "  iFlow message: Send warning via iFlow itself"
+echo "  Claw message: Send warning via Claw itself"
 echo "Enter your phone number for alerts (or leave blank to skip):"
 read -r PHONE_NUMBER
 
 # Update service file
-SERVICE_FILE="$SCRIPT_DIR/systemd/iflow-auth-monitor.service"
+SERVICE_FILE="$SCRIPT_DIR/systemd/claw-auth-monitor.service"
 if [ -n "$NTFY_TOPIC" ]; then
     sed -i "s|# Environment=NOTIFY_NTFY=.*|Environment=NOTIFY_NTFY=$NTFY_TOPIC|" "$SERVICE_FILE"
 fi
@@ -73,10 +73,10 @@ fi
 echo ""
 echo "Installing systemd timer..."
 mkdir -p ~/.config/systemd/user
-cp "$SCRIPT_DIR/systemd/iflow-auth-monitor.service" ~/.config/systemd/user/
-cp "$SCRIPT_DIR/systemd/iflow-auth-monitor.timer" ~/.config/systemd/user/
+cp "$SCRIPT_DIR/systemd/claw-auth-monitor.service" ~/.config/systemd/user/
+cp "$SCRIPT_DIR/systemd/claw-auth-monitor.timer" ~/.config/systemd/user/
 systemctl --user daemon-reload
-systemctl --user enable --now iflow-auth-monitor.timer
+systemctl --user enable --now claw-auth-monitor.timer
 
 echo "Auth monitor installed and running."
 echo ""
@@ -110,7 +110,7 @@ echo ""
 echo "What's configured:"
 echo "  - Auth status: $SCRIPT_DIR/claude-auth-status.sh"
 echo "  - Mobile re-auth: $SCRIPT_DIR/mobile-reauth.sh"
-echo "  - Auth monitor: systemctl --user status iflow-auth-monitor.timer"
+echo "  - Auth monitor: systemctl --user status claw-auth-monitor.timer"
 echo ""
 echo "Quick commands:"
 echo "  Check auth:  $SCRIPT_DIR/claude-auth-status.sh"

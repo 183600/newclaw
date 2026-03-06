@@ -134,9 +134,9 @@ export function injectCanvasLiveReload(html: string): string {
     const action = { ...userAction, id };
     return postToNode({ userAction: action });
   }
-  globalThis.iFlow = globalThis.iFlow ?? {};
-  globalThis.iFlow.postMessage = postToNode;
-  globalThis.iFlow.sendUserAction = sendUserAction;
+  globalThis.Claw = globalThis.Claw ?? {};
+  globalThis.Claw.postMessage = postToNode;
+  globalThis.Claw.sendUserAction = sendUserAction;
   globalThis.iflowPostMessage = postToNode;
   globalThis.iflowSendUserAction = sendUserAction;
 

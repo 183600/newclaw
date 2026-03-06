@@ -124,7 +124,7 @@ describe("enableConsoleCapture", () => {
 });
 
 function tempLogPath() {
-  return path.join(os.tmpdir(), `iflow-log-${crypto.randomUUID()}.log`);
+  return path.join(os.tmpdir(), `claw-log-${crypto.randomUUID()}.log`);
 }
 
 function eioError() {

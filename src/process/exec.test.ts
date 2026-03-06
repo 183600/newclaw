@@ -7,7 +7,7 @@ describe("runCommandWithTimeout", () => {
       [process.execPath, "-e", 'process.stdout.write(process.env.IFLOW_TEST_ENV ?? "")'],
       {
         timeoutMs: 5_000,
-        env: { IFLOW_TEST_ENV: "ok" },
+        env: { CLAW_TEST_ENV: "ok" },
       },
     );
 
@@ -27,7 +27,7 @@ describe("runCommandWithTimeout", () => {
         ],
         {
           timeoutMs: 5_000,
-          env: { IFLOW_TEST_ENV: "ok" },
+          env: { CLAW_TEST_ENV: "ok" },
         },
       );
 

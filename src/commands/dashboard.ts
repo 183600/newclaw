@@ -57,7 +57,7 @@ export async function dashboardCommand(
   }
 
   if (opened) {
-    runtime.log("Opened in your browser. Keep that tab to control iFlow.");
+    runtime.log("Opened in your browser. Keep that tab to control Claw.");
   } else if (hint) {
     runtime.log(hint);
   }

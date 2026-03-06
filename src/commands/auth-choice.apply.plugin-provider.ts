@@ -1,7 +1,7 @@
 import type { iFlowConfig } from "../config/config.js";
 import type { ProviderAuthMethod, ProviderPlugin } from "../plugins/types.js";
 import type { ApplyAuthChoiceParams, ApplyAuthChoiceResult } from "./auth-choice.apply.js";
-import { resolveiFlowAgentDir } from "../agents/agent-paths.js";
+import { resolveClawAgentDir } from "../agents/agent-paths.js";
 import {
   resolveDefaultAgentId,
   resolveAgentDir,
@@ -119,7 +119,7 @@ export async function applyAuthChoicePluginProvider(
   const defaultAgentId = resolveDefaultAgentId(nextConfig);
   const agentDir =
     params.agentDir ??
-    (agentId === defaultAgentId ? resolveiFlowAgentDir() : resolveAgentDir(nextConfig, agentId));
+    (agentId === defaultAgentId ? resolveClawAgentDir() : resolveAgentDir(nextConfig, agentId));
   const workspaceDir =
     resolveAgentWorkspaceDir(nextConfig, agentId) ?? resolveDefaultAgentWorkspaceDir();
 

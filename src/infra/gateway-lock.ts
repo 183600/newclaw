@@ -74,7 +74,7 @@ function isGatewayArgv(args: string[]): boolean {
   const entryCandidates = [
     "dist/index.js",
     "dist/entry.js",
-    "iflow.mjs",
+    "claw.mjs",
     "scripts/run-node.mjs",
     "src/index.ts",
   ];
@@ -83,7 +83,7 @@ function isGatewayArgv(args: string[]): boolean {
   }
 
   const exe = normalized[0] ?? "";
-  return exe.endsWith("/iflow") || exe === "iflow";
+  return exe.endsWith("/claw") || exe === "claw";
 }
 
 function readLinuxCmdline(pid: number): string[] | null {
@@ -180,6 +180,7 @@ export async function acquireGatewayLock(
   const allowInTests = opts.allowInTests === true;
   if (
     env.IFLOW_ALLOW_MULTI_GATEWAY === "1" ||
+    env.CLAW_ALLOW_MULTI_GATEWAY === "1" ||
     (!allowInTests && (env.VITEST || env.NODE_ENV === "test"))
   ) {
     return null;

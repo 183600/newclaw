@@ -22,7 +22,7 @@ describe("parseIdentityMarkdown", () => {
 - **Creature:** Robot
 - **Vibe:** Warm
 - **Emoji:** :robot:
-- **Avatar:** avatars/iflow.png
+- **Avatar:** avatars/claw.png
 `;
     const parsed = parseIdentityMarkdown(content);
     expect(parsed).toEqual({
@@ -30,7 +30,7 @@ describe("parseIdentityMarkdown", () => {
       creature: "Robot",
       vibe: "Warm",
       emoji: ":robot:",
-      avatar: "avatars/iflow.png",
+      avatar: "avatars/claw.png",
     });
   });
 });

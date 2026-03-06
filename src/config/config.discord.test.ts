@@ -29,7 +29,7 @@ describe("config discord", () => {
                   enabled: true,
                   allowFrom: ["steipete"],
                   groupEnabled: true,
-                  groupChannels: ["iflow-dm"],
+                  groupChannels: ["claw-dm"],
                 },
                 actions: {
                   emojiUploads: true,
@@ -38,7 +38,7 @@ describe("config discord", () => {
                 },
                 guilds: {
                   "123": {
-                    slug: "friends-of-iflow",
+                    slug: "friends-of-claw",
                     requireMention: false,
                     users: ["steipete"],
                     channels: {
@@ -61,11 +61,11 @@ describe("config discord", () => {
 
       expect(cfg.channels?.discord?.enabled).toBe(true);
       expect(cfg.channels?.discord?.dm?.groupEnabled).toBe(true);
-      expect(cfg.channels?.discord?.dm?.groupChannels).toEqual(["iflow-dm"]);
+      expect(cfg.channels?.discord?.dm?.groupChannels).toEqual(["claw-dm"]);
       expect(cfg.channels?.discord?.actions?.emojiUploads).toBe(true);
       expect(cfg.channels?.discord?.actions?.stickerUploads).toBe(false);
       expect(cfg.channels?.discord?.actions?.channels).toBe(true);
-      expect(cfg.channels?.discord?.guilds?.["123"]?.slug).toBe("friends-of-iflow");
+      expect(cfg.channels?.discord?.guilds?.["123"]?.slug).toBe("friends-of-claw");
       expect(cfg.channels?.discord?.guilds?.["123"]?.channels?.general?.allow).toBe(true);
     });
   });

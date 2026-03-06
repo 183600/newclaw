@@ -9,27 +9,27 @@ describe("resolveGatewayStateDir", () => {
   });
 
   it("appends the profile suffix when set", () => {
-    const env = { HOME: "/Users/test", IFLOW_PROFILE: "rescue" };
+    const env = { HOME: "/Users/test", CLAW_PROFILE: "rescue" };
     expect(resolveGatewayStateDir(env)).toBe(path.join("/Users/test", ".iflow-rescue"));
   });
 
   it("treats default profiles as the base state dir", () => {
-    const env = { HOME: "/Users/test", IFLOW_PROFILE: "Default" };
+    const env = { HOME: "/Users/test", CLAW_PROFILE: "Default" };
     expect(resolveGatewayStateDir(env)).toBe(path.join("/Users/test", ".iflow"));
   });
 
-  it("uses IFLOW_STATE_DIR when provided", () => {
-    const env = { HOME: "/Users/test", IFLOW_STATE_DIR: "/var/lib/iflow" };
-    expect(resolveGatewayStateDir(env)).toBe(path.resolve("/var/lib/iflow"));
+  it("uses CLAW_STATE_DIR when provided", () => {
+    const env = { HOME: "/Users/test", CLAW_STATE_DIR: "/var/lib/claw" };
+    expect(resolveGatewayStateDir(env)).toBe(path.resolve("/var/lib/claw"));
   });
 
-  it("expands ~ in IFLOW_STATE_DIR", () => {
-    const env = { HOME: "/Users/test", IFLOW_STATE_DIR: "~/iflow-state" };
-    expect(resolveGatewayStateDir(env)).toBe(path.resolve("/Users/test/iflow-state"));
+  it("expands ~ in CLAW_STATE_DIR", () => {
+    const env = { HOME: "/Users/test", CLAW_STATE_DIR: "~/claw-state" };
+    expect(resolveGatewayStateDir(env)).toBe(path.resolve("/Users/test/claw-state"));
   });
 
   it("preserves Windows absolute paths without HOME", () => {
-    const env = { IFLOW_STATE_DIR: "C:\\State\\iflow" };
-    expect(resolveGatewayStateDir(env)).toBe("C:\\State\\iflow");
+    const env = { CLAW_STATE_DIR: "C:\\State\\claw" };
+    expect(resolveGatewayStateDir(env)).toBe("C:\\State\\claw");
   });
 });

@@ -20,7 +20,7 @@ Quick answers plus deeper troubleshooting for real-world setups (local dev, VPS,
   - [It is stuck on "wake up my friend" / onboarding will not hatch. What now?](#it-is-stuck-on-wake-up-my-friend-onboarding-will-not-hatch-what-now)
   - [Can I migrate my setup to a new machine (Mac mini) without redoing onboarding?](#can-i-migrate-my-setup-to-a-new-machine-mac-mini-without-redoing-onboarding)
   - [Where do I see what is new in the latest version?](#where-do-i-see-what-is-new-in-the-latest-version)
-  - [I can't access docs.iflow.ai (SSL error). What now?](#i-cant-access-docsiflowai-ssl-error-what-now)
+  - [I can't access docs.iflow.ai (SSL error). What now?](#i-cant-access-docsclawai-ssl-error-what-now)
   - [What’s the difference between stable and beta?](#whats-the-difference-between-stable-and-beta)
 - [How do I install the beta version, and what’s the difference between beta and dev?](#how-do-i-install-the-beta-version-and-whats-the-difference-between-beta-and-dev)
   - [How do I try the latest bits?](#how-do-i-try-the-latest-bits)
@@ -442,7 +442,7 @@ section is the latest shipped version. Entries are grouped by **Highlights**, **
 
 Some Comcast/Xfinity connections incorrectly block `docs.iflow.ai` via Xfinity
 Advanced Security. Disable it or allowlist `docs.iflow.ai`, then retry. More
-detail: [Troubleshooting](/help/troubleshooting#docsiflowai-shows-an-ssl-error-comcastxfinity).
+detail: [Troubleshooting](/help/troubleshooting#docsclawai-shows-an-ssl-error-comcastxfinity).
 Please help us unblock it by reporting here: https://spa.xfinity.com/check_url_status.
 
 If you still can't reach the site, the docs are mirrored on GitHub:
@@ -1049,10 +1049,10 @@ Docs: [Cron jobs](/automation/cron-jobs), [Cron vs Heartbeat](/automation/cron-v
 
 ### How do I install skills on Linux
 
-Use **ClawHub** (CLI) or drop skills into your workspace. The macOS Skills UI isn’t available on Linux.
-Browse skills at https://clawhub.com.
+Use **iFlowHub** (CLI) or drop skills into your workspace. The macOS Skills UI isn’t available on Linux.
+Browse skills at https://iflowhub.com.
 
-Install the ClawHub CLI (pick one package manager):
+Install the iFlowHub CLI (pick one package manager):
 
 ```bash
 npm i -g clawhub
@@ -1131,7 +1131,7 @@ clawhub install <skill-slug>
 clawhub update --all
 ```
 
-ClawHub installs into `./skills` under your current directory (or falls back to your configured iFlow workspace); iFlow treats that as `<workspace>/skills` on the next session. For shared skills across agents, place them in `~/.iflow/skills/<name>/SKILL.md`. Some skills expect binaries installed via Homebrew; on Linux that means Linuxbrew (see the Homebrew Linux FAQ entry above). See [Skills](/tools/skills) and [ClawHub](/tools/clawhub).
+iFlowHub installs into `./skills` under your current directory (or falls back to your configured iFlow workspace); iFlow treats that as `<workspace>/skills` on the next session. For shared skills across agents, place them in `~/.iflow/skills/<name>/SKILL.md`. Some skills expect binaries installed via Homebrew; on Linux that means Linuxbrew (see the Homebrew Linux FAQ entry above). See [Skills](/tools/skills) and [iFlowHub](/tools/clawhub).
 
 ### How do I install the Chrome extension for browser takeover
 

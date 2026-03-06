@@ -8,7 +8,7 @@ import handler from "./handler.js";
 
 describe("soul-evil hook", () => {
   it("skips subagent sessions", async () => {
-    const tempDir = await makeTempWorkspace("iflow-soul-");
+    const tempDir = await makeTempWorkspace("claw-soul-");
     await writeWorkspaceFile({
       dir: tempDir,
       name: "SOUL_EVIL.md",

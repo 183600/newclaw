@@ -6,7 +6,7 @@ import type { iFlowConfig } from "../config/config.js";
 import { resolveTelegramToken } from "./token.js";
 
 function withTempDir(): string {
-  return fs.mkdtempSync(path.join(os.tmpdir(), "iflow-telegram-token-"));
+  return fs.mkdtempSync(path.join(os.tmpdir(), "claw-telegram-token-"));
 }
 
 describe("resolveTelegramToken", () => {

@@ -172,7 +172,7 @@ export function registerDnsCli(program: Command) {
     .description(
       "Set up CoreDNS to serve your discovery domain for unicast DNS-SD (Wide-Area Bonjour)",
     )
-    .option("--domain <domain>", "Wide-area discovery domain (e.g. iflow.internal)")
+    .option("--domain <domain>", "Wide-area discovery domain (e.g. claw.internal)")
     .option(
       "--apply",
       "Install/update CoreDNS config and (re)start the service (requires sudo)",
@@ -314,7 +314,7 @@ export function registerDnsCli(program: Command) {
         const serial = `${y}${m}${d}01`;
 
         const zoneLines = [
-          `; created by iflow dns setup (will be overwritten by the gateway when wide-area discovery is enabled)`,
+          `; created by claw dns setup (will be overwritten by the gateway when wide-area discovery is enabled)`,
           `$ORIGIN ${wideAreaDomain}`,
           `$TTL 60`,
           `@ IN SOA ns1 hostmaster ${serial} 7200 3600 1209600 60`,

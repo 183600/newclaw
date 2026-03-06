@@ -27,7 +27,7 @@ x-i18n:
   - [卡在 "wake up my friend" / 新手引导无法启动，怎么办？](#it-is-stuck-on-wake-up-my-friend-onboarding-will-not-hatch-what-now)
   - [能否将我的设置迁移到新机器（Mac mini）而不重新进行新手引导？](#can-i-migrate-my-setup-to-a-new-machine-mac-mini-without-redoing-onboarding)
   - [在哪里查看最新版本的更新内容？](#where-do-i-see-whats-new-in-the-latest-version)
-  - [无法访问 docs.iflow.ai（SSL 错误），怎么办？](#i-cant-access-docsiflowai-ssl-error-what-now)
+  - [无法访问 docs.iflow.ai（SSL 错误），怎么办？](#i-cant-access-docsclawai-ssl-error-what-now)
   - [stable 和 beta 有什么区别？](#whats-the-difference-between-stable-and-beta)
 - [如何安装 beta 版本，beta 和 dev 有什么区别？](#how-do-i-install-the-beta-version-and-whats-the-difference-between-beta-and-dev)
   - [如何试用最新代码？](#how-do-i-try-the-latest-bits)
@@ -427,7 +427,7 @@ https://github.com/iflow/iflow/blob/main/CHANGELOG.md
 
 ### 无法访问 docs.iflow.ai（SSL 错误），怎么办
 
-一些 Comcast/Xfinity 连接通过 Xfinity Advanced Security 错误地拦截了 `docs.iflow.ai`。禁用该功能或将 `docs.iflow.ai` 加入白名单，然后重试。更多详情：[故障排除](/help/troubleshooting#docsiflowai-shows-an-ssl-error-comcastxfinity)。
+一些 Comcast/Xfinity 连接通过 Xfinity Advanced Security 错误地拦截了 `docs.iflow.ai`。禁用该功能或将 `docs.iflow.ai` 加入白名单，然后重试。更多详情：[故障排除](/help/troubleshooting#docsclawai-shows-an-ssl-error-comcastxfinity)。
 请帮助我们在此处报告以解除封锁：https://spa.xfinity.com/check_url_status。
 
 如果仍然无法访问该网站，文档在 GitHub 上有镜像：
@@ -982,10 +982,10 @@ iflow cron runs --id <jobId> --limit 50
 
 ### 如何在 Linux 上安装 Skills
 
-使用 **ClawHub**（CLI）或将 Skills 放入你的工作区。macOS Skills UI 在 Linux 上不可用。
-浏览 Skills：https://clawhub.com。
+使用 **iFlowHub**（CLI）或将 Skills 放入你的工作区。macOS Skills UI 在 Linux 上不可用。
+浏览 Skills：https://iflowhub.com。
 
-安装 ClawHub CLI（选择一个包管理器）：
+安装 iFlowHub CLI（选择一个包管理器）：
 
 ```bash
 npm i -g clawhub
@@ -1063,7 +1063,7 @@ clawhub install <skill-slug>
 clawhub update --all
 ```
 
-ClawHub 安装到当前目录下的 `./skills`（或回退到你配置的 iFlow 工作区）；iFlow 在下一个会话中将其视为 `<workspace>/skills`。对于跨智能体共享的 Skills，将它们放在 `~/.iflow/skills/<name>/SKILL.md`。某些 Skills 期望通过 Homebrew 安装二进制文件；在 Linux 上意味着 Linuxbrew（参阅上面的 Homebrew Linux 常见问题条目）。参阅[Skills](/tools/skills)和 [ClawHub](/tools/clawhub)。
+iFlowHub 安装到当前目录下的 `./skills`（或回退到你配置的 iFlow 工作区）；iFlow 在下一个会话中将其视为 `<workspace>/skills`。对于跨智能体共享的 Skills，将它们放在 `~/.iflow/skills/<name>/SKILL.md`。某些 Skills 期望通过 Homebrew 安装二进制文件；在 Linux 上意味着 Linuxbrew（参阅上面的 Homebrew Linux 常见问题条目）。参阅[Skills](/tools/skills)和 [iFlowHub](/tools/clawhub)。
 
 ### 如何安装用于浏览器接管的 Chrome 扩展
 

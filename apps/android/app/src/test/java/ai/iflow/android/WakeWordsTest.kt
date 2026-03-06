@@ -7,12 +7,12 @@ import org.junit.Test
 class WakeWordsTest {
   @Test
   fun parseCommaSeparatedTrimsAndDropsEmpty() {
-    assertEquals(listOf("iflow", "claude"), WakeWords.parseCommaSeparated("  iflow , claude, ,  "))
+    assertEquals(listOf("claw", "claude"), WakeWords.parseCommaSeparated("  claw , claude, ,  "))
   }
 
   @Test
   fun sanitizeTrimsCapsAndFallsBack() {
-    val defaults = listOf("iflow", "claude")
+    val defaults = listOf("claw", "claude")
     val long = "x".repeat(WakeWords.maxWordLength + 10)
     val words = listOf(" ", "  hello  ", long)
 
@@ -26,7 +26,7 @@ class WakeWordsTest {
 
   @Test
   fun sanitizeLimitsWordCount() {
-    val defaults = listOf("iflow")
+    val defaults = listOf("claw")
     val words = (1..(WakeWords.maxWords + 5)).map { "w$it" }
     val sanitized = WakeWords.sanitize(words, defaults)
     assertEquals(WakeWords.maxWords, sanitized.size)
@@ -36,15 +36,15 @@ class WakeWordsTest {
 
   @Test
   fun parseIfChangedSkipsWhenUnchanged() {
-    val current = listOf("iflow", "claude")
-    val parsed = WakeWords.parseIfChanged(" iflow , claude ", current)
+    val current = listOf("claw", "claude")
+    val parsed = WakeWords.parseIfChanged(" claw , claude ", current)
     assertNull(parsed)
   }
 
   @Test
   fun parseIfChangedReturnsUpdatedList() {
-    val current = listOf("iflow")
-    val parsed = WakeWords.parseIfChanged(" iflow , jarvis ", current)
-    assertEquals(listOf("iflow", "jarvis"), parsed)
+    val current = listOf("claw")
+    val parsed = WakeWords.parseIfChanged(" claw , jarvis ", current)
+    assertEquals(listOf("claw", "jarvis"), parsed)
   }
 }

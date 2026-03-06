@@ -2,7 +2,7 @@ import type { AgentTool, AgentToolResult } from "@mariozechner/pi-agent-core";
 import fs from "node:fs/promises";
 import { describe, expect, it, vi } from "vitest";
 import type { iFlowConfig } from "../config/config.js";
-import { ensureiFlowModelsJson } from "./models-config.js";
+import { ensureClawModelsJson } from "./models-config.js";
 import { splitSdkTools } from "./pi-embedded-runner.js";
 
 vi.mock("@mariozechner/pi-ai", async () => {
@@ -71,7 +71,7 @@ const _makeOpenAiConfig = (modelIds: string[]) =>
   }) satisfies iFlowConfig;
 
 const _ensureModels = (cfg: iFlowConfig, agentDir: string) =>
-  ensureiFlowModelsJson(cfg, agentDir) as unknown;
+  ensureClawModelsJson(cfg, agentDir) as unknown;
 
 const _textFromContent = (content: unknown) => {
   if (typeof content === "string") {

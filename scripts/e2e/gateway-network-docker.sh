@@ -6,8 +6,8 @@ IMAGE_NAME="iflow-gateway-network-e2e"
 
 PORT="18789"
 TOKEN="e2e-$(date +%s)-$$"
-NET_NAME="iflow-net-e2e-$$"
-GW_NAME="iflow-gateway-e2e-$$"
+NET_NAME="claw-net-e2e-$"
+GW_NAME="iflow-gateway-e2e-$"
 
 cleanup() {
   docker rm -f "$GW_NAME" >/dev/null 2>&1 || true

@@ -97,7 +97,7 @@ describe("Agent-specific sandbox config", () => {
         list: [
           {
             id: "work",
-            workspace: "~/iflow-work",
+            workspace: "~/claw-work",
             sandbox: {
               mode: "all",
               scope: "agent",
@@ -135,7 +135,7 @@ describe("Agent-specific sandbox config", () => {
         list: [
           {
             id: "main",
-            workspace: "~/iflow",
+            workspace: "~/claw",
             sandbox: {
               mode: "off", // Agent override
             },
@@ -166,7 +166,7 @@ describe("Agent-specific sandbox config", () => {
         list: [
           {
             id: "family",
-            workspace: "~/iflow-family",
+            workspace: "~/claw-family",
             sandbox: {
               mode: "all", // Agent override
               scope: "agent",
@@ -199,7 +199,7 @@ describe("Agent-specific sandbox config", () => {
         list: [
           {
             id: "work",
-            workspace: "~/iflow-work",
+            workspace: "~/claw-work",
             sandbox: {
               mode: "all",
               scope: "agent", // Agent override

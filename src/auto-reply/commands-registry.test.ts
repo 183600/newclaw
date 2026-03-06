@@ -146,21 +146,21 @@ describe("commands registry", () => {
   });
 
   it("normalizes telegram-style command mentions for the current bot", () => {
-    expect(normalizeCommandBody("/help@iflow", { botUsername: "iflow" })).toBe("/help");
+    expect(normalizeCommandBody("/help@claw", { botUsername: "claw" })).toBe("/help");
     expect(
-      normalizeCommandBody("/help@iflow args", {
-        botUsername: "iflow",
+      normalizeCommandBody("/help@claw args", {
+        botUsername: "claw",
       }),
     ).toBe("/help args");
     expect(
-      normalizeCommandBody("/help@iflow: args", {
-        botUsername: "iflow",
+      normalizeCommandBody("/help@claw: args", {
+        botUsername: "claw",
       }),
     ).toBe("/help args");
   });
 
   it("keeps telegram-style command mentions for other bots", () => {
-    expect(normalizeCommandBody("/help@otherbot", { botUsername: "iflow" })).toBe("/help@otherbot");
+    expect(normalizeCommandBody("/help@otherbot", { botUsername: "claw" })).toBe("/help@otherbot");
   });
 
   it("normalizes dock command aliases", () => {

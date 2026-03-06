@@ -29,7 +29,7 @@ describe("resolveSkillsPromptForRun", () => {
   it("prefers snapshot prompt when available", () => {
     const prompt = resolveSkillsPromptForRun({
       skillsSnapshot: { prompt: "SNAPSHOT", skills: [] },
-      workspaceDir: "/tmp/iflow",
+      workspaceDir: "/tmp/claw",
     });
     expect(prompt).toBe("SNAPSHOT");
   });
@@ -40,13 +40,13 @@ describe("resolveSkillsPromptForRun", () => {
         description: "Demo",
         filePath: "/app/skills/demo-skill/SKILL.md",
         baseDir: "/app/skills/demo-skill",
-        source: "iflow-bundled",
+        source: "claw-bundled",
       },
       frontmatter: {},
     };
     const prompt = resolveSkillsPromptForRun({
       entries: [entry],
-      workspaceDir: "/tmp/iflow",
+      workspaceDir: "/tmp/claw",
     });
     expect(prompt).toContain("<available_skills>");
     expect(prompt).toContain("/app/skills/demo-skill/SKILL.md");

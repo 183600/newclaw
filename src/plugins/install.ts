@@ -69,14 +69,14 @@ function validatePluginId(pluginId: string): string | null {
   return null;
 }
 
-async function ensureiFlowExtensions(manifest: PackageManifest) {
+async function ensureClawExtensions(manifest: PackageManifest) {
   const extensions = manifest[MANIFEST_KEY]?.extensions;
   if (!Array.isArray(extensions)) {
-    throw new Error("package.json missing iflow.extensions");
+    throw new Error("package.json missing claw.extensions");
   }
   const list = extensions.map((e) => (typeof e === "string" ? e.trim() : "")).filter(Boolean);
   if (list.length === 0) {
-    throw new Error("package.json iflow.extensions is empty");
+    throw new Error("package.json claw.extensions is empty");
   }
   return list;
 }
@@ -143,7 +143,7 @@ async function installPluginFromPackageDir(params: {
 
   let extensions: string[];
   try {
-    extensions = await ensureiFlowExtensions(manifest);
+    extensions = await ensureClawExtensions(manifest);
   } catch (err) {
     return { ok: false, error: String(err) };
   }
@@ -269,7 +269,7 @@ export async function installPluginFromArchive(params: {
     return { ok: false, error: `unsupported archive: ${archivePath}` };
   }
 
-  const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-plugin-"));
+  const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "claw-plugin-"));
   const extractDir = path.join(tmpDir, "extract");
   await fs.mkdir(extractDir, { recursive: true });
 
@@ -408,7 +408,7 @@ export async function installPluginFromNpmSpec(params: {
     return { ok: false, error: "missing npm spec" };
   }
 
-  const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-npm-pack-"));
+  const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "claw-npm-pack-"));
   logger.info?.(`Downloading ${spec}…`);
   const res = await runCommandWithTimeout(["npm", "pack", spec], {
     timeoutMs: Math.max(timeoutMs, 300_000),

@@ -47,7 +47,7 @@ describe("onboard-hooks", () => {
       {
         name: "session-memory",
         description: "Save session context to memory when /new command is issued",
-        source: "iflow-bundled",
+        source: "claw-bundled",
         pluginId: undefined,
         filePath: "/mock/workspace/hooks/session-memory/HOOK.md",
         baseDir: "/mock/workspace/hooks/session-memory",
@@ -80,7 +80,7 @@ describe("onboard-hooks", () => {
       {
         name: "command-logger",
         description: "Log all command events to a centralized audit file",
-        source: "iflow-bundled",
+        source: "claw-bundled",
         pluginId: undefined,
         filePath: "/mock/workspace/hooks/command-logger/HOOK.md",
         baseDir: "/mock/workspace/hooks/command-logger",
@@ -239,7 +239,7 @@ describe("onboard-hooks", () => {
 
       // Second note should confirm configuration
       expect(noteCalls[1][0]).toContain("Enabled 1 hook: session-memory");
-      expect(noteCalls[1][0]).toMatch(/(?:iflow|iflow)( --profile isolated)? hooks list/);
+      expect(noteCalls[1][0]).toMatch(/(?:claw|claw)( --profile isolated)? hooks list/);
     });
   });
 });

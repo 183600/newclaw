@@ -9,7 +9,7 @@ import { afterEach, describe, expect, it } from "vitest";
 const tempDirs: string[] = [];
 
 function makeTempDir() {
-  const dir = path.join(os.tmpdir(), `iflow-hook-install-${randomUUID()}`);
+  const dir = path.join(os.tmpdir(), `claw-hook-install-${randomUUID()}`);
   fs.mkdirSync(dir, { recursive: true });
   tempDirs.push(dir);
   return dir;
@@ -37,7 +37,7 @@ describe("installHooksFromArchive", () => {
       JSON.stringify({
         name: "@iflow/zip-hooks",
         version: "0.0.1",
-        iflow: { hooks: ["./hooks/zip-hook"] },
+        claw: { hooks: ["./hooks/zip-hook"] },
       }),
     );
     zip.file(
@@ -46,7 +46,7 @@ describe("installHooksFromArchive", () => {
         "---",
         "name: zip-hook",
         "description: Zip hook",
-        'metadata: {"iflow":{"events":["command:new"]}}',
+        'metadata: {"claw":{"events":["command:new"]}}',
         "---",
         "",
         "# Zip Hook",
@@ -82,7 +82,7 @@ describe("installHooksFromArchive", () => {
       JSON.stringify({
         name: "@iflow/tar-hooks",
         version: "0.0.1",
-        iflow: { hooks: ["./hooks/tar-hook"] },
+        claw: { hooks: ["./hooks/tar-hook"] },
       }),
       "utf-8",
     );
@@ -92,7 +92,7 @@ describe("installHooksFromArchive", () => {
         "---",
         "name: tar-hook",
         "description: Tar hook",
-        'metadata: {"iflow":{"events":["command:new"]}}',
+        'metadata: {"claw":{"events":["command:new"]}}',
         "---",
         "",
         "# Tar Hook",
@@ -131,7 +131,7 @@ describe("installHooksFromArchive", () => {
       JSON.stringify({
         name: "@evil/..",
         version: "0.0.1",
-        iflow: { hooks: ["./hooks/evil-hook"] },
+        claw: { hooks: ["./hooks/evil-hook"] },
       }),
       "utf-8",
     );
@@ -141,7 +141,7 @@ describe("installHooksFromArchive", () => {
         "---",
         "name: evil-hook",
         "description: Evil hook",
-        'metadata: {"iflow":{"events":["command:new"]}}',
+        'metadata: {"claw":{"events":["command:new"]}}',
         "---",
         "",
         "# Evil Hook",
@@ -178,7 +178,7 @@ describe("installHooksFromArchive", () => {
       JSON.stringify({
         name: "@evil/.",
         version: "0.0.1",
-        iflow: { hooks: ["./hooks/reserved-hook"] },
+        claw: { hooks: ["./hooks/reserved-hook"] },
       }),
       "utf-8",
     );
@@ -188,7 +188,7 @@ describe("installHooksFromArchive", () => {
         "---",
         "name: reserved-hook",
         "description: Reserved hook",
-        'metadata: {"iflow":{"events":["command:new"]}}',
+        'metadata: {"claw":{"events":["command:new"]}}',
         "---",
         "",
         "# Reserved Hook",
@@ -226,7 +226,7 @@ describe("installHooksFromPath", () => {
         "---",
         "name: my-hook",
         "description: My hook",
-        'metadata: {"iflow":{"events":["command:new"]}}',
+        'metadata: {"claw":{"events":["command:new"]}}',
         "---",
         "",
         "# My Hook",

@@ -296,7 +296,7 @@ export const signalOnboardingAdapter: ChannelOnboardingAdapter = {
 
     await prompter.note(
       [
-        'Link device with: signal-cli link -n "iFlow"',
+        'Link device with: signal-cli link -n "Claw"',
         "Scan QR in Signal → Linked Devices",
         `Then run: ${formatCliCommand("iflow gateway call channels.status --params '{\"probe\":true}'")}`,
         `Docs: ${formatDocsLink("/signal", "signal")}`,

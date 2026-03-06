@@ -46,7 +46,7 @@ describe("installUnhandledRejectionHandler - fatal detection", () => {
 
       expect(exitCalls).toEqual([1]);
       expect(consoleErrorSpy).toHaveBeenCalledWith(
-        "[iflow] FATAL unhandled rejection:",
+        "[claw] FATAL unhandled rejection:",
         expect.stringContaining("Out of memory"),
       );
     });
@@ -82,7 +82,7 @@ describe("installUnhandledRejectionHandler - fatal detection", () => {
 
       expect(exitCalls).toEqual([1]);
       expect(consoleErrorSpy).toHaveBeenCalledWith(
-        "[iflow] CONFIGURATION ERROR - requires fix:",
+        "[claw] CONFIGURATION ERROR - requires fix:",
         expect.stringContaining("Invalid config"),
       );
     });
@@ -108,7 +108,7 @@ describe("installUnhandledRejectionHandler - fatal detection", () => {
 
       expect(exitCalls).toEqual([]);
       expect(consoleWarnSpy).toHaveBeenCalledWith(
-        "[iflow] Non-fatal unhandled rejection (continuing):",
+        "[claw] Non-fatal unhandled rejection (continuing):",
         expect.stringContaining("fetch failed"),
       );
     });
@@ -131,7 +131,7 @@ describe("installUnhandledRejectionHandler - fatal detection", () => {
 
       expect(exitCalls).toEqual([1]);
       expect(consoleErrorSpy).toHaveBeenCalledWith(
-        "[iflow] Unhandled promise rejection:",
+        "[claw] Unhandled promise rejection:",
         expect.stringContaining("Something went wrong"),
       );
     });

@@ -6,7 +6,7 @@ import type { iFlowConfig } from "../config/config.js";
 import { buildSystemPromptParams } from "./system-prompt-params.js";
 
 async function makeTempDir(label: string): Promise<string> {
-  return fs.mkdtemp(path.join(os.tmpdir(), `iflow-${label}-`));
+  return fs.mkdtemp(path.join(os.tmpdir(), `claw-${label}-`));
 }
 
 async function makeRepoRoot(root: string): Promise<void> {

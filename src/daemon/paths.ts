@@ -31,12 +31,12 @@ export function resolveUserPathWithHome(input: string, home?: string): string {
 }
 
 export function resolveGatewayStateDir(env: Record<string, string | undefined>): string {
-  const override = env.IFLOW_STATE_DIR?.trim();
+  const override = env.IFLOW_STATE_DIR?.trim() || env.CLAW_STATE_DIR?.trim();
   if (override) {
     const home = override.startsWith("~") ? resolveHomeDir(env) : undefined;
     return resolveUserPathWithHome(override, home);
   }
   const home = resolveHomeDir(env);
-  const suffix = resolveGatewayProfileSuffix(env.IFLOW_PROFILE);
+  const suffix = resolveGatewayProfileSuffix(env.IFLOW_PROFILE ?? env.CLAW_PROFILE);
   return path.join(home, `.iflow${suffix}`);
 }

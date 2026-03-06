@@ -8,7 +8,7 @@ import { initSessionState } from "./session.js";
 
 describe("initSessionState thread forking", () => {
   it("forks a new session from the parent session file", async () => {
-    const root = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-thread-session-"));
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), "claw-thread-session-"));
     const sessionsDir = path.join(root, "sessions");
     await fs.mkdir(sessionsDir, { recursive: true });
 
@@ -80,7 +80,7 @@ describe("initSessionState thread forking", () => {
   });
 
   it("records topic-specific session files when MessageThreadId is present", async () => {
-    const root = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-topic-session-"));
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), "claw-topic-session-"));
     const storePath = path.join(root, "sessions.json");
 
     const cfg = {
@@ -107,7 +107,7 @@ describe("initSessionState thread forking", () => {
 
 describe("initSessionState RawBody", () => {
   it("triggerBodyNormalized correctly extracts commands when Body contains context but RawBody is clean", async () => {
-    const root = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-rawbody-"));
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), "claw-rawbody-"));
     const storePath = path.join(root, "sessions.json");
     const cfg = { session: { store: storePath } } as iFlowConfig;
 
@@ -128,7 +128,7 @@ describe("initSessionState RawBody", () => {
   });
 
   it("Reset triggers (/new, /reset) work with RawBody", async () => {
-    const root = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-rawbody-reset-"));
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), "claw-rawbody-reset-"));
     const storePath = path.join(root, "sessions.json");
     const cfg = { session: { store: storePath } } as iFlowConfig;
 
@@ -150,7 +150,7 @@ describe("initSessionState RawBody", () => {
   });
 
   it("preserves argument casing while still matching reset triggers case-insensitively", async () => {
-    const root = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-rawbody-reset-case-"));
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), "claw-rawbody-reset-case-"));
     const storePath = path.join(root, "sessions.json");
 
     const cfg = {
@@ -178,7 +178,7 @@ describe("initSessionState RawBody", () => {
   });
 
   it("falls back to Body when RawBody is undefined", async () => {
-    const root = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-rawbody-fallback-"));
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), "claw-rawbody-fallback-"));
     const storePath = path.join(root, "sessions.json");
     const cfg = { session: { store: storePath } } as iFlowConfig;
 
@@ -202,7 +202,7 @@ describe("initSessionState reset policy", () => {
     vi.useFakeTimers();
     vi.setSystemTime(new Date(2026, 0, 18, 5, 0, 0));
     try {
-      const root = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-reset-daily-"));
+      const root = await fs.mkdtemp(path.join(os.tmpdir(), "claw-reset-daily-"));
       const storePath = path.join(root, "sessions.json");
       const sessionKey = "agent:main:whatsapp:dm:s1";
       const existingSessionId = "daily-session-id";
@@ -232,7 +232,7 @@ describe("initSessionState reset policy", () => {
     vi.useFakeTimers();
     vi.setSystemTime(new Date(2026, 0, 18, 3, 0, 0));
     try {
-      const root = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-reset-daily-edge-"));
+      const root = await fs.mkdtemp(path.join(os.tmpdir(), "claw-reset-daily-edge-"));
       const storePath = path.join(root, "sessions.json");
       const sessionKey = "agent:main:whatsapp:dm:s-edge";
       const existingSessionId = "daily-edge-session";
@@ -262,7 +262,7 @@ describe("initSessionState reset policy", () => {
     vi.useFakeTimers();
     vi.setSystemTime(new Date(2026, 0, 18, 5, 30, 0));
     try {
-      const root = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-reset-idle-"));
+      const root = await fs.mkdtemp(path.join(os.tmpdir(), "claw-reset-idle-"));
       const storePath = path.join(root, "sessions.json");
       const sessionKey = "agent:main:whatsapp:dm:s2";
       const existingSessionId = "idle-session-id";
@@ -297,7 +297,7 @@ describe("initSessionState reset policy", () => {
     vi.useFakeTimers();
     vi.setSystemTime(new Date(2026, 0, 18, 5, 0, 0));
     try {
-      const root = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-reset-thread-"));
+      const root = await fs.mkdtemp(path.join(os.tmpdir(), "claw-reset-thread-"));
       const storePath = path.join(root, "sessions.json");
       const sessionKey = "agent:main:slack:channel:c1:thread:123";
       const existingSessionId = "thread-session-id";
@@ -333,7 +333,7 @@ describe("initSessionState reset policy", () => {
     vi.useFakeTimers();
     vi.setSystemTime(new Date(2026, 0, 18, 5, 0, 0));
     try {
-      const root = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-reset-thread-nosuffix-"));
+      const root = await fs.mkdtemp(path.join(os.tmpdir(), "claw-reset-thread-nosuffix-"));
       const storePath = path.join(root, "sessions.json");
       const sessionKey = "agent:main:discord:channel:c1";
       const existingSessionId = "thread-nosuffix";
@@ -368,7 +368,7 @@ describe("initSessionState reset policy", () => {
     vi.useFakeTimers();
     vi.setSystemTime(new Date(2026, 0, 18, 5, 0, 0));
     try {
-      const root = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-reset-type-default-"));
+      const root = await fs.mkdtemp(path.join(os.tmpdir(), "claw-reset-type-default-"));
       const storePath = path.join(root, "sessions.json");
       const sessionKey = "agent:main:whatsapp:dm:s4";
       const existingSessionId = "type-default-session";
@@ -403,7 +403,7 @@ describe("initSessionState reset policy", () => {
     vi.useFakeTimers();
     vi.setSystemTime(new Date(2026, 0, 18, 5, 0, 0));
     try {
-      const root = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-reset-legacy-"));
+      const root = await fs.mkdtemp(path.join(os.tmpdir(), "claw-reset-legacy-"));
       const storePath = path.join(root, "sessions.json");
       const sessionKey = "agent:main:whatsapp:dm:s3";
       const existingSessionId = "legacy-session-id";
@@ -437,7 +437,7 @@ describe("initSessionState reset policy", () => {
 
 describe("initSessionState channel reset overrides", () => {
   it("uses channel-specific reset policy when configured", async () => {
-    const root = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-channel-idle-"));
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), "claw-channel-idle-"));
     const storePath = path.join(root, "sessions.json");
     const sessionKey = "agent:main:discord:dm:123";
     const sessionId = "session-override";

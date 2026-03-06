@@ -26,11 +26,11 @@ const formatLine = (label: string, value: string) => {
 };
 
 function resolveLaunchAgentLabel(args?: { env?: Record<string, string | undefined> }): string {
-  const envLabel = args?.env?.IFLOW_LAUNCHD_LABEL?.trim();
+  const envLabel = args?.env?.IFLOW_LAUNCHD_LABEL?.trim() ?? args?.env?.CLAW_LAUNCHD_LABEL?.trim();
   if (envLabel) {
     return envLabel;
   }
-  return resolveGatewayLaunchAgentLabel(args?.env?.IFLOW_PROFILE);
+  return resolveGatewayLaunchAgentLabel(args?.env?.IFLOW_PROFILE ?? args?.env?.CLAW_PROFILE);
 }
 
 function resolveLaunchAgentPlistPathForLabel(
@@ -417,7 +417,10 @@ export async function installLaunchAgent({
     description ??
     formatGatewayServiceDescription({
       profile: env.IFLOW_PROFILE,
-      version: environment?.IFLOW_SERVICE_VERSION ?? env.IFLOW_SERVICE_VERSION,
+      version:
+        environment?.IFLOW_SERVICE_VERSION ??
+        environment?.CLAW_SERVICE_VERSION ??
+        env.IFLOW_SERVICE_VERSION,
     });
   const plist = buildLaunchAgentPlist({
     label,

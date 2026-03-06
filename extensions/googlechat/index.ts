@@ -7,7 +7,7 @@ import { setGoogleChatRuntime } from "./src/runtime.js";
 const plugin = {
   id: "googlechat",
   name: "Google Chat",
-  description: "iFlow Google Chat channel plugin",
+  description: "Claw Google Chat channel plugin",
   configSchema: emptyPluginConfigSchema(),
   register(api: iFlowPluginApi) {
     setGoogleChatRuntime(api.runtime);

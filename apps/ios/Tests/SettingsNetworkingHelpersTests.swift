@@ -1,5 +1,5 @@
 import Testing
-@testable import iFlow
+@testable import Claw
 
 @Suite struct SettingsNetworkingHelpersTests {
     @Test func parseHostPortParsesIPv4() {

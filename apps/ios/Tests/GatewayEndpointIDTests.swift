@@ -1,7 +1,7 @@
 import iFlowKit
 import Network
 import Testing
-@testable import iFlow
+@testable import Claw
 
 @Suite struct GatewayEndpointIDTests {
     @Test func stableIDForServiceDecodesAndNormalizesName() {

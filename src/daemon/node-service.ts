@@ -21,6 +21,14 @@ function withNodeServiceEnv(
     IFLOW_LOG_PREFIX: "node",
     IFLOW_SERVICE_MARKER: NODE_SERVICE_MARKER,
     IFLOW_SERVICE_KIND: NODE_SERVICE_KIND,
+    // Backward compatibility
+    CLAW_LAUNCHD_LABEL: resolveNodeLaunchAgentLabel(),
+    CLAW_SYSTEMD_UNIT: resolveNodeSystemdServiceName(),
+    CLAW_WINDOWS_TASK_NAME: resolveNodeWindowsTaskName(),
+    CLAW_TASK_SCRIPT_NAME: NODE_WINDOWS_TASK_SCRIPT_NAME,
+    CLAW_LOG_PREFIX: "node",
+    CLAW_SERVICE_MARKER: NODE_SERVICE_MARKER,
+    CLAW_SERVICE_KIND: NODE_SERVICE_KIND,
   };
 }
 
@@ -37,6 +45,14 @@ function withNodeInstallEnv(args: GatewayServiceInstallArgs): GatewayServiceInst
       IFLOW_LOG_PREFIX: "node",
       IFLOW_SERVICE_MARKER: NODE_SERVICE_MARKER,
       IFLOW_SERVICE_KIND: NODE_SERVICE_KIND,
+      // Backward compatibility
+      CLAW_LAUNCHD_LABEL: resolveNodeLaunchAgentLabel(),
+      CLAW_SYSTEMD_UNIT: resolveNodeSystemdServiceName(),
+      CLAW_WINDOWS_TASK_NAME: resolveNodeWindowsTaskName(),
+      CLAW_TASK_SCRIPT_NAME: NODE_WINDOWS_TASK_SCRIPT_NAME,
+      CLAW_LOG_PREFIX: "node",
+      CLAW_SERVICE_MARKER: NODE_SERVICE_MARKER,
+      CLAW_SERVICE_KIND: NODE_SERVICE_KIND,
     },
   };
 }

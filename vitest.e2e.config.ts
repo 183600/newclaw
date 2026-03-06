@@ -16,7 +16,7 @@ export default defineConfig({
       "apps/macos/**",
       "apps/macos/.build/**",
       "**/vendor/**",
-      "dist/iFlow.app/**",
+      "dist/Claw.app/**",
     ],
   },
 });

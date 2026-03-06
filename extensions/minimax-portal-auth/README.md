@@ -1,4 +1,4 @@
-# MiniMax OAuth (iFlow plugin)
+# MiniMax OAuth (Claw plugin)
 
 OAuth provider plugin for **MiniMax** (OAuth).
 
@@ -7,7 +7,7 @@ OAuth provider plugin for **MiniMax** (OAuth).
 Bundled plugins are disabled by default. Enable this one:
 
 ```bash
-iflow plugins enable minimax-portal-auth
+claw plugins enable minimax-portal-auth
 ```
 
 Restart the Gateway after enabling.
@@ -19,7 +19,7 @@ iflow gateway restart
 ## Authenticate
 
 ```bash
-iflow models auth login --provider minimax-portal --set-default
+claw models auth login --provider minimax-portal --set-default
 ```
 
 You will be prompted to select an endpoint:

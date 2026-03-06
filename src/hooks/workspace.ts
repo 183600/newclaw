@@ -15,7 +15,7 @@ import { resolveBundledHooksDir } from "./bundled-dir.js";
 import { shouldIncludeHook } from "./config.js";
 import {
   parseFrontmatter,
-  resolveiFlowMetadata,
+  resolveClawMetadata,
   resolveHookInvocationPolicy,
 } from "./frontmatter.js";
 
@@ -182,7 +182,7 @@ export function loadHookEntriesFromDir(params: {
         pluginId: params.pluginId,
       },
       frontmatter,
-      metadata: resolveiFlowMetadata(frontmatter),
+      metadata: resolveClawMetadata(frontmatter),
       invocation: resolveHookInvocationPolicy(frontmatter),
     };
     return entry;
@@ -208,23 +208,23 @@ function loadHookEntries(
   const bundledHooks = bundledHooksDir
     ? loadHooksFromDir({
         dir: bundledHooksDir,
-        source: "iflow-bundled",
+        source: "claw-bundled",
       })
     : [];
   const extraHooks = extraDirs.flatMap((dir) => {
     const resolved = resolveUserPath(dir);
     return loadHooksFromDir({
       dir: resolved,
-      source: "iflow-workspace", // Extra dirs treated as workspace
+      source: "claw-workspace", // Extra dirs treated as workspace
     });
   });
   const managedHooks = loadHooksFromDir({
     dir: managedHooksDir,
-    source: "iflow-managed",
+    source: "claw-managed",
   });
   const workspaceHooks = loadHooksFromDir({
     dir: workspaceHooksDir,
-    source: "iflow-workspace",
+    source: "claw-workspace",
   });
 
   const merged = new Map<string, Hook>();
@@ -253,7 +253,7 @@ function loadHookEntries(
     return {
       hook,
       frontmatter,
-      metadata: resolveiFlowMetadata(frontmatter),
+      metadata: resolveClawMetadata(frontmatter),
       invocation: resolveHookInvocationPolicy(frontmatter),
     };
   });

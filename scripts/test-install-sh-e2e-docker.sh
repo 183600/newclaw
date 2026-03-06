@@ -2,8 +2,8 @@
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-IMAGE_NAME="${IFLOW_INSTALL_E2E_IMAGE:-${CLAWDBOT_INSTALL_E2E_IMAGE:-iflow-install-e2e:local}}"
-INSTALL_URL="${IFLOW_INSTALL_URL:-${CLAWDBOT_INSTALL_URL:-https://iflow.bot/install.sh}}"
+IMAGE_NAME="${IFLOW_INSTALL_E2E_IMAGE:-${CLAWDBOT_INSTALL_E2E_IMAGE:-claw-install-e2e:local}}"
+INSTALL_URL="${IFLOW_INSTALL_URL:-${CLAWDBOT_INSTALL_URL:-https://claw.bot/install.sh}}"
 
 OPENAI_API_KEY="${OPENAI_API_KEY:-}"
 ANTHROPIC_API_KEY="${ANTHROPIC_API_KEY:-}"

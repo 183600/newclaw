@@ -130,7 +130,7 @@ describe("onboard (non-interactive): gateway and remote auth", () => {
     delete process.env.IFLOW_GATEWAY_TOKEN;
     delete process.env.IFLOW_GATEWAY_PASSWORD;
 
-    tempHome = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-onboard-"));
+    tempHome = await fs.mkdtemp(path.join(os.tmpdir(), "claw-onboard-"));
     process.env.HOME = tempHome;
   });
 
@@ -153,7 +153,7 @@ describe("onboard (non-interactive): gateway and remote auth", () => {
   it("writes gateway token auth into config and gateway enforces it", async () => {
     const stateDir = await initStateDir("state-noninteractive-");
     const token = "tok_test_123";
-    const workspace = path.join(stateDir, "iflow");
+    const workspace = path.join(stateDir, "claw");
 
     const { runNonInteractiveOnboarding } = await import("./onboard-non-interactive.js");
     await runNonInteractiveOnboarding(
@@ -240,7 +240,7 @@ describe("onboard (non-interactive): gateway and remote auth", () => {
     process.env.IFLOW_CONFIG_PATH = path.join(stateDir, "iflow.json");
 
     const port = await getFreeGatewayPort();
-    const workspace = path.join(stateDir, "iflow");
+    const workspace = path.join(stateDir, "claw");
 
     // Other test files mock ../config/config.js. This onboarding flow needs the real
     // implementation so it can persist the config and then read it back (Windows CI

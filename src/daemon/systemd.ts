@@ -39,11 +39,11 @@ function resolveSystemdUnitPathForName(
 }
 
 function resolveSystemdServiceName(env: Record<string, string | undefined>): string {
-  const override = env.IFLOW_SYSTEMD_UNIT?.trim();
+  const override = env.IFLOW_SYSTEMD_UNIT?.trim() || env.CLAW_SYSTEMD_UNIT?.trim();
   if (override) {
     return override.endsWith(".service") ? override.slice(0, -".service".length) : override;
   }
-  return resolveGatewaySystemdServiceName(env.IFLOW_PROFILE);
+  return resolveGatewaySystemdServiceName(env.IFLOW_PROFILE ?? env.CLAW_PROFILE);
 }
 
 function resolveSystemdUnitPath(env: Record<string, string | undefined>): string {
@@ -235,7 +235,10 @@ export async function installSystemdService({
     description ??
     formatGatewayServiceDescription({
       profile: env.IFLOW_PROFILE,
-      version: environment?.IFLOW_SERVICE_VERSION ?? env.IFLOW_SERVICE_VERSION,
+      version:
+        environment?.IFLOW_SERVICE_VERSION ??
+        environment?.CLAW_SERVICE_VERSION ??
+        env.IFLOW_SERVICE_VERSION,
     });
   const unit = buildSystemdUnit({
     description: serviceDescription,

@@ -213,7 +213,7 @@ describe("resolveAgentRoute", () => {
   test("defaultAgentId is used when no binding matches", () => {
     const cfg: iFlowConfig = {
       agents: {
-        list: [{ id: "home", default: true, workspace: "~/iflow-home" }],
+        list: [{ id: "home", default: true, workspace: "~/claw-home" }],
       },
     };
     const route = resolveAgentRoute({

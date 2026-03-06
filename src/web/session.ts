@@ -117,7 +117,7 @@ export async function createWaSocket(
     version,
     logger,
     printQRInTerminal: false,
-    browser: ["iflow", "cli", VERSION],
+    browser: ["claw", "cli", VERSION],
     syncFullHistory: false,
     markOnlineOnConnect: false,
   });

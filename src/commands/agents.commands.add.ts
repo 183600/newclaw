@@ -177,7 +177,7 @@ export async function agentsAddCommand(
 
   const prompter = createClackPrompter();
   try {
-    await prompter.intro("Add iFlow agent");
+    await prompter.intro("Add Claw agent");
     const name =
       nameInput ??
       (await prompter.text({

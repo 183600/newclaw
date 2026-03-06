@@ -4,9 +4,9 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 COMPOSE_FILE="$ROOT_DIR/docker-compose.yml"
 EXTRA_COMPOSE_FILE="$ROOT_DIR/docker-compose.extra.yml"
-IMAGE_NAME="${IFLOW_IMAGE:-iflow:local}"
-EXTRA_MOUNTS="${IFLOW_EXTRA_MOUNTS:-}"
-HOME_VOLUME_NAME="${IFLOW_HOME_VOLUME:-}"
+IMAGE_NAME="${CLAW_IMAGE:-claw:local}"
+EXTRA_MOUNTS="${CLAW_EXTRA_MOUNTS:-}"
+HOME_VOLUME_NAME="${CLAW_HOME_VOLUME:-}"
 
 require_cmd() {
   if ! command -v "$1" >/dev/null 2>&1; then
@@ -21,34 +21,34 @@ if ! docker compose version >/dev/null 2>&1; then
   exit 1
 fi
 
-IFLOW_CONFIG_DIR="${IFLOW_CONFIG_DIR:-$HOME/.iflow}"
-IFLOW_WORKSPACE_DIR="${IFLOW_WORKSPACE_DIR:-$HOME/.iflow/workspace}"
+CLAW_CONFIG_DIR="${CLAW_CONFIG_DIR:-$HOME/.claw}"
+CLAW_WORKSPACE_DIR="${CLAW_WORKSPACE_DIR:-$HOME/.claw/workspace}"
 
-mkdir -p "$IFLOW_CONFIG_DIR"
-mkdir -p "$IFLOW_WORKSPACE_DIR"
+mkdir -p "$CLAW_CONFIG_DIR"
+mkdir -p "$CLAW_WORKSPACE_DIR"
 
-export IFLOW_CONFIG_DIR
-export IFLOW_WORKSPACE_DIR
-export IFLOW_GATEWAY_PORT="${IFLOW_GATEWAY_PORT:-18789}"
-export IFLOW_BRIDGE_PORT="${IFLOW_BRIDGE_PORT:-18790}"
-export IFLOW_GATEWAY_BIND="${IFLOW_GATEWAY_BIND:-lan}"
-export IFLOW_IMAGE="$IMAGE_NAME"
-export IFLOW_DOCKER_APT_PACKAGES="${IFLOW_DOCKER_APT_PACKAGES:-}"
-export IFLOW_EXTRA_MOUNTS="$EXTRA_MOUNTS"
-export IFLOW_HOME_VOLUME="$HOME_VOLUME_NAME"
+export CLAW_CONFIG_DIR
+export CLAW_WORKSPACE_DIR
+export CLAW_GATEWAY_PORT="${CLAW_GATEWAY_PORT:-18789}"
+export CLAW_BRIDGE_PORT="${CLAW_BRIDGE_PORT:-18790}"
+export CLAW_GATEWAY_BIND="${CLAW_GATEWAY_BIND:-lan}"
+export CLAW_IMAGE="$IMAGE_NAME"
+export CLAW_DOCKER_APT_PACKAGES="${CLAW_DOCKER_APT_PACKAGES:-}"
+export CLAW_EXTRA_MOUNTS="$EXTRA_MOUNTS"
+export CLAW_HOME_VOLUME="$HOME_VOLUME_NAME"
 
-if [[ -z "${IFLOW_GATEWAY_TOKEN:-}" ]]; then
+if [[ -z "${CLAW_GATEWAY_TOKEN:-}" ]]; then
   if command -v openssl >/dev/null 2>&1; then
-    IFLOW_GATEWAY_TOKEN="$(openssl rand -hex 32)"
+    CLAW_GATEWAY_TOKEN="$(openssl rand -hex 32)"
   else
-    IFLOW_GATEWAY_TOKEN="$(python3 - <<'PY'
+    CLAW_GATEWAY_TOKEN="$(python3 - <<'PY'
 import secrets
 print(secrets.token_hex(32))
 PY
 )"
   fi
 fi
-export IFLOW_GATEWAY_TOKEN
+export CLAW_GATEWAY_TOKEN
 
 COMPOSE_FILES=("$COMPOSE_FILE")
 COMPOSE_ARGS=()
@@ -61,14 +61,14 @@ write_extra_compose() {
 
   cat >"$EXTRA_COMPOSE_FILE" <<'YAML'
 services:
-  iflow-gateway:
+  claw-gateway:
     volumes:
 YAML
 
   if [[ -n "$home_volume" ]]; then
     printf '      - %s:/home/node\n' "$home_volume" >>"$EXTRA_COMPOSE_FILE"
-    printf '      - %s:/home/node/.iflow\n' "$IFLOW_CONFIG_DIR" >>"$EXTRA_COMPOSE_FILE"
-    printf '      - %s:/home/node/.iflow/workspace\n' "$IFLOW_WORKSPACE_DIR" >>"$EXTRA_COMPOSE_FILE"
+    printf '      - %s:/home/node/.claw\n' "$CLAW_CONFIG_DIR" >>"$EXTRA_COMPOSE_FILE"
+    printf '      - %s:/home/node/.claw/workspace\n' "$CLAW_WORKSPACE_DIR" >>"$EXTRA_COMPOSE_FILE"
   fi
 
   for mount in "${mounts[@]}"; do
@@ -76,14 +76,14 @@ YAML
   done
 
   cat >>"$EXTRA_COMPOSE_FILE" <<'YAML'
-  iflow-cli:
+  claw-cli:
     volumes:
 YAML
 
   if [[ -n "$home_volume" ]]; then
     printf '      - %s:/home/node\n' "$home_volume" >>"$EXTRA_COMPOSE_FILE"
-    printf '      - %s:/home/node/.iflow\n' "$IFLOW_CONFIG_DIR" >>"$EXTRA_COMPOSE_FILE"
-    printf '      - %s:/home/node/.iflow/workspace\n' "$IFLOW_WORKSPACE_DIR" >>"$EXTRA_COMPOSE_FILE"
+    printf '      - %s:/home/node/.claw\n' "$CLAW_CONFIG_DIR" >>"$EXTRA_COMPOSE_FILE"
+    printf '      - %s:/home/node/.claw/workspace\n' "$CLAW_WORKSPACE_DIR" >>"$EXTRA_COMPOSE_FILE"
   fi
 
   for mount in "${mounts[@]}"; do
@@ -159,20 +159,20 @@ upsert_env() {
 }
 
 upsert_env "$ENV_FILE" \
-  IFLOW_CONFIG_DIR \
-  IFLOW_WORKSPACE_DIR \
-  IFLOW_GATEWAY_PORT \
-  IFLOW_BRIDGE_PORT \
-  IFLOW_GATEWAY_BIND \
-  IFLOW_GATEWAY_TOKEN \
-  IFLOW_IMAGE \
-  IFLOW_EXTRA_MOUNTS \
-  IFLOW_HOME_VOLUME \
-  IFLOW_DOCKER_APT_PACKAGES
+  CLAW_CONFIG_DIR \
+  CLAW_WORKSPACE_DIR \
+  CLAW_GATEWAY_PORT \
+  CLAW_BRIDGE_PORT \
+  CLAW_GATEWAY_BIND \
+  CLAW_GATEWAY_TOKEN \
+  CLAW_IMAGE \
+  CLAW_EXTRA_MOUNTS \
+  CLAW_HOME_VOLUME \
+  CLAW_DOCKER_APT_PACKAGES
 
 echo "==> Building Docker image: $IMAGE_NAME"
 docker build \
-  --build-arg "IFLOW_DOCKER_APT_PACKAGES=${IFLOW_DOCKER_APT_PACKAGES}" \
+  --build-arg "CLAW_DOCKER_APT_PACKAGES=${CLAW_DOCKER_APT_PACKAGES}" \
   -t "$IMAGE_NAME" \
   -f "$ROOT_DIR/Dockerfile" \
   "$ROOT_DIR"
@@ -182,33 +182,33 @@ echo "==> Onboarding (interactive)"
 echo "When prompted:"
 echo "  - Gateway bind: lan"
 echo "  - Gateway auth: token"
-echo "  - Gateway token: $IFLOW_GATEWAY_TOKEN"
+echo "  - Gateway token: $CLAW_GATEWAY_TOKEN"
 echo "  - Tailscale exposure: Off"
 echo "  - Install Gateway daemon: No"
 echo ""
-docker compose "${COMPOSE_ARGS[@]}" run --rm iflow-cli onboard --no-install-daemon
+docker compose "${COMPOSE_ARGS[@]}" run --rm claw-cli onboard --no-install-daemon
 
 echo ""
 echo "==> Provider setup (optional)"
 echo "WhatsApp (QR):"
-echo "  ${COMPOSE_HINT} run --rm iflow-cli channels login"
+echo "  ${COMPOSE_HINT} run --rm claw-cli channels login"
 echo "Telegram (bot token):"
-echo "  ${COMPOSE_HINT} run --rm iflow-cli channels add --channel telegram --token <token>"
+echo "  ${COMPOSE_HINT} run --rm claw-cli channels add --channel telegram --token <token>"
 echo "Discord (bot token):"
-echo "  ${COMPOSE_HINT} run --rm iflow-cli channels add --channel discord --token <token>"
-echo "Docs: https://docs.iflow.ai/channels"
+echo "  ${COMPOSE_HINT} run --rm claw-cli channels add --channel discord --token <token>"
+echo "Docs: https://docs.claw.dev/channels"
 
 echo ""
 echo "==> Starting gateway"
-docker compose "${COMPOSE_ARGS[@]}" up -d iflow-gateway
+docker compose "${COMPOSE_ARGS[@]}" up -d claw-gateway
 
 echo ""
 echo "Gateway running with host port mapping."
 echo "Access from tailnet devices via the host's tailnet IP."
-echo "Config: $IFLOW_CONFIG_DIR"
-echo "Workspace: $IFLOW_WORKSPACE_DIR"
-echo "Token: $IFLOW_GATEWAY_TOKEN"
+echo "Config: $CLAW_CONFIG_DIR"
+echo "Workspace: $CLAW_WORKSPACE_DIR"
+echo "Token: $CLAW_GATEWAY_TOKEN"
 echo ""
 echo "Commands:"
-echo "  ${COMPOSE_HINT} logs -f iflow-gateway"
-echo "  ${COMPOSE_HINT} exec iflow-gateway node dist/index.js health --token \"$IFLOW_GATEWAY_TOKEN\""
+echo "  ${COMPOSE_HINT} logs -f claw-gateway"
+echo "  ${COMPOSE_HINT} exec claw-gateway node dist/index.js health --token \"$CLAW_GATEWAY_TOKEN\""

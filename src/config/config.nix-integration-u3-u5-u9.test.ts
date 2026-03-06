@@ -5,29 +5,29 @@ import { withEnvOverride, withTempHome } from "./test-helpers.js";
 
 describe("Nix integration (U3, U5, U9)", () => {
   describe("U3: isNixMode env var detection", () => {
-    it("isNixMode is false when IFLOW_NIX_MODE is not set", async () => {
-      await withEnvOverride({ IFLOW_NIX_MODE: undefined }, async () => {
+    it("isNixMode is false when CLAW_NIX_MODE is not set", async () => {
+      await withEnvOverride({ CLAW_NIX_MODE: undefined }, async () => {
         const { isNixMode } = await import("./config.js");
         expect(isNixMode).toBe(false);
       });
     });
 
-    it("isNixMode is false when IFLOW_NIX_MODE is empty", async () => {
-      await withEnvOverride({ IFLOW_NIX_MODE: "" }, async () => {
+    it("isNixMode is false when CLAW_NIX_MODE is empty", async () => {
+      await withEnvOverride({ CLAW_NIX_MODE: "" }, async () => {
         const { isNixMode } = await import("./config.js");
         expect(isNixMode).toBe(false);
       });
     });
 
-    it("isNixMode is false when IFLOW_NIX_MODE is not '1'", async () => {
-      await withEnvOverride({ IFLOW_NIX_MODE: "true" }, async () => {
+    it("isNixMode is false when CLAW_NIX_MODE is not '1'", async () => {
+      await withEnvOverride({ CLAW_NIX_MODE: "true" }, async () => {
         const { isNixMode } = await import("./config.js");
         expect(isNixMode).toBe(false);
       });
     });
 
-    it("isNixMode is true when IFLOW_NIX_MODE=1", async () => {
-      await withEnvOverride({ IFLOW_NIX_MODE: "1" }, async () => {
+    it("isNixMode is true when CLAW_NIX_MODE=1", async () => {
+      await withEnvOverride({ CLAW_NIX_MODE: "1" }, async () => {
         const { isNixMode } = await import("./config.js");
         expect(isNixMode).toBe(true);
       });
@@ -36,14 +36,14 @@ describe("Nix integration (U3, U5, U9)", () => {
 
   describe("U5: CONFIG_PATH and STATE_DIR env var overrides", () => {
     it("STATE_DIR defaults to ~/.iflow when env not set", async () => {
-      await withEnvOverride({ IFLOW_STATE_DIR: undefined }, async () => {
+      await withEnvOverride({ CLAW_STATE_DIR: undefined }, async () => {
         const { STATE_DIR } = await import("./config.js");
         expect(STATE_DIR).toMatch(/\.iflow$/);
       });
     });
 
-    it("STATE_DIR respects IFLOW_STATE_DIR override", async () => {
-      await withEnvOverride({ IFLOW_STATE_DIR: "/custom/state/dir" }, async () => {
+    it("STATE_DIR respects CLAW_STATE_DIR override", async () => {
+      await withEnvOverride({ CLAW_STATE_DIR: "/custom/state/dir" }, async () => {
         const { STATE_DIR } = await import("./config.js");
         expect(STATE_DIR).toBe(path.resolve("/custom/state/dir"));
       });
@@ -51,24 +51,24 @@ describe("Nix integration (U3, U5, U9)", () => {
 
     it("CONFIG_PATH defaults to ~/.iflow/iflow.json when env not set", async () => {
       await withEnvOverride(
-        { IFLOW_CONFIG_PATH: undefined, IFLOW_STATE_DIR: undefined },
+        { CLAW_CONFIG_PATH: undefined, CLAW_STATE_DIR: undefined },
         async () => {
           const { CONFIG_PATH } = await import("./config.js");
-          expect(CONFIG_PATH).toMatch(/\.iflow[\\/]iflow\.json$/);
+          expect(CONFIG_PATH).toMatch(/\.iflow[\\/]claw\.json$/);
         },
       );
     });
 
-    it("CONFIG_PATH respects IFLOW_CONFIG_PATH override", async () => {
-      await withEnvOverride({ IFLOW_CONFIG_PATH: "/nix/store/abc/iflow.json" }, async () => {
+    it("CONFIG_PATH respects CLAW_CONFIG_PATH override", async () => {
+      await withEnvOverride({ CLAW_CONFIG_PATH: "/nix/store/abc/iflow.json" }, async () => {
         const { CONFIG_PATH } = await import("./config.js");
         expect(CONFIG_PATH).toBe(path.resolve("/nix/store/abc/iflow.json"));
       });
     });
 
-    it("CONFIG_PATH expands ~ in IFLOW_CONFIG_PATH override", async () => {
+    it("CONFIG_PATH expands ~ in CLAW_CONFIG_PATH override", async () => {
       await withTempHome(async (home) => {
-        await withEnvOverride({ IFLOW_CONFIG_PATH: "~/.iflow/custom.json" }, async () => {
+        await withEnvOverride({ CLAW_CONFIG_PATH: "~/.iflow/custom.json" }, async () => {
           const { CONFIG_PATH } = await import("./config.js");
           expect(CONFIG_PATH).toBe(path.join(home, ".iflow", "custom.json"));
         });
@@ -78,8 +78,8 @@ describe("Nix integration (U3, U5, U9)", () => {
     it("CONFIG_PATH uses STATE_DIR when only state dir is overridden", async () => {
       await withEnvOverride(
         {
-          IFLOW_CONFIG_PATH: undefined,
-          IFLOW_STATE_DIR: "/custom/state",
+          CLAW_CONFIG_PATH: undefined,
+          CLAW_STATE_DIR: "/custom/state",
         },
         async () => {
           const { CONFIG_PATH } = await import("./config.js");
@@ -167,21 +167,21 @@ describe("Nix integration (U3, U5, U9)", () => {
 
   describe("U6: gateway port resolution", () => {
     it("uses default when env and config are unset", async () => {
-      await withEnvOverride({ IFLOW_GATEWAY_PORT: undefined }, async () => {
+      await withEnvOverride({ CLAW_GATEWAY_PORT: undefined }, async () => {
         const { DEFAULT_GATEWAY_PORT, resolveGatewayPort } = await import("./config.js");
         expect(resolveGatewayPort({})).toBe(DEFAULT_GATEWAY_PORT);
       });
     });
 
-    it("prefers IFLOW_GATEWAY_PORT over config", async () => {
-      await withEnvOverride({ IFLOW_GATEWAY_PORT: "19001" }, async () => {
+    it("prefers CLAW_GATEWAY_PORT over config", async () => {
+      await withEnvOverride({ CLAW_GATEWAY_PORT: "19001" }, async () => {
         const { resolveGatewayPort } = await import("./config.js");
         expect(resolveGatewayPort({ gateway: { port: 19002 } })).toBe(19001);
       });
     });
 
     it("falls back to config when env is invalid", async () => {
-      await withEnvOverride({ IFLOW_GATEWAY_PORT: "nope" }, async () => {
+      await withEnvOverride({ CLAW_GATEWAY_PORT: "nope" }, async () => {
         const { resolveGatewayPort } = await import("./config.js");
         expect(resolveGatewayPort({ gateway: { port: 19003 } })).toBe(19003);
       });

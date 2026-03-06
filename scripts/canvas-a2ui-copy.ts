@@ -5,8 +5,8 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
 export function getA2uiPaths(env = process.env) {
-  const srcDir = env.IFLOW_A2UI_SRC_DIR ?? path.join(repoRoot, "src", "canvas-host", "a2ui");
-  const outDir = env.IFLOW_A2UI_OUT_DIR ?? path.join(repoRoot, "dist", "canvas-host", "a2ui");
+  const srcDir = env.CLAW_A2UI_SRC_DIR ?? path.join(repoRoot, "src", "canvas-host", "a2ui");
+  const outDir = env.CLAW_A2UI_OUT_DIR ?? path.join(repoRoot, "dist", "canvas-host", "a2ui");
   return { srcDir, outDir };
 }
 
@@ -18,7 +18,7 @@ export async function copyA2uiAssets({ srcDir, outDir }: { srcDir: string; outDi
   } catch (err) {
     const message = 'Missing A2UI bundle assets. Run "pnpm canvas:a2ui:bundle" and retry.';
     if (skipMissing) {
-      console.warn(`${message} Skipping copy (IFLOW_A2UI_SKIP_MISSING=1).`);
+      console.warn(`${message} Skipping copy (CLAW_A2UI_SKIP_MISSING=1).`);
       return;
     }
     throw new Error(message, { cause: err });

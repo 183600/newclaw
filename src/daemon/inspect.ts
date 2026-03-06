@@ -15,7 +15,7 @@ export type ExtraGatewayService = {
   label: string;
   detail: string;
   scope: "user" | "system";
-  marker?: "iflow" | "clawdbot" | "moltbot";
+  marker?: "claw" | "clawdbot" | "moltbot";
   legacy?: boolean;
 };
 
@@ -23,7 +23,7 @@ export type FindExtraGatewayServicesOptions = {
   deep?: boolean;
 };
 
-const EXTRA_MARKERS = ["iflow", "clawdbot", "moltbot"] as const;
+const EXTRA_MARKERS = ["claw", "clawdbot", "moltbot"] as const;
 const execFileAsync = promisify(execFile);
 
 export function renderGatewayServiceCleanupHints(
@@ -87,7 +87,7 @@ function hasGatewayServiceMarker(content: string): boolean {
   );
 }
 
-function isiFlowGatewayLaunchdService(label: string, contents: string): boolean {
+function isClawGatewayLaunchdService(label: string, contents: string): boolean {
   if (hasGatewayServiceMarker(contents)) {
     return true;
   }
@@ -98,23 +98,23 @@ function isiFlowGatewayLaunchdService(label: string, contents: string): boolean 
   return label.startsWith("ai.iflow.");
 }
 
-function isiFlowGatewaySystemdService(name: string, contents: string): boolean {
+function isClawGatewaySystemdService(name: string, contents: string): boolean {
   if (hasGatewayServiceMarker(contents)) {
     return true;
   }
-  if (!name.startsWith("iflow-gateway")) {
+  if (!name.startsWith("claw-gateway")) {
     return false;
   }
   return contents.toLowerCase().includes("gateway");
 }
 
-function isiFlowGatewayTaskName(name: string): boolean {
+function isClawGatewayTaskName(name: string): boolean {
   const normalized = name.trim().toLowerCase();
   if (!normalized) {
     return false;
   }
   const defaultName = resolveGatewayWindowsTaskName().toLowerCase();
-  return normalized === defaultName || normalized.startsWith("iflow gateway");
+  return normalized === defaultName || normalized.startsWith("claw gateway");
 }
 
 function tryExtractPlistLabel(contents: string): string | null {
@@ -185,7 +185,7 @@ async function scanLaunchdDir(params: {
     if (isIgnoredLaunchdLabel(label)) {
       continue;
     }
-    if (marker === "iflow" && isiFlowGatewayLaunchdService(label, contents)) {
+    if (marker === "claw" && isClawGatewayLaunchdService(label, contents)) {
       continue;
     }
     results.push({
@@ -194,7 +194,7 @@ async function scanLaunchdDir(params: {
       detail: `plist: ${fullPath}`,
       scope: params.scope,
       marker,
-      legacy: marker !== "iflow" || isLegacyLabel(label),
+      legacy: marker !== "claw" || isLegacyLabel(label),
     });
   }
 
@@ -232,7 +232,7 @@ async function scanSystemdDir(params: {
     if (!marker) {
       continue;
     }
-    if (marker === "iflow" && isiFlowGatewaySystemdService(name, contents)) {
+    if (marker === "claw" && isClawGatewaySystemdService(name, contents)) {
       continue;
     }
     results.push({
@@ -241,7 +241,7 @@ async function scanSystemdDir(params: {
       detail: `unit: ${fullPath}`,
       scope: params.scope,
       marker,
-      legacy: marker !== "iflow",
+      legacy: marker !== "claw",
     });
   }
 
@@ -414,7 +414,7 @@ export async function findExtraGatewayServices(
       if (!name) {
         continue;
       }
-      if (isiFlowGatewayTaskName(name)) {
+      if (isClawGatewayTaskName(name)) {
         continue;
       }
       const lowerName = name.toLowerCase();
@@ -435,7 +435,7 @@ export async function findExtraGatewayServices(
         detail: task.taskToRun ? `task: ${name}, run: ${task.taskToRun}` : name,
         scope: "system",
         marker,
-        legacy: marker !== "iflow",
+        legacy: marker !== "claw",
       });
     }
     return results;

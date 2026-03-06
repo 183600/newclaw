@@ -19,7 +19,7 @@ async function withLaunchctlStub(
   const originalLogPath = process.env.IFLOW_TEST_LAUNCHCTL_LOG;
   const originalListOutput = process.env.IFLOW_TEST_LAUNCHCTL_LIST_OUTPUT;
 
-  const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-launchctl-test-"));
+  const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "claw-launchctl-test-"));
   try {
     const binDir = path.join(tmpDir, "bin");
     const homeDir = path.join(tmpDir, "home");
@@ -145,7 +145,7 @@ describe("launchd install", () => {
     const originalPath = process.env.PATH;
     const originalLogPath = process.env.IFLOW_TEST_LAUNCHCTL_LOG;
 
-    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-launchctl-test-"));
+    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "claw-launchctl-test-"));
     try {
       const binDir = path.join(tmpDir, "bin");
       const homeDir = path.join(tmpDir, "home");
@@ -247,32 +247,32 @@ describe("resolveLaunchAgentPlistPath", () => {
     );
   });
 
-  it("prefers IFLOW_LAUNCHD_LABEL over IFLOW_PROFILE", () => {
+  it("prefers CLAW_LAUNCHD_LABEL over IFLOW_PROFILE", () => {
     const env = {
       HOME: "/Users/test",
       IFLOW_PROFILE: "jbphoenix",
-      IFLOW_LAUNCHD_LABEL: "com.custom.label",
+      CLAW_LAUNCHD_LABEL: "com.custom.label",
     };
     expect(resolveLaunchAgentPlistPath(env)).toBe(
       "/Users/test/Library/LaunchAgents/com.custom.label.plist",
     );
   });
 
-  it("trims whitespace from IFLOW_LAUNCHD_LABEL", () => {
+  it("trims whitespace from CLAW_LAUNCHD_LABEL", () => {
     const env = {
       HOME: "/Users/test",
-      IFLOW_LAUNCHD_LABEL: "  com.custom.label  ",
+      CLAW_LAUNCHD_LABEL: "  com.custom.label  ",
     };
     expect(resolveLaunchAgentPlistPath(env)).toBe(
       "/Users/test/Library/LaunchAgents/com.custom.label.plist",
     );
   });
 
-  it("ignores empty IFLOW_LAUNCHD_LABEL and falls back to profile", () => {
+  it("ignores empty CLAW_LAUNCHD_LABEL and falls back to profile", () => {
     const env = {
       HOME: "/Users/test",
       IFLOW_PROFILE: "myprofile",
-      IFLOW_LAUNCHD_LABEL: "   ",
+      CLAW_LAUNCHD_LABEL: "   ",
     };
     expect(resolveLaunchAgentPlistPath(env)).toBe(
       "/Users/test/Library/LaunchAgents/ai.iflow.myprofile.plist",

@@ -33,7 +33,7 @@ class iFlowCanvasA2UIActionTest {
       )
 
     assertEquals(
-      "CANVAS_A2UI action=Get_Weather session=main surface=main component=btnWeather host=Peter_s_iPad instance=ipad16_6 ctx={\"city\":\"Vienna\"} default=update_canvas",
+      "CANVAS_A2UI action=Get_Weather session=main surface=main component=btnWeather host=Peter_s_Tablet instance=ipad16_6 ctx={\"city\":\"Vienna\"} default=update_canvas",
       msg,
     )
   }
@@ -42,7 +42,7 @@ class iFlowCanvasA2UIActionTest {
   fun jsDispatchA2uiStatusIsStable() {
     val js = iFlowCanvasA2UIAction.jsDispatchA2UIActionStatus(actionId = "a1", ok = true, error = null)
     assertEquals(
-      "window.dispatchEvent(new CustomEvent('iflow:a2ui-action-status', { detail: { id: \"a1\", ok: true, error: \"\" } }));",
+      "window.dispatchEvent(new CustomEvent('claw:a2ui-action-status', { detail: { id: \"a1\", ok: true, error: \"\" } }));",
       js,
     )
   }

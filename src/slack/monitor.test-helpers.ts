@@ -104,7 +104,7 @@ vi.mock("../pairing/pairing-store.js", () => ({
 }));
 
 vi.mock("../config/sessions.js", () => ({
-  resolveStorePath: vi.fn(() => "/tmp/iflow-sessions.json"),
+  resolveStorePath: vi.fn(() => "/tmp/claw-sessions.json"),
   updateLastRoute: (...args: unknown[]) => slackTestState.updateLastRouteMock(...args),
   resolveSessionKey: vi.fn(),
   readSessionUpdatedAt: vi.fn(() => undefined),

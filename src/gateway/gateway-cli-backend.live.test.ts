@@ -228,7 +228,7 @@ describeLive("gateway live (cli backend)", () => {
     const parsed = parseModelRef(rawModel, "claude-cli");
     if (!parsed) {
       throw new Error(
-        `IFLOW_LIVE_CLI_BACKEND_MODEL must resolve to a CLI backend model. Got: ${rawModel}`,
+        `CLAW_LIVE_CLI_BACKEND_MODEL must resolve to a CLI backend model. Got: ${rawModel}`,
       );
     }
     const providerId = parsed.provider;
@@ -243,7 +243,7 @@ describeLive("gateway live (cli backend)", () => {
 
     const cliCommand = process.env.IFLOW_LIVE_CLI_BACKEND_COMMAND ?? providerDefaults?.command;
     if (!cliCommand) {
-      throw new Error(`IFLOW_LIVE_CLI_BACKEND_COMMAND is required for provider "${providerId}".`);
+      throw new Error(`CLAW_LIVE_CLI_BACKEND_COMMAND is required for provider "${providerId}".`);
     }
     const baseCliArgs =
       parseJsonStringArray(
@@ -251,7 +251,7 @@ describeLive("gateway live (cli backend)", () => {
         process.env.IFLOW_LIVE_CLI_BACKEND_ARGS,
       ) ?? providerDefaults?.args;
     if (!baseCliArgs || baseCliArgs.length === 0) {
-      throw new Error(`IFLOW_LIVE_CLI_BACKEND_ARGS is required for provider "${providerId}".`);
+      throw new Error(`CLAW_LIVE_CLI_BACKEND_ARGS is required for provider "${providerId}".`);
     }
     const cliClearEnv =
       parseJsonStringArray(
@@ -263,11 +263,11 @@ describeLive("gateway live (cli backend)", () => {
 
     if (cliImageMode && !cliImageArg) {
       throw new Error(
-        "IFLOW_LIVE_CLI_BACKEND_IMAGE_MODE requires IFLOW_LIVE_CLI_BACKEND_IMAGE_ARG.",
+        "IFLOW_LIVE_CLI_BACKEND_IMAGE_MODE requires CLAW_LIVE_CLI_BACKEND_IMAGE_ARG.",
       );
     }
 
-    const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-live-cli-"));
+    const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "claw-live-cli-"));
     const disableMcpConfig = process.env.IFLOW_LIVE_CLI_BACKEND_DISABLE_MCP_CONFIG !== "0";
     let cliArgs = baseCliArgs;
     if (providerId === "claude-cli" && disableMcpConfig) {

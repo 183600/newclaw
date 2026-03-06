@@ -2,7 +2,7 @@ import iFlowKit
 import Foundation
 import Testing
 import UIKit
-@testable import iFlow
+@testable import Claw
 
 private func withUserDefaults<T>(_ updates: [String: Any?], _ body: () throws -> T) rethrows -> T {
     let defaults = UserDefaults.standard

@@ -183,16 +183,16 @@ function injectControlUiConfig(html: string, opts: ControlUiInjectionOpts): stri
   const { basePath, assistantName, assistantAvatar } = opts;
   const script =
     `<script>` +
-    `window.__IFLOW_CONTROL_UI_BASE_PATH__=${JSON.stringify(basePath)};` +
-    `window.__IFLOW_ASSISTANT_NAME__=${JSON.stringify(
+    `window.__CLAW_CONTROL_UI_BASE_PATH__=${JSON.stringify(basePath)};` +
+    `window.__CLAW_ASSISTANT_NAME__=${JSON.stringify(
       assistantName ?? DEFAULT_ASSISTANT_IDENTITY.name,
     )};` +
-    `window.__IFLOW_ASSISTANT_AVATAR__=${JSON.stringify(
+    `window.__CLAW_ASSISTANT_AVATAR__=${JSON.stringify(
       assistantAvatar ?? DEFAULT_ASSISTANT_IDENTITY.avatar,
     )};` +
     `</script>`;
   // Check if already injected
-  if (html.includes("__IFLOW_ASSISTANT_NAME__")) {
+  if (html.includes("__CLAW_ASSISTANT_NAME__")) {
     return html;
   }
   const headClose = html.indexOf("</head>");

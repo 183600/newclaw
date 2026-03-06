@@ -83,7 +83,7 @@ src/agents/
 ├── pi-embedded-helpers.ts         # 错误分类、轮次验证
 ├── pi-embedded-helpers/           # 辅助模块
 ├── pi-embedded-utils.ts           # 格式化工具
-├── pi-tools.ts                    # createiFlowCodingTools()
+├── pi-tools.ts                    # createClawCodingTools()
 ├── pi-tools.abort.ts              # 工具的 AbortSignal 封装
 ├── pi-tools.policy.ts             # 工具允许/拒绝列表策略
 ├── pi-tools.read.ts               # Read 工具自定义
@@ -149,7 +149,7 @@ const result = await runEmbeddedPiAgent({
   sessionKey: "main:whatsapp:+1234567890",
   sessionFile: "/path/to/session.jsonl",
   workspaceDir: "/path/to/workspace",
-  config: iflowConfig,
+  config: clawConfig,
   prompt: "Hello, how are you?",
   provider: "anthropic",
   model: "claude-sonnet-4-20250514",

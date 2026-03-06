@@ -1,6 +1,6 @@
 import Foundation
 import Testing
-@testable import iFlow
+@testable import Claw
 
 @Suite struct VoiceWakeGatewaySyncTests {
     @Test func decodeGatewayTriggersFromJSONSanitizes() {

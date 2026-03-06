@@ -54,7 +54,7 @@ export async function noteSecurityWarnings(cfg: iFlowConfig) {
           : [
               `  Fix: ${formatCliCommand("iflow doctor --fix")} to generate a token`,
               `  Or set token directly: ${formatCliCommand(
-                "iflow config set gateway.auth.mode token",
+                "claw config set gateway.auth.mode token",
               )}`,
             ];
       warnings.push(

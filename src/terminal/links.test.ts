@@ -85,7 +85,7 @@ describe("formatDocsRootLink", () => {
   });
 
   it("should format root link with custom label", () => {
-    const result = formatDocsRootLink("iFlow Docs");
-    expect(result).toBe(`[LINK:iFlow Docs->${DOCS_ROOT}]`);
+    const result = formatDocsRootLink("Claw Docs");
+    expect(result).toBe(`[LINK:Claw Docs->${DOCS_ROOT}]`);
   });
 });

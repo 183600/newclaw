@@ -5,8 +5,8 @@ Welcome to the lobster tank! 🦞
 ## Quick Links
 
 - **GitHub:** https://github.com/iflow/iflow
-- **Discord:** https://discord.gg/qkhbAGHRBT
-- **X/Twitter:** [@steipete](https://x.com/steipete) / [@iflow](https://x.com/iflow)
+- **Discord:** https://discord.gg/iflow
+- **X/Twitter:** [@steipete](https://x.com/steipete) / [@claw](https://x.com/claw)
 
 ## Maintainers
 

@@ -24,7 +24,7 @@ import { createExecApprovalForwarder } from "../infra/exec-approval-forwarder.js
 import { onHeartbeatEvent } from "../infra/heartbeat-events.js";
 import { startHeartbeatRunner } from "../infra/heartbeat-runner.js";
 import { getMachineDisplayName } from "../infra/machine-name.js";
-import { ensureiFlowCliOnPath } from "../infra/path-env.js";
+import { ensureClawCliOnPath } from "../infra/path-env.js";
 import { setGatewaySigusr1RestartPolicy } from "../infra/restart.js";
 import {
   primeRemoteSkillsCache,
@@ -73,7 +73,7 @@ import { loadGatewayTlsRuntime } from "./server/tls.js";
 
 export { __resetModelCatalogCacheForTest } from "./server-model-catalog.js";
 
-ensureiFlowCliOnPath();
+ensureClawCliOnPath();
 
 const log = createSubsystemLogger("gateway");
 const logCanvas = log.child("canvas");
@@ -149,7 +149,9 @@ export async function startGatewayServer(
   opts: GatewayServerOptions = {},
 ): Promise<GatewayServer> {
   // Ensure all default port derivations (browser/canvas) see the actual runtime port.
-  process.env.IFLOW_GATEWAY_PORT = String(port);
+  process.env.IFLOW_GATEWAY_PORT =
+    process.env.IFLOW_GATEWAY_PORT || process.env.IFLOW_GATEWAY_PORT || String(port);
+  process.env.IFLOW_GATEWAY_PORT = process.env.IFLOW_GATEWAY_PORT || String(port);
   logAcceptedEnvOption({
     key: "IFLOW_RAW_STREAM",
     description: "raw stream logging enabled",

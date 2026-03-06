@@ -1,6 +1,6 @@
-## iFlow Node (Android) (internal)
+## Claw Node (Android) (internal)
 
-Modern Android node app: connects to the **Gateway WebSocket** (`_iflow-gw._tcp`) and exposes **Canvas + Chat + Camera**.
+Modern Android node app: connects to the **Gateway WebSocket** (`_claw-gw._tcp`) and exposes **Canvas + Chat + Camera**.
 
 Notes:
 - The node keeps the connection alive via a **foreground service** (persistent notification with a Disconnect action).
@@ -25,7 +25,7 @@ cd apps/android
 
 1) Start the gateway (on your “master” machine):
 ```bash
-pnpm iflow gateway --port 18789 --verbose
+pnpm claw gateway --port 18789 --verbose
 ```
 
 2) In the Android app:
@@ -34,8 +34,8 @@ pnpm iflow gateway --port 18789 --verbose
 
 3) Approve pairing (on the gateway machine):
 ```bash
-iflow nodes pending
-iflow nodes approve <requestId>
+claw nodes pending
+claw nodes approve <requestId>
 ```
 
 More details: `docs/platforms/android.md`.

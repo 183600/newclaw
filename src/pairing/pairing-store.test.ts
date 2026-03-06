@@ -8,7 +8,7 @@ import { listChannelPairingRequests, upsertChannelPairingRequest } from "./pairi
 
 async function withTempStateDir<T>(fn: (stateDir: string) => Promise<T>) {
   const previous = process.env.IFLOW_STATE_DIR;
-  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-pairing-"));
+  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "claw-pairing-"));
   process.env.IFLOW_STATE_DIR = dir;
   try {
     return await fn(dir);

@@ -60,8 +60,8 @@ describe("writeOAuthCredentials", () => {
     delete process.env.IFLOW_OAUTH_DIR;
   });
 
-  it("writes auth-profiles.json under IFLOW_AGENT_DIR when set", async () => {
-    tempStateDir = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-oauth-"));
+  it("writes auth-profiles.json under CLAW_AGENT_DIR when set", async () => {
+    tempStateDir = await fs.mkdtemp(path.join(os.tmpdir(), "claw-oauth-"));
     process.env.IFLOW_STATE_DIR = tempStateDir;
     process.env.IFLOW_AGENT_DIR = path.join(tempStateDir, "agent");
     process.env.PI_CODING_AGENT_DIR = process.env.IFLOW_AGENT_DIR;
@@ -119,8 +119,8 @@ describe("setMinimaxApiKey", () => {
     }
   });
 
-  it("writes to IFLOW_AGENT_DIR when set", async () => {
-    tempStateDir = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-minimax-"));
+  it("writes to CLAW_AGENT_DIR when set", async () => {
+    tempStateDir = await fs.mkdtemp(path.join(os.tmpdir(), "claw-minimax-"));
     process.env.IFLOW_STATE_DIR = tempStateDir;
     process.env.IFLOW_AGENT_DIR = path.join(tempStateDir, "custom-agent");
     process.env.PI_CODING_AGENT_DIR = process.env.IFLOW_AGENT_DIR;

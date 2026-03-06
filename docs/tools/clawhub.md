@@ -1,19 +1,19 @@
 ---
-summary: "ClawHub guide: public skills registry + CLI workflows"
+summary: "iFlowHub guide: public skills registry + CLI workflows"
 read_when:
-  - Introducing ClawHub to new users
+  - Introducing iFlowHub to new users
   - Installing, searching, or publishing skills
-  - Explaining ClawHub CLI flags and sync behavior
-title: "ClawHub"
+  - Explaining iFlowHub CLI flags and sync behavior
+title: "iFlowHub"
 ---
 
-# ClawHub
+# iFlowHub
 
-ClawHub is the **public skill registry for iFlow**. It is a free service: all skills are public, open, and visible to everyone for sharing and reuse. A skill is just a folder with a `SKILL.md` file (plus supporting text files). You can browse skills in the web app or use the CLI to search, install, update, and publish skills.
+iFlowHub is the **public skill registry for iFlow**. It is a free service: all skills are public, open, and visible to everyone for sharing and reuse. A skill is just a folder with a `SKILL.md` file (plus supporting text files). You can browse skills in the web app or use the CLI to search, install, update, and publish skills.
 
 Site: [clawhub.ai](https://clawhub.ai)
 
-## What ClawHub is
+## What iFlowHub is
 
 - A public registry for iFlow skills.
 - A versioned store of skill bundles and metadata.
@@ -22,7 +22,7 @@ Site: [clawhub.ai](https://clawhub.ai)
 ## How it works
 
 1. A user publishes a skill bundle (files + metadata).
-2. ClawHub stores the bundle, parses metadata, and assigns a version.
+2. iFlowHub stores the bundle, parses metadata, and assigns a version.
 3. The registry indexes the skill for search and discovery.
 4. Users browse, download, and install skills in iFlow.
 
@@ -36,7 +36,7 @@ Site: [clawhub.ai](https://clawhub.ai)
 
 ## Who this is for (beginner-friendly)
 
-If you want to add new capabilities to your iFlow agent, ClawHub is the easiest way to find and install skills. You do not need to know how the backend works. You can:
+If you want to add new capabilities to your iFlow agent, iFlowHub is the easiest way to find and install skills. You do not need to know how the backend works. You can:
 
 - Search for skills by plain language.
 - Install a skill into your workspace.
@@ -83,7 +83,7 @@ A typical skill includes:
 - Optional configs, scripts, or supporting files used by the skill.
 - Metadata such as tags, summary, and install requirements.
 
-ClawHub uses metadata to power discovery and safely expose skill capabilities.
+iFlowHub uses metadata to power discovery and safely expose skill capabilities.
 The registry also tracks usage signals (such as stars and downloads) to improve
 ranking and visibility.
 
@@ -99,7 +99,7 @@ ranking and visibility.
 
 ## Security and moderation
 
-ClawHub is open by default. Anyone can upload skills, but a GitHub account must
+iFlowHub is open by default. Anyone can upload skills, but a GitHub account must
 be at least one week old to publish. This helps slow down abuse without blocking
 legitimate contributors.
 
@@ -158,7 +158,7 @@ Update:
 
 List:
 
-- `clawhub list` (reads `.clawhub/lock.json`)
+- `clawhub list` (reads `.iflowhub/lock.json`)
 
 Publish:
 
@@ -237,8 +237,8 @@ Updates compare the local skill contents to registry versions using a content ha
 
 ### Storage and lockfile
 
-- Installed skills are recorded in `.clawhub/lock.json` under your workdir.
-- Auth tokens are stored in the ClawHub CLI config file (override via `CLAWHUB_CONFIG_PATH`).
+- Installed skills are recorded in `.iflowhub/lock.json` under your workdir.
+- Auth tokens are stored in the iFlowHub CLI config file (override via `CLAWHUB_CONFIG_PATH`).
 
 ### Telemetry (install counts)
 

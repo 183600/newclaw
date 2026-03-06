@@ -1,20 +1,20 @@
 #!/usr/bin/env bash
-# Reset iFlow like Trimmy: kill running instances, rebuild, repackage, relaunch, verify.
+# Reset Claw like Trimmy: kill running instances, rebuild, repackage, relaunch, verify.
 
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 APP_BUNDLE="${IFLOW_APP_BUNDLE:-}"
-APP_PROCESS_PATTERN="iFlow.app/Contents/MacOS/iFlow"
-DEBUG_PROCESS_PATTERN="${ROOT_DIR}/apps/macos/.build/debug/iFlow"
-LOCAL_PROCESS_PATTERN="${ROOT_DIR}/apps/macos/.build-local/debug/iFlow"
-RELEASE_PROCESS_PATTERN="${ROOT_DIR}/apps/macos/.build/release/iFlow"
+APP_PROCESS_PATTERN="Claw.app/Contents/MacOS/Claw"
+DEBUG_PROCESS_PATTERN="${ROOT_DIR}/apps/macos/.build/debug/Claw"
+LOCAL_PROCESS_PATTERN="${ROOT_DIR}/apps/macos/.build-local/debug/Claw"
+RELEASE_PROCESS_PATTERN="${ROOT_DIR}/apps/macos/.build/release/Claw"
 LAUNCH_AGENT="${HOME}/Library/LaunchAgents/ai.iflow.mac.plist"
 LOCK_KEY="$(printf '%s' "${ROOT_DIR}" | shasum -a 256 | cut -c1-8)"
-LOCK_DIR="${TMPDIR:-/tmp}/iflow-restart-${LOCK_KEY}"
+LOCK_DIR="${TMPDIR:-/tmp}/claw-restart-${LOCK_KEY}"
 LOCK_PID_FILE="${LOCK_DIR}/pid"
 WAIT_FOR_LOCK=0
-LOG_PATH="${IFLOW_RESTART_LOG:-/tmp/iflow-restart.log}"
+LOG_PATH="${IFLOW_RESTART_LOG:-/tmp/claw-restart.log}"
 NO_SIGN=0
 SIGN=0
 AUTO_DETECT_SIGNING=1
@@ -96,8 +96,8 @@ for arg in "$@"; do
       log "  IFLOW_GATEWAY_WAIT_SECONDS=0  Wait time before gateway port check (unsigned only)"
       log ""
       log "Unsigned recovery:"
-      log "  node iflow.mjs daemon install --force --runtime node"
-      log "  node iflow.mjs daemon restart"
+      log "  node claw.mjs daemon install --force --runtime node"
+      log "  node claw.mjs daemon restart"
       log ""
       log "Reset unsigned overrides:"
       log "  rm ~/.iflow/disable-launchagent"
@@ -126,18 +126,18 @@ fi
 
 acquire_lock
 
-kill_all_iflow() {
+kill_all_claw() {
   for _ in {1..10}; do
     pkill -f "${APP_PROCESS_PATTERN}" 2>/dev/null || true
     pkill -f "${DEBUG_PROCESS_PATTERN}" 2>/dev/null || true
     pkill -f "${LOCAL_PROCESS_PATTERN}" 2>/dev/null || true
     pkill -f "${RELEASE_PROCESS_PATTERN}" 2>/dev/null || true
-    pkill -x "iFlow" 2>/dev/null || true
+    pkill -x "Claw" 2>/dev/null || true
     if ! pgrep -f "${APP_PROCESS_PATTERN}" >/dev/null 2>&1 \
        && ! pgrep -f "${DEBUG_PROCESS_PATTERN}" >/dev/null 2>&1 \
        && ! pgrep -f "${LOCAL_PROCESS_PATTERN}" >/dev/null 2>&1 \
        && ! pgrep -f "${RELEASE_PROCESS_PATTERN}" >/dev/null 2>&1 \
-       && ! pgrep -x "iFlow" >/dev/null 2>&1; then
+       && ! pgrep -x "Claw" >/dev/null 2>&1; then
       return 0
     fi
     sleep 0.3
@@ -149,8 +149,8 @@ stop_launch_agent() {
 }
 
 # 1) Kill all running instances first.
-log "==> Killing existing iFlow instances"
-kill_all_iflow
+log "==> Killing existing Claw instances"
+kill_all_claw
 stop_launch_agent
 
 # Bundle Gateway-hosted Canvas A2UI assets.
@@ -158,7 +158,7 @@ run_step "bundle canvas a2ui" bash -lc "cd '${ROOT_DIR}' && pnpm canvas:a2ui:bun
 
 # 2) Rebuild into the same path the packager consumes (.build).
 run_step "clean build cache" bash -lc "cd '${ROOT_DIR}/apps/macos' && rm -rf .build .build-swift .swiftpm 2>/dev/null || true"
-run_step "swift build" bash -lc "cd '${ROOT_DIR}/apps/macos' && swift build -q --product iFlow"
+run_step "swift build" bash -lc "cd '${ROOT_DIR}/apps/macos' && swift build -q --product Claw"
 
 if [ "$AUTO_DETECT_SIGNING" -eq 1 ]; then
   if check_signing_keys; then
@@ -191,20 +191,20 @@ choose_app_bundle() {
     return 0
   fi
 
-  if [[ -d "/Applications/iFlow.app" ]]; then
-    APP_BUNDLE="/Applications/iFlow.app"
+  if [[ -d "/Applications/Claw.app" ]]; then
+    APP_BUNDLE="/Applications/Claw.app"
     return 0
   fi
 
-  if [[ -d "${ROOT_DIR}/dist/iFlow.app" ]]; then
-    APP_BUNDLE="${ROOT_DIR}/dist/iFlow.app"
+  if [[ -d "${ROOT_DIR}/dist/Claw.app" ]]; then
+    APP_BUNDLE="${ROOT_DIR}/dist/Claw.app"
     if [[ ! -d "${APP_BUNDLE}/Contents/Frameworks/Sparkle.framework" ]]; then
-      fail "dist/iFlow.app missing Sparkle after packaging"
+      fail "dist/Claw.app missing Sparkle after packaging"
     fi
     return 0
   fi
 
-  fail "App bundle not found. Set IFLOW_APP_BUNDLE to your installed iFlow.app"
+  fail "App bundle not found. Set IFLOW_APP_BUNDLE to your installed Claw.app"
 }
 
 choose_app_bundle
@@ -217,8 +217,8 @@ fi
 # When unsigned, ensure the gateway LaunchAgent targets the repo CLI (before the app launches).
 # This reduces noisy "could not connect" errors during app startup.
 if [ "$NO_SIGN" -eq 1 ] && [ "$ATTACH_ONLY" -ne 1 ]; then
-  run_step "install gateway launch agent (unsigned)" bash -lc "cd '${ROOT_DIR}' && node iflow.mjs daemon install --force --runtime node"
-  run_step "restart gateway daemon (unsigned)" bash -lc "cd '${ROOT_DIR}' && node iflow.mjs daemon restart"
+  run_step "install gateway launch agent (unsigned)" bash -lc "cd '${ROOT_DIR}' && node claw.mjs daemon install --force --runtime node"
+  run_step "restart gateway daemon (unsigned)" bash -lc "cd '${ROOT_DIR}' && node claw.mjs daemon restart"
   if [[ "${GATEWAY_WAIT_SECONDS}" -gt 0 ]]; then
     run_step "wait for gateway (unsigned)" sleep "${GATEWAY_WAIT_SECONDS}"
   fi
@@ -259,7 +259,7 @@ run_step "launch app" env -i \
 # 5) Verify the app is alive.
 sleep 1.5
 if pgrep -f "${APP_PROCESS_PATTERN}" >/dev/null 2>&1; then
-  log "OK: iFlow is running."
+  log "OK: Claw is running."
 else
   fail "App exited immediately. Check ${LOG_PATH} or Console.app (User Reports)."
 fi

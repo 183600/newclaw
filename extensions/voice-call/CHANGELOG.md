@@ -4,25 +4,25 @@
 
 ### Changes
 
-- Version alignment with core iFlow release numbers.
+- Version alignment with core Claw release numbers.
 
 ## 2026.1.31
 
 ### Changes
 
-- Version alignment with core iFlow release numbers.
+- Version alignment with core Claw release numbers.
 
 ## 2026.1.30
 
 ### Changes
 
-- Version alignment with core iFlow release numbers.
+- Version alignment with core Claw release numbers.
 
 ## 2026.1.29
 
 ### Changes
 
-- Version alignment with core iFlow release numbers.
+- Version alignment with core Claw release numbers.
 
 ## 2026.1.26
 
@@ -37,61 +37,61 @@
 
 ### Changes
 
-- Version alignment with core iFlow release numbers.
+- Version alignment with core Claw release numbers.
 
 ## 2026.1.22
 
 ### Changes
 
-- Version alignment with core iFlow release numbers.
+- Version alignment with core Claw release numbers.
 
 ## 2026.1.21
 
 ### Changes
 
-- Version alignment with core iFlow release numbers.
+- Version alignment with core Claw release numbers.
 
 ## 2026.1.20
 
 ### Changes
 
-- Version alignment with core iFlow release numbers.
+- Version alignment with core Claw release numbers.
 
 ## 2026.1.17-1
 
 ### Changes
 
-- Version alignment with core iFlow release numbers.
+- Version alignment with core Claw release numbers.
 
 ## 2026.1.17
 
 ### Changes
 
-- Version alignment with core iFlow release numbers.
+- Version alignment with core Claw release numbers.
 
 ## 2026.1.16
 
 ### Changes
 
-- Version alignment with core iFlow release numbers.
+- Version alignment with core Claw release numbers.
 
 ## 2026.1.15
 
 ### Changes
 
-- Version alignment with core iFlow release numbers.
+- Version alignment with core Claw release numbers.
 
 ## 2026.1.14
 
 ### Changes
 
-- Version alignment with core iFlow release numbers.
+- Version alignment with core Claw release numbers.
 
 ## 0.1.0
 
 ### Highlights
 
-- First public release of the @iflow/voice-call plugin.
+- First public release of the @claw/voice-call plugin.
 
 ### Features
 
@@ -104,6 +104,6 @@
 - Speech: OpenAI TTS (model/voice/instructions) with Twilio `<Say>` fallback.
 - Tooling: `voice_call` tool actions for initiate/continue/speak/end/status.
 - Gateway RPC: `voicecall.initiate|continue|speak|end|status` (+ legacy `voicecall.start`).
-- CLI: `iflow voicecall` commands (call/start/continue/speak/end/status/tail/expose).
+- CLI: `claw voicecall` commands (call/start/continue/speak/end/status/tail/expose).
 - Observability: JSONL call logs and `voicecall tail` for live inspection.
 - Response controls: `responseModel`, `responseSystemPrompt`, and `responseTimeoutMs` for auto‑responses.

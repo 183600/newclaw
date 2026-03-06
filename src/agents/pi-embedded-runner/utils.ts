@@ -4,7 +4,7 @@ import type { iFlowConfig } from "../../config/config.js";
 import type { ExecToolDefaults } from "../bash-tools.js";
 
 export function mapThinkingLevel(level?: ThinkLevel): ThinkingLevel {
-  // pi-agent-core supports "xhigh"; iFlow enables it for specific models.
+  // pi-agent-core supports "xhigh"; Claw enables it for specific models.
   if (!level) {
     return "off";
   }

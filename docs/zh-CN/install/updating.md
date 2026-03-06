@@ -230,4 +230,4 @@ git pull
 
 - 再次运行 `iflow doctor` 并仔细阅读输出（它通常会告诉你修复方法）。
 - 查看：[故障排除](/gateway/troubleshooting)
-- 在 Discord 中提问：https://discord.gg/clawd
+- 在 Discord 中提问：https://discord.gg/iflow

@@ -8,13 +8,13 @@ export function buildPairingReply(params: {
 }): string {
   const { channel, idLine, code } = params;
   return [
-    "iFlow: access not configured.",
+    "Claw: access not configured.",
     "",
     idLine,
     "",
     `Pairing code: ${code}`,
     "",
     "Ask the bot owner to approve with:",
-    formatCliCommand(`iflow pairing approve ${channel} <code>`),
+    formatCliCommand(`claw pairing approve ${channel} <code>`),
   ].join("\n");
 }

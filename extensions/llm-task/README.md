@@ -4,7 +4,7 @@ Adds an **optional** agent tool `llm-task` for running **JSON-only** LLM tasks
 (drafting, summarizing, classifying) with optional JSON Schema validation.
 
 Designed to be called from workflow engines (for example, Lobster via
-`iflow.invoke --each`) without adding new iFlow code per workflow.
+`claw.invoke --each`) without adding new Claw code per workflow.
 
 ## Enable
 
@@ -89,9 +89,9 @@ Returns `details.json` containing the parsed JSON (and validates against
 
 ## Bundled extension note
 
-This extension depends on iFlow internal modules (the embedded agent runner).
-It is intended to ship as a **bundled** iFlow extension (like `lobster`) and
+This extension depends on Claw internal modules (the embedded agent runner).
+It is intended to ship as a **bundled** Claw extension (like `lobster`) and
 be enabled via `plugins.entries` + tool allowlists.
 
 It is **not** currently designed to be copied into
-`~/.iflow/extensions` as a standalone plugin directory.
+`~/.claw/extensions` as a standalone plugin directory.

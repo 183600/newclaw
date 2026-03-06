@@ -8,15 +8,15 @@ import { resolveConfigPath, resolveGatewayLockDir, resolveStateDir } from "../co
 import { acquireGatewayLock, GatewayLockError } from "./gateway-lock.js";
 
 async function makeEnv() {
-  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-gateway-lock-"));
+  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "claw-gateway-lock-"));
   const configPath = path.join(dir, "iflow.json");
   await fs.writeFile(configPath, "{}", "utf8");
   await fs.mkdir(resolveGatewayLockDir(), { recursive: true });
   return {
     env: {
       ...process.env,
-      IFLOW_STATE_DIR: dir,
-      IFLOW_CONFIG_PATH: configPath,
+      CLAW_STATE_DIR: dir,
+      CLAW_CONFIG_PATH: configPath,
     },
     cleanup: async () => {
       await fs.rm(dir, { recursive: true, force: true });

@@ -1,13 +1,13 @@
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { iFlowApp } from "./app.ts";
+import { ClawApp } from "./app.ts";
 import "../styles.css";
 
 // oxlint-disable-next-line typescript/unbound-method
-const originalConnect = iFlowApp.prototype.connect;
+const originalConnect = ClawApp.prototype.connect;
 
 function mountApp(pathname: string) {
   window.history.replaceState({}, "", pathname);
-  const app = document.createElement("iflow-app") as iFlowApp;
+  const app = document.createElement("claw-app") as ClawApp;
   document.body.append(app);
   return app;
 }
@@ -19,17 +19,17 @@ function nextFrame() {
 }
 
 beforeEach(() => {
-  iFlowApp.prototype.connect = () => {
+  ClawApp.prototype.connect = () => {
     // no-op: avoid real gateway WS connections in browser tests
   };
-  window.__IFLOW_CONTROL_UI_BASE_PATH__ = undefined;
+  window.__CLAW_CONTROL_UI_BASE_PATH__ = undefined;
   localStorage.clear();
   document.body.innerHTML = "";
 });
 
 afterEach(() => {
-  iFlowApp.prototype.connect = originalConnect;
-  window.__IFLOW_CONTROL_UI_BASE_PATH__ = undefined;
+  ClawApp.prototype.connect = originalConnect;
+  window.__CLAW_CONTROL_UI_BASE_PATH__ = undefined;
   localStorage.clear();
   document.body.innerHTML = "";
 });
@@ -53,22 +53,22 @@ describe("control UI routing", () => {
   });
 
   it("infers nested base paths", async () => {
-    const app = mountApp("/apps/iflow/cron");
+    const app = mountApp("/apps/claw/cron");
     await app.updateComplete;
 
-    expect(app.basePath).toBe("/apps/iflow");
+    expect(app.basePath).toBe("/apps/claw");
     expect(app.tab).toBe("cron");
-    expect(window.location.pathname).toBe("/apps/iflow/cron");
+    expect(window.location.pathname).toBe("/apps/claw/cron");
   });
 
   it("honors explicit base path overrides", async () => {
-    window.__IFLOW_CONTROL_UI_BASE_PATH__ = "/iflow";
-    const app = mountApp("/iflow/sessions");
+    window.__CLAW_CONTROL_UI_BASE_PATH__ = "/claw";
+    const app = mountApp("/claw/sessions");
     await app.updateComplete;
 
-    expect(app.basePath).toBe("/iflow");
+    expect(app.basePath).toBe("/claw");
     expect(app.tab).toBe("sessions");
-    expect(window.location.pathname).toBe("/iflow/sessions");
+    expect(window.location.pathname).toBe("/claw/sessions");
   });
 
   it("updates the URL when clicking nav items", async () => {
@@ -170,7 +170,7 @@ describe("control UI routing", () => {
   });
 
   it("hydrates token from URL params even when settings already set", async () => {
-    localStorage.setItem("iflow.control.settings.v1", JSON.stringify({ token: "existing-token" }));
+    localStorage.setItem("claw.control.settings.v1", JSON.stringify({ token: "existing-token" }));
     const app = mountApp("/ui/overview?token=abc123");
     await app.updateComplete;
 

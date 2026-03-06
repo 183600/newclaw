@@ -1,10 +1,10 @@
 ---
 read_when:
-  - 向新用户介绍 ClawHub
+  - 向新用户介绍 iFlowHub
   - 安装、搜索或发布 Skills
-  - 说明 ClawHub CLI 标志和同步行为
-summary: ClawHub 指南：公共 Skills 注册中心 + CLI 工作流
-title: ClawHub
+  - 说明 iFlowHub CLI 标志和同步行为
+summary: iFlowHub 指南：公共 Skills 注册中心 + CLI 工作流
+title: iFlowHub
 x-i18n:
   generated_at: "2026-02-01T21:42:32Z"
   model: claude-opus-4-5
@@ -14,15 +14,15 @@ x-i18n:
   workflow: 15
 ---
 
-# ClawHub
+# iFlowHub
 
-ClawHub 是 **iFlow 的公共 Skills 注册中心**。它是一项免费服务：所有 Skills 都是公开的、开放的，所有人都可以查看、共享和复用。Skills 就是一个包含 `SKILL.md` 文件（以及辅助文本文件）的文件夹。你可以在网页应用中浏览 Skills，也可以使用 CLI 来搜索、安装、更新和发布 Skills。
+iFlowHub 是 **iFlow 的公共 Skills 注册中心**。它是一项免费服务：所有 Skills 都是公开的、开放的，所有人都可以查看、共享和复用。Skills 就是一个包含 `SKILL.md` 文件（以及辅助文本文件）的文件夹。你可以在网页应用中浏览 Skills，也可以使用 CLI 来搜索、安装、更新和发布 Skills。
 
-网站：[clawhub.com](https://clawhub.com)
+网站：[iflowhub.com](https://iflowhub.com)
 
 ## 适用人群（新手友好）
 
-如果你想为 iFlow 智能体添加新功能，ClawHub 是查找和安装 Skills 的最简单方式。你不需要了解后端的工作原理。你可以：
+如果你想为 iFlow 智能体添加新功能，iFlowHub 是查找和安装 Skills 的最简单方式。你不需要了解后端的工作原理。你可以：
 
 - 使用自然语言搜索 Skills。
 - 将 Skills 安装到你的工作区。
@@ -110,7 +110,7 @@ pnpm add -g clawhub
 
 列表：
 
-- `clawhub list`（读取 `.clawhub/lock.json`）
+- `clawhub list`（读取 `.iflowhub/lock.json`）
 
 发布：
 
@@ -189,8 +189,8 @@ clawhub sync --all
 
 ### 存储和锁文件
 
-- 已安装的 Skills 记录在工作目录下的 `.clawhub/lock.json` 中。
-- 认证令牌存储在 ClawHub CLI 配置文件中（可通过 `CLAWHUB_CONFIG_PATH` 覆盖）。
+- 已安装的 Skills 记录在工作目录下的 `.iflowhub/lock.json` 中。
+- 认证令牌存储在 iFlowHub CLI 配置文件中（可通过 `CLAWHUB_CONFIG_PATH` 覆盖）。
 
 ### 遥测（安装计数）
 

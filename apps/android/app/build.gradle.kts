@@ -8,17 +8,17 @@ plugins {
 }
 
 android {
-  namespace = "ai.iflow.android"
+  namespace = "ai.claw.android"
   compileSdk = 36
 
   sourceSets {
     getByName("main") {
-      assets.srcDir(file("../../shared/iFlowKit/Sources/iFlowKit/Resources"))
+      assets.srcDir(file("../../shared/ClawKit/Sources/ClawKit/Resources"))
     }
   }
 
   defaultConfig {
-    applicationId = "ai.iflow.android"
+    applicationId = "ai.claw.android"
     minSdk = 31
     targetSdk = 36
     versionCode = 202602020
@@ -65,7 +65,7 @@ androidComponents {
         val versionName = output.versionName.orNull ?: "0"
         val buildType = variant.buildType
 
-        val outputFileName = "iflow-${versionName}-${buildType}.apk"
+        val outputFileName = "claw-${versionName}-${buildType}.apk"
         output.outputFileName = outputFileName
       }
   }

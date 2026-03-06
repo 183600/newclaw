@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from "vitest";
 import type { runCommandWithTimeout } from "../process/exec.js";
 import { discoverGatewayBeacons } from "./bonjour-discovery.js";
 
-const WIDE_AREA_DOMAIN = "iflow.internal.";
+const WIDE_AREA_DOMAIN = "claw.internal.";
 
 describe("bonjour-discovery", () => {
   it("discovers beacons on darwin across local + wide-area domains", async () => {
@@ -231,7 +231,7 @@ describe("bonjour-discovery", () => {
               `"transport=gateway"`,
               `"sshPort=22"`,
               `"tailnetDns=peters-mac-studio-1.sheep-coho.ts.net"`,
-              `"cliPath=/opt/homebrew/bin/iflow"`,
+              `"cliPath=/opt/homebrew/bin/claw"`,
               "",
             ].join(" "),
             stderr: "",
@@ -263,7 +263,7 @@ describe("bonjour-discovery", () => {
         tailnetDns: "peters-mac-studio-1.sheep-coho.ts.net",
         gatewayPort: 18789,
         sshPort: 22,
-        cliPath: "/opt/homebrew/bin/iflow",
+        cliPath: "/opt/homebrew/bin/claw",
       }),
     ]);
 
@@ -287,12 +287,12 @@ describe("bonjour-discovery", () => {
     await discoverGatewayBeacons({
       platform: "darwin",
       timeoutMs: 1,
-      domains: ["local", "iflow.internal"],
+      domains: ["local", "claw.internal"],
       run: run as unknown as typeof runCommandWithTimeout,
     });
 
     expect(calls.filter((c) => c[1] === "-B").map((c) => c[3])).toEqual(
-      expect.arrayContaining(["local.", "iflow.internal."]),
+      expect.arrayContaining(["local.", "claw.internal."]),
     );
 
     calls.length = 0;

@@ -29,10 +29,10 @@ async function withTempHome<T>(fn: (home: string) => Promise<T>): Promise<T> {
     },
     {
       env: {
-        IFLOW_AGENT_DIR: (home) => path.join(home, ".iflow", "agent"),
+        CLAW_AGENT_DIR: (home) => path.join(home, ".iflow", "agent"),
         PI_CODING_AGENT_DIR: (home) => path.join(home, ".iflow", "agent"),
       },
-      prefix: "iflow-reply-",
+      prefix: "claw-reply-",
     },
   );
 }
@@ -74,7 +74,7 @@ describe("directive behavior", () => {
           agents: {
             defaults: {
               model: { primary: "anthropic/claude-opus-4-5" },
-              workspace: path.join(home, "iflow"),
+              workspace: path.join(home, "claw"),
               models: {
                 "anthropic/claude-opus-4-5": {},
                 "moonshot/kimi-k2-0905-preview": { alias: "Kimi" },
@@ -143,7 +143,7 @@ describe("directive behavior", () => {
           agents: {
             defaults: {
               model: { primary: "openai/gpt-4.1-mini" },
-              workspace: path.join(home, "iflow"),
+              workspace: path.join(home, "claw"),
               models: {
                 "openai/gpt-4.1-mini": {},
                 "anthropic/claude-opus-4-5": { alias: "Opus" },
@@ -175,7 +175,7 @@ describe("directive behavior", () => {
           agents: {
             defaults: {
               model: { primary: "openai/gpt-4.1-mini" },
-              workspace: path.join(home, "iflow"),
+              workspace: path.join(home, "claw"),
               models: {
                 "openai/gpt-4.1-mini": {},
                 "anthropic/claude-opus-4-5": { alias: "Opus" },
@@ -209,7 +209,7 @@ describe("directive behavior", () => {
           agents: {
             defaults: {
               model: { primary: "openai/gpt-4.1-mini" },
-              workspace: path.join(home, "iflow"),
+              workspace: path.join(home, "claw"),
             },
           },
           tools: { elevated: { allowFrom: { whatsapp: ["*"] } } },
@@ -240,7 +240,7 @@ describe("directive behavior", () => {
           agents: {
             defaults: {
               model: { primary: "openai/gpt-4.1-mini" },
-              workspace: path.join(home, "iflow"),
+              workspace: path.join(home, "claw"),
             },
           },
           channels: { whatsapp: { allowFrom: ["*"] } },

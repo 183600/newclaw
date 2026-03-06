@@ -1,12 +1,12 @@
 {
-  "name": "@iflow/minimax-portal-auth",
+  "name": "@claw/minimax-portal-auth",
   "version": "2026.2.2",
-  "description": "iFlow MiniMax Portal OAuth provider plugin",
+  "description": "Claw MiniMax Portal OAuth provider plugin",
   "type": "module",
   "devDependencies": {
     "iflow": "workspace:*"
   },
-  "iflow": {
+  "claw": {
     "extensions": [
       "./index.ts"
     ]

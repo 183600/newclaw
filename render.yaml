@@ -9,11 +9,11 @@ services:
         value: "8080"
       - key: SETUP_PASSWORD
         sync: false
-      - key: IFLOW_STATE_DIR
+      - key: CLAW_STATE_DIR
         value: /data/.iflow
-      - key: IFLOW_WORKSPACE_DIR
+      - key: CLAW_WORKSPACE_DIR
         value: /data/workspace
-      - key: IFLOW_GATEWAY_TOKEN
+      - key: CLAW_GATEWAY_TOKEN
         generateValue: true
     disk:
       name: iflow-data

@@ -17,7 +17,7 @@ import java.util.UUID
 
 class SecurePrefs(context: Context) {
   companion object {
-    val defaultWakeWords: List<String> = listOf("iflow", "claude")
+    val defaultWakeWords: List<String> = listOf("claw", "claude")
     private const val displayNameKey = "node.displayName"
     private const val voiceWakeModeKey = "voiceWake.mode"
   }
@@ -31,7 +31,7 @@ class SecurePrefs(context: Context) {
       .build()
 
   private val prefs: SharedPreferences by lazy {
-    createPrefs(appContext, "iflow.node.secure")
+    createPrefs(appContext, "claw.node.secure")
   }
 
   private val _instanceId = MutableStateFlow(loadOrCreateInstanceId())

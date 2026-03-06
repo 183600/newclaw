@@ -9,7 +9,7 @@ import { afterEach, describe, expect, it } from "vitest";
 const tempDirs: string[] = [];
 
 function makeTempDir() {
-  const dir = path.join(os.tmpdir(), `iflow-plugin-install-${randomUUID()}`);
+  const dir = path.join(os.tmpdir(), `claw-plugin-install-${randomUUID()}`);
   fs.mkdirSync(dir, { recursive: true });
   tempDirs.push(dir);
   return dir;
@@ -102,7 +102,7 @@ describe("installPluginFromArchive", () => {
       JSON.stringify({
         name: "@iflow/voice-call",
         version: "0.0.1",
-        iflow: { extensions: ["./dist/index.js"] },
+        claw: { extensions: ["./dist/index.js"] },
       }),
       "utf-8",
     );
@@ -140,7 +140,7 @@ describe("installPluginFromArchive", () => {
       JSON.stringify({
         name: "@iflow/voice-call",
         version: "0.0.1",
-        iflow: { extensions: ["./dist/index.js"] },
+        claw: { extensions: ["./dist/index.js"] },
       }),
       "utf-8",
     );
@@ -182,7 +182,7 @@ describe("installPluginFromArchive", () => {
       JSON.stringify({
         name: "@iflow/zipper",
         version: "0.0.1",
-        iflow: { extensions: ["./dist/index.js"] },
+        claw: { extensions: ["./dist/index.js"] },
       }),
     );
     zip.file("package/dist/index.js", "export {};");
@@ -216,7 +216,7 @@ describe("installPluginFromArchive", () => {
       JSON.stringify({
         name: "@iflow/voice-call",
         version: "0.0.1",
-        iflow: { extensions: ["./dist/index.js"] },
+        claw: { extensions: ["./dist/index.js"] },
       }),
       "utf-8",
     );
@@ -234,7 +234,7 @@ describe("installPluginFromArchive", () => {
         JSON.stringify({
           name: "@iflow/voice-call",
           version: "0.0.2",
-          iflow: { extensions: ["./dist/index.js"] },
+          claw: { extensions: ["./dist/index.js"] },
         }),
         "utf-8",
       );
@@ -278,7 +278,7 @@ describe("installPluginFromArchive", () => {
       JSON.stringify({
         name: "@evil/..",
         version: "0.0.1",
-        iflow: { extensions: ["./dist/index.js"] },
+        claw: { extensions: ["./dist/index.js"] },
       }),
       "utf-8",
     );
@@ -314,7 +314,7 @@ describe("installPluginFromArchive", () => {
       JSON.stringify({
         name: "@evil/.",
         version: "0.0.1",
-        iflow: { extensions: ["./dist/index.js"] },
+        claw: { extensions: ["./dist/index.js"] },
       }),
       "utf-8",
     );
@@ -340,7 +340,7 @@ describe("installPluginFromArchive", () => {
     expect(result.error).toContain("reserved path segment");
   });
 
-  it("rejects packages without iflow.extensions", async () => {
+  it("rejects packages without claw.extensions", async () => {
     const stateDir = makeTempDir();
     const workDir = makeTempDir();
     const pkgDir = path.join(workDir, "package");
@@ -367,6 +367,6 @@ describe("installPluginFromArchive", () => {
     if (result.ok) {
       return;
     }
-    expect(result.error).toContain("iflow.extensions");
+    expect(result.error).toContain("claw.extensions");
   });
 });

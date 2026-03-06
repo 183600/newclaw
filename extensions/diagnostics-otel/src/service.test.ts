@@ -95,8 +95,8 @@ vi.mock("@opentelemetry/semantic-conventions", () => ({
   },
 }));
 
-vi.mock("iflow/plugin-sdk", async () => {
-  const actual = await vi.importActual<typeof import("iflow/plugin-sdk")>("iflow/plugin-sdk");
+vi.mock("claw/plugin-sdk", async () => {
+  const actual = await vi.importActual<typeof import("claw/plugin-sdk")>("claw/plugin-sdk");
   return {
     ...actual,
     registerLogTransport: registerLogTransportMock,
@@ -191,20 +191,20 @@ describe("diagnostics-otel service", () => {
       attempt: 2,
     });
 
-    expect(telemetryState.counters.get("iflow.webhook.received")?.add).toHaveBeenCalled();
-    expect(telemetryState.histograms.get("iflow.webhook.duration_ms")?.record).toHaveBeenCalled();
-    expect(telemetryState.counters.get("iflow.message.queued")?.add).toHaveBeenCalled();
-    expect(telemetryState.counters.get("iflow.message.processed")?.add).toHaveBeenCalled();
-    expect(telemetryState.histograms.get("iflow.message.duration_ms")?.record).toHaveBeenCalled();
-    expect(telemetryState.histograms.get("iflow.queue.wait_ms")?.record).toHaveBeenCalled();
-    expect(telemetryState.counters.get("iflow.session.stuck")?.add).toHaveBeenCalled();
-    expect(telemetryState.histograms.get("iflow.session.stuck_age_ms")?.record).toHaveBeenCalled();
-    expect(telemetryState.counters.get("iflow.run.attempt")?.add).toHaveBeenCalled();
+    expect(telemetryState.counters.get("claw.webhook.received")?.add).toHaveBeenCalled();
+    expect(telemetryState.histograms.get("claw.webhook.duration_ms")?.record).toHaveBeenCalled();
+    expect(telemetryState.counters.get("claw.message.queued")?.add).toHaveBeenCalled();
+    expect(telemetryState.counters.get("claw.message.processed")?.add).toHaveBeenCalled();
+    expect(telemetryState.histograms.get("claw.message.duration_ms")?.record).toHaveBeenCalled();
+    expect(telemetryState.histograms.get("claw.queue.wait_ms")?.record).toHaveBeenCalled();
+    expect(telemetryState.counters.get("claw.session.stuck")?.add).toHaveBeenCalled();
+    expect(telemetryState.histograms.get("claw.session.stuck_age_ms")?.record).toHaveBeenCalled();
+    expect(telemetryState.counters.get("claw.run.attempt")?.add).toHaveBeenCalled();
 
     const spanNames = telemetryState.tracer.startSpan.mock.calls.map((call) => call[0]);
-    expect(spanNames).toContain("iflow.webhook.processed");
-    expect(spanNames).toContain("iflow.message.processed");
-    expect(spanNames).toContain("iflow.session.stuck");
+    expect(spanNames).toContain("claw.webhook.processed");
+    expect(spanNames).toContain("claw.message.processed");
+    expect(spanNames).toContain("claw.session.stuck");
 
     expect(registerLogTransportMock).toHaveBeenCalledTimes(1);
     expect(registeredTransports).toHaveLength(1);

@@ -35,7 +35,7 @@ vi.mock("../model-auth.js", () => ({
 }));
 
 vi.mock("../models-config.js", () => ({
-  ensureiFlowModelsJson: vi.fn(async () => {}),
+  ensureClawModelsJson: vi.fn(async () => {}),
 }));
 
 vi.mock("../context-window-guard.js", () => ({
@@ -66,7 +66,7 @@ vi.mock("../../utils/message-channel.js", () => ({
 }));
 
 vi.mock("../agent-paths.js", () => ({
-  resolveiFlowAgentDir: vi.fn(() => "/tmp/agent-dir"),
+  resolveClawAgentDir: vi.fn(() => "/tmp/agent-dir"),
 }));
 
 vi.mock("../auth-profiles.js", () => ({

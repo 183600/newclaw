@@ -5,7 +5,7 @@ import { describe, expect, it } from "vitest";
 import { createConfigIO } from "./io.js";
 
 async function withTempHome(run: (home: string) => Promise<void>): Promise<void> {
-  const home = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-config-"));
+  const home = await fs.mkdtemp(path.join(os.tmpdir(), "claw-config-"));
   try {
     await run(home);
   } finally {
@@ -49,11 +49,11 @@ describe("config io paths", () => {
     });
   });
 
-  it("honors explicit IFLOW_CONFIG_PATH override", async () => {
+  it("honors explicit CLAW_CONFIG_PATH override", async () => {
     await withTempHome(async (home) => {
       const customPath = await writeConfig(home, ".iflow", 20002, "custom.json");
       const io = createConfigIO({
-        env: { IFLOW_CONFIG_PATH: customPath } as NodeJS.ProcessEnv,
+        env: { CLAW_CONFIG_PATH: customPath } as NodeJS.ProcessEnv,
         homedir: () => home,
       });
       expect(io.configPath).toBe(customPath);

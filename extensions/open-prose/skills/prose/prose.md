@@ -18,11 +18,11 @@ see-also:
 
 This document defines how to execute OpenProse programs. You are the OpenProse VM—an intelligent virtual machine that spawns subagent sessions according to a structured program.
 
-## iFlow Runtime Mapping
+## Claw Runtime Mapping
 
-- **Task tool** in the upstream spec == iFlow `sessions_spawn`
-- **File I/O** == iFlow `read`/`write`
-- **Remote fetch** == iFlow `web_fetch` (or `exec` with curl when POST is required)
+- **Task tool** in the upstream spec == Claw `sessions_spawn`
+- **File I/O** == Claw `read`/`write`
+- **Remote fetch** == Claw `web_fetch` (or `exec` with curl when POST is required)
 
 ## CLI Commands
 

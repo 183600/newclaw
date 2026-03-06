@@ -4,14 +4,14 @@ import os from "node:os";
 import path from "node:path";
 import { describe, expect, it, vi } from "vitest";
 import "./test-helpers/fast-coding-tools.js";
-import { createiFlowTools } from "./iflow-tools.js";
-import { __testing, createiFlowCodingTools } from "./pi-tools.js";
+import { createClawTools } from "./iflow-tools.js";
+import { __testing, createClawCodingTools } from "./pi-tools.js";
 import { createSandboxedReadTool } from "./pi-tools.read.js";
 import { createBrowserTool } from "./tools/browser-tool.js";
 
-const defaultTools = createiFlowCodingTools();
+const defaultTools = createClawCodingTools();
 
-describe("createiFlowCodingTools", () => {
+describe("createClawCodingTools", () => {
   describe("Claude/Gemini alias support", () => {
     it("adds Claude-style aliases to schemas without dropping metadata", () => {
       const base: AgentTool = {
@@ -250,7 +250,7 @@ describe("createiFlowCodingTools", () => {
     expect(offenders).toEqual([]);
   });
   it("keeps raw core tool schemas union-free", () => {
-    const tools = createiFlowTools();
+    const tools = createClawTools();
     const coreTools = new Set([
       "browser",
       "canvas",
@@ -306,7 +306,7 @@ describe("createiFlowCodingTools", () => {
     expect(offenders).toEqual([]);
   });
   it("does not expose provider-specific message tools", () => {
-    const tools = createiFlowCodingTools({ messageProvider: "discord" });
+    const tools = createClawCodingTools({ messageProvider: "discord" });
     const names = new Set(tools.map((tool) => tool.name));
     expect(names.has("discord")).toBe(false);
     expect(names.has("slack")).toBe(false);
@@ -314,7 +314,7 @@ describe("createiFlowCodingTools", () => {
     expect(names.has("whatsapp")).toBe(false);
   });
   it("filters session tools for sub-agent sessions by default", () => {
-    const tools = createiFlowCodingTools({
+    const tools = createClawCodingTools({
       sessionKey: "agent:main:subagent:test",
     });
     const names = new Set(tools.map((tool) => tool.name));
@@ -329,7 +329,7 @@ describe("createiFlowCodingTools", () => {
     expect(names.has("apply_patch")).toBe(false);
   });
   it("supports allow-only sub-agent tool policy", () => {
-    const tools = createiFlowCodingTools({
+    const tools = createClawCodingTools({
       sessionKey: "agent:main:subagent:test",
       // Intentionally partial config; only fields used by pi-tools are provided.
       config: {
@@ -347,7 +347,7 @@ describe("createiFlowCodingTools", () => {
   });
 
   it("applies tool profiles before allow/deny policies", () => {
-    const tools = createiFlowCodingTools({
+    const tools = createClawCodingTools({
       config: { tools: { profile: "messaging" } },
     });
     const names = new Set(tools.map((tool) => tool.name));
@@ -358,7 +358,7 @@ describe("createiFlowCodingTools", () => {
     expect(names.has("browser")).toBe(false);
   });
   it("expands group shorthands in global tool policy", () => {
-    const tools = createiFlowCodingTools({
+    const tools = createClawCodingTools({
       config: { tools: { allow: ["group:fs"] } },
     });
     const names = new Set(tools.map((tool) => tool.name));
@@ -369,7 +369,7 @@ describe("createiFlowCodingTools", () => {
     expect(names.has("browser")).toBe(false);
   });
   it("expands group shorthands in global tool deny policy", () => {
-    const tools = createiFlowCodingTools({
+    const tools = createClawCodingTools({
       config: { tools: { deny: ["group:fs"] } },
     });
     const names = new Set(tools.map((tool) => tool.name));
@@ -379,7 +379,7 @@ describe("createiFlowCodingTools", () => {
     expect(names.has("exec")).toBe(true);
   });
   it("lets agent profiles override global profiles", () => {
-    const tools = createiFlowCodingTools({
+    const tools = createClawCodingTools({
       sessionKey: "agent:work:main",
       config: {
         tools: { profile: "coding" },
@@ -463,8 +463,8 @@ describe("createiFlowCodingTools", () => {
     }
   });
   it("applies sandbox path guards to file_path alias", async () => {
-    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-sbx-"));
-    const outsidePath = path.join(os.tmpdir(), "iflow-outside.txt");
+    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "claw-sbx-"));
+    const outsidePath = path.join(os.tmpdir(), "claw-outside.txt");
     await fs.writeFile(outsidePath, "outside", "utf8");
     try {
       const readTool = createSandboxedReadTool(tmpDir);

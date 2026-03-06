@@ -9,11 +9,11 @@ import {
 type PiSdkModule = typeof import("./pi-model-discovery.js");
 
 vi.mock("./models-config.js", () => ({
-  ensureiFlowModelsJson: vi.fn().mockResolvedValue({ agentDir: "/tmp", wrote: false }),
+  ensureClawModelsJson: vi.fn().mockResolvedValue({ agentDir: "/tmp", wrote: false }),
 }));
 
 vi.mock("./agent-paths.js", () => ({
-  resolveiFlowAgentDir: () => "/tmp/iflow",
+  resolveClawAgentDir: () => "/tmp/claw",
 }));
 
 describe("loadModelCatalog", () => {

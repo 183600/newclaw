@@ -1,17 +1,17 @@
-# @iflow/zalo
+# @claw/zalo
 
-Zalo channel plugin for iFlow (Bot API).
+Zalo channel plugin for Claw (Bot API).
 
 ## Install (local checkout)
 
 ```bash
-iflow plugins install ./extensions/zalo
+claw plugins install ./extensions/zalo
 ```
 
 ## Install (npm)
 
 ```bash
-iflow plugins install @iflow/zalo
+claw plugins install @claw/zalo
 ```
 
 Onboarding: select Zalo and confirm the install prompt to fetch the plugin automatically.

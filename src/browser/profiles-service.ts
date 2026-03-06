@@ -4,7 +4,7 @@ import type { BrowserProfileConfig, iFlowConfig } from "../config/config.js";
 import type { BrowserRouteContext, ProfileStatus } from "./server-context.js";
 import { loadConfig, writeConfigFile } from "../config/config.js";
 import { deriveDefaultBrowserCdpPortRange } from "../config/port-defaults.js";
-import { resolveiFlowUserDataDir } from "./chrome.js";
+import { resolveClawUserDataDir } from "./chrome.js";
 import { parseHttpUrl, resolveProfile } from "./config.js";
 import { DEFAULT_BROWSER_DEFAULT_PROFILE_NAME } from "./constants.js";
 import {
@@ -20,7 +20,7 @@ export type CreateProfileParams = {
   name: string;
   color?: string;
   cdpUrl?: string;
-  driver?: "iflow" | "extension";
+  driver?: "claw" | "extension";
 };
 
 export type CreateProfileResult = {
@@ -154,7 +154,7 @@ export function createBrowserProfilesService(ctx: BrowserRouteContext) {
         // ignore
       }
 
-      const userDataDir = resolveiFlowUserDataDir(name);
+      const userDataDir = resolveClawUserDataDir(name);
       const profileDir = path.dirname(userDataDir);
       if (fs.existsSync(profileDir)) {
         await movePathToTrash(profileDir);

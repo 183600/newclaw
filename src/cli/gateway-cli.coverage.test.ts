@@ -145,7 +145,7 @@ describe("gateway-cli coverage", () => {
     discoverGatewayBeacons.mockReset();
     discoverGatewayBeacons.mockResolvedValueOnce([
       {
-        instanceName: "Studio (iFlow)",
+        instanceName: "Studio (Claw)",
         displayName: "Studio",
         domain: "local.",
         host: "studio.local",
@@ -177,9 +177,9 @@ describe("gateway-cli coverage", () => {
     discoverGatewayBeacons.mockReset();
     discoverGatewayBeacons.mockResolvedValueOnce([
       {
-        instanceName: "Studio (iFlow)",
+        instanceName: "Studio (Claw)",
         displayName: "Studio",
-        domain: "iflow.internal.",
+        domain: "claw.internal.",
         host: "studio.iflow.internal",
         lanHost: "studio.local",
         tailnetDns: "studio.tailnet.ts.net",
@@ -200,7 +200,7 @@ describe("gateway-cli coverage", () => {
     const out = runtimeLogs.join("\n");
     expect(out).toContain("Gateway Discovery");
     expect(out).toContain("Found 1 gateway(s)");
-    expect(out).toContain("- Studio iflow.internal.");
+    expect(out).toContain("- Studio claw.internal.");
     expect(out).toContain("  tailnet: studio.tailnet.ts.net");
     expect(out).toContain("  host: studio.iflow.internal");
     expect(out).toContain("  ws: ws://studio.tailnet.ts.net:18789");
@@ -328,7 +328,7 @@ describe("gateway-cli coverage", () => {
   });
 
   it("uses env/config port when --port is omitted", async () => {
-    await withEnvOverride({ IFLOW_GATEWAY_PORT: "19001" }, async () => {
+    await withEnvOverride({ CLAW_GATEWAY_PORT: "19001" }, async () => {
       runtimeLogs.length = 0;
       runtimeErrors.length = 0;
       startGatewayServer.mockClear();

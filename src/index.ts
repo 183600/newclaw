@@ -20,7 +20,7 @@ import { loadDotEnv } from "./infra/dotenv.js";
 import { normalizeEnv } from "./infra/env.js";
 import { formatUncaughtError } from "./infra/errors.js";
 import { isMainModule } from "./infra/is-main.js";
-import { ensureiFlowCliOnPath } from "./infra/path-env.js";
+import { ensureClawCliOnPath } from "./infra/path-env.js";
 import {
   describePortOwner,
   ensurePortAvailable,
@@ -35,7 +35,7 @@ import { assertWebChannel, normalizeE164, toWhatsappJid } from "./utils.js";
 
 loadDotEnv({ quiet: true });
 normalizeEnv();
-ensureiFlowCliOnPath();
+ensureClawCliOnPath();
 
 // Capture all console output into structured logs while keeping stdout/stderr behavior.
 enableConsoleCapture();
@@ -82,12 +82,12 @@ if (isMain) {
   installUnhandledRejectionHandler();
 
   process.on("uncaughtException", (error) => {
-    console.error("[iflow] Uncaught exception:", formatUncaughtError(error));
+    console.error("[claw] Uncaught exception:", formatUncaughtError(error));
     process.exit(1);
   });
 
   void program.parseAsync(process.argv).catch((err) => {
-    console.error("[iflow] CLI failed:", formatUncaughtError(err));
+    console.error("[claw] CLI failed:", formatUncaughtError(err));
     process.exit(1);
   });
 }

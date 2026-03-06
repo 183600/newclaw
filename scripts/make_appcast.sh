@@ -2,8 +2,8 @@
 set -euo pipefail
 
 ROOT=$(cd "$(dirname "$0")/.." && pwd)
-ZIP=${1:?"Usage: $0 iFlow-<ver>.zip"}
-FEED_URL=${2:-"https://raw.githubusercontent.com/iflow/iflow/main/appcast.xml"}
+ZIP=${1:?"Usage: $0 Claw-<ver>.zip"}
+FEED_URL=${2:-"https://raw.githubusercontent.com/claw/claw/main/appcast.xml"}
 PRIVATE_KEY_FILE=${SPARKLE_PRIVATE_KEY_FILE:-}
 if [[ -z "$PRIVATE_KEY_FILE" ]]; then
   echo "Set SPARKLE_PRIVATE_KEY_FILE to your ed25519 private key (Sparkle)." >&2
@@ -19,7 +19,7 @@ ZIP_NAME=$(basename "$ZIP")
 ZIP_BASE="${ZIP_NAME%.zip}"
 VERSION=${SPARKLE_RELEASE_VERSION:-}
 if [[ -z "$VERSION" ]]; then
-  if [[ "$ZIP_NAME" =~ ^iFlow-([0-9]+(\.[0-9]+){1,2}([-.][^.]*)?)\.zip$ ]]; then
+  if [[ "$ZIP_NAME" =~ ^Claw-([0-9]+(\.[0-9]+){1,2}([-.][^.]*)?)\.zip$ ]]; then
     VERSION="${BASH_REMATCH[1]}"
   else
     echo "Could not infer version from $ZIP_NAME; set SPARKLE_RELEASE_VERSION." >&2

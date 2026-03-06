@@ -1,7 +1,7 @@
 {
-  "name": "@iflow/voice-call",
+  "name": "@claw/voice-call",
   "version": "2026.2.2",
-  "description": "iFlow voice-call plugin",
+  "description": "Claw voice-call plugin",
   "type": "module",
   "dependencies": {
     "@sinclair/typebox": "0.34.48",
@@ -11,7 +11,7 @@
   "devDependencies": {
     "iflow": "workspace:*"
   },
-  "iflow": {
+  "claw": {
     "extensions": [
       "./index.ts"
     ]

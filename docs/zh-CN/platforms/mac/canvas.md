@@ -75,7 +75,7 @@ A2UI 由 Gateway网关 canvas 主机托管，并在 Canvas 面板内渲染。当
 默认 A2UI 主机 URL：
 
 ```
-http://<gateway-host>:18793/__iflow__/a2ui/
+http://<gateway-host>:18793/__claw__/a2ui/
 ```
 
 ### A2UI 命令（v0.8）

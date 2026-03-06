@@ -1,8 +1,8 @@
 import fs from "node:fs";
 import path from "node:path";
-import { resolveiFlowPackageRoot } from "../infra/iflow-root.js";
+import { resolveClawPackageRoot } from "../infra/iflow-root.js";
 
-export async function resolveiFlowDocsPath(params: {
+export async function resolveClawDocsPath(params: {
   workspaceDir?: string;
   argv1?: string;
   cwd?: string;
@@ -16,7 +16,7 @@ export async function resolveiFlowDocsPath(params: {
     }
   }
 
-  const packageRoot = await resolveiFlowPackageRoot({
+  const packageRoot = await resolveClawPackageRoot({
     cwd: params.cwd,
     argv1: params.argv1,
     moduleUrl: params.moduleUrl,

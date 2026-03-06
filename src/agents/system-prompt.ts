@@ -109,7 +109,7 @@ function buildMessagingSection(params: {
     "## Messaging",
     "- Reply in current session → automatically routes to the source channel (Signal, Telegram, etc.)",
     "- Cross-session messaging → use sessions_send(sessionKey, message)",
-    "- Never use exec/curl for provider messaging; iFlow handles all routing internally.",
+    "- Never use exec/curl for provider messaging; Claw handles all routing internally.",
     params.availableTools.has("message")
       ? [
           "",
@@ -150,13 +150,13 @@ function buildDocsSection(params: { docsPath?: string; isMinimal: boolean; readT
   }
   return [
     "## Documentation",
-    `iFlow docs: ${docsPath}`,
+    `Claw docs: ${docsPath}`,
     "Mirror: https://docs.iflow.ai",
     "Source: https://github.com/iflow/iflow",
     "Community: https://discord.com/invite/clawd",
     "Find new skills: https://clawhub.com",
-    "For iFlow behavior, commands, config, or architecture: consult local docs first.",
-    "When diagnosing issues, run `iflow status` yourself when possible; only ask the user if you lack access (e.g., sandboxed).",
+    "For Claw behavior, commands, config, or architecture: consult local docs first.",
+    "When diagnosing issues, run `claw status` yourself when possible; only ask the user if you lack access (e.g., sandboxed).",
     "",
   ];
 }
@@ -233,7 +233,7 @@ export function buildAgentSystemPrompt(params: {
     nodes: "List/describe/notify/camera/screen on paired nodes",
     cron: "Manage cron jobs and wake events (use for reminders; when scheduling a reminder, write the systemEvent text as something that will read like a reminder when it fires, and mention that it is a reminder depending on the time gap between setting and firing; include recent context in reminder text if appropriate)",
     message: "Send messages and channel actions",
-    gateway: "Restart, apply config, or run updates on the running iFlow process",
+    gateway: "Restart, apply config, or run updates on the running Claw process",
     agents_list: "List agent ids allowed for sessions_spawn",
     sessions_list: "List other sessions (incl. sub-agents) with filters/last",
     sessions_history: "Fetch history for another session/sub-agent",
@@ -373,11 +373,11 @@ export function buildAgentSystemPrompt(params: {
 
   // For "none" mode, return just the basic identity line
   if (promptMode === "none") {
-    return "You are a personal assistant running inside iFlow.";
+    return "You are a personal assistant running inside Claw.";
   }
 
   const lines = [
-    "You are a personal assistant running inside iFlow.",
+    "You are a personal assistant running inside Claw.",
     "",
     "## Tooling",
     "Tool availability (filtered by policy):",
@@ -392,7 +392,7 @@ export function buildAgentSystemPrompt(params: {
           "- apply_patch: apply multi-file patches",
           `- ${execToolName}: run shell commands (supports background via yieldMs/background)`,
           `- ${processToolName}: manage background exec sessions`,
-          "- browser: control iFlow's dedicated browser",
+          "- browser: control Claw's dedicated browser",
           "- canvas: present/eval/snapshot the Canvas",
           "- nodes: list/describe/notify/camera/screen on paired nodes",
           "- cron: manage cron jobs and wake events (use for reminders; when scheduling a reminder, write the systemEvent text as something that will read like a reminder when it fires, and mention that it is a reminder depending on the time gap between setting and firing; include recent context in reminder text if appropriate)",
@@ -411,25 +411,25 @@ export function buildAgentSystemPrompt(params: {
     "Use plain human language for narration unless in a technical context.",
     "",
     ...safetySection,
-    "## iFlow CLI Quick Reference",
-    "iFlow is controlled via subcommands. Do not invent commands.",
+    "## Claw CLI Quick Reference",
+    "Claw is controlled via subcommands. Do not invent commands.",
     "To manage the Gateway daemon service (start/stop/restart):",
-    "- iflow gateway status",
-    "- iflow gateway start",
-    "- iflow gateway stop",
-    "- iflow gateway restart",
-    "If unsure, ask the user to run `iflow help` (or `iflow gateway --help`) and paste the output.",
+    "- claw gateway status",
+    "- claw gateway start",
+    "- claw gateway stop",
+    "- claw gateway restart",
+    "If unsure, ask the user to run `claw help` (or `claw gateway --help`) and paste the output.",
     "",
     ...skillsSection,
     ...memorySection,
     // Skip self-update for subagent/none modes
-    hasGateway && !isMinimal ? "## iFlow Self-Update" : "",
+    hasGateway && !isMinimal ? "## Claw Self-Update" : "",
     hasGateway && !isMinimal
       ? [
           "Get Updates (self-update) is ONLY allowed when the user explicitly asks for it.",
           "Do not run config.apply or update.run unless the user explicitly requests an update or config change; if it's not explicit, ask first.",
           "Actions: config.get, config.schema, config.apply (validate + write full config, then restart), update.run (update deps or git, then restart).",
-          "After restart, iFlow pings the last active session automatically.",
+          "After restart, Claw pings the last active session automatically.",
         ].join("\n")
       : "",
     hasGateway && !isMinimal ? "" : "",
@@ -501,7 +501,7 @@ export function buildAgentSystemPrompt(params: {
       userTimezone,
     }),
     "## Workspace Files (injected)",
-    "These user-editable files are loaded by iFlow and included below in Project Context.",
+    "These user-editable files are loaded by Claw and included below in Project Context.",
     "",
     ...buildReplyTagsSection(isMinimal),
     ...buildMessagingSection({
@@ -592,7 +592,7 @@ export function buildAgentSystemPrompt(params: {
       heartbeatPromptLine,
       "If you receive a heartbeat poll (a user message matching the heartbeat prompt above), and there is nothing that needs attention, reply exactly:",
       "HEARTBEAT_OK",
-      'iFlow treats a leading/trailing "HEARTBEAT_OK" as a heartbeat ack (and may discard it).',
+      'Claw treats a leading/trailing "HEARTBEAT_OK" as a heartbeat ack (and may discard it).',
       'If something needs attention, do NOT include "HEARTBEAT_OK"; reply with the alert text instead.',
       "",
     );

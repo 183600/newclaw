@@ -1,6 +1,6 @@
 import Foundation
 import Testing
-@testable import iFlow
+@testable import Claw
 
 private struct KeychainEntry: Hashable {
     let service: String

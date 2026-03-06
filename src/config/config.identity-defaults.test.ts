@@ -131,7 +131,7 @@ describe("config identity defaults", () => {
                     theme: "space lobster",
                     emoji: "🦞",
                   },
-                  groupChat: { mentionPatterns: ["@iflow"] },
+                  groupChat: { mentionPatterns: ["@claw"] },
                 },
               ],
             },
@@ -150,7 +150,7 @@ describe("config identity defaults", () => {
       const cfg = loadConfig();
 
       expect(cfg.messages?.responsePrefix).toBe("✅");
-      expect(cfg.agents?.list?.[0]?.groupChat?.mentionPatterns).toEqual(["@iflow"]);
+      expect(cfg.agents?.list?.[0]?.groupChat?.mentionPatterns).toEqual(["@claw"]);
     });
   });
 
@@ -163,7 +163,7 @@ describe("config identity defaults", () => {
         JSON.stringify(
           {
             messages: {
-              messagePrefix: "[iflow]",
+              messagePrefix: "[claw]",
               responsePrefix: "🦞",
             },
             channels: {
@@ -327,7 +327,7 @@ describe("config identity defaults", () => {
                 {
                   id: "main",
                   identity: {
-                    name: "iFlow",
+                    name: "Claw",
                     theme: "space lobster",
                     emoji: "🦞",
                   },

@@ -30,7 +30,7 @@ const RESPONSE_PAGE = `<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>iFlow Antigravity OAuth</title>
+    <title>Claw Antigravity OAuth</title>
   </head>
   <body>
     <main>

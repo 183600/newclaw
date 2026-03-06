@@ -2,9 +2,9 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
-import { resolveiFlowAgentDir } from "./agent-paths.js";
+import { resolveClawAgentDir } from "./agent-paths.js";
 
-describe("resolveiFlowAgentDir", () => {
+describe("resolveClawAgentDir", () => {
   const previousStateDir = process.env.IFLOW_STATE_DIR;
   const previousAgentDir = process.env.IFLOW_AGENT_DIR;
   const previousPiAgentDir = process.env.PI_CODING_AGENT_DIR;
@@ -33,23 +33,23 @@ describe("resolveiFlowAgentDir", () => {
   });
 
   it("defaults to the multi-agent path when no overrides are set", async () => {
-    tempStateDir = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-agent-"));
+    tempStateDir = await fs.mkdtemp(path.join(os.tmpdir(), "claw-agent-"));
     process.env.IFLOW_STATE_DIR = tempStateDir;
     delete process.env.IFLOW_AGENT_DIR;
     delete process.env.PI_CODING_AGENT_DIR;
 
-    const resolved = resolveiFlowAgentDir();
+    const resolved = resolveClawAgentDir();
 
     expect(resolved).toBe(path.join(tempStateDir, "agents", "main", "agent"));
   });
 
-  it("honors IFLOW_AGENT_DIR overrides", async () => {
-    tempStateDir = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-agent-"));
+  it("honors CLAW_AGENT_DIR overrides", async () => {
+    tempStateDir = await fs.mkdtemp(path.join(os.tmpdir(), "claw-agent-"));
     const override = path.join(tempStateDir, "agent");
     process.env.IFLOW_AGENT_DIR = override;
     delete process.env.PI_CODING_AGENT_DIR;
 
-    const resolved = resolveiFlowAgentDir();
+    const resolved = resolveClawAgentDir();
 
     expect(resolved).toBe(path.resolve(override));
   });

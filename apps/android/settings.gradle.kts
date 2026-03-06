@@ -14,5 +14,5 @@ dependencyResolutionManagement {
   }
 }
 
-rootProject.name = "iFlowNodeAndroid"
+rootProject.name = "ClawNodeAndroid"
 include(":app")

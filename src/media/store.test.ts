@@ -29,7 +29,7 @@ describe("media store", () => {
 
   beforeAll(async () => {
     snapshotEnv();
-    home = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-test-home-"));
+    home = await fs.mkdtemp(path.join(os.tmpdir(), "claw-test-home-"));
     process.env.HOME = home;
     process.env.USERPROFILE = home;
     process.env.IFLOW_STATE_DIR = path.join(home, ".iflow");

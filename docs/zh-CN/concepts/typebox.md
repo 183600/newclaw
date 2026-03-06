@@ -61,7 +61,7 @@ Client                    Gateway网关
 - 服务器握手 + 方法分发：`src/gateway/server.ts`
 - 节点客户端：`src/gateway/client.ts`
 - 生成的 JSON Schema：`dist/protocol.schema.json`
-- 生成的 Swift 模型：`apps/macos/Sources/iFlowProtocol/Gateway网关Models.swift`
+- 生成的 Swift 模型：`apps/macos/Sources/ClawProtocol/Gateway网关Models.swift`
 
 ## 当前流水线
 

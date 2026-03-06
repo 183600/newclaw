@@ -15,7 +15,7 @@ describe("hasAnyWhatsAppAuth", () => {
 
   beforeEach(() => {
     previousOauthDir = process.env.IFLOW_OAUTH_DIR;
-    tempOauthDir = fs.mkdtempSync(path.join(os.tmpdir(), "iflow-oauth-"));
+    tempOauthDir = fs.mkdtempSync(path.join(os.tmpdir(), "claw-oauth-"));
     process.env.IFLOW_OAUTH_DIR = tempOauthDir;
   });
 
@@ -46,7 +46,7 @@ describe("hasAnyWhatsAppAuth", () => {
   });
 
   it("includes authDir overrides", () => {
-    const customDir = fs.mkdtempSync(path.join(os.tmpdir(), "iflow-wa-auth-"));
+    const customDir = fs.mkdtempSync(path.join(os.tmpdir(), "claw-wa-auth-"));
     try {
       writeCreds(customDir);
       const cfg = {

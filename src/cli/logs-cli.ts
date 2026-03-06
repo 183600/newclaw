@@ -123,7 +123,7 @@ function createLogWriters() {
     onBrokenPipe: (err, stream) => {
       const code = err.code ?? "EPIPE";
       const target = stream === process.stdout ? "stdout" : "stderr";
-      const message = `iflow logs: output ${target} closed (${code}). Stopping tail.`;
+      const message = `claw logs: output ${target} closed (${code}). Stopping tail.`;
       try {
         clearActiveProgressLine();
         process.stderr.write(`${message}\n`);

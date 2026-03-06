@@ -74,7 +74,7 @@ const findLatestMtime = (dirPath, shouldSkip) => {
 };
 
 const shouldBuild = () => {
-  if (env.IFLOW_FORCE_BUILD === "1") {
+  if (env.CLAW_FORCE_BUILD === "1") {
     return true;
   }
   const stampMtime = statMtime(buildStampPath);
@@ -100,14 +100,14 @@ const shouldBuild = () => {
 };
 
 const logRunner = (message) => {
-  if (env.IFLOW_RUNNER_LOG === "0") {
+  if (env.CLAW_RUNNER_LOG === "0") {
     return;
   }
-  process.stderr.write(`[iflow] ${message}\n`);
+  process.stderr.write(`[claw] ${message}\n`);
 };
 
 const runNode = () => {
-  const nodeProcess = spawn(process.execPath, ["iflow.mjs", ...args], {
+  const nodeProcess = spawn(process.execPath, ["claw.mjs", ...args], {
     cwd,
     env,
     stdio: "inherit",

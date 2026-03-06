@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 import process from "node:process";
 
-declare const __IFLOW_VERSION__: string | undefined;
+declare const __CLAW_VERSION__: string | undefined;
 
 const BUNDLED_VERSION =
-  (typeof __IFLOW_VERSION__ === "string" && __IFLOW_VERSION__) ||
+  (typeof __CLAW_VERSION__ === "string" && __CLAW_VERSION__) ||
   process.env.IFLOW_BUNDLED_VERSION ||
   "0.0.0";
 
@@ -49,8 +49,8 @@ async function main() {
   const { loadDotEnv } = await import("../infra/dotenv.js");
   loadDotEnv({ quiet: true });
 
-  const { ensureiFlowCliOnPath } = await import("../infra/path-env.js");
-  ensureiFlowCliOnPath();
+  const { ensureClawCliOnPath } = await import("../infra/path-env.js");
+  ensureClawCliOnPath();
 
   const { enableConsoleCapture } = await import("../logging.js");
   enableConsoleCapture();
@@ -66,7 +66,7 @@ async function main() {
   installUnhandledRejectionHandler();
 
   process.on("uncaughtException", (error) => {
-    console.error("[iflow] Uncaught exception:", formatUncaughtError(error));
+    console.error("[claw] Uncaught exception:", formatUncaughtError(error));
     process.exit(1);
   });
 
@@ -74,6 +74,6 @@ async function main() {
 }
 
 void main().catch((err) => {
-  console.error("[iflow] Relay failed:", err instanceof Error ? (err.stack ?? err.message) : err);
+  console.error("[claw] Relay failed:", err instanceof Error ? (err.stack ?? err.message) : err);
   process.exit(1);
 });

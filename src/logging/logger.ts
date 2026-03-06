@@ -10,10 +10,10 @@ import { loggingState } from "./state.js";
 
 // Pin to /tmp so mac Debug UI and docs match; os.tmpdir() can be a per-user
 // randomized path on macOS which made the “Open log” button a no-op.
-export const DEFAULT_LOG_DIR = "/tmp/iflow";
-export const DEFAULT_LOG_FILE = path.join(DEFAULT_LOG_DIR, "iflow.log"); // legacy single-file path
+export const DEFAULT_LOG_DIR = "/tmp/claw";
+export const DEFAULT_LOG_FILE = path.join(DEFAULT_LOG_DIR, "claw.log"); // legacy single-file path
 
-const LOG_PREFIX = "iflow";
+const LOG_PREFIX = "claw";
 const LOG_SUFFIX = ".log";
 const MAX_LOG_AGE_MS = 24 * 60 * 60 * 1000; // 24h
 
@@ -94,7 +94,7 @@ function buildLogger(settings: ResolvedSettings): TsLogger<LogObj> {
     pruneOldRollingLogs(path.dirname(settings.file));
   }
   const logger = new TsLogger<LogObj>({
-    name: "iflow",
+    name: "claw",
     minLevel: levelToMinLevel(settings.level),
     type: "hidden", // no ansi formatting
   });

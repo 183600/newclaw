@@ -43,7 +43,7 @@ pnpm gateway:watch
   - OpenAI Chat Completions (HTTP)：[`/v1/chat/completions`](/gateway/openai-http-api)。
   - OpenResponses (HTTP)：[`/v1/responses`](/gateway/openresponses-http-api)。
   - Tools Invoke (HTTP)：[`/tools/invoke`](/gateway/tools-invoke-http-api)。
-- 默认在 `canvasHost.port`（默认 `18793`）启动 Canvas 文件服务器，从 `~/.iflow/workspace/canvas` 提供 `http://<gateway-host>:18793/__iflow__/canvas/` 服务。通过 `canvasHost.enabled=false` 或 `IFLOW_SKIP_CANVAS_HOST=1` 禁用。
+- 默认在 `canvasHost.port`（默认 `18793`）启动 Canvas 文件服务器，从 `~/.iflow/workspace/canvas` 提供 `http://<gateway-host>:18793/__claw__/canvas/` 服务。通过 `canvasHost.enabled=false` 或 `IFLOW_SKIP_CANVAS_HOST=1` 禁用。
 - 日志输出到标准输出；使用 launchd/systemd 保持进程存活并轮转日志。
 - 传入 `--verbose` 可在故障排除时将调试日志（握手、请求/响应、事件）从日志文件镜像到标准输出。
 - `--force` 使用 `lsof` 查找所选端口上的监听进程，发送 SIGTERM，记录被终止的进程，然后启动 Gateway网关（如果缺少 `lsof` 则快速失败）。

@@ -221,7 +221,7 @@ async function runGatewayCommand(opts: GatewayRunOpts) {
     defaultRuntime.error(
       [
         "Gateway auth is set to token, but no token is configured.",
-        "Set gateway.auth.token (or IFLOW_GATEWAY_TOKEN), or pass --token.",
+        "Set gateway.auth.token (or CLAW_GATEWAY_TOKEN), or pass --token.",
         ...authHints,
       ]
         .filter(Boolean)
@@ -234,7 +234,7 @@ async function runGatewayCommand(opts: GatewayRunOpts) {
     defaultRuntime.error(
       [
         "Gateway auth is set to password, but no password is configured.",
-        "Set gateway.auth.password (or IFLOW_GATEWAY_PASSWORD), or pass --password.",
+        "Set gateway.auth.password (or CLAW_GATEWAY_PASSWORD), or pass --password.",
         ...authHints,
       ]
         .filter(Boolean)
@@ -247,7 +247,7 @@ async function runGatewayCommand(opts: GatewayRunOpts) {
     defaultRuntime.error(
       [
         `Refusing to bind gateway to ${bind} without auth.`,
-        "Set gateway.auth.token/password (or IFLOW_GATEWAY_TOKEN/IFLOW_GATEWAY_PASSWORD) or pass --token/--password.",
+        "Set gateway.auth.token/password (or CLAW_GATEWAY_TOKEN/CLAW_GATEWAY_PASSWORD) or pass --token/--password.",
         ...authHints,
       ]
         .filter(Boolean)
@@ -317,7 +317,7 @@ export function addGatewayRunCommand(cmd: Command): Command {
     )
     .option(
       "--token <token>",
-      "Shared token required in connect.params.auth.token (default: IFLOW_GATEWAY_TOKEN env if set)",
+      "Shared token required in connect.params.auth.token (default: CLAW_GATEWAY_TOKEN env if set)",
     )
     .option("--auth <mode>", 'Gateway auth mode ("token"|"password")')
     .option("--password <password>", "Password for auth mode=password")

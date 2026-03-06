@@ -24,10 +24,10 @@ vi.mock("../config/config.js", async (importOriginal) => {
 
 import { emitAgentEvent } from "../infra/agent-events.js";
 import "./test-helpers/fast-core-tools.js";
-import { createiFlowTools } from "./iflow-tools.js";
+import { createClawTools } from "./iflow-tools.js";
 import { resetSubagentRegistryForTests } from "./subagent-registry.js";
 
-describe("iflow-tools: subagents", () => {
+describe("claw-tools: subagents", () => {
   beforeEach(() => {
     configOverride = {
       session: {
@@ -101,7 +101,7 @@ describe("iflow-tools: subagents", () => {
       return {};
     });
 
-    const tool = createiFlowTools({
+    const tool = createClawTools({
       agentSessionKey: "main",
       agentChannel: "whatsapp",
     }).find((candidate) => candidate.name === "sessions_spawn");
@@ -165,7 +165,7 @@ describe("iflow-tools: subagents", () => {
     resetSubagentRegistryForTests();
     callGatewayMock.mockReset();
 
-    const tool = createiFlowTools({
+    const tool = createClawTools({
       agentSessionKey: "main",
       agentChannel: "whatsapp",
     }).find((candidate) => candidate.name === "sessions_spawn");

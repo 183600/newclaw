@@ -120,7 +120,7 @@ function parseArgs(args: string[]): AcpServerOptions {
 }
 
 function printHelp(): void {
-  console.log(`Usage: iflow acp [options]
+  console.log(`Usage: claw acp [options]
 
 Gateway-backed ACP server for IDE integration.
 

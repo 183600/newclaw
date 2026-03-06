@@ -4,7 +4,7 @@ import { abortEmbeddedPiRun } from "../../agents/pi-embedded.js";
 import { updateSessionStore } from "../../config/sessions.js";
 import { logVerbose } from "../../globals.js";
 import { createInternalHookEvent, triggerInternalHook } from "../../hooks/internal-hooks.js";
-import { scheduleGatewaySigusr1Restart, triggeriFlowRestart } from "../../infra/restart.js";
+import { scheduleGatewaySigusr1Restart, triggerClawRestart } from "../../infra/restart.js";
 import { loadCostUsageSummary, loadSessionCostSummary } from "../../infra/session-cost-usage.js";
 import { formatTokenCount, formatUsd } from "../../utils/usage-format.js";
 import { parseActivationCommand } from "../group-activation.js";
@@ -262,11 +262,11 @@ export const handleRestartCommand: CommandHandler = async (params, allowTextComm
     return {
       shouldContinue: false,
       reply: {
-        text: "⚙️ Restarting iFlow in-process (SIGUSR1); back in a few seconds.",
+        text: "⚙️ Restarting Claw in-process (SIGUSR1); back in a few seconds.",
       },
     };
   }
-  const restartMethod = triggeriFlowRestart();
+  const restartMethod = triggerClawRestart();
   if (!restartMethod.ok) {
     const detail = restartMethod.detail ? ` Details: ${restartMethod.detail}` : "";
     return {
@@ -279,7 +279,7 @@ export const handleRestartCommand: CommandHandler = async (params, allowTextComm
   return {
     shouldContinue: false,
     reply: {
-      text: `⚙️ Restarting iFlow via ${restartMethod.method}; give me a few seconds to come back online.`,
+      text: `⚙️ Restarting Claw via ${restartMethod.method}; give me a few seconds to come back online.`,
     },
   };
 };

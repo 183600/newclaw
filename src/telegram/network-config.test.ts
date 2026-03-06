@@ -5,25 +5,25 @@ describe("resolveTelegramAutoSelectFamilyDecision", () => {
   it("prefers env enable over env disable", () => {
     const decision = resolveTelegramAutoSelectFamilyDecision({
       env: {
-        IFLOW_TELEGRAM_ENABLE_AUTO_SELECT_FAMILY: "1",
-        IFLOW_TELEGRAM_DISABLE_AUTO_SELECT_FAMILY: "1",
+        CLAW_TELEGRAM_ENABLE_AUTO_SELECT_FAMILY: "1",
+        CLAW_TELEGRAM_DISABLE_AUTO_SELECT_FAMILY: "1",
       },
       nodeMajor: 22,
     });
     expect(decision).toEqual({
       value: true,
-      source: "env:IFLOW_TELEGRAM_ENABLE_AUTO_SELECT_FAMILY",
+      source: "env:CLAW_TELEGRAM_ENABLE_AUTO_SELECT_FAMILY",
     });
   });
 
   it("uses env disable when set", () => {
     const decision = resolveTelegramAutoSelectFamilyDecision({
-      env: { IFLOW_TELEGRAM_DISABLE_AUTO_SELECT_FAMILY: "1" },
+      env: { CLAW_TELEGRAM_DISABLE_AUTO_SELECT_FAMILY: "1" },
       nodeMajor: 22,
     });
     expect(decision).toEqual({
       value: false,
-      source: "env:IFLOW_TELEGRAM_DISABLE_AUTO_SELECT_FAMILY",
+      source: "env:CLAW_TELEGRAM_DISABLE_AUTO_SELECT_FAMILY",
     });
   });
 

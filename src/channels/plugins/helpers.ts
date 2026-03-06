@@ -14,7 +14,7 @@ export function resolveChannelDefaultAccountId<ResolvedAccount>(params: {
 }
 
 export function formatPairingApproveHint(channelId: string): string {
-  const listCmd = formatCliCommand(`iflow pairing list ${channelId}`);
-  const approveCmd = formatCliCommand(`iflow pairing approve ${channelId} <code>`);
+  const listCmd = formatCliCommand(`claw pairing list ${channelId}`);
+  const approveCmd = formatCliCommand(`claw pairing approve ${channelId} <code>`);
   return `Approve via: ${listCmd} / ${approveCmd}`;
 }

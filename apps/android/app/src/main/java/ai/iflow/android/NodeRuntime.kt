@@ -506,7 +506,7 @@ class NodeRuntime(context: Context) {
     val version = resolvedVersionName()
     val release = Build.VERSION.RELEASE?.trim().orEmpty()
     val releaseLabel = if (release.isEmpty()) "unknown" else release
-    return "iFlowAndroid/$version (Android $releaseLabel; SDK ${Build.VERSION.SDK_INT})"
+    return "ClawAndroid/$version (Android $releaseLabel; SDK ${Build.VERSION.SDK_INT})"
   }
 
   private fun buildClientInfo(clientId: String, clientMode: String): GatewayClientInfo {
@@ -529,7 +529,7 @@ class NodeRuntime(context: Context) {
       caps = buildCapabilities(),
       commands = buildInvokeCommands(),
       permissions = emptyMap(),
-      client = buildClientInfo(clientId = "iflow-android", clientMode = "node"),
+      client = buildClientInfo(clientId = "claw-android", clientMode = "node"),
       userAgent = buildUserAgent(),
     )
   }
@@ -541,7 +541,7 @@ class NodeRuntime(context: Context) {
       caps = emptyList(),
       commands = emptyList(),
       permissions = emptyMap(),
-      client = buildClientInfo(clientId = "iflow-control-ui", clientMode = "ui"),
+      client = buildClientInfo(clientId = "claw-control-ui", clientMode = "ui"),
       userAgent = buildUserAgent(),
     )
   }
@@ -1115,7 +1115,7 @@ class NodeRuntime(context: Context) {
     val raw = if (nodeRaw.isNotBlank()) nodeRaw else operatorRaw
     if (raw.isBlank()) return null
     val base = raw.trimEnd('/')
-    return "${base}/__iflow__/a2ui/?platform=android"
+    return "${base}/__claw__/a2ui/?platform=android"
   }
 
   private suspend fun ensureA2uiReady(a2uiUrl: String): Boolean {
@@ -1207,7 +1207,7 @@ private const val a2uiReadyCheckJS: String =
   """
   (() => {
     try {
-      const host = globalThis.iflowA2UI;
+      const host = globalThis.clawA2UI;
       return !!host && typeof host.applyMessages === 'function';
     } catch (_) {
       return false;
@@ -1219,8 +1219,8 @@ private const val a2uiResetJS: String =
   """
   (() => {
     try {
-      const host = globalThis.iflowA2UI;
-      if (!host) return { ok: false, error: "missing iflowA2UI" };
+      const host = globalThis.clawA2UI;
+      if (!host) return { ok: false, error: "missing clawA2UI" };
       return host.reset();
     } catch (e) {
       return { ok: false, error: String(e?.message ?? e) };
@@ -1232,8 +1232,8 @@ private fun a2uiApplyMessagesJS(messagesJson: String): String {
   return """
     (() => {
       try {
-        const host = globalThis.iflowA2UI;
-        if (!host) return { ok: false, error: "missing iflowA2UI" };
+        const host = globalThis.clawA2UI;
+        if (!host) return { ok: false, error: "missing clawA2UI" };
         const messages = $messagesJson;
         return host.applyMessages(messages);
       } catch (e) {

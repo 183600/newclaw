@@ -88,7 +88,7 @@ export function shouldIncludeHook(params: {
   const { entry, config, eligibility } = params;
   const hookKey = resolveHookKey(entry.hook.name, entry);
   const hookConfig = resolveHookConfig(config, hookKey);
-  const pluginManaged = entry.hook.source === "iflow-plugin";
+  const pluginManaged = entry.hook.source === "claw-plugin";
   const osList = entry.metadata?.os ?? [];
   const remotePlatforms = eligibility?.remote?.platforms ?? [];
 

@@ -24,7 +24,7 @@ describe("onboard (non-interactive): Vercel AI Gateway", () => {
     delete process.env.IFLOW_GATEWAY_TOKEN;
     delete process.env.IFLOW_GATEWAY_PASSWORD;
 
-    const tempHome = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-onboard-gateway-"));
+    const tempHome = await fs.mkdtemp(path.join(os.tmpdir(), "claw-onboard-gateway-"));
     process.env.HOME = tempHome;
     process.env.IFLOW_STATE_DIR = tempHome;
     process.env.IFLOW_CONFIG_PATH = path.join(tempHome, "iflow.json");

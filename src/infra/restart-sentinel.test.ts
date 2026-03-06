@@ -16,7 +16,7 @@ describe("restart sentinel", () => {
 
   beforeEach(async () => {
     prevStateDir = process.env.IFLOW_STATE_DIR;
-    tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-sentinel-"));
+    tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "claw-sentinel-"));
     process.env.IFLOW_STATE_DIR = tempDir;
   });
 

@@ -71,7 +71,7 @@ describe("buildStatusMessage", () => {
     });
     const normalized = normalizeTestText(text);
 
-    expect(normalized).toContain("iFlow");
+    expect(normalized).toContain("Claw");
     expect(normalized).toContain("Model: anthropic/pi:opus");
     expect(normalized).toContain("api-key");
     expect(normalized).toContain("Tokens: 1.2k in / 800 out");
@@ -403,7 +403,7 @@ describe("buildStatusMessage", () => {
 
         expect(normalizeTestText(text)).toContain("Context: 1.0k/32k");
       },
-      { prefix: "iflow-status-" },
+      { prefix: "claw-status-" },
     );
   });
 });

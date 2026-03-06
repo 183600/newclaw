@@ -145,7 +145,7 @@ export async function buildStatusAllReportLines(params: {
   });
 
   const lines: string[] = [];
-  lines.push(heading("iFlow status --all"));
+  lines.push(heading("Claw status --all"));
   lines.push("");
   lines.push(heading("Overview"));
   lines.push(overview.trimEnd());

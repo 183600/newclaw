@@ -8,16 +8,16 @@ import {
 describe("shell env fallback", () => {
   it("is disabled by default", () => {
     expect(shouldEnableShellEnvFallback({} as NodeJS.ProcessEnv)).toBe(false);
-    expect(shouldEnableShellEnvFallback({ IFLOW_LOAD_SHELL_ENV: "0" })).toBe(false);
-    expect(shouldEnableShellEnvFallback({ IFLOW_LOAD_SHELL_ENV: "1" })).toBe(true);
+    expect(shouldEnableShellEnvFallback({ CLAW_LOAD_SHELL_ENV: "0" })).toBe(false);
+    expect(shouldEnableShellEnvFallback({ CLAW_LOAD_SHELL_ENV: "1" })).toBe(true);
   });
 
   it("resolves timeout from env with default fallback", () => {
     expect(resolveShellEnvFallbackTimeoutMs({} as NodeJS.ProcessEnv)).toBe(15000);
-    expect(resolveShellEnvFallbackTimeoutMs({ IFLOW_SHELL_ENV_TIMEOUT_MS: "42" })).toBe(42);
+    expect(resolveShellEnvFallbackTimeoutMs({ CLAW_SHELL_ENV_TIMEOUT_MS: "42" })).toBe(42);
     expect(
       resolveShellEnvFallbackTimeoutMs({
-        IFLOW_SHELL_ENV_TIMEOUT_MS: "nope",
+        CLAW_SHELL_ENV_TIMEOUT_MS: "nope",
       }),
     ).toBe(15000);
   });

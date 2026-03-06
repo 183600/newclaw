@@ -591,7 +591,7 @@ Teams 最近在相同的底层数据模型上引入了两种频道 UI 样式：
 
 ### 文件存储位置
 
-上传的文件存储在已配置 SharePoint 站点默认文档库中的 `/iFlowShared/` 文件夹。
+上传的文件存储在已配置 SharePoint 站点默认文档库中的 `/ClawShared/` 文件夹。
 
 ## 投票（Adaptive Cards）
 

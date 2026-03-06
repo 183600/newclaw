@@ -88,11 +88,11 @@ export function assertSupportedRuntime(
 
   runtime.error(
     [
-      "iflow requires Node >=22.0.0.",
+      "claw requires Node >=22.0.0.",
       `Detected: ${runtimeLabel} (exec: ${execLabel}).`,
       `PATH searched: ${details.pathEnv}`,
       "Install Node: https://nodejs.org/en/download",
-      "Upgrade Node and re-run iflow.",
+      "Upgrade Node and re-run claw.",
     ].join("\n"),
   );
   runtime.exit(1);

@@ -55,11 +55,11 @@ async function requireRiskAcknowledgement(params: {
     [
       "Security warning — please read.",
       "",
-      "iFlow is a hobby project and still in beta. Expect sharp edges.",
+      "Claw is a hobby project and still in beta. Expect sharp edges.",
       "This bot can read files and run actions if tools are enabled.",
       "A bad prompt can trick it into doing unsafe things.",
       "",
-      "If you’re not comfortable with basic security and access control, don’t run iFlow.",
+      "If you’re not comfortable with basic security and access control, don’t run Claw.",
       "Ask someone experienced to help before enabling tools or exposing it to the internet.",
       "",
       "Recommended baseline:",
@@ -69,8 +69,8 @@ async function requireRiskAcknowledgement(params: {
       "- Use the strongest available model for any bot with tools or untrusted inboxes.",
       "",
       "Run regularly:",
-      "iflow security audit --deep",
-      "iflow security audit --fix",
+      "claw security audit --deep",
+      "claw security audit --fix",
       "",
       "Must read: https://docs.iflow.ai/gateway/security",
     ].join("\n"),
@@ -92,7 +92,7 @@ export async function runOnboardingWizard(
   prompter: WizardPrompter,
 ) {
   printWizardHeader(runtime);
-  await prompter.intro("iFlow onboarding");
+  await prompter.intro("Claw onboarding");
   await requireRiskAcknowledgement({ opts, prompter });
 
   const snapshot = await readConfigFileSnapshot();

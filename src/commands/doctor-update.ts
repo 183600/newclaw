@@ -6,7 +6,7 @@ import { runGatewayUpdate } from "../infra/update-runner.js";
 import { runCommandWithTimeout } from "../process/exec.js";
 import { note } from "../terminal/note.js";
 
-async function detectiFlowGitCheckout(root: string): Promise<"git" | "not-git" | "unknown"> {
+async function detectClawGitCheckout(root: string): Promise<"git" | "not-git" | "unknown"> {
   const res = await runCommandWithTimeout(["git", "-C", root, "rev-parse", "--show-toplevel"], {
     timeoutMs: 5000,
   }).catch(() => null);
@@ -42,10 +42,10 @@ export async function maybeOfferUpdateBeforeDoctor(params: {
     return { updated: false };
   }
 
-  const git = await detectiFlowGitCheckout(params.root);
+  const git = await detectClawGitCheckout(params.root);
   if (git === "git") {
     const shouldUpdate = await params.confirm({
-      message: "Update iFlow from git before running doctor?",
+      message: "Update Claw from git before running doctor?",
       initialValue: true,
     });
     if (!shouldUpdate) {

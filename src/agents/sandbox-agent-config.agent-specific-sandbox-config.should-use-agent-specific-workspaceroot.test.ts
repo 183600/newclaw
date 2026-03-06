@@ -74,7 +74,7 @@ describe("Agent-specific sandbox config", () => {
         list: [
           {
             id: "isolated",
-            workspace: "~/iflow-isolated",
+            workspace: "~/claw-isolated",
             sandbox: {
               mode: "all",
               scope: "agent",
@@ -108,14 +108,14 @@ describe("Agent-specific sandbox config", () => {
         list: [
           {
             id: "main",
-            workspace: "~/iflow",
+            workspace: "~/claw",
             sandbox: {
               mode: "off", // main: no sandbox
             },
           },
           {
             id: "family",
-            workspace: "~/iflow-family",
+            workspace: "~/claw-family",
             sandbox: {
               mode: "all", // family: always sandbox
               scope: "agent",
@@ -156,7 +156,7 @@ describe("Agent-specific sandbox config", () => {
         list: [
           {
             id: "restricted",
-            workspace: "~/iflow-restricted",
+            workspace: "~/claw-restricted",
             sandbox: {
               mode: "all",
               scope: "agent",

@@ -6,7 +6,7 @@ import os from "node:os";
 import path from "node:path";
 import { describe, it } from "vitest";
 import type { iFlowConfig, ModelProviderConfig } from "../config/types.js";
-import { resolveiFlowAgentDir } from "../agents/agent-paths.js";
+import { resolveClawAgentDir } from "../agents/agent-paths.js";
 import { resolveAgentWorkspaceDir } from "../agents/agent-scope.js";
 import {
   type AuthProfileStore,
@@ -20,7 +20,7 @@ import {
 } from "../agents/live-auth-keys.js";
 import { isModernModelRef } from "../agents/live-model-filter.js";
 import { getApiKeyForModel } from "../agents/model-auth.js";
-import { ensureiFlowModelsJson } from "../agents/models-config.js";
+import { ensureClawModelsJson } from "../agents/models-config.js";
 import { discoverAuthStorage, discoverModels } from "../agents/pi-model-discovery.js";
 import { loadConfig } from "../config/config.js";
 import { isTruthyEnvValue } from "../infra/env.js";
@@ -513,7 +513,7 @@ async function runGatewayModelSuite(params: GatewayModelSuiteParams) {
   process.env.IFLOW_GATEWAY_TOKEN = token;
   const agentId = "dev";
 
-  const hostAgentDir = resolveiFlowAgentDir();
+  const hostAgentDir = resolveClawAgentDir();
   const hostStore = ensureAuthProfileStore(hostAgentDir, {
     allowKeychainPrompt: false,
   });
@@ -526,7 +526,7 @@ async function runGatewayModelSuite(params: GatewayModelSuiteParams) {
     lastGood: hostStore.lastGood ? { ...hostStore.lastGood } : undefined,
     usageStats: hostStore.usageStats ? { ...hostStore.usageStats } : undefined,
   };
-  tempStateDir = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-live-state-"));
+  tempStateDir = await fs.mkdtemp(path.join(os.tmpdir(), "claw-live-state-"));
   process.env.IFLOW_STATE_DIR = tempStateDir;
   tempAgentDir = path.join(tempStateDir, "agents", DEFAULT_AGENT_ID, "agent");
   saveAuthProfileStore(sanitizedStore, tempAgentDir);
@@ -544,7 +544,7 @@ async function runGatewayModelSuite(params: GatewayModelSuiteParams) {
   const toolProbePath = path.join(workspaceDir, `.iflow-live-tool-probe.${nonceA}.txt`);
   await fs.writeFile(toolProbePath, `nonceA=${nonceA}\nnonceB=${nonceB}\n`);
 
-  const agentDir = resolveiFlowAgentDir();
+  const agentDir = resolveClawAgentDir();
   const sanitizedCfg: iFlowConfig = {
     ...params.cfg,
     auth: sanitizeAuthConfig({ cfg: params.cfg, agentDir }),
@@ -554,12 +554,12 @@ async function runGatewayModelSuite(params: GatewayModelSuiteParams) {
     candidates: params.candidates,
     providerOverrides: params.providerOverrides,
   });
-  const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-live-"));
+  const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "claw-live-"));
   const tempConfigPath = path.join(tempDir, "iflow.json");
   await fs.writeFile(tempConfigPath, `${JSON.stringify(nextCfg, null, 2)}\n`);
   process.env.IFLOW_CONFIG_PATH = tempConfigPath;
 
-  await ensureiFlowModelsJson(nextCfg);
+  await ensureClawModelsJson(nextCfg);
 
   const port = await getFreeGatewayPort();
   const server = await startGatewayServer(port, {
@@ -691,7 +691,7 @@ async function runGatewayModelSuite(params: GatewayModelSuiteParams) {
               sessionKey,
               idempotencyKey: `idem-${runIdTool}-tool`,
               message:
-                "iFlow live tool probe (local, safe): " +
+                "Claw live tool probe (local, safe): " +
                 `use the tool named \`read\` (or \`Read\`) with JSON arguments {"path":"${toolProbePath}"}. ` +
                 "Then reply with the two nonce values you read (include both).",
               thinking: params.thinkingLevel,
@@ -731,7 +731,7 @@ async function runGatewayModelSuite(params: GatewayModelSuiteParams) {
                 sessionKey,
                 idempotencyKey: `idem-${runIdTool}-exec-read`,
                 message:
-                  "iFlow live tool probe (local, safe): " +
+                  "Claw live tool probe (local, safe): " +
                   "use the tool named `exec` (or `Exec`) to run this command: " +
                   `mkdir -p "${tempDir}" && printf '%s' '${nonceC}' > "${toolWritePath}". ` +
                   `Then use the tool named \`read\` (or \`Read\`) with JSON arguments {"path":"${toolWritePath}"}. ` +
@@ -1014,9 +1014,9 @@ describeLive("gateway live (dev agent, profile keys)", () => {
     "runs meaningful prompts across models with available keys",
     async () => {
       const cfg = loadConfig();
-      await ensureiFlowModelsJson(cfg);
+      await ensureClawModelsJson(cfg);
 
-      const agentDir = resolveiFlowAgentDir();
+      const agentDir = resolveClawAgentDir();
       const authStore = ensureAuthProfileStore(agentDir, {
         allowKeychainPrompt: false,
       });
@@ -1122,9 +1122,9 @@ describeLive("gateway live (dev agent, profile keys)", () => {
     process.env.IFLOW_GATEWAY_TOKEN = token;
 
     const cfg = loadConfig();
-    await ensureiFlowModelsJson(cfg);
+    await ensureClawModelsJson(cfg);
 
-    const agentDir = resolveiFlowAgentDir();
+    const agentDir = resolveClawAgentDir();
     const authStorage = discoverAuthStorage(agentDir);
     const modelRegistry = discoverModels(authStorage, agentDir);
     const anthropic = modelRegistry.find("anthropic", "claude-opus-4-5") as Model<Api> | null;

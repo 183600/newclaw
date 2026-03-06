@@ -51,19 +51,19 @@ export function registerAgentCommands(program: Command, args: { agentChannelOpti
         `
 ${theme.heading("Examples:")}
 ${formatHelpExamples([
-  ['iflow agent --to +15555550123 --message "status update"', "Start a new session."],
-  ['iflow agent --agent ops --message "Summarize logs"', "Use a specific agent."],
+  ['claw agent --to +15555550123 --message "status update"', "Start a new session."],
+  ['claw agent --agent ops --message "Summarize logs"', "Use a specific agent."],
   [
-    'iflow agent --session-id 1234 --message "Summarize inbox" --thinking medium',
+    'claw agent --session-id 1234 --message "Summarize inbox" --thinking medium',
     "Target a session with explicit thinking level.",
   ],
   [
-    'iflow agent --to +15555550123 --message "Trace logs" --verbose on --json',
+    'claw agent --to +15555550123 --message "Trace logs" --verbose on --json',
     "Enable verbose logging and JSON output.",
   ],
-  ['iflow agent --to +15555550123 --message "Summon reply" --deliver', "Deliver reply."],
+  ['claw agent --to +15555550123 --message "Summon reply" --deliver', "Deliver reply."],
   [
-    'iflow agent --agent ops --message "Generate report" --deliver --reply-channel slack --reply-to "#reports"',
+    'claw agent --agent ops --message "Generate report" --deliver --reply-channel slack --reply-to "#reports"',
     "Send reply to a different channel/target.",
   ],
 ])}
@@ -155,14 +155,14 @@ ${theme.muted("Docs:")} ${formatDocsLink("/cli/agent", "docs.iflow.ai/cli/agent"
         `
 ${theme.heading("Examples:")}
 ${formatHelpExamples([
-  ['iflow agents set-identity --agent main --name "iFlow" --emoji "🦞"', "Set name + emoji."],
-  ["iflow agents set-identity --agent main --avatar avatars/iflow.png", "Set avatar path."],
+  ['claw agents set-identity --agent main --name "Claw" --emoji "🦞"', "Set name + emoji."],
+  ["claw agents set-identity --agent main --avatar avatars/claw.png", "Set avatar path."],
   [
-    "iflow agents set-identity --workspace ~/.iflow/workspace --from-identity",
+    "claw agents set-identity --workspace ~/.iflow/workspace --from-identity",
     "Load from IDENTITY.md.",
   ],
   [
-    "iflow agents set-identity --identity-file ~/.iflow/workspace/IDENTITY.md --agent main",
+    "claw agents set-identity --identity-file ~/.iflow/workspace/IDENTITY.md --agent main",
     "Use a specific IDENTITY.md.",
   ],
 ])}

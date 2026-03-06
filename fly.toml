@@ -1,4 +1,4 @@
-# iFlow Fly.io deployment configuration
+# Claw Fly.io deployment configuration
 # See https://fly.io/docs/reference/configuration/
 
 app = "iflow"
@@ -10,8 +10,8 @@ dockerfile = "Dockerfile"
 [env]
 NODE_ENV = "production"
 # Fly uses x86, but keep this for consistency
-IFLOW_PREFER_PNPM = "1"
-IFLOW_STATE_DIR = "/data"
+CLAW_PREFER_PNPM = "1"
+CLAW_STATE_DIR = "/data"
 NODE_OPTIONS = "--max-old-space-size=1536"
 
 [processes]

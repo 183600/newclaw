@@ -127,13 +127,13 @@ Note: nodes use the standalone canvas host on `canvasHost.port` (default `18793`
 2. Navigate the node to it (LAN):
 
 ```bash
-iflow nodes invoke --node "<Android Node>" --command canvas.navigate --params '{"url":"http://<gateway-hostname>.local:18793/__iflow__/canvas/"}'
+iflow nodes invoke --node "<Android Node>" --command canvas.navigate --params '{"url":"http://<gateway-hostname>.local:18793/__claw__/canvas/"}'
 ```
 
-Tailnet (optional): if both devices are on Tailscale, use a MagicDNS name or tailnet IP instead of `.local`, e.g. `http://<gateway-magicdns>:18793/__iflow__/canvas/`.
+Tailnet (optional): if both devices are on Tailscale, use a MagicDNS name or tailnet IP instead of `.local`, e.g. `http://<gateway-magicdns>:18793/__claw__/canvas/`.
 
 This server injects a live-reload client into HTML and reloads on file changes.
-The A2UI host lives at `http://<gateway-host>:18793/__iflow__/a2ui/`.
+The A2UI host lives at `http://<gateway-host>:18793/__claw__/a2ui/`.
 
 Canvas commands (foreground only):
 

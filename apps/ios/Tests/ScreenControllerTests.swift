@@ -1,6 +1,6 @@
 import Testing
 import WebKit
-@testable import iFlow
+@testable import Claw
 
 @Suite struct ScreenControllerTests {
     @Test @MainActor func canvasModeConfiguresWebViewForTouch() {

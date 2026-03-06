@@ -51,9 +51,9 @@ class GatewayDiscovery(
   private val nsd = context.getSystemService(NsdManager::class.java)
   private val connectivity = context.getSystemService(ConnectivityManager::class.java)
   private val dns = DnsResolver.getInstance()
-  private val serviceType = "_iflow-gw._tcp."
-  private val wideAreaDomain = System.getenv("IFLOW_WIDE_AREA_DOMAIN")
-  private val logTag = "iFlow/GatewayDiscovery"
+  private val serviceType = "_claw-gw._tcp."
+  private val wideAreaDomain = System.getenv("CLAW_WIDE_AREA_DOMAIN")
+  private val logTag = "Claw/GatewayDiscovery"
 
   private val localById = ConcurrentHashMap<String, GatewayEndpoint>()
   private val unicastById = ConcurrentHashMap<String, GatewayEndpoint>()

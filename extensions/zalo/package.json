@@ -1,7 +1,7 @@
 {
-  "name": "@iflow/zalo",
+  "name": "@claw/zalo",
   "version": "2026.2.2",
-  "description": "iFlow Zalo channel plugin",
+  "description": "Claw Zalo channel plugin",
   "type": "module",
   "dependencies": {
     "iflow": "workspace:*",
@@ -10,7 +10,7 @@
   "devDependencies": {
     "iflow": "workspace:*"
   },
-  "iflow": {
+  "claw": {
     "extensions": [
       "./index.ts"
     ],
@@ -28,7 +28,7 @@
       "quickstartAllowFrom": true
     },
     "install": {
-      "npmSpec": "@iflow/zalo",
+      "npmSpec": "@claw/zalo",
       "localPath": "extensions/zalo",
       "defaultChoice": "npm"
     }

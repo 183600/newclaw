@@ -102,7 +102,7 @@ export function loadPluginManifest(rootDir: string): PluginManifestLoadResult {
   };
 }
 
-// package.json "iflow" metadata (used for onboarding/catalog)
+// package.json "claw" metadata (used for onboarding/catalog)
 export type PluginPackageChannel = {
   id?: string;
   label?: string;

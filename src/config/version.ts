@@ -1,4 +1,4 @@
-export type iFlowVersion = {
+export type ClawVersion = {
   major: number;
   minor: number;
   patch: number;
@@ -7,7 +7,7 @@ export type iFlowVersion = {
 
 const VERSION_RE = /^v?(\d+)\.(\d+)\.(\d+)(?:-(\d+))?/;
 
-export function parseiFlowVersion(raw: string | null | undefined): iFlowVersion | null {
+export function parseClawVersion(raw: string | null | undefined): ClawVersion | null {
   if (!raw) {
     return null;
   }
@@ -24,12 +24,12 @@ export function parseiFlowVersion(raw: string | null | undefined): iFlowVersion 
   };
 }
 
-export function compareiFlowVersions(
+export function compareClawVersions(
   a: string | null | undefined,
   b: string | null | undefined,
 ): number | null {
-  const parsedA = parseiFlowVersion(a);
-  const parsedB = parseiFlowVersion(b);
+  const parsedA = parseClawVersion(a);
+  const parsedB = parseClawVersion(b);
   if (!parsedA || !parsedB) {
     return null;
   }

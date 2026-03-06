@@ -1,12 +1,12 @@
 {
-  "name": "@iflow/nextcloud-talk",
+  "name": "@claw/nextcloud-talk",
   "version": "2026.2.2",
-  "description": "iFlow Nextcloud Talk channel plugin",
+  "description": "Claw Nextcloud Talk channel plugin",
   "type": "module",
   "devDependencies": {
     "iflow": "workspace:*"
   },
-  "iflow": {
+  "claw": {
     "extensions": [
       "./index.ts"
     ],
@@ -25,7 +25,7 @@
       "quickstartAllowFrom": true
     },
     "install": {
-      "npmSpec": "@iflow/nextcloud-talk",
+      "npmSpec": "@claw/nextcloud-talk",
       "localPath": "extensions/nextcloud-talk",
       "defaultChoice": "npm"
     }

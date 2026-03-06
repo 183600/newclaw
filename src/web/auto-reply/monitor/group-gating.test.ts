@@ -8,7 +8,7 @@ const baseConfig = {
       groups: { "*": { requireMention: true } },
     },
   },
-  session: { store: "/tmp/iflow-sessions.json" },
+  session: { store: "/tmp/claw-sessions.json" },
 } as const;
 
 describe("applyGroupGating", () => {

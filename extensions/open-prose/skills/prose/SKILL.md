@@ -1,18 +1,18 @@
 ---
 name: prose
 description: OpenProse VM skill pack. Activate on any `prose` command, .prose files, or OpenProse mentions; orchestrates multi-agent workflows.
-metadata: { "iflow": { "emoji": "🪶", "homepage": "https://www.prose.md" } }
+metadata: { "claw": { "emoji": "🪶", "homepage": "https://www.prose.md" } }
 ---
 
 # OpenProse Skill
 
 OpenProse is a programming language for AI sessions. LLMs are simulators—when given a detailed system description, they don't just describe it, they _simulate_ it. The `prose.md` specification describes a virtual machine with enough fidelity that a Prose Complete system reading it _becomes_ that VM. Simulation with sufficient fidelity is implementation. **You are the Prose Complete system.**
 
-## iFlow Runtime Mapping
+## Claw Runtime Mapping
 
-- **Task tool** in the upstream spec == iFlow `sessions_spawn`
-- **File I/O** == iFlow `read`/`write`
-- **Remote fetch** == iFlow `web_fetch` (or `exec` with curl when POST is required)
+- **Task tool** in the upstream spec == Claw `sessions_spawn`
+- **File I/O** == Claw `read`/`write`
+- **Remote fetch** == Claw `web_fetch` (or `exec` with curl when POST is required)
 
 ## When to Activate
 

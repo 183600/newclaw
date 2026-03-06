@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { iFlowSchema } from "./zod-schema.js";
+import { ClawSchema } from "./zod-schema.js";
 
 describe("telegram custom commands schema", () => {
   it("normalizes custom commands", () => {
-    const res = iFlowSchema.safeParse({
+    const res = ClawSchema.safeParse({
       channels: {
         telegram: {
           customCommands: [{ command: "/Backup", description: "  Git backup  " }],
@@ -22,7 +22,7 @@ describe("telegram custom commands schema", () => {
   });
 
   it("rejects custom commands with invalid names", () => {
-    const res = iFlowSchema.safeParse({
+    const res = ClawSchema.safeParse({
       channels: {
         telegram: {
           customCommands: [{ command: "Bad-Name", description: "Override status" }],

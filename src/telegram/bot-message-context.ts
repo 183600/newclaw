@@ -281,7 +281,7 @@ export const buildTelegramMessageContext = async ({
                   bot.api.sendMessage(
                     chatId,
                     [
-                      "iFlow: access not configured.",
+                      "Claw: access not configured.",
                       "",
                       `Your Telegram user id: ${telegramUserId}`,
                       "",

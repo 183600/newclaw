@@ -63,7 +63,7 @@ const baseQueuedRun = (messageProvider = "whatsapp"): FollowupRun =>
 describe("createFollowupRunner compaction", () => {
   it("adds verbose auto-compaction notice and tracks count", async () => {
     const storePath = path.join(
-      await fs.mkdtemp(path.join(tmpdir(), "iflow-compaction-")),
+      await fs.mkdtemp(path.join(tmpdir(), "claw-compaction-")),
       "sessions.json",
     );
     const sessionEntry: SessionEntry = {
@@ -197,7 +197,7 @@ describe("createFollowupRunner messaging tool dedupe", () => {
 
   it("persists usage even when replies are suppressed", async () => {
     const storePath = path.join(
-      await fs.mkdtemp(path.join(tmpdir(), "iflow-followup-usage-")),
+      await fs.mkdtemp(path.join(tmpdir(), "claw-followup-usage-")),
       "sessions.json",
     );
     const sessionKey = "main";

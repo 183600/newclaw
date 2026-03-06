@@ -19,7 +19,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import ai.iflow.android.ui.RootScreen
-import ai.iflow.android.ui.iFlowTheme
+import ai.iflow.android.ui.ClawTheme
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
@@ -56,7 +56,7 @@ class MainActivity : ComponentActivity() {
     }
 
     setContent {
-      iFlowTheme {
+      ClawTheme {
         Surface(modifier = Modifier) {
           RootScreen(viewModel = viewModel)
         }

@@ -171,7 +171,7 @@ describe("routeReply", () => {
   it("applies responsePrefix when routing", async () => {
     mocks.sendMessageSlack.mockClear();
     const cfg = {
-      messages: { responsePrefix: "[iflow]" },
+      messages: { responsePrefix: "[claw]" },
     } as unknown as iFlowConfig;
     await routeReply({
       payload: { text: "hi" },
@@ -181,7 +181,7 @@ describe("routeReply", () => {
     });
     expect(mocks.sendMessageSlack).toHaveBeenCalledWith(
       "channel:C123",
-      "[iflow] hi",
+      "[claw] hi",
       expect.any(Object),
     );
   });

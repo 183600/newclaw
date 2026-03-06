@@ -67,7 +67,7 @@ describe("tool_result_persist hook", () => {
   });
 
   it("composes transforms in priority order and allows stripping toolResult.details", () => {
-    const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "iflow-toolpersist-"));
+    const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "claw-toolpersist-"));
     process.env.IFLOW_BUNDLED_PLUGINS_DIR = "/nonexistent/bundled/plugins";
 
     const pluginA = writeTempPlugin({

@@ -103,14 +103,14 @@ export IFLOW_EXTRA_MOUNTS="$HOME/.codex:/home/node/.codex:ro,$HOME/github:/home/
 示例：
 
 ```bash
-export IFLOW_HOME_VOLUME="iflow_home"
+export IFLOW_HOME_VOLUME="claw_home"
 ./docker-setup.sh
 ```
 
 可以与额外挂载组合使用：
 
 ```bash
-export IFLOW_HOME_VOLUME="iflow_home"
+export IFLOW_HOME_VOLUME="claw_home"
 export IFLOW_EXTRA_MOUNTS="$HOME/.codex:/home/node/.codex:ro,$HOME/github:/home/node/github:rw"
 ./docker-setup.sh
 ```

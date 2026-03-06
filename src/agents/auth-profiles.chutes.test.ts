@@ -45,7 +45,7 @@ describe("auth-profiles (chutes)", () => {
   });
 
   it("refreshes expired Chutes OAuth credentials", async () => {
-    tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-chutes-"));
+    tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "claw-chutes-"));
     process.env.IFLOW_STATE_DIR = tempDir;
     process.env.IFLOW_AGENT_DIR = path.join(tempDir, "agents", "main", "agent");
     process.env.PI_CODING_AGENT_DIR = process.env.IFLOW_AGENT_DIR;

@@ -11,7 +11,7 @@ import { buildGatewayConnectionDetails, callGateway } from "../gateway/call.js";
 import { normalizeControlUiBasePath } from "../gateway/control-ui-shared.js";
 import { probeGateway } from "../gateway/probe.js";
 import { collectChannelStatusIssues } from "../infra/channels-status-issues.js";
-import { resolveiFlowPackageRoot } from "../infra/iflow-root.js";
+import { resolveClawPackageRoot } from "../infra/iflow-root.js";
 import { resolveOsSummary } from "../infra/os-summary.js";
 import { inspectPortUsage } from "../infra/ports.js";
 import { readRestartSentinel } from "../infra/restart-sentinel.js";
@@ -81,7 +81,7 @@ export async function statusAllCommand(
     progress.tick();
 
     progress.setLabel("Checking for updates…");
-    const root = await resolveiFlowPackageRoot({
+    const root = await resolveClawPackageRoot({
       moduleUrl: import.meta.url,
       argv1: process.argv[1],
       cwd: process.cwd(),

@@ -76,12 +76,12 @@ Gateway网关在 `local.` 上广播 `_iflow-gw._tcp`。iOS 应用会自动列出
 iOS 节点渲染一个 WKWebView 画布。使用 `node.invoke` 来驱动它：
 
 ```bash
-iflow nodes invoke --node "iOS Node" --command canvas.navigate --params '{"url":"http://<gateway-host>:18793/__iflow__/canvas/"}'
+iflow nodes invoke --node "iOS Node" --command canvas.navigate --params '{"url":"http://<gateway-host>:18793/__claw__/canvas/"}'
 ```
 
 注意事项：
 
-- Gateway网关画布主机提供 `/__iflow__/canvas/` 和 `/__iflow__/a2ui/` 服务。
+- Gateway网关画布主机提供 `/__claw__/canvas/` 和 `/__claw__/a2ui/` 服务。
 - iOS 节点在连接时如果画布主机 URL 已广播，会自动导航到 A2UI。
 - 使用 `canvas.navigate` 和 `{"url":""}` 返回内置脚手架页面。
 

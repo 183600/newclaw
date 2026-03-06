@@ -3,7 +3,7 @@ set -euo pipefail
 
 cd /repo
 
-export IFLOW_STATE_DIR="/tmp/iflow-test"
+export IFLOW_STATE_DIR="/tmp/claw-test"
 export IFLOW_CONFIG_PATH="${IFLOW_STATE_DIR}/iflow.json"
 
 echo "==> Build"
@@ -17,7 +17,7 @@ echo 'creds' >"${IFLOW_STATE_DIR}/credentials/marker.txt"
 echo 'session' >"${IFLOW_STATE_DIR}/agents/main/sessions/sessions.json"
 
 echo "==> Reset (config+creds+sessions)"
-pnpm iflow reset --scope config+creds+sessions --yes --non-interactive
+pnpm claw reset --scope config+creds+sessions --yes --non-interactive
 
 test ! -f "${IFLOW_CONFIG_PATH}"
 test ! -d "${IFLOW_STATE_DIR}/credentials"
@@ -28,7 +28,7 @@ mkdir -p "${IFLOW_STATE_DIR}/credentials"
 echo '{}' >"${IFLOW_CONFIG_PATH}"
 
 echo "==> Uninstall (state only)"
-pnpm iflow uninstall --state --yes --non-interactive
+pnpm claw uninstall --state --yes --non-interactive
 
 test ! -d "${IFLOW_STATE_DIR}"
 

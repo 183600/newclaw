@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-INSTALL_URL="${IFLOW_INSTALL_URL:-https://iflow.bot/install.sh}"
-DEFAULT_PACKAGE="iflow"
+INSTALL_URL="${IFLOW_INSTALL_URL:-https://claw.bot/install.sh}"
+DEFAULT_PACKAGE="claw"
 PACKAGE_NAME="${IFLOW_INSTALL_PACKAGE:-$DEFAULT_PACKAGE}"
 
 echo "==> Pre-flight: ensure git absent"

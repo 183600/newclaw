@@ -1,12 +1,12 @@
 {
-  "name": "@iflow/open-prose",
+  "name": "@claw/open-prose",
   "version": "2026.2.2",
   "description": "OpenProse VM skill pack plugin (slash command + telemetry).",
   "type": "module",
   "devDependencies": {
     "iflow": "workspace:*"
   },
-  "iflow": {
+  "claw": {
     "extensions": [
       "./index.ts"
     ]

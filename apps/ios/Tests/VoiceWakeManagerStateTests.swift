@@ -1,7 +1,7 @@
 import Foundation
 import SwabbleKit
 import Testing
-@testable import iFlow
+@testable import Claw
 
 @Suite(.serialized) struct VoiceWakeManagerStateTests {
     @Test @MainActor func suspendAndResumeCycleUpdatesState() async {

@@ -1,7 +1,7 @@
 import SwiftUI
 
 @main
-struct iFlowApp: App {
+struct ClawApp: App {
     @State private var appModel: NodeAppModel
     @State private var gatewayController: GatewayConnectionController
     @Environment(\.scenePhase) private var scenePhase

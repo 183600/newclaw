@@ -262,7 +262,7 @@ export async function maybeScanExtraGatewayServices(
         note(failed.map((line) => `- ${line}`).join("\n"), "Legacy gateway cleanup skipped");
       }
       if (removed.length > 0) {
-        runtime.log("Legacy gateway services removed. Installing iFlow gateway next.");
+        runtime.log("Legacy gateway services removed. Installing Claw gateway next.");
       }
     }
   }

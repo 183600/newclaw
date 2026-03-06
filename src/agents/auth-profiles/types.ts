@@ -11,7 +11,7 @@ export type ApiKeyCredential = {
 export type TokenCredential = {
   /**
    * Static bearer-style token (often OAuth access token / PAT).
-   * Not refreshable by iFlow (unlike `type: "oauth"`).
+   * Not refreshable by Claw (unlike `type: "oauth"`).
    */
   type: "token";
   provider: string;

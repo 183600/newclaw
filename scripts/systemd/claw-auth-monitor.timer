@@ -1,5 +1,5 @@
 [Unit]
-Description=Check iFlow auth expiry every 30 minutes
+Description=Check Claw auth expiry every 30 minutes
 
 [Timer]
 OnBootSec=5min

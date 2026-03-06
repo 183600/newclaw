@@ -1,7 +1,7 @@
 {
-  "name": "@iflow/diagnostics-otel",
+  "name": "@claw/diagnostics-otel",
   "version": "2026.2.2",
-  "description": "iFlow diagnostics OpenTelemetry exporter",
+  "description": "Claw diagnostics OpenTelemetry exporter",
   "type": "module",
   "dependencies": {
     "@opentelemetry/api": "^1.9.0",
@@ -19,7 +19,7 @@
   "devDependencies": {
     "iflow": "workspace:*"
   },
-  "iflow": {
+  "claw": {
     "extensions": [
       "./index.ts"
     ]

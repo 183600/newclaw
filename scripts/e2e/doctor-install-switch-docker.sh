@@ -2,7 +2,7 @@
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
-IMAGE_NAME="iflow-doctor-install-switch-e2e"
+IMAGE_NAME="claw-doctor-install-switch-e2e"
 
 echo "Building Docker image..."
 docker build -t "$IMAGE_NAME" -f "$ROOT_DIR/scripts/e2e/Dockerfile" "$ROOT_DIR"
@@ -17,10 +17,10 @@ docker run --rm -t "$IMAGE_NAME" bash -lc '
   export npm_config_audit=false
 
   # Stub systemd/loginctl so doctor + daemon flows work in Docker.
-  export PATH="/tmp/iflow-bin:$PATH"
-  mkdir -p /tmp/iflow-bin
+  export PATH="/tmp/claw-bin:$PATH"
+  mkdir -p /tmp/claw-bin
 
-  cat > /tmp/iflow-bin/systemctl <<"SYSTEMCTL"
+  cat > /tmp/claw-bin/systemctl <<"SYSTEMCTL"
 #!/usr/bin/env bash
 set -euo pipefail
 
@@ -54,9 +54,9 @@ case "$cmd" in
     ;;
 esac
 SYSTEMCTL
-  chmod +x /tmp/iflow-bin/systemctl
+  chmod +x /tmp/claw-bin/systemctl
 
-  cat > /tmp/iflow-bin/loginctl <<"LOGINCTL"
+  cat > /tmp/claw-bin/loginctl <<"LOGINCTL"
 #!/usr/bin/env bash
 set -euo pipefail
 
@@ -69,7 +69,7 @@ if [[ "$*" == *"enable-linger"* ]]; then
 fi
 exit 0
 LOGINCTL
-  chmod +x /tmp/iflow-bin/loginctl
+  chmod +x /tmp/claw-bin/loginctl
 
   # Install the npm-global variant from the local /app source.
   # `npm pack` can emit script output; keep only the tarball name.
@@ -80,10 +80,10 @@ LOGINCTL
   fi
   npm install -g --prefix /tmp/npm-prefix "/app/$pkg_tgz"
 
-  npm_bin="/tmp/npm-prefix/bin/iflow"
-  npm_entry="/tmp/npm-prefix/lib/node_modules/iflow/dist/index.js"
+  npm_bin="/tmp/npm-prefix/bin/claw"
+  npm_entry="/tmp/npm-prefix/lib/node_modules/claw/dist/index.js"
   git_entry="/app/dist/index.js"
-  git_cli="/app/iflow.mjs"
+  git_cli="/app/claw.mjs"
 
   assert_entrypoint() {
     local unit_path="$1"
@@ -114,7 +114,7 @@ LOGINCTL
     local doctor_expected="$5"
 
     echo "== Flow: $name =="
-    home_dir=$(mktemp -d "/tmp/iflow-switch-${name}.XXXXXX")
+    home_dir=$(mktemp -d "/tmp/claw-switch-${name}.XXXXXX")
     export HOME="$home_dir"
     export USER="testuser"
 

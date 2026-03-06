@@ -1,7 +1,7 @@
 {
-  "name": "@iflow/memory-core",
+  "name": "@claw/memory-core",
   "version": "2026.2.2",
-  "description": "iFlow core memory search plugin",
+  "description": "Claw core memory search plugin",
   "type": "module",
   "devDependencies": {
     "iflow": "workspace:*"
@@ -9,7 +9,7 @@
   "peerDependencies": {
     "iflow": ">=2026.1.26"
   },
-  "iflow": {
+  "claw": {
     "extensions": [
       "./index.ts"
     ]

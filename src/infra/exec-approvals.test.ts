@@ -27,7 +27,7 @@ function makePathEnv(binDir: string): NodeJS.ProcessEnv {
 }
 
 function makeTempDir() {
-  return fs.mkdtempSync(path.join(os.tmpdir(), "iflow-exec-approvals-"));
+  return fs.mkdtempSync(path.join(os.tmpdir(), "claw-exec-approvals-"));
 }
 
 describe("exec approvals allowlist matching", () => {

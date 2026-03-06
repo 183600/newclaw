@@ -6,7 +6,7 @@ import { log } from "./logger.js";
 
 const OPENROUTER_APP_HEADERS: Record<string, string> = {
   "HTTP-Referer": "https://iflow.ai",
-  "X-Title": "iFlow",
+  "X-Title": "Claw",
 };
 
 /**
@@ -103,7 +103,7 @@ function createStreamFnWithExtraParams(
 
 /**
  * Create a streamFn wrapper that adds OpenRouter app attribution headers.
- * These headers allow iFlow to appear on OpenRouter's leaderboard.
+ * These headers allow Claw to appear on OpenRouter's leaderboard.
  */
 function createOpenRouterHeadersWrapper(baseStreamFn: StreamFn | undefined): StreamFn {
   const underlying = baseStreamFn ?? streamSimple;

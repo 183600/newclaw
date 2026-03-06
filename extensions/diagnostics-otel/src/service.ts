@@ -12,7 +12,7 @@ import { ParentBasedSampler, TraceIdRatioBasedSampler } from "@opentelemetry/sdk
 import { SemanticResourceAttributes } from "@opentelemetry/semantic-conventions";
 import { onDiagnosticEvent, registerLogTransport } from "iflow/plugin-sdk";
 
-const DEFAULT_SERVICE_NAME = "iflow";
+const DEFAULT_SERVICE_NAME = "claw";
 
 function normalizeEndpoint(endpoint?: string): string | undefined {
   const trimmed = endpoint?.trim();
@@ -129,78 +129,78 @@ export function createDiagnosticsOtelService(): iFlowPluginService {
         FATAL: 21 as SeverityNumber,
       };
 
-      const meter = metrics.getMeter("iflow");
-      const tracer = trace.getTracer("iflow");
+      const meter = metrics.getMeter("claw");
+      const tracer = trace.getTracer("claw");
 
-      const tokensCounter = meter.createCounter("iflow.tokens", {
+      const tokensCounter = meter.createCounter("claw.tokens", {
         unit: "1",
         description: "Token usage by type",
       });
-      const costCounter = meter.createCounter("iflow.cost.usd", {
+      const costCounter = meter.createCounter("claw.cost.usd", {
         unit: "1",
         description: "Estimated model cost (USD)",
       });
-      const durationHistogram = meter.createHistogram("iflow.run.duration_ms", {
+      const durationHistogram = meter.createHistogram("claw.run.duration_ms", {
         unit: "ms",
         description: "Agent run duration",
       });
-      const contextHistogram = meter.createHistogram("iflow.context.tokens", {
+      const contextHistogram = meter.createHistogram("claw.context.tokens", {
         unit: "1",
         description: "Context window size and usage",
       });
-      const webhookReceivedCounter = meter.createCounter("iflow.webhook.received", {
+      const webhookReceivedCounter = meter.createCounter("claw.webhook.received", {
         unit: "1",
         description: "Webhook requests received",
       });
-      const webhookErrorCounter = meter.createCounter("iflow.webhook.error", {
+      const webhookErrorCounter = meter.createCounter("claw.webhook.error", {
         unit: "1",
         description: "Webhook processing errors",
       });
-      const webhookDurationHistogram = meter.createHistogram("iflow.webhook.duration_ms", {
+      const webhookDurationHistogram = meter.createHistogram("claw.webhook.duration_ms", {
         unit: "ms",
         description: "Webhook processing duration",
       });
-      const messageQueuedCounter = meter.createCounter("iflow.message.queued", {
+      const messageQueuedCounter = meter.createCounter("claw.message.queued", {
         unit: "1",
         description: "Messages queued for processing",
       });
-      const messageProcessedCounter = meter.createCounter("iflow.message.processed", {
+      const messageProcessedCounter = meter.createCounter("claw.message.processed", {
         unit: "1",
         description: "Messages processed by outcome",
       });
-      const messageDurationHistogram = meter.createHistogram("iflow.message.duration_ms", {
+      const messageDurationHistogram = meter.createHistogram("claw.message.duration_ms", {
         unit: "ms",
         description: "Message processing duration",
       });
-      const queueDepthHistogram = meter.createHistogram("iflow.queue.depth", {
+      const queueDepthHistogram = meter.createHistogram("claw.queue.depth", {
         unit: "1",
         description: "Queue depth on enqueue/dequeue",
       });
-      const queueWaitHistogram = meter.createHistogram("iflow.queue.wait_ms", {
+      const queueWaitHistogram = meter.createHistogram("claw.queue.wait_ms", {
         unit: "ms",
         description: "Queue wait time before execution",
       });
-      const laneEnqueueCounter = meter.createCounter("iflow.queue.lane.enqueue", {
+      const laneEnqueueCounter = meter.createCounter("claw.queue.lane.enqueue", {
         unit: "1",
         description: "Command queue lane enqueue events",
       });
-      const laneDequeueCounter = meter.createCounter("iflow.queue.lane.dequeue", {
+      const laneDequeueCounter = meter.createCounter("claw.queue.lane.dequeue", {
         unit: "1",
         description: "Command queue lane dequeue events",
       });
-      const sessionStateCounter = meter.createCounter("iflow.session.state", {
+      const sessionStateCounter = meter.createCounter("claw.session.state", {
         unit: "1",
         description: "Session state transitions",
       });
-      const sessionStuckCounter = meter.createCounter("iflow.session.stuck", {
+      const sessionStuckCounter = meter.createCounter("claw.session.stuck", {
         unit: "1",
         description: "Sessions stuck in processing",
       });
-      const sessionStuckAgeHistogram = meter.createHistogram("iflow.session.stuck_age_ms", {
+      const sessionStuckAgeHistogram = meter.createHistogram("claw.session.stuck_age_ms", {
         unit: "ms",
         description: "Age of stuck sessions",
       });
-      const runAttemptCounter = meter.createCounter("iflow.run.attempt", {
+      const runAttemptCounter = meter.createCounter("claw.run.attempt", {
         unit: "1",
         description: "Run attempts",
       });
@@ -219,7 +219,7 @@ export function createDiagnosticsOtelService(): iFlowPluginService {
               : {},
           ),
         );
-        const otelLogger = logProvider.getLogger("iflow");
+        const otelLogger = logProvider.getLogger("claw");
 
         stopLogTransport = registerLogTransport((logObj) => {
           const safeStringify = (value: unknown) => {
@@ -277,13 +277,13 @@ export function createDiagnosticsOtelService(): iFlowPluginService {
           }
 
           const attributes: Record<string, string | number | boolean> = {
-            "iflow.log.level": logLevelName,
+            "claw.log.level": logLevelName,
           };
           if (meta?.name) {
-            attributes["iflow.logger"] = meta.name;
+            attributes["claw.logger"] = meta.name;
           }
           if (meta?.parentNames?.length) {
-            attributes["iflow.logger.parents"] = meta.parentNames.join(".");
+            attributes["claw.logger.parents"] = meta.parentNames.join(".");
           }
           if (bindings) {
             for (const [key, value] of Object.entries(bindings)) {
@@ -292,14 +292,14 @@ export function createDiagnosticsOtelService(): iFlowPluginService {
                 typeof value === "number" ||
                 typeof value === "boolean"
               ) {
-                attributes[`iflow.${key}`] = value;
+                attributes[`claw.${key}`] = value;
               } else if (value != null) {
-                attributes[`iflow.${key}`] = safeStringify(value);
+                attributes[`claw.${key}`] = safeStringify(value);
               }
             }
           }
           if (numericArgs.length > 0) {
-            attributes["iflow.log.args"] = safeStringify(numericArgs);
+            attributes["claw.log.args"] = safeStringify(numericArgs);
           }
           if (meta?.path?.filePath) {
             attributes["code.filepath"] = meta.path.filePath;
@@ -311,7 +311,7 @@ export function createDiagnosticsOtelService(): iFlowPluginService {
             attributes["code.function"] = meta.path.method;
           }
           if (meta?.path?.filePathWithLine) {
-            attributes["iflow.code.location"] = meta.path.filePathWithLine;
+            attributes["claw.code.location"] = meta.path.filePathWithLine;
           }
 
           otelLogger.emit({
@@ -340,29 +340,29 @@ export function createDiagnosticsOtelService(): iFlowPluginService {
 
       const recordModelUsage = (evt: Extract<DiagnosticEventPayload, { type: "model.usage" }>) => {
         const attrs = {
-          "iflow.channel": evt.channel ?? "unknown",
-          "iflow.provider": evt.provider ?? "unknown",
-          "iflow.model": evt.model ?? "unknown",
+          "claw.channel": evt.channel ?? "unknown",
+          "claw.provider": evt.provider ?? "unknown",
+          "claw.model": evt.model ?? "unknown",
         };
 
         const usage = evt.usage;
         if (usage.input) {
-          tokensCounter.add(usage.input, { ...attrs, "iflow.token": "input" });
+          tokensCounter.add(usage.input, { ...attrs, "claw.token": "input" });
         }
         if (usage.output) {
-          tokensCounter.add(usage.output, { ...attrs, "iflow.token": "output" });
+          tokensCounter.add(usage.output, { ...attrs, "claw.token": "output" });
         }
         if (usage.cacheRead) {
-          tokensCounter.add(usage.cacheRead, { ...attrs, "iflow.token": "cache_read" });
+          tokensCounter.add(usage.cacheRead, { ...attrs, "claw.token": "cache_read" });
         }
         if (usage.cacheWrite) {
-          tokensCounter.add(usage.cacheWrite, { ...attrs, "iflow.token": "cache_write" });
+          tokensCounter.add(usage.cacheWrite, { ...attrs, "claw.token": "cache_write" });
         }
         if (usage.promptTokens) {
-          tokensCounter.add(usage.promptTokens, { ...attrs, "iflow.token": "prompt" });
+          tokensCounter.add(usage.promptTokens, { ...attrs, "claw.token": "prompt" });
         }
         if (usage.total) {
-          tokensCounter.add(usage.total, { ...attrs, "iflow.token": "total" });
+          tokensCounter.add(usage.total, { ...attrs, "claw.token": "total" });
         }
 
         if (evt.costUsd) {
@@ -374,13 +374,13 @@ export function createDiagnosticsOtelService(): iFlowPluginService {
         if (evt.context?.limit) {
           contextHistogram.record(evt.context.limit, {
             ...attrs,
-            "iflow.context": "limit",
+            "claw.context": "limit",
           });
         }
         if (evt.context?.used) {
           contextHistogram.record(evt.context.used, {
             ...attrs,
-            "iflow.context": "used",
+            "claw.context": "used",
           });
         }
 
@@ -389,16 +389,16 @@ export function createDiagnosticsOtelService(): iFlowPluginService {
         }
         const spanAttrs: Record<string, string | number> = {
           ...attrs,
-          "iflow.sessionKey": evt.sessionKey ?? "",
-          "iflow.sessionId": evt.sessionId ?? "",
-          "iflow.tokens.input": usage.input ?? 0,
-          "iflow.tokens.output": usage.output ?? 0,
-          "iflow.tokens.cache_read": usage.cacheRead ?? 0,
-          "iflow.tokens.cache_write": usage.cacheWrite ?? 0,
-          "iflow.tokens.total": usage.total ?? 0,
+          "claw.sessionKey": evt.sessionKey ?? "",
+          "claw.sessionId": evt.sessionId ?? "",
+          "claw.tokens.input": usage.input ?? 0,
+          "claw.tokens.output": usage.output ?? 0,
+          "claw.tokens.cache_read": usage.cacheRead ?? 0,
+          "claw.tokens.cache_write": usage.cacheWrite ?? 0,
+          "claw.tokens.total": usage.total ?? 0,
         };
 
-        const span = spanWithDuration("iflow.model.usage", spanAttrs, evt.durationMs);
+        const span = spanWithDuration("claw.model.usage", spanAttrs, evt.durationMs);
         span.end();
       };
 
@@ -406,8 +406,8 @@ export function createDiagnosticsOtelService(): iFlowPluginService {
         evt: Extract<DiagnosticEventPayload, { type: "webhook.received" }>,
       ) => {
         const attrs = {
-          "iflow.channel": evt.channel ?? "unknown",
-          "iflow.webhook": evt.updateType ?? "unknown",
+          "claw.channel": evt.channel ?? "unknown",
+          "claw.webhook": evt.updateType ?? "unknown",
         };
         webhookReceivedCounter.add(1, attrs);
       };
@@ -416,8 +416,8 @@ export function createDiagnosticsOtelService(): iFlowPluginService {
         evt: Extract<DiagnosticEventPayload, { type: "webhook.processed" }>,
       ) => {
         const attrs = {
-          "iflow.channel": evt.channel ?? "unknown",
-          "iflow.webhook": evt.updateType ?? "unknown",
+          "claw.channel": evt.channel ?? "unknown",
+          "claw.webhook": evt.updateType ?? "unknown",
         };
         if (typeof evt.durationMs === "number") {
           webhookDurationHistogram.record(evt.durationMs, attrs);
@@ -427,9 +427,9 @@ export function createDiagnosticsOtelService(): iFlowPluginService {
         }
         const spanAttrs: Record<string, string | number> = { ...attrs };
         if (evt.chatId !== undefined) {
-          spanAttrs["iflow.chatId"] = String(evt.chatId);
+          spanAttrs["claw.chatId"] = String(evt.chatId);
         }
-        const span = spanWithDuration("iflow.webhook.processed", spanAttrs, evt.durationMs);
+        const span = spanWithDuration("claw.webhook.processed", spanAttrs, evt.durationMs);
         span.end();
       };
 
@@ -437,8 +437,8 @@ export function createDiagnosticsOtelService(): iFlowPluginService {
         evt: Extract<DiagnosticEventPayload, { type: "webhook.error" }>,
       ) => {
         const attrs = {
-          "iflow.channel": evt.channel ?? "unknown",
-          "iflow.webhook": evt.updateType ?? "unknown",
+          "claw.channel": evt.channel ?? "unknown",
+          "claw.webhook": evt.updateType ?? "unknown",
         };
         webhookErrorCounter.add(1, attrs);
         if (!tracesEnabled) {
@@ -446,12 +446,12 @@ export function createDiagnosticsOtelService(): iFlowPluginService {
         }
         const spanAttrs: Record<string, string | number> = {
           ...attrs,
-          "iflow.error": evt.error,
+          "claw.error": evt.error,
         };
         if (evt.chatId !== undefined) {
-          spanAttrs["iflow.chatId"] = String(evt.chatId);
+          spanAttrs["claw.chatId"] = String(evt.chatId);
         }
-        const span = tracer.startSpan("iflow.webhook.error", {
+        const span = tracer.startSpan("claw.webhook.error", {
           attributes: spanAttrs,
         });
         span.setStatus({ code: SpanStatusCode.ERROR, message: evt.error });
@@ -462,8 +462,8 @@ export function createDiagnosticsOtelService(): iFlowPluginService {
         evt: Extract<DiagnosticEventPayload, { type: "message.queued" }>,
       ) => {
         const attrs = {
-          "iflow.channel": evt.channel ?? "unknown",
-          "iflow.source": evt.source ?? "unknown",
+          "claw.channel": evt.channel ?? "unknown",
+          "claw.source": evt.source ?? "unknown",
         };
         messageQueuedCounter.add(1, attrs);
         if (typeof evt.queueDepth === "number") {
@@ -475,8 +475,8 @@ export function createDiagnosticsOtelService(): iFlowPluginService {
         evt: Extract<DiagnosticEventPayload, { type: "message.processed" }>,
       ) => {
         const attrs = {
-          "iflow.channel": evt.channel ?? "unknown",
-          "iflow.outcome": evt.outcome ?? "unknown",
+          "claw.channel": evt.channel ?? "unknown",
+          "claw.outcome": evt.outcome ?? "unknown",
         };
         messageProcessedCounter.add(1, attrs);
         if (typeof evt.durationMs === "number") {
@@ -487,21 +487,21 @@ export function createDiagnosticsOtelService(): iFlowPluginService {
         }
         const spanAttrs: Record<string, string | number> = { ...attrs };
         if (evt.sessionKey) {
-          spanAttrs["iflow.sessionKey"] = evt.sessionKey;
+          spanAttrs["claw.sessionKey"] = evt.sessionKey;
         }
         if (evt.sessionId) {
-          spanAttrs["iflow.sessionId"] = evt.sessionId;
+          spanAttrs["claw.sessionId"] = evt.sessionId;
         }
         if (evt.chatId !== undefined) {
-          spanAttrs["iflow.chatId"] = String(evt.chatId);
+          spanAttrs["claw.chatId"] = String(evt.chatId);
         }
         if (evt.messageId !== undefined) {
-          spanAttrs["iflow.messageId"] = String(evt.messageId);
+          spanAttrs["claw.messageId"] = String(evt.messageId);
         }
         if (evt.reason) {
-          spanAttrs["iflow.reason"] = evt.reason;
+          spanAttrs["claw.reason"] = evt.reason;
         }
-        const span = spanWithDuration("iflow.message.processed", spanAttrs, evt.durationMs);
+        const span = spanWithDuration("claw.message.processed", spanAttrs, evt.durationMs);
         if (evt.outcome === "error") {
           span.setStatus({ code: SpanStatusCode.ERROR, message: evt.error });
         }
@@ -511,7 +511,7 @@ export function createDiagnosticsOtelService(): iFlowPluginService {
       const recordLaneEnqueue = (
         evt: Extract<DiagnosticEventPayload, { type: "queue.lane.enqueue" }>,
       ) => {
-        const attrs = { "iflow.lane": evt.lane };
+        const attrs = { "claw.lane": evt.lane };
         laneEnqueueCounter.add(1, attrs);
         queueDepthHistogram.record(evt.queueSize, attrs);
       };
@@ -519,7 +519,7 @@ export function createDiagnosticsOtelService(): iFlowPluginService {
       const recordLaneDequeue = (
         evt: Extract<DiagnosticEventPayload, { type: "queue.lane.dequeue" }>,
       ) => {
-        const attrs = { "iflow.lane": evt.lane };
+        const attrs = { "claw.lane": evt.lane };
         laneDequeueCounter.add(1, attrs);
         queueDepthHistogram.record(evt.queueSize, attrs);
         if (typeof evt.waitMs === "number") {
@@ -530,9 +530,9 @@ export function createDiagnosticsOtelService(): iFlowPluginService {
       const recordSessionState = (
         evt: Extract<DiagnosticEventPayload, { type: "session.state" }>,
       ) => {
-        const attrs: Record<string, string> = { "iflow.state": evt.state };
+        const attrs: Record<string, string> = { "claw.state": evt.state };
         if (evt.reason) {
-          attrs["iflow.reason"] = evt.reason;
+          attrs["claw.reason"] = evt.reason;
         }
         sessionStateCounter.add(1, attrs);
       };
@@ -540,7 +540,7 @@ export function createDiagnosticsOtelService(): iFlowPluginService {
       const recordSessionStuck = (
         evt: Extract<DiagnosticEventPayload, { type: "session.stuck" }>,
       ) => {
-        const attrs: Record<string, string> = { "iflow.state": evt.state };
+        const attrs: Record<string, string> = { "claw.state": evt.state };
         sessionStuckCounter.add(1, attrs);
         if (typeof evt.ageMs === "number") {
           sessionStuckAgeHistogram.record(evt.ageMs, attrs);
@@ -550,26 +550,26 @@ export function createDiagnosticsOtelService(): iFlowPluginService {
         }
         const spanAttrs: Record<string, string | number> = { ...attrs };
         if (evt.sessionKey) {
-          spanAttrs["iflow.sessionKey"] = evt.sessionKey;
+          spanAttrs["claw.sessionKey"] = evt.sessionKey;
         }
         if (evt.sessionId) {
-          spanAttrs["iflow.sessionId"] = evt.sessionId;
+          spanAttrs["claw.sessionId"] = evt.sessionId;
         }
-        spanAttrs["iflow.queueDepth"] = evt.queueDepth ?? 0;
-        spanAttrs["iflow.ageMs"] = evt.ageMs;
-        const span = tracer.startSpan("iflow.session.stuck", { attributes: spanAttrs });
+        spanAttrs["claw.queueDepth"] = evt.queueDepth ?? 0;
+        spanAttrs["claw.ageMs"] = evt.ageMs;
+        const span = tracer.startSpan("claw.session.stuck", { attributes: spanAttrs });
         span.setStatus({ code: SpanStatusCode.ERROR, message: "session stuck" });
         span.end();
       };
 
       const recordRunAttempt = (evt: Extract<DiagnosticEventPayload, { type: "run.attempt" }>) => {
-        runAttemptCounter.add(1, { "iflow.attempt": evt.attempt });
+        runAttemptCounter.add(1, { "claw.attempt": evt.attempt });
       };
 
       const recordHeartbeat = (
         evt: Extract<DiagnosticEventPayload, { type: "diagnostic.heartbeat" }>,
       ) => {
-        queueDepthHistogram.record(evt.queued, { "iflow.channel": "heartbeat" });
+        queueDepthHistogram.record(evt.queued, { "claw.channel": "heartbeat" });
       };
 
       unsubscribe = onDiagnosticEvent((evt: DiagnosticEventPayload) => {

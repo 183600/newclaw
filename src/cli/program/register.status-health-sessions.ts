@@ -39,12 +39,12 @@ export function registerStatusHealthSessionsCommands(program: Command) {
       "after",
       () =>
         `\n${theme.heading("Examples:")}\n${formatHelpExamples([
-          ["iflow status", "Show channel health + session summary."],
-          ["iflow status --all", "Full diagnosis (read-only)."],
-          ["iflow status --json", "Machine-readable output."],
-          ["iflow status --usage", "Show model provider usage/quota snapshots."],
-          ["iflow status --deep", "Run channel probes (WA + Telegram + Discord + Slack + Signal)."],
-          ["iflow status --deep --timeout 5000", "Tighten probe timeout."],
+          ["claw status", "Show channel health + session summary."],
+          ["claw status --all", "Full diagnosis (read-only)."],
+          ["claw status --json", "Machine-readable output."],
+          ["claw status --usage", "Show model provider usage/quota snapshots."],
+          ["claw status --deep", "Run channel probes (WA + Telegram + Discord + Slack + Signal)."],
+          ["claw status --deep --timeout 5000", "Tighten probe timeout."],
         ])}`,
     )
     .addHelpText(
@@ -116,10 +116,10 @@ export function registerStatusHealthSessionsCommands(program: Command) {
       "after",
       () =>
         `\n${theme.heading("Examples:")}\n${formatHelpExamples([
-          ["iflow sessions", "List all sessions."],
-          ["iflow sessions --active 120", "Only last 2 hours."],
-          ["iflow sessions --json", "Machine-readable output."],
-          ["iflow sessions --store ./tmp/sessions.json", "Use a specific session store."],
+          ["claw sessions", "List all sessions."],
+          ["claw sessions --active 120", "Only last 2 hours."],
+          ["claw sessions --json", "Machine-readable output."],
+          ["claw sessions --store ./tmp/sessions.json", "Use a specific session store."],
         ])}\n\n${theme.muted(
           "Shows token usage per session when the agent reports it; set agents.defaults.contextTokens to cap the window and show %.",
         )}`,

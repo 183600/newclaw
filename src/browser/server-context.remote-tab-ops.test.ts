@@ -4,15 +4,15 @@ import type { BrowserServerState } from "./server-context.js";
 vi.mock("./chrome.js", () => ({
   isChromeCdpReady: vi.fn(async () => true),
   isChromeReachable: vi.fn(async () => true),
-  launchiFlowChrome: vi.fn(async () => {
+  launchClawChrome: vi.fn(async () => {
     throw new Error("unexpected launch");
   }),
-  resolveiFlowUserDataDir: vi.fn(() => "/tmp/iflow"),
-  stopiFlowChrome: vi.fn(async () => {}),
+  resolveClawUserDataDir: vi.fn(() => "/tmp/claw"),
+  stopClawChrome: vi.fn(async () => {}),
 }));
 
 function makeState(
-  profile: "remote" | "iflow",
+  profile: "remote" | "claw",
 ): BrowserServerState & { profiles: Map<string, { lastTargetId?: string | null }> } {
   return {
     // oxlint-disable-next-line typescript/no-explicit-any
@@ -37,7 +37,7 @@ function makeState(
           cdpPort: 443,
           color: "#00AA00",
         },
-        iflow: { cdpPort: 18800, color: "#FF4500" },
+        claw: { cdpPort: 18800, color: "#FF4500" },
       },
     },
     profiles: new Map(),
@@ -277,12 +277,12 @@ describe("browser server-context tab selection state", () => {
     global.fetch = fetchMock;
 
     const { createBrowserRouteContext } = await import("./server-context.js");
-    const state = makeState("iflow");
+    const state = makeState("claw");
     const ctx = createBrowserRouteContext({ getState: () => state });
-    const iflow = ctx.forProfile("iflow");
+    const claw = ctx.forProfile("claw");
 
-    const opened = await iflow.openTab("https://created.example");
+    const opened = await claw.openTab("https://created.example");
     expect(opened.targetId).toBe("CREATED");
-    expect(state.profiles.get("iflow")?.lastTargetId).toBe("CREATED");
+    expect(state.profiles.get("claw")?.lastTargetId).toBe("CREATED");
   });
 });

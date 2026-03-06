@@ -28,7 +28,7 @@ describe("formatCliBannerLine", () => {
       richTty: false,
     });
 
-    expect(result).toContain("🦞 iFlow");
+    expect(result).toContain("🦞 Claw");
     expect(result).toContain("1.0.0");
     expect(result).toContain("(abc123)");
     expect(result).toContain("—");
@@ -44,7 +44,7 @@ describe("formatCliBannerLine", () => {
     expect(result).toContain("\n");
     const lines = result.split("\n");
     expect(lines).toHaveLength(2);
-    expect(lines[0]).toContain("🦞 iFlow 1.0.0 (abc123)");
+    expect(lines[0]).toContain("🦞 Claw 1.0.0 (abc123)");
     expect(lines[1]).toMatch(/^\s+🦞/); // Indented second line with lobster
   });
 
@@ -80,7 +80,7 @@ describe("formatCliBannerArt", () => {
     const result = bannerModule.formatCliBannerArt({ richTty: false });
 
     expect(result).toContain("▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄");
-    expect(result).toContain("🦞 IFLOW 🦞");
+    expect(result).toContain("🦞 CLAW 🦞");
   });
 
   it("should include colored escape codes when rich formatting is enabled", () => {
@@ -115,7 +115,7 @@ describe("emitCliBanner", () => {
     const originalIsTTY = process.stdout.isTTY;
     process.stdout.isTTY = true;
 
-    bannerModule.emitCliBanner("1.0.0", { argv: ["node", "iflow"] });
+    bannerModule.emitCliBanner("1.0.0", { argv: ["node", "claw"] });
 
     expect(mockWrite).toHaveBeenCalled();
     expect(bannerModule.hasEmittedCliBanner()).toBe(true);
@@ -127,7 +127,7 @@ describe("emitCliBanner", () => {
     const originalIsTTY = process.stdout.isTTY;
     process.stdout.isTTY = true;
 
-    bannerModule.emitCliBanner("1.0.0", { argv: ["node", "iflow", "--json"] });
+    bannerModule.emitCliBanner("1.0.0", { argv: ["node", "claw", "--json"] });
 
     expect(mockWrite).not.toHaveBeenCalled();
     expect(bannerModule.hasEmittedCliBanner()).toBe(false);
@@ -139,7 +139,7 @@ describe("emitCliBanner", () => {
     const originalIsTTY = process.stdout.isTTY;
     process.stdout.isTTY = true;
 
-    bannerModule.emitCliBanner("1.0.0", { argv: ["node", "iflow", "--version"] });
+    bannerModule.emitCliBanner("1.0.0", { argv: ["node", "claw", "--version"] });
 
     expect(mockWrite).not.toHaveBeenCalled();
     expect(bannerModule.hasEmittedCliBanner()).toBe(false);
@@ -151,7 +151,7 @@ describe("emitCliBanner", () => {
     const originalIsTTY = process.stdout.isTTY;
     process.stdout.isTTY = false;
 
-    bannerModule.emitCliBanner("1.0.0", { argv: ["node", "iflow"] });
+    bannerModule.emitCliBanner("1.0.0", { argv: ["node", "claw"] });
 
     expect(mockWrite).not.toHaveBeenCalled();
     expect(bannerModule.hasEmittedCliBanner()).toBe(false);
@@ -163,10 +163,10 @@ describe("emitCliBanner", () => {
     const originalIsTTY = process.stdout.isTTY;
     process.stdout.isTTY = true;
 
-    bannerModule.emitCliBanner("1.0.0", { argv: ["node", "iflow"] });
+    bannerModule.emitCliBanner("1.0.0", { argv: ["node", "claw"] });
     expect(mockWrite).toHaveBeenCalledTimes(1);
 
-    bannerModule.emitCliBanner("1.0.0", { argv: ["node", "iflow"] });
+    bannerModule.emitCliBanner("1.0.0", { argv: ["node", "claw"] });
     expect(mockWrite).toHaveBeenCalledTimes(1); // Still only called once
 
     process.stdout.isTTY = originalIsTTY;

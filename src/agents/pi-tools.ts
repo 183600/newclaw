@@ -21,7 +21,7 @@ import {
   type ProcessToolDefaults,
 } from "./bash-tools.js";
 import { listChannelAgentTools } from "./channel-tools.js";
-import { createiFlowTools } from "./iflow-tools.js";
+import { createClawTools } from "./iflow-tools.js";
 import { wrapToolWithAbortSignal } from "./pi-tools.abort.js";
 import { wrapToolWithBeforeToolCallHook } from "./pi-tools.before-tool-call.js";
 import {
@@ -34,7 +34,7 @@ import {
 import {
   assertRequiredParams,
   CLAUDE_PARAM_GROUPS,
-  createiFlowReadTool,
+  createClawReadTool,
   createSandboxedEditTool,
   createSandboxedReadTool,
   createSandboxedWriteTool,
@@ -111,7 +111,7 @@ export const __testing = {
   assertRequiredParams,
 } as const;
 
-export function createiFlowCodingTools(options?: {
+export function createClawCodingTools(options?: {
   exec?: ExecToolDefaults & ProcessToolDefaults;
   messageProvider?: string;
   agentAccountId?: string;
@@ -241,7 +241,7 @@ export function createiFlowCodingTools(options?: {
         return [createSandboxedReadTool(sandboxRoot)];
       }
       const freshReadTool = createReadTool(workspaceRoot);
-      return [createiFlowReadTool(freshReadTool)];
+      return [createClawReadTool(freshReadTool)];
     }
     if (tool.name === "bash" || tool.name === execToolName) {
       return [];
@@ -316,7 +316,7 @@ export function createiFlowCodingTools(options?: {
     processTool as unknown as AnyAgentTool,
     // Channel docking: include channel-defined agent tools (login, etc.).
     ...listChannelAgentTools({ cfg: options?.config }),
-    ...createiFlowTools({
+    ...createClawTools({
       sandboxBrowserBridgeUrl: sandbox?.browser?.bridgeUrl,
       allowHostBrowserControl: sandbox ? sandbox.browserAllowHostControl : true,
       agentSessionKey: options?.sessionKey,

@@ -76,7 +76,7 @@ src/agents/
 ├── pi-embedded-helpers.ts         # Error classification, turn validation
 ├── pi-embedded-helpers/           # Helper modules
 ├── pi-embedded-utils.ts           # Formatting utilities
-├── pi-tools.ts                    # createiFlowCodingTools()
+├── pi-tools.ts                    # createClawCodingTools()
 ├── pi-tools.abort.ts              # AbortSignal wrapping for tools
 ├── pi-tools.policy.ts             # Tool allowlist/denylist policy
 ├── pi-tools.read.ts               # Read tool customizations
@@ -142,7 +142,7 @@ const result = await runEmbeddedPiAgent({
   sessionKey: "main:whatsapp:+1234567890",
   sessionFile: "/path/to/session.jsonl",
   workspaceDir: "/path/to/workspace",
-  config: iflowConfig,
+  config: clawConfig,
   prompt: "Hello, how are you?",
   provider: "anthropic",
   model: "claude-sonnet-4-20250514",

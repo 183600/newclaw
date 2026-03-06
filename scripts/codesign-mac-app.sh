@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-APP_BUNDLE="${1:-dist/iFlow.app}"
+APP_BUNDLE="${1:-dist/Claw.app}"
 IDENTITY="${SIGN_IDENTITY:-}"
 TIMESTAMP_MODE="${CODESIGN_TIMESTAMP:-auto}"
 DISABLE_LIBRARY_VALIDATION="${DISABLE_LIBRARY_VALIDATION:-0}"
 SKIP_TEAM_ID_CHECK="${SKIP_TEAM_ID_CHECK:-0}"
-ENT_TMP_BASE=$(mktemp -t iflow-entitlements-base.XXXXXX)
-ENT_TMP_APP_BASE=$(mktemp -t iflow-entitlements-app-base.XXXXXX)
-ENT_TMP_RUNTIME=$(mktemp -t iflow-entitlements-runtime.XXXXXX)
+ENT_TMP_BASE=$(mktemp -t claw-entitlements-base.XXXXXX)
+ENT_TMP_APP_BASE=$(mktemp -t claw-entitlements-app-base.XXXXXX)
+ENT_TMP_RUNTIME=$(mktemp -t claw-entitlements-runtime.XXXXXX)
 
 if [[ "${APP_BUNDLE}" == "--help" || "${APP_BUNDLE}" == "-h" ]]; then
   cat <<'HELP'
@@ -248,8 +248,8 @@ verify_team_ids() {
 }
 
 # Sign main binary
-if [ -f "$APP_BUNDLE/Contents/MacOS/iFlow" ]; then
-  echo "Signing main binary"; sign_item "$APP_BUNDLE/Contents/MacOS/iFlow" "$APP_ENTITLEMENTS"
+if [ -f "$APP_BUNDLE/Contents/MacOS/Claw" ]; then
+  echo "Signing main binary"; sign_item "$APP_BUNDLE/Contents/MacOS/Claw" "$APP_ENTITLEMENTS"
 fi
 
 # Sign Sparkle deeply if present

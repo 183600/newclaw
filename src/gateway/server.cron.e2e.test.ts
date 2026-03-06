@@ -54,7 +54,7 @@ describe("gateway server cron", () => {
   test("handles cron CRUD, normalization, and patch semantics", { timeout: 120_000 }, async () => {
     const prevSkipCron = process.env.IFLOW_SKIP_CRON;
     process.env.IFLOW_SKIP_CRON = "0";
-    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-gw-cron-"));
+    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "claw-gw-cron-"));
     testState.cronStorePath = path.join(dir, "cron", "jobs.json");
     testState.sessionConfig = { mainKey: "primary" };
     testState.cronEnabled = false;
@@ -268,7 +268,7 @@ describe("gateway server cron", () => {
   test("writes cron run history and auto-runs due jobs", async () => {
     const prevSkipCron = process.env.IFLOW_SKIP_CRON;
     process.env.IFLOW_SKIP_CRON = "0";
-    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-gw-cron-log-"));
+    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "claw-gw-cron-log-"));
     testState.cronStorePath = path.join(dir, "cron", "jobs.json");
     testState.cronEnabled = undefined;
     await fs.mkdir(path.dirname(testState.cronStorePath), { recursive: true });

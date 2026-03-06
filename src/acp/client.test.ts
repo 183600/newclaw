@@ -15,7 +15,7 @@ vi.mock("node:readline", () => ({
 }));
 
 vi.mock("../infra/path-env.js", () => ({
-  ensureiFlowCliOnPath: vi.fn(),
+  ensureClawCliOnPath: vi.fn(),
 }));
 
 describe("ACP Client", () => {

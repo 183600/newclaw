@@ -143,7 +143,7 @@ fun ChatComposer(
         value = input,
         onValueChange = { input = it },
         modifier = Modifier.fillMaxWidth(),
-        placeholder = { Text("Message iFlow…") },
+        placeholder = { Text("Message Claw…") },
         minLines = 2,
         maxLines = 6,
       )

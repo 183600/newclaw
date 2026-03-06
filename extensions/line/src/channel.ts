@@ -42,7 +42,7 @@ export const linePlugin: ChannelPlugin<ResolvedLineAccount> = {
       if (!account.channelAccessToken) {
         throw new Error("LINE channel access token not configured");
       }
-      await line.pushMessageLine(id, "iFlow: your access has been approved.", {
+      await line.pushMessageLine(id, "Claw: your access has been approved.", {
         channelAccessToken: account.channelAccessToken,
       });
     },

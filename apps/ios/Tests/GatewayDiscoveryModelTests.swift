@@ -1,5 +1,5 @@
 import Testing
-@testable import iFlow
+@testable import Claw
 
 @Suite(.serialized) struct GatewayDiscoveryModelTests {
     @Test @MainActor func debugLoggingCapturesLifecycleAndResets() {

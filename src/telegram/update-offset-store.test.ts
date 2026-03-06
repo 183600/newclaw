@@ -6,7 +6,7 @@ import { readTelegramUpdateOffset, writeTelegramUpdateOffset } from "./update-of
 
 async function withTempStateDir<T>(fn: (dir: string) => Promise<T>) {
   const previous = process.env.IFLOW_STATE_DIR;
-  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-telegram-"));
+  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "claw-telegram-"));
   process.env.IFLOW_STATE_DIR = dir;
   try {
     return await fn(dir);

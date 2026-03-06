@@ -19,7 +19,7 @@ import { resolveBundledSkillsDir } from "./bundled-dir.js";
 import { shouldIncludeSkill } from "./config.js";
 import {
   parseFrontmatter,
-  resolveiFlowMetadata,
+  resolveClawMetadata,
   resolveSkillInvocationPolicy,
 } from "./frontmatter.js";
 import { resolvePluginSkillDirs } from "./plugin-skills.js";
@@ -136,23 +136,23 @@ function loadSkillEntries(
   const bundledSkills = bundledSkillsDir
     ? loadSkills({
         dir: bundledSkillsDir,
-        source: "iflow-bundled",
+        source: "claw-bundled",
       })
     : [];
   const extraSkills = mergedExtraDirs.flatMap((dir) => {
     const resolved = resolveUserPath(dir);
     return loadSkills({
       dir: resolved,
-      source: "iflow-extra",
+      source: "claw-extra",
     });
   });
   const managedSkills = loadSkills({
     dir: managedSkillsDir,
-    source: "iflow-managed",
+    source: "claw-managed",
   });
   const workspaceSkills = loadSkills({
     dir: workspaceSkillsDir,
-    source: "iflow-workspace",
+    source: "claw-workspace",
   });
 
   const merged = new Map<string, Skill>();
@@ -181,7 +181,7 @@ function loadSkillEntries(
     return {
       skill,
       frontmatter,
-      metadata: resolveiFlowMetadata(frontmatter),
+      metadata: resolveClawMetadata(frontmatter),
       invocation: resolveSkillInvocationPolicy(frontmatter),
     };
   });

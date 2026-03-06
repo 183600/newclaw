@@ -5,7 +5,7 @@ Adds the `lobster` agent tool as an **optional** plugin tool.
 ## What this is
 
 - Lobster is a standalone workflow shell (typed JSON-first pipelines + approvals/resume).
-- This plugin integrates Lobster with iFlow _without core changes_.
+- This plugin integrates Lobster with Claw _without core changes_.
 
 ## Enable
 
@@ -30,19 +30,19 @@ Enable it in an agent allowlist:
 }
 ```
 
-## Using `iflow.invoke` (Lobster → iFlow tools)
+## Using `claw.invoke` (Lobster → Claw tools)
 
-Some Lobster pipelines may include a `iflow.invoke` step to call back into iFlow tools/plugins (for example: `gog` for Google Workspace, `gh` for GitHub, `message.send`, etc.).
+Some Lobster pipelines may include a `claw.invoke` step to call back into Claw tools/plugins (for example: `gog` for Google Workspace, `gh` for GitHub, `message.send`, etc.).
 
-For this to work, the iFlow Gateway must expose the tool bridge endpoint and the target tool must be allowed by policy:
+For this to work, the Claw Gateway must expose the tool bridge endpoint and the target tool must be allowed by policy:
 
-- iFlow provides an HTTP endpoint: `POST /tools/invoke`.
+- Claw provides an HTTP endpoint: `POST /tools/invoke`.
 - The request is gated by **gateway auth** (e.g. `Authorization: Bearer …` when token auth is enabled).
-- The invoked tool is gated by **tool policy** (global + per-agent + provider + group policy). If the tool is not allowed, iFlow returns `404 Tool not available`.
+- The invoked tool is gated by **tool policy** (global + per-agent + provider + group policy). If the tool is not allowed, Claw returns `404 Tool not available`.
 
 ### Allowlisting recommended
 
-To avoid letting workflows call arbitrary tools, set a tight allowlist on the agent that will be used by `iflow.invoke`.
+To avoid letting workflows call arbitrary tools, set a tight allowlist on the agent that will be used by `claw.invoke`.
 
 Example (allow only a small set of tools):
 

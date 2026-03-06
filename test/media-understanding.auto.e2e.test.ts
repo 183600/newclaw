@@ -14,7 +14,7 @@ const writeExecutable = async (dir: string, name: string, content: string) => {
 };
 
 const makeTempMedia = async (ext: string) => {
-  const dir = await makeTempDir("iflow-media-e2e-");
+  const dir = await makeTempDir("claw-media-e2e-");
   const filePath = path.join(dir, `sample${ext}`);
   await fs.writeFile(filePath, "audio");
   return { dir, filePath };
@@ -50,8 +50,8 @@ describe("media understanding auto-detect (e2e)", () => {
   it("uses sherpa-onnx-offline when available", async () => {
     const snapshot = envSnapshot();
     try {
-      const binDir = await makeTempDir("iflow-bin-sherpa-");
-      const modelDir = await makeTempDir("iflow-sherpa-model-");
+      const binDir = await makeTempDir("claw-bin-sherpa-");
+      const modelDir = await makeTempDir("claw-sherpa-model-");
       tempPaths.push(binDir, modelDir);
 
       await fs.writeFile(path.join(modelDir, "tokens.txt"), "a");
@@ -90,8 +90,8 @@ describe("media understanding auto-detect (e2e)", () => {
   it("uses whisper-cli when sherpa is missing", async () => {
     const snapshot = envSnapshot();
     try {
-      const binDir = await makeTempDir("iflow-bin-whispercpp-");
-      const modelDir = await makeTempDir("iflow-whispercpp-model-");
+      const binDir = await makeTempDir("claw-bin-whispercpp-");
+      const modelDir = await makeTempDir("claw-whispercpp-model-");
       tempPaths.push(binDir, modelDir);
 
       const modelPath = path.join(modelDir, "tiny.bin");
@@ -135,7 +135,7 @@ describe("media understanding auto-detect (e2e)", () => {
   it("uses gemini CLI for images when available", async () => {
     const snapshot = envSnapshot();
     try {
-      const binDir = await makeTempDir("iflow-bin-gemini-");
+      const binDir = await makeTempDir("claw-bin-gemini-");
       tempPaths.push(binDir);
 
       await writeExecutable(

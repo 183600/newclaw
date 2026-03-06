@@ -1,12 +1,12 @@
 {
-  "name": "@iflow/llm-task",
+  "name": "@claw/llm-task",
   "version": "2026.2.2",
-  "description": "iFlow JSON-only LLM task plugin",
+  "description": "Claw JSON-only LLM task plugin",
   "type": "module",
   "devDependencies": {
     "iflow": "workspace:*"
   },
-  "iflow": {
+  "claw": {
     "extensions": [
       "./index.ts"
     ]

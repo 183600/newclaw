@@ -91,9 +91,9 @@ async function removeMacApp(runtime: RuntimeEnv, dryRun?: boolean) {
   if (process.platform !== "darwin") {
     return;
   }
-  await removePath("/Applications/iFlow.app", runtime, {
+  await removePath("/Applications/Claw.app", runtime, {
     dryRun,
-    label: "/Applications/iFlow.app",
+    label: "/Applications/Claw.app",
   });
 }
 
@@ -125,7 +125,7 @@ export async function uninstallCommand(runtime: RuntimeEnv, opts: UninstallOptio
         {
           value: "app",
           label: "macOS app",
-          hint: "/Applications/iFlow.app",
+          hint: "/Applications/Claw.app",
         },
       ],
       initialValues: ["service", "state", "workspace"],

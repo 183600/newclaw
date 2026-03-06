@@ -39,7 +39,7 @@ cd iflow
 fly apps create my-iflow
 
 # 创建持久化卷（1GB 通常足够）
-fly volumes create iflow_data --size 1 --region iad
+fly volumes create claw_data --size 1 --region iad
 ```
 
 **提示：** 选择离你最近的区域。常见选项：`lhr`（伦敦）、`iad`（弗吉尼亚）、`sjc`（圣何塞）。
@@ -79,7 +79,7 @@ primary_region = "iad"
   memory = "2048mb"
 
 [mounts]
-  source = "iflow_data"
+  source = "claw_data"
   destination = "/data"
 ```
 

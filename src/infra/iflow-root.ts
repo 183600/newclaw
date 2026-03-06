@@ -2,7 +2,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-const CORE_PACKAGE_NAMES = new Set(["iflow"]);
+const CORE_PACKAGE_NAMES = new Set(["claw"]);
 
 async function readPackageName(dir: string): Promise<string | null> {
   try {
@@ -43,7 +43,7 @@ function candidateDirsFromArgv1(argv1: string): string[] {
   return candidates;
 }
 
-export async function resolveiFlowPackageRoot(opts: {
+export async function resolveClawPackageRoot(opts: {
   cwd?: string;
   argv1?: string;
   moduleUrl?: string;
@@ -68,4 +68,13 @@ export async function resolveiFlowPackageRoot(opts: {
   }
 
   return null;
+}
+
+/** @deprecated Use resolveClawPackageRoot instead */
+export async function resolveiFlowPackageRoot(opts: {
+  cwd?: string;
+  argv1?: string;
+  moduleUrl?: string;
+}): Promise<string | null> {
+  return resolveClawPackageRoot(opts);
 }

@@ -196,7 +196,7 @@ function formatElevatedUnavailableMessage(params: {
   lines.push("- agents.list[].tools.elevated.enabled");
   lines.push("- agents.list[].tools.elevated.allowFrom.<provider>");
   if (params.sessionKey) {
-    lines.push(`See: ${formatCliCommand(`iflow sandbox explain --session ${params.sessionKey}`)}`);
+    lines.push(`See: ${formatCliCommand(`claw sandbox explain --session ${params.sessionKey}`)}`);
   }
   return lines.join("\n");
 }

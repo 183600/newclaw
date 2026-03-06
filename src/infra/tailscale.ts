@@ -396,7 +396,7 @@ export async function ensureFunnel(
     runtime.error("Failed to enable Tailscale Funnel. Is it allowed on your tailnet?");
     runtime.error(
       info(
-        `Tip: Funnel is optional for iFlow. You can keep running the web gateway without it: \`${formatCliCommand("iflow gateway")}\``,
+        `Tip: Funnel is optional for Claw. You can keep running the web gateway without it: \`${formatCliCommand("iflow gateway")}\``,
       ),
     );
     if (shouldLogVerbose()) {

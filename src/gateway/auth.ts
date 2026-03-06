@@ -224,7 +224,7 @@ export function assertGatewayAuthConfigured(auth: ResolvedGatewayAuth): void {
       return;
     }
     throw new Error(
-      "gateway auth mode is token, but no token was configured (set gateway.auth.token or IFLOW_GATEWAY_TOKEN)",
+      "gateway auth mode is token, but no token was configured (set gateway.auth.token or CLAW_GATEWAY_TOKEN)",
     );
   }
   if (auth.mode === "password" && !auth.password) {

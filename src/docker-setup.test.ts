@@ -40,7 +40,7 @@ describe("docker-setup.sh", () => {
       return;
     }
 
-    const rootDir = await mkdtemp(join(tmpdir(), "iflow-docker-setup-"));
+    const rootDir = await mkdtemp(join(tmpdir(), "claw-docker-setup-"));
     const scriptPath = join(rootDir, "docker-setup.sh");
     const dockerfilePath = join(rootDir, "Dockerfile");
     const composePath = join(rootDir, "docker-compose.yml");
@@ -52,7 +52,7 @@ describe("docker-setup.sh", () => {
     await writeFile(dockerfilePath, "FROM scratch\n");
     await writeFile(
       composePath,
-      "services:\n  iflow-gateway:\n    image: noop\n  iflow-cli:\n    image: noop\n",
+      "services:\n  claw-gateway:\n    image: noop\n  claw-cli:\n    image: noop\n",
     );
     await writeDockerStub(binDir, logPath);
 
@@ -60,9 +60,9 @@ describe("docker-setup.sh", () => {
       ...process.env,
       PATH: `${binDir}:${process.env.PATH ?? ""}`,
       DOCKER_STUB_LOG: logPath,
-      IFLOW_GATEWAY_TOKEN: "test-token",
-      IFLOW_CONFIG_DIR: join(rootDir, "config"),
-      IFLOW_WORKSPACE_DIR: join(rootDir, "iflow"),
+      CLAW_GATEWAY_TOKEN: "test-token",
+      CLAW_CONFIG_DIR: join(rootDir, "config"),
+      CLAW_WORKSPACE_DIR: join(rootDir, "claw"),
     };
     delete env.IFLOW_DOCKER_APT_PACKAGES;
     delete env.IFLOW_EXTRA_MOUNTS;
@@ -82,7 +82,7 @@ describe("docker-setup.sh", () => {
     expect(envFile).toContain("IFLOW_HOME_VOLUME=");
   });
 
-  it("plumbs IFLOW_DOCKER_APT_PACKAGES into .env and docker build args", async () => {
+  it("plumbs CLAW_DOCKER_APT_PACKAGES into .env and docker build args", async () => {
     const assocCheck = spawnSync("bash", ["-c", "declare -A _t=()"], {
       encoding: "utf8",
     });
@@ -90,7 +90,7 @@ describe("docker-setup.sh", () => {
       return;
     }
 
-    const rootDir = await mkdtemp(join(tmpdir(), "iflow-docker-setup-"));
+    const rootDir = await mkdtemp(join(tmpdir(), "claw-docker-setup-"));
     const scriptPath = join(rootDir, "docker-setup.sh");
     const dockerfilePath = join(rootDir, "Dockerfile");
     const composePath = join(rootDir, "docker-compose.yml");
@@ -102,7 +102,7 @@ describe("docker-setup.sh", () => {
     await writeFile(dockerfilePath, "FROM scratch\n");
     await writeFile(
       composePath,
-      "services:\n  iflow-gateway:\n    image: noop\n  iflow-cli:\n    image: noop\n",
+      "services:\n  claw-gateway:\n    image: noop\n  claw-cli:\n    image: noop\n",
     );
     await writeDockerStub(binDir, logPath);
 
@@ -110,12 +110,12 @@ describe("docker-setup.sh", () => {
       ...process.env,
       PATH: `${binDir}:${process.env.PATH ?? ""}`,
       DOCKER_STUB_LOG: logPath,
-      IFLOW_DOCKER_APT_PACKAGES: "ffmpeg build-essential",
-      IFLOW_GATEWAY_TOKEN: "test-token",
-      IFLOW_CONFIG_DIR: join(rootDir, "config"),
-      IFLOW_WORKSPACE_DIR: join(rootDir, "iflow"),
-      IFLOW_EXTRA_MOUNTS: "",
-      IFLOW_HOME_VOLUME: "",
+      CLAW_DOCKER_APT_PACKAGES: "ffmpeg build-essential",
+      CLAW_GATEWAY_TOKEN: "test-token",
+      CLAW_CONFIG_DIR: join(rootDir, "config"),
+      CLAW_WORKSPACE_DIR: join(rootDir, "claw"),
+      CLAW_EXTRA_MOUNTS: "",
+      CLAW_HOME_VOLUME: "",
     };
 
     const result = spawnSync("bash", [scriptPath], {
@@ -130,7 +130,7 @@ describe("docker-setup.sh", () => {
     expect(envFile).toContain("IFLOW_DOCKER_APT_PACKAGES=ffmpeg build-essential");
 
     const log = await readFile(logPath, "utf8");
-    expect(log).toContain("--build-arg IFLOW_DOCKER_APT_PACKAGES=ffmpeg build-essential");
+    expect(log).toContain("--build-arg CLAW_DOCKER_APT_PACKAGES=ffmpeg build-essential");
   });
 
   it("keeps docker-compose gateway command in sync", async () => {

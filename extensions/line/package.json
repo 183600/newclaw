@@ -1,12 +1,12 @@
 {
-  "name": "@iflow/line",
+  "name": "@claw/line",
   "version": "2026.2.2",
-  "description": "iFlow LINE channel plugin",
+  "description": "Claw LINE channel plugin",
   "type": "module",
   "devDependencies": {
     "iflow": "workspace:*"
   },
-  "iflow": {
+  "claw": {
     "extensions": [
       "./index.ts"
     ],
@@ -21,7 +21,7 @@
       "quickstartAllowFrom": true
     },
     "install": {
-      "npmSpec": "@iflow/line",
+      "npmSpec": "@claw/line",
       "localPath": "extensions/line",
       "defaultChoice": "npm"
     }

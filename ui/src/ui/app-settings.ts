@@ -1,4 +1,4 @@
-import type { iFlowApp } from "./app.ts";
+import type { ClawApp } from "./app.ts";
 import { refreshChat } from "./app-chat.ts";
 import {
   startLogsPolling,
@@ -177,19 +177,19 @@ export async function refreshActiveTab(host: SettingsHost) {
     await loadChannelsTab(host);
   }
   if (host.tab === "instances") {
-    await loadPresence(host as unknown as iFlowApp);
+    await loadPresence(host as unknown as ClawApp);
   }
   if (host.tab === "sessions") {
-    await loadSessions(host as unknown as iFlowApp);
+    await loadSessions(host as unknown as ClawApp);
   }
   if (host.tab === "cron") {
     await loadCron(host);
   }
   if (host.tab === "skills") {
-    await loadSkills(host as unknown as iFlowApp);
+    await loadSkills(host as unknown as ClawApp);
   }
   if (host.tab === "agents") {
-    const app = host as unknown as iFlowApp;
+    const app = host as unknown as ClawApp;
     await loadAgents(app);
     await loadConfig(app);
     const agentIds = app.agentsList?.agents?.map((entry) => entry.id) ?? [];
@@ -212,10 +212,10 @@ export async function refreshActiveTab(host: SettingsHost) {
     }
   }
   if (host.tab === "nodes") {
-    await loadNodes(host as unknown as iFlowApp);
-    await loadDevices(host as unknown as iFlowApp);
-    await loadConfig(host as unknown as iFlowApp);
-    await loadExecApprovals(host as unknown as iFlowApp);
+    await loadNodes(host as unknown as ClawApp);
+    await loadDevices(host as unknown as ClawApp);
+    await loadConfig(host as unknown as ClawApp);
+    await loadExecApprovals(host as unknown as ClawApp);
   }
   if (host.tab === "chat") {
     await refreshChat(host as unknown as Parameters<typeof refreshChat>[0]);
@@ -225,16 +225,16 @@ export async function refreshActiveTab(host: SettingsHost) {
     );
   }
   if (host.tab === "config") {
-    await loadConfigSchema(host as unknown as iFlowApp);
-    await loadConfig(host as unknown as iFlowApp);
+    await loadConfigSchema(host as unknown as ClawApp);
+    await loadConfig(host as unknown as ClawApp);
   }
   if (host.tab === "debug") {
-    await loadDebug(host as unknown as iFlowApp);
+    await loadDebug(host as unknown as ClawApp);
     host.eventLog = host.eventLogBuffer;
   }
   if (host.tab === "logs") {
     host.logsAtBottom = true;
-    await loadLogs(host as unknown as iFlowApp, { reset: true });
+    await loadLogs(host as unknown as ClawApp, { reset: true });
     scheduleLogsScroll(host as unknown as Parameters<typeof scheduleLogsScroll>[0], true);
   }
 }
@@ -243,7 +243,7 @@ export function inferBasePath() {
   if (typeof window === "undefined") {
     return "";
   }
-  const configured = window.__IFLOW_CONTROL_UI_BASE_PATH__;
+  const configured = window.__CLAW_CONTROL_UI_BASE_PATH__;
   if (typeof configured === "string" && configured.trim()) {
     return normalizeBasePath(configured);
   }
@@ -396,26 +396,26 @@ export function syncUrlWithSessionKey(sessionKey: string, replace: boolean) {
 
 export async function loadOverview(host: SettingsHost) {
   await Promise.all([
-    loadChannels(host as unknown as iFlowApp, false),
-    loadPresence(host as unknown as iFlowApp),
-    loadSessions(host as unknown as iFlowApp),
-    loadCronStatus(host as unknown as iFlowApp),
-    loadDebug(host as unknown as iFlowApp),
+    loadChannels(host as unknown as ClawApp, false),
+    loadPresence(host as unknown as ClawApp),
+    loadSessions(host as unknown as ClawApp),
+    loadCronStatus(host as unknown as ClawApp),
+    loadDebug(host as unknown as ClawApp),
   ]);
 }
 
 export async function loadChannelsTab(host: SettingsHost) {
   await Promise.all([
-    loadChannels(host as unknown as iFlowApp, true),
-    loadConfigSchema(host as unknown as iFlowApp),
-    loadConfig(host as unknown as iFlowApp),
+    loadChannels(host as unknown as ClawApp, true),
+    loadConfigSchema(host as unknown as ClawApp),
+    loadConfig(host as unknown as ClawApp),
   ]);
 }
 
 export async function loadCron(host: SettingsHost) {
   await Promise.all([
-    loadChannels(host as unknown as iFlowApp, false),
-    loadCronStatus(host as unknown as iFlowApp),
-    loadCronJobs(host as unknown as iFlowApp),
+    loadChannels(host as unknown as ClawApp, false),
+    loadCronStatus(host as unknown as ClawApp),
+    loadCronJobs(host as unknown as ClawApp),
   ]);
 }

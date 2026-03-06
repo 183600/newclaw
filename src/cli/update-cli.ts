@@ -10,7 +10,7 @@ import {
   resolveUpdateAvailability,
 } from "../commands/status.update.js";
 import { readConfigFileSnapshot, writeConfigFile } from "../config/config.js";
-import { resolveiFlowPackageRoot } from "../infra/iflow-root.js";
+import { resolveClawPackageRoot } from "../infra/iflow-root.js";
 import { trimLogTail } from "../infra/restart-sentinel.js";
 import { parseSemver } from "../infra/runtime-guard.js";
 import {
@@ -82,7 +82,7 @@ const STEP_LABELS: Record<string, string> = {
   "deps install": "Installing dependencies",
   build: "Building",
   "ui:build": "Building UI",
-  "iflow doctor": "Running doctor checks",
+  "claw doctor": "Running doctor checks",
   "git rev-parse HEAD (after)": "Verifying update",
   "global update": "Updating via package manager",
   "global install": "Installing global package",
@@ -112,10 +112,10 @@ const UPDATE_QUIPS = [
 ];
 
 const MAX_LOG_CHARS = 8000;
-const DEFAULT_PACKAGE_NAME = "iflow";
+const DEFAULT_PACKAGE_NAME = "claw";
 const CORE_PACKAGE_NAMES = new Set([DEFAULT_PACKAGE_NAME]);
 const CLI_NAME = resolveCliName();
-const IFLOW_REPO_URL = "https://github.com/iflow/iflow.git";
+const CLAW_REPO_URL = "https://github.com/iflow/iflow.git";
 const DEFAULT_GIT_DIR = path.join(os.homedir(), ".iflow");
 
 function normalizeTag(value?: string | null): string | null {
@@ -126,8 +126,8 @@ function normalizeTag(value?: string | null): string | null {
   if (!trimmed) {
     return null;
   }
-  if (trimmed.startsWith("iflow@")) {
-    return trimmed.slice("iflow@".length);
+  if (trimmed.startsWith("claw@")) {
+    return trimmed.slice("claw@".length);
   }
   if (trimmed.startsWith(`${DEFAULT_PACKAGE_NAME}@`)) {
     return trimmed.slice(`${DEFAULT_PACKAGE_NAME}@`.length);
@@ -202,7 +202,7 @@ async function pathExists(targetPath: string): Promise<boolean> {
 }
 
 async function tryWriteCompletionCache(root: string, jsonMode: boolean): Promise<void> {
-  const binPath = path.join(root, "iflow.mjs");
+  const binPath = path.join(root, "claw.mjs");
   if (!(await pathExists(binPath))) {
     return;
   }
@@ -303,7 +303,7 @@ async function ensureGitCheckout(params: {
   if (!dirExists) {
     return await runUpdateStep({
       name: "git clone",
-      argv: ["git", "clone", IFLOW_REPO_URL, params.dir],
+      argv: ["git", "clone", CLAW_REPO_URL, params.dir],
       timeoutMs: params.timeoutMs,
       progress: params.progress,
     });
@@ -313,12 +313,12 @@ async function ensureGitCheckout(params: {
     const empty = await isEmptyDir(params.dir);
     if (!empty) {
       throw new Error(
-        `IFLOW_GIT_DIR points at a non-git directory: ${params.dir}. Set IFLOW_GIT_DIR to an empty folder or an iflow checkout.`,
+        `CLAW_GIT_DIR points at a non-git directory: ${params.dir}. Set CLAW_GIT_DIR to an empty folder or an claw checkout.`,
       );
     }
     return await runUpdateStep({
       name: "git clone",
-      argv: ["git", "clone", IFLOW_REPO_URL, params.dir],
+      argv: ["git", "clone", CLAW_REPO_URL, params.dir],
       cwd: params.dir,
       timeoutMs: params.timeoutMs,
       progress: params.progress,
@@ -326,7 +326,7 @@ async function ensureGitCheckout(params: {
   }
 
   if (!(await isCorePackage(params.dir))) {
-    throw new Error(`IFLOW_GIT_DIR does not look like a core checkout: ${params.dir}.`);
+    throw new Error(`CLAW_GIT_DIR does not look like a core checkout: ${params.dir}.`);
   }
 
   return null;
@@ -380,7 +380,7 @@ export async function updateStatusCommand(opts: UpdateStatusOptions): Promise<vo
   }
 
   const root =
-    (await resolveiFlowPackageRoot({
+    (await resolveClawPackageRoot({
       moduleUrl: import.meta.url,
       argv1: process.argv[1],
       cwd: process.cwd(),
@@ -455,7 +455,7 @@ export async function updateStatusCommand(opts: UpdateStatusOptions): Promise<vo
     },
   ];
 
-  defaultRuntime.log(theme.heading("iFlow update status"));
+  defaultRuntime.log(theme.heading("Claw update status"));
   defaultRuntime.log("");
   defaultRuntime.log(
     renderTable({
@@ -628,7 +628,7 @@ export async function updateCommand(opts: UpdateCommandOptions): Promise<void> {
   }
 
   const root =
-    (await resolveiFlowPackageRoot({
+    (await resolveClawPackageRoot({
       moduleUrl: import.meta.url,
       argv1: process.argv[1],
       cwd: process.cwd(),
@@ -737,7 +737,7 @@ export async function updateCommand(opts: UpdateCommandOptions): Promise<void> {
   const showProgress = !opts.json && process.stdout.isTTY;
 
   if (!opts.json) {
-    defaultRuntime.log(theme.heading("Updating iFlow..."));
+    defaultRuntime.log(theme.heading("Updating Claw..."));
     defaultRuntime.log("");
   }
 
@@ -881,12 +881,12 @@ export async function updateCommand(opts: UpdateCommandOptions): Promise<void> {
     if (result.reason === "not-git-install") {
       defaultRuntime.log(
         theme.warn(
-          `Skipped: this iFlow install isn't a git checkout, and the package manager couldn't be detected. Update via your package manager, then run \`${replaceCliName(formatCliCommand("iflow doctor"), CLI_NAME)}\` and \`${replaceCliName(formatCliCommand("iflow gateway restart"), CLI_NAME)}\`.`,
+          `Skipped: this Claw install isn't a git checkout, and the package manager couldn't be detected. Update via your package manager, then run \`${replaceCliName(formatCliCommand("iflow doctor"), CLI_NAME)}\` and \`${replaceCliName(formatCliCommand("iflow gateway restart"), CLI_NAME)}\`.`,
         ),
       );
       defaultRuntime.log(
         theme.muted(
-          `Examples: \`${replaceCliName("npm i -g iflow@latest", CLI_NAME)}\` or \`${replaceCliName("pnpm add -g iflow@latest", CLI_NAME)}\``,
+          `Examples: \`${replaceCliName("npm i -g claw@latest", CLI_NAME)}\` or \`${replaceCliName("pnpm add -g claw@latest", CLI_NAME)}\``,
         ),
       );
     }
@@ -1045,7 +1045,7 @@ export async function updateCommand(opts: UpdateCommandOptions): Promise<void> {
 export async function updateWizardCommand(opts: UpdateWizardOptions = {}): Promise<void> {
   if (!process.stdin.isTTY) {
     defaultRuntime.error(
-      "Update wizard requires a TTY. Use `iflow update --channel <stable|beta|dev>` instead.",
+      "Update wizard requires a TTY. Use `claw update --channel <stable|beta|dev>` instead.",
     );
     defaultRuntime.exit(1);
     return;
@@ -1059,7 +1059,7 @@ export async function updateWizardCommand(opts: UpdateWizardOptions = {}): Promi
   }
 
   const root =
-    (await resolveiFlowPackageRoot({
+    (await resolveClawPackageRoot({
       moduleUrl: import.meta.url,
       argv1: process.argv[1],
       cwd: process.cwd(),
@@ -1136,7 +1136,7 @@ export async function updateWizardCommand(opts: UpdateWizardOptions = {}): Promi
         const empty = await isEmptyDir(gitDir);
         if (!empty) {
           defaultRuntime.error(
-            `IFLOW_GIT_DIR points at a non-git directory: ${gitDir}. Set IFLOW_GIT_DIR to an empty folder or an iflow checkout.`,
+            `CLAW_GIT_DIR points at a non-git directory: ${gitDir}. Set CLAW_GIT_DIR to an empty folder or an claw checkout.`,
           );
           defaultRuntime.exit(1);
           return;
@@ -1144,7 +1144,7 @@ export async function updateWizardCommand(opts: UpdateWizardOptions = {}): Promi
       }
       const ok = await confirm({
         message: stylePromptMessage(
-          `Create a git checkout at ${gitDir}? (override via IFLOW_GIT_DIR)`,
+          `Create a git checkout at ${gitDir}? (override via CLAW_GIT_DIR)`,
         ),
         initialValue: true,
       });
@@ -1181,7 +1181,7 @@ export async function updateWizardCommand(opts: UpdateWizardOptions = {}): Promi
 export function registerUpdateCli(program: Command) {
   const update = program
     .command("update")
-    .description("Update iFlow to the latest version")
+    .description("Update Claw to the latest version")
     .option("--json", "Output result as JSON", false)
     .option("--no-restart", "Skip restarting the gateway service after a successful update")
     .option("--channel <stable|beta|dev>", "Persist update channel (git + npm)")
@@ -1190,15 +1190,15 @@ export function registerUpdateCli(program: Command) {
     .option("--yes", "Skip confirmation prompts (non-interactive)", false)
     .addHelpText("after", () => {
       const examples = [
-        ["iflow update", "Update a source checkout (git)"],
-        ["iflow update --channel beta", "Switch to beta channel (git + npm)"],
-        ["iflow update --channel dev", "Switch to dev channel (git + npm)"],
-        ["iflow update --tag beta", "One-off update to a dist-tag or version"],
-        ["iflow update --no-restart", "Update without restarting the service"],
-        ["iflow update --json", "Output result as JSON"],
-        ["iflow update --yes", "Non-interactive (accept downgrade prompts)"],
-        ["iflow update wizard", "Interactive update wizard"],
-        ["iflow --update", "Shorthand for iflow update"],
+        ["claw update", "Update a source checkout (git)"],
+        ["claw update --channel beta", "Switch to beta channel (git + npm)"],
+        ["claw update --channel dev", "Switch to dev channel (git + npm)"],
+        ["claw update --tag beta", "One-off update to a dist-tag or version"],
+        ["claw update --no-restart", "Update without restarting the service"],
+        ["claw update --json", "Output result as JSON"],
+        ["claw update --yes", "Non-interactive (accept downgrade prompts)"],
+        ["claw update wizard", "Interactive update wizard"],
+        ["claw --update", "Shorthand for claw update"],
       ] as const;
       const fmtExamples = examples
         .map(([cmd, desc]) => `  ${theme.command(cmd)} ${theme.muted(`# ${desc}`)}`)
@@ -1210,7 +1210,7 @@ ${theme.heading("What this does:")}
 
 ${theme.heading("Switch channels:")}
   - Use --channel stable|beta|dev to persist the update channel in config
-  - Run iflow update status to see the active channel and source
+  - Run claw update status to see the active channel and source
   - Use --tag <dist-tag|version> for a one-off npm update without persisting
 
 ${theme.heading("Non-interactive:")}
@@ -1272,9 +1272,9 @@ ${theme.muted("Docs:")} ${formatDocsLink("/cli/update", "docs.iflow.ai/cli/updat
       "after",
       () =>
         `\n${theme.heading("Examples:")}\n${formatHelpExamples([
-          ["iflow update status", "Show channel + version status."],
-          ["iflow update status --json", "JSON output."],
-          ["iflow update status --timeout 10", "Custom timeout."],
+          ["claw update status", "Show channel + version status."],
+          ["claw update status --json", "JSON output."],
+          ["claw update status --timeout 10", "Custom timeout."],
         ])}\n\n${theme.heading("Notes:")}\n${theme.muted(
           "- Shows current update channel (stable/beta/dev) and source",
         )}\n${theme.muted("- Includes git tag/branch/SHA for source checkouts")}\n\n${theme.muted(

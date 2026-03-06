@@ -4,7 +4,7 @@ import { formatCliCommand } from "./command-format.js";
 describe("formatCliCommand", () => {
   it("should return original command when no profile is set", () => {
     const env = { IFLOW_PROFILE: "" };
-    const command = "iflow --help";
+    const command = "claw --help";
     const result = formatCliCommand(command, env);
 
     expect(result).toBe(command);
@@ -12,7 +12,7 @@ describe("formatCliCommand", () => {
 
   it("should return original command when IFLOW_PROFILE is undefined", () => {
     const env = {};
-    const command = "iflow --help";
+    const command = "claw --help";
     const result = formatCliCommand(command, env);
 
     expect(result).toBe(command);
@@ -26,49 +26,49 @@ describe("formatCliCommand", () => {
     expect(result).toBe(command);
   });
 
-  it("should add profile flag to iflow command", () => {
+  it("should add profile flag to claw command", () => {
     const env = { IFLOW_PROFILE: "dev" };
-    const command = "iflow --help";
+    const command = "claw --help";
     const result = formatCliCommand(command, env);
 
-    expect(result).toBe("iflow --profile dev --help");
+    expect(result).toBe("claw --profile dev --help");
   });
 
-  it("should add profile flag to pnpm iflow command", () => {
+  it("should add profile flag to pnpm claw command", () => {
     const env = { IFLOW_PROFILE: "prod" };
-    const command = "pnpm iflow --help";
+    const command = "pnpm claw --help";
     const result = formatCliCommand(command, env);
 
-    expect(result).toBe("pnpm iflow --profile prod --help");
+    expect(result).toBe("pnpm claw --profile prod --help");
   });
 
-  it("should add profile flag to npm iflow command", () => {
+  it("should add profile flag to npm claw command", () => {
     const env = { IFLOW_PROFILE: "staging" };
-    const command = "npm iflow --help";
+    const command = "npm claw --help";
     const result = formatCliCommand(command, env);
 
-    expect(result).toBe("npm iflow --profile staging --help");
+    expect(result).toBe("npm claw --profile staging --help");
   });
 
-  it("should add profile flag to bunx iflow command", () => {
+  it("should add profile flag to bunx claw command", () => {
     const env = { IFLOW_PROFILE: "test" };
-    const command = "bunx iflow --help";
+    const command = "bunx claw --help";
     const result = formatCliCommand(command, env);
 
-    expect(result).toBe("bunx iflow --profile test --help");
+    expect(result).toBe("bunx claw --profile test --help");
   });
 
-  it("should add profile flag to npx iflow command", () => {
+  it("should add profile flag to npx claw command", () => {
     const env = { IFLOW_PROFILE: "custom" };
-    const command = "npx iflow --help";
+    const command = "npx claw --help";
     const result = formatCliCommand(command, env);
 
-    expect(result).toBe("npx iflow --profile custom --help");
+    expect(result).toBe("npx claw --profile custom --help");
   });
 
   it("should not add profile flag when --profile flag already exists", () => {
     const env = { IFLOW_PROFILE: "dev" };
-    const command = "iflow --profile prod --help";
+    const command = "claw --profile prod --help";
     const result = formatCliCommand(command, env);
 
     expect(result).toBe(command);
@@ -76,7 +76,7 @@ describe("formatCliCommand", () => {
 
   it("should not add profile flag when --profile flag exists with equals", () => {
     const env = { IFLOW_PROFILE: "dev" };
-    const command = "iflow --profile=prod --help";
+    const command = "claw --profile=prod --help";
     const result = formatCliCommand(command, env);
 
     expect(result).toBe(command);
@@ -84,7 +84,7 @@ describe("formatCliCommand", () => {
 
   it("should not add profile flag when --dev flag exists", () => {
     const env = { IFLOW_PROFILE: "dev" };
-    const command = "iflow --dev --help";
+    const command = "claw --dev --help";
     const result = formatCliCommand(command, env);
 
     expect(result).toBe(command);
@@ -92,15 +92,15 @@ describe("formatCliCommand", () => {
 
   it("should handle command with multiple spaces", () => {
     const env = { IFLOW_PROFILE: "dev" };
-    const command = "pnpm  iflow  --help";
+    const command = "pnpm  claw  --help";
     const result = formatCliCommand(command, env);
 
-    expect(result).toBe("pnpm  iflow --profile dev  --help");
+    expect(result).toBe("pnpm  claw --profile dev  --help");
   });
 
   it("should handle command with profile flag at end", () => {
     const env = { IFLOW_PROFILE: "dev" };
-    const command = "iflow --help --profile";
+    const command = "claw --help --profile";
     const result = formatCliCommand(command, env);
 
     expect(result).toBe(command);
@@ -116,17 +116,17 @@ describe("formatCliCommand", () => {
 
   it("should handle command with no arguments", () => {
     const env = { IFLOW_PROFILE: "dev" };
-    const command = "iflow";
+    const command = "claw";
     const result = formatCliCommand(command, env);
 
-    expect(result).toBe("iflow --profile dev");
+    expect(result).toBe("claw --profile dev");
   });
 
   it("should handle command with complex arguments", () => {
     const env = { IFLOW_PROFILE: "prod" };
-    const command = "pnpm iflow agent --mode rpc --json";
+    const command = "pnpm claw agent --mode rpc --json";
     const result = formatCliCommand(command, env);
 
-    expect(result).toBe("pnpm iflow --profile prod agent --mode rpc --json");
+    expect(result).toBe("pnpm claw --profile prod agent --mode rpc --json");
   });
 });

@@ -1,8 +1,8 @@
 import type { OAuthCredentials } from "@mariozechner/pi-ai";
-import { resolveiFlowAgentDir } from "../agents/agent-paths.js";
+import { resolveClawAgentDir } from "../agents/agent-paths.js";
 import { upsertAuthProfile } from "../agents/auth-profiles.js";
 
-const resolveAuthAgentDir = (agentDir?: string) => agentDir ?? resolveiFlowAgentDir();
+const resolveAuthAgentDir = (agentDir?: string) => agentDir ?? resolveClawAgentDir();
 
 export async function writeOAuthCredentials(
   provider: string,

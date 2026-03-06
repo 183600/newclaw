@@ -87,7 +87,7 @@ const MemorySchema = z
   .strict()
   .optional();
 
-export const iFlowSchema = z
+export const ClawSchema = z
   .object({
     meta: z
       .object({

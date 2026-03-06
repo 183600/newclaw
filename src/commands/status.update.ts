@@ -1,5 +1,5 @@
 import { formatCliCommand } from "../cli/command-format.js";
-import { resolveiFlowPackageRoot } from "../infra/iflow-root.js";
+import { resolveClawPackageRoot } from "../infra/iflow-root.js";
 import {
   checkUpdateStatus,
   compareSemverStrings,
@@ -12,7 +12,7 @@ export async function getUpdateCheckResult(params: {
   fetchGit: boolean;
   includeRegistry: boolean;
 }): Promise<UpdateCheckResult> {
-  const root = await resolveiFlowPackageRoot({
+  const root = await resolveClawPackageRoot({
     moduleUrl: import.meta.url,
     argv1: process.argv[1],
     cwd: process.cwd(),

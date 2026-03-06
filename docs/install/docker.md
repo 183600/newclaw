@@ -126,14 +126,14 @@ named volume here (not a bind path); for bind mounts, use
 Example:
 
 ```bash
-export IFLOW_HOME_VOLUME="iflow_home"
+export IFLOW_HOME_VOLUME="claw_home"
 ./docker-setup.sh
 ```
 
 You can combine this with extra mounts:
 
 ```bash
-export IFLOW_HOME_VOLUME="iflow_home"
+export IFLOW_HOME_VOLUME="claw_home"
 export IFLOW_EXTRA_MOUNTS="$HOME/.codex:/home/node/.codex:ro,$HOME/github:/home/node/github:rw"
 ./docker-setup.sh
 ```
@@ -178,7 +178,7 @@ If you want a more full-featured container, use these opt-in knobs:
 1. **Persist `/home/node`** so browser downloads and tool caches survive:
 
 ```bash
-export IFLOW_HOME_VOLUME="iflow_home"
+export IFLOW_HOME_VOLUME="claw_home"
 ./docker-setup.sh
 ```
 

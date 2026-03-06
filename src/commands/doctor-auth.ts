@@ -135,7 +135,7 @@ export async function maybeRemoveDeprecatedCliAuthProfiles(
   if (deprecated.has(CODEX_CLI_PROFILE_ID)) {
     lines.push(
       `- ${CODEX_CLI_PROFILE_ID} (OpenAI Codex): use OAuth → ${formatCliCommand(
-        "iflow models auth login --provider openai-codex",
+        "claw models auth login --provider openai-codex",
       )}`,
     );
   }
@@ -209,12 +209,12 @@ type AuthIssue = {
 function formatAuthIssueHint(issue: AuthIssue): string | null {
   if (issue.provider === "anthropic" && issue.profileId === CLAUDE_CLI_PROFILE_ID) {
     return `Deprecated profile. Use ${formatCliCommand("iflow models auth setup-token")} or ${formatCliCommand(
-      "iflow configure",
+      "claw configure",
     )}.`;
   }
   if (issue.provider === "openai-codex" && issue.profileId === CODEX_CLI_PROFILE_ID) {
     return `Deprecated profile. Use ${formatCliCommand(
-      "iflow models auth login --provider openai-codex",
+      "claw models auth login --provider openai-codex",
     )} or ${formatCliCommand("iflow configure")}.`;
   }
   return `Re-auth via \`${formatCliCommand("iflow configure")}\` or \`${formatCliCommand("iflow onboard")}\`.`;

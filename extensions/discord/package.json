@@ -1,12 +1,12 @@
 {
-  "name": "@iflow/discord",
+  "name": "@claw/discord",
   "version": "2026.2.2",
-  "description": "iFlow Discord channel plugin",
+  "description": "Claw Discord channel plugin",
   "type": "module",
   "devDependencies": {
     "iflow": "workspace:*"
   },
-  "iflow": {
+  "claw": {
     "extensions": [
       "./index.ts"
     ]

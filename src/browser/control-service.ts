@@ -73,7 +73,7 @@ export async function stopBrowserControlService(): Promise<void> {
       }
     }
   } catch (err) {
-    logService.warn(`iflow browser stop failed: ${String(err)}`);
+    logService.warn(`claw browser stop failed: ${String(err)}`);
   }
 
   state = null;

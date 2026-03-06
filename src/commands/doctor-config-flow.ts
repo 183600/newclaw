@@ -5,7 +5,7 @@ import type { iFlowConfig } from "../config/config.js";
 import type { DoctorOptions } from "./doctor-prompter.js";
 import { formatCliCommand } from "../cli/command-format.js";
 import {
-  iFlowSchema,
+  ClawSchema,
   CONFIG_PATH,
   migrateLegacyConfig,
   readConfigFileSnapshot,
@@ -77,7 +77,7 @@ function stripUnknownConfigKeys(config: iFlowConfig): {
   config: iFlowConfig;
   removed: string[];
 } {
-  const parsed = iFlowSchema.safeParse(config);
+  const parsed = ClawSchema.safeParse(config);
   if (parsed.success) {
     return { config, removed: [] };
   }
@@ -163,7 +163,7 @@ async function maybeMigrateLegacyConfig(): Promise<string[]> {
   }
 
   const legacyCandidates = [
-    path.join(home, ".clawdbot", "clawdbot.json"),
+    path.join(home, ".iflowdbot", "clawdbot.json"),
     path.join(home, ".moltbot", "moltbot.json"),
     path.join(home, ".moldbot", "moldbot.json"),
   ];
@@ -284,7 +284,7 @@ export async function loadAndMaybeMigrateDoctorConfig(params: {
       note(lines, "Doctor changes");
     } else {
       note(lines, "Unknown config keys");
-      fixHints.push('Run "iflow doctor --fix" to remove these keys.');
+      fixHints.push('Run "claw doctor --fix" to remove these keys.');
     }
   }
 

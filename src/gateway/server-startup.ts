@@ -38,7 +38,7 @@ export async function startGatewaySidecars(params: {
   logChannels: { info: (msg: string) => void; error: (msg: string) => void };
   logBrowser: { error: (msg: string) => void };
 }) {
-  // Start iFlow browser control server (unless disabled via config).
+  // Start Claw browser control server (unless disabled via config).
   let browserControl: Awaited<ReturnType<typeof startBrowserControlServerIfEnabled>> = null;
   try {
     browserControl = await startBrowserControlServerIfEnabled();
@@ -112,7 +112,7 @@ export async function startGatewaySidecars(params: {
   }
 
   // Launch configured channels so gateway replies via the surface the message came from.
-  // Tests can opt out via IFLOW_SKIP_CHANNELS (or legacy IFLOW_SKIP_PROVIDERS).
+  // Tests can opt out via CLAW_SKIP_CHANNELS (or legacy CLAW_SKIP_PROVIDERS).
   const skipChannels =
     isTruthyEnvValue(process.env.IFLOW_SKIP_CHANNELS) ||
     isTruthyEnvValue(process.env.IFLOW_SKIP_PROVIDERS);
@@ -124,7 +124,7 @@ export async function startGatewaySidecars(params: {
     }
   } else {
     params.logChannels.info(
-      "skipping channel start (IFLOW_SKIP_CHANNELS=1 or IFLOW_SKIP_PROVIDERS=1)",
+      "skipping channel start (CLAW_SKIP_CHANNELS=1 or CLAW_SKIP_PROVIDERS=1)",
     );
   }
 

@@ -21,7 +21,7 @@ description: |
 name: session-memory
 metadata:
   {
-    "iflow":
+    "claw":
       {
         "emoji": "disk",
         "events": ["command:new"],
@@ -39,11 +39,11 @@ metadata:
   it("preserves inline JSON values", () => {
     const content = `---
 name: inline-json
-metadata: {"iflow": {"events": ["test"]}}
+metadata: {"claw": {"events": ["test"]}}
 ---
 `;
     const result = parseFrontmatterBlock(content);
-    expect(result.metadata).toBe('{"iflow": {"events": ["test"]}}');
+    expect(result.metadata).toBe('{"claw": {"events": ["test"]}}');
   });
 
   it("stringifies YAML objects and arrays", () => {
@@ -55,7 +55,7 @@ tags:
   - alpha
   - beta
 metadata:
-  iflow:
+  claw:
     events:
       - command:new
 ---
