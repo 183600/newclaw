@@ -85,9 +85,7 @@ export async function runDaemonInstall(opts: DaemonInstallOptions) {
       });
       if (!json) {
         defaultRuntime.log(`Gateway service already ${service.loadedText}.`);
-        defaultRuntime.log(
-          `Reinstall with: ${formatCliCommand("newclaw gateway install --force")}`,
-        );
+        defaultRuntime.log(`Reinstall with: ${formatCliCommand("iflow gateway install --force")}`);
       }
       return;
     }
@@ -96,7 +94,7 @@ export async function runDaemonInstall(opts: DaemonInstallOptions) {
   const { programArguments, workingDirectory, environment } = await buildGatewayInstallPlan({
     env: process.env,
     port,
-    token: opts.token || cfg.gateway?.auth?.token || process.env.NEWCLAW_GATEWAY_TOKEN,
+    token: opts.token || cfg.gateway?.auth?.token || process.env.IFLOW_GATEWAY_TOKEN,
     runtime: runtimeRaw,
     warn: (message) => {
       if (json) {

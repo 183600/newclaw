@@ -76,7 +76,7 @@ export function registerChannelsCli(program: Command) {
       () =>
         `\n${theme.muted("Docs:")} ${formatDocsLink(
           "/cli/channels",
-          "docs.newclaw.ai/cli/channels",
+          "docs.iflow.ai/cli/channels",
         )}\n`,
     );
 

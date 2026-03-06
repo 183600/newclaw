@@ -1,4 +1,4 @@
-import { DEFAULT_ACCOUNT_ID } from "newclaw/plugin-sdk";
+import { DEFAULT_ACCOUNT_ID } from "iflow/plugin-sdk";
 import { readFileSync } from "node:fs";
 import type { ZaloConfig } from "./types.js";
 

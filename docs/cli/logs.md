@@ -1,12 +1,12 @@
 ---
-summary: "CLI reference for `newclaw logs` (tail gateway logs via RPC)"
+summary: "CLI reference for `iflow logs` (tail gateway logs via RPC)"
 read_when:
   - You need to tail Gateway logs remotely (without SSH)
   - You want JSON log lines for tooling
 title: "logs"
 ---
 
-# `newclaw logs`
+# `iflow logs`
 
 Tail Gateway file logs over RPC (works in remote mode).
 
@@ -17,8 +17,8 @@ Related:
 ## Examples
 
 ```bash
-newclaw logs
-newclaw logs --follow
-newclaw logs --json
-newclaw logs --limit 500
+iflow logs
+iflow logs --follow
+iflow logs --json
+iflow logs --limit 500
 ```

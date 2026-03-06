@@ -2,7 +2,7 @@
 read_when:
   - 想要查看哪些 Skills 可用且可以运行
   - 想要调试 Skills 缺失的二进制文件/环境变量/配置
-summary: Skills 列表/信息/检查及 Skills 资格的 `newclaw skills` CLI 参考
+summary: Skills 列表/信息/检查及 Skills 资格的 `iflow skills` CLI 参考
 title: skills
 x-i18n:
   generated_at: "2026-02-01T20:21:28Z"
@@ -13,7 +13,7 @@ x-i18n:
   workflow: 14
 ---
 
-# `newclaw skills`
+# `iflow skills`
 
 检查 Skills（内置 + 工作区 + 托管覆盖），查看哪些符合条件以及哪些缺少依赖。
 
@@ -26,8 +26,8 @@ x-i18n:
 ## 命令
 
 ```bash
-newclaw skills list
-newclaw skills list --eligible
-newclaw skills info <name>
-newclaw skills check
+iflow skills list
+iflow skills list --eligible
+iflow skills info <name>
+iflow skills check
 ```

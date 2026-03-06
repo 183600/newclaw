@@ -1,4 +1,4 @@
-import type { NewClawConfig } from "../../config/config.js";
+import type { iFlowConfig } from "../../config/config.js";
 import type { RuntimeEnv } from "../../runtime.js";
 import type { OnboardOptions } from "../onboard-types.js";
 import { formatCliCommand } from "../../cli/command-format.js";
@@ -23,7 +23,7 @@ import { resolveNonInteractiveWorkspaceDir } from "./local/workspace.js";
 export async function runNonInteractiveOnboardingLocal(params: {
   opts: OnboardOptions;
   runtime: RuntimeEnv;
-  baseConfig: NewClawConfig;
+  baseConfig: iFlowConfig;
 }) {
   const { opts, runtime, baseConfig } = params;
   const mode = "local" as const;
@@ -34,7 +34,7 @@ export async function runNonInteractiveOnboardingLocal(params: {
     defaultWorkspaceDir: DEFAULT_WORKSPACE,
   });
 
-  let nextConfig: NewClawConfig = {
+  let nextConfig: iFlowConfig = {
     ...baseConfig,
     agents: {
       ...baseConfig.agents,
@@ -128,7 +128,7 @@ export async function runNonInteractiveOnboardingLocal(params: {
 
   if (!opts.json) {
     runtime.log(
-      `Tip: run \`${formatCliCommand("newclaw configure --section web")}\` to store your Brave API key for web_search. Docs: https://docs.newclaw.ai/tools/web`,
+      `Tip: run \`${formatCliCommand("iflow configure --section web")}\` to store your Brave API key for web_search. Docs: https://docs.iflow.ai/tools/web`,
     );
   }
 }

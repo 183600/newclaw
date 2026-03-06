@@ -88,11 +88,11 @@ export function assertSupportedRuntime(
 
   runtime.error(
     [
-      "newclaw requires Node >=22.0.0.",
+      "iflow requires Node >=22.0.0.",
       `Detected: ${runtimeLabel} (exec: ${execLabel}).`,
       `PATH searched: ${details.pathEnv}`,
       "Install Node: https://nodejs.org/en/download",
-      "Upgrade Node and re-run newclaw.",
+      "Upgrade Node and re-run iflow.",
     ].join("\n"),
   );
   runtime.exit(1);

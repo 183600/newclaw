@@ -1,12 +1,12 @@
 {
-  "name": "@newclaw/imessage",
+  "name": "@iflow/imessage",
   "version": "2026.2.2",
-  "description": "NewClaw iMessage channel plugin",
+  "description": "iFlow iMessage channel plugin",
   "type": "module",
   "devDependencies": {
-    "newclaw": "workspace:*"
+    "iflow": "workspace:*"
   },
-  "newclaw": {
+  "iflow": {
     "extensions": [
       "./index.ts"
     ]

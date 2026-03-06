@@ -1,4 +1,4 @@
-import type { NewClawConfig } from "../../config/config.js";
+import type { iFlowConfig } from "../../config/config.js";
 import type { AuthProfileStore } from "./types.js";
 import { formatCliCommand } from "../../cli/command-format.js";
 import { normalizeProviderId } from "../model-selection.js";
@@ -6,7 +6,7 @@ import { listProfilesForProvider } from "./profiles.js";
 import { suggestOAuthProfileIdForLegacyDefault } from "./repair.js";
 
 export function formatAuthDoctorHint(params: {
-  cfg?: NewClawConfig;
+  cfg?: iFlowConfig;
   store: AuthProfileStore;
   provider: string;
   profileId?: string;
@@ -42,6 +42,6 @@ export function formatAuthDoctorHint(params: {
     }`,
     `- auth store oauth profiles: ${storeOauthProfiles || "(none)"}`,
     `- suggested profile: ${suggested}`,
-    `Fix: run "${formatCliCommand("newclaw doctor --yes")}"`,
+    `Fix: run "${formatCliCommand("iflow doctor --yes")}"`,
   ].join("\n");
 }

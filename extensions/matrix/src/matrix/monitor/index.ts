@@ -1,4 +1,4 @@
-import { mergeAllowlist, summarizeMapping, type RuntimeEnv } from "newclaw/plugin-sdk";
+import { mergeAllowlist, summarizeMapping, type RuntimeEnv } from "iflow/plugin-sdk";
 import { format } from "node:util";
 import type { CoreConfig, ReplyToMode } from "../../types.js";
 import { resolveMatrixTargets } from "../../resolve-targets.js";

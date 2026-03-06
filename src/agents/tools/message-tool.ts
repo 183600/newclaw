@@ -1,5 +1,5 @@
 import { Type } from "@sinclair/typebox";
-import type { NewClawConfig } from "../../config/config.js";
+import type { iFlowConfig } from "../../config/config.js";
 import type { AnyAgentTool } from "./common.js";
 import { BLUEBUBBLES_GROUP_ACTIONS } from "../../channels/plugins/bluebubbles-actions.js";
 import {
@@ -247,7 +247,7 @@ const MessageToolSchema = buildMessageToolSchemaFromActions(AllMessageActions, {
 type MessageToolOptions = {
   agentAccountId?: string;
   agentSessionKey?: string;
-  config?: NewClawConfig;
+  config?: iFlowConfig;
   currentChannelId?: string;
   currentChannelProvider?: string;
   currentThreadTs?: string;
@@ -256,7 +256,7 @@ type MessageToolOptions = {
   sandboxRoot?: string;
 };
 
-function buildMessageToolSchema(cfg: NewClawConfig) {
+function buildMessageToolSchema(cfg: iFlowConfig) {
   const actions = listChannelMessageActions(cfg);
   const includeButtons = supportsChannelMessageButtons(cfg);
   const includeCards = supportsChannelMessageCards(cfg);
@@ -302,7 +302,7 @@ function filterActionsForContext(params: {
 }
 
 function buildMessageToolDescription(options?: {
-  config?: NewClawConfig;
+  config?: iFlowConfig;
   currentChannel?: string;
   currentChannelId?: string;
 }): string {

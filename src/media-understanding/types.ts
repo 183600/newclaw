@@ -97,7 +97,7 @@ export type ImageDescriptionRequest = {
   profile?: string;
   preferredProfile?: string;
   agentDir: string;
-  cfg: import("../config/config.js").NewClawConfig;
+  cfg: import("../config/config.js").iFlowConfig;
 };
 
 export type ImageDescriptionResult = {

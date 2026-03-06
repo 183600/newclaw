@@ -37,11 +37,11 @@ Pending requests expire automatically after **5 minutes**.
 ## CLI workflow (headless friendly)
 
 ```bash
-newclaw nodes pending
-newclaw nodes approve <requestId>
-newclaw nodes reject <requestId>
-newclaw nodes status
-newclaw nodes rename --node <id|name|ip> --name "Living Room iPad"
+iflow nodes pending
+iflow nodes approve <requestId>
+iflow nodes reject <requestId>
+iflow nodes status
+iflow nodes rename --node <id|name|ip> --name "Living Room iPad"
 ```
 
 `nodes status` shows paired/connected nodes and their capabilities.
@@ -80,12 +80,12 @@ If silent approval fails, it falls back to the normal “Approve/Reject” promp
 
 ## Storage (local, private)
 
-Pairing state is stored under the Gateway state directory (default `~/.newclaw`):
+Pairing state is stored under the Gateway state directory (default `~/.iflow`):
 
-- `~/.newclaw/nodes/paired.json`
-- `~/.newclaw/nodes/pending.json`
+- `~/.iflow/nodes/paired.json`
+- `~/.iflow/nodes/pending.json`
 
-If you override `NEWCLAW_STATE_DIR`, the `nodes/` folder moves with it.
+If you override `IFLOW_STATE_DIR`, the `nodes/` folder moves with it.
 
 Security notes:
 

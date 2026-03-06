@@ -1,16 +1,16 @@
 {
-  "name": "@newclaw/zalouser",
+  "name": "@iflow/zalouser",
   "version": "2026.2.2",
-  "description": "NewClaw Zalo Personal Account plugin via zca-cli",
+  "description": "iFlow Zalo Personal Account plugin via zca-cli",
   "type": "module",
   "dependencies": {
     "@sinclair/typebox": "0.34.48",
-    "newclaw": "workspace:*"
+    "iflow": "workspace:*"
   },
   "devDependencies": {
-    "newclaw": "workspace:*"
+    "iflow": "workspace:*"
   },
-  "newclaw": {
+  "iflow": {
     "extensions": [
       "./index.ts"
     ],
@@ -28,7 +28,7 @@
       "quickstartAllowFrom": true
     },
     "install": {
-      "npmSpec": "@newclaw/zalouser",
+      "npmSpec": "@iflow/zalouser",
       "localPath": "extensions/zalouser",
       "defaultChoice": "npm"
     }

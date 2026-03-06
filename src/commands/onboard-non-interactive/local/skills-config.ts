@@ -1,9 +1,9 @@
-import type { NewClawConfig } from "../../../config/config.js";
+import type { iFlowConfig } from "../../../config/config.js";
 import type { RuntimeEnv } from "../../../runtime.js";
 import type { OnboardOptions } from "../../onboard-types.js";
 
 export function applyNonInteractiveSkillsConfig(params: {
-  nextConfig: NewClawConfig;
+  nextConfig: iFlowConfig;
   opts: OnboardOptions;
   runtime: RuntimeEnv;
 }) {

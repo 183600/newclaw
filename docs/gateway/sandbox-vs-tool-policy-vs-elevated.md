@@ -7,7 +7,7 @@ status: active
 
 # Sandbox vs Tool Policy vs Elevated
 
-NewClaw has three related (but different) controls:
+iFlow has three related (but different) controls:
 
 1. **Sandbox** (`agents.defaults.sandbox.*` / `agents.list[].sandbox.*`) decides **where tools run** (Docker vs host).
 2. **Tool policy** (`tools.*`, `tools.sandbox.tools.*`, `agents.list[].tools.*`) decides **which tools are available/allowed**.
@@ -15,13 +15,13 @@ NewClaw has three related (but different) controls:
 
 ## Quick debug
 
-Use the inspector to see what NewClaw is _actually_ doing:
+Use the inspector to see what iFlow is _actually_ doing:
 
 ```bash
-newclaw sandbox explain
-newclaw sandbox explain --session agent:main:main
-newclaw sandbox explain --agent work
-newclaw sandbox explain --json
+iflow sandbox explain
+iflow sandbox explain --session agent:main:main
+iflow sandbox explain --agent work
+iflow sandbox explain --json
 ```
 
 It prints:
@@ -93,7 +93,7 @@ Available groups:
 - `group:automation`: `cron`, `gateway`
 - `group:messaging`: `message`
 - `group:nodes`: `nodes`
-- `group:newclaw`: all built-in NewClaw tools (excludes provider plugins)
+- `group:iflow`: all built-in iFlow tools (excludes provider plugins)
 
 ## Elevated: exec-only “run on host”
 

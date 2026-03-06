@@ -1,14 +1,14 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { NewClawConfig } from "../config/config.js";
+import type { iFlowConfig } from "../config/config.js";
 import { withTempHome as withTempHomeBase } from "../../test/helpers/temp-home.js";
 
 async function withTempHome<T>(fn: (home: string) => Promise<T>): Promise<T> {
-  return withTempHomeBase(fn, { prefix: "newclaw-models-" });
+  return withTempHomeBase(fn, { prefix: "iflow-models-" });
 }
 
-const _MODELS_CONFIG: NewClawConfig = {
+const _MODELS_CONFIG: iFlowConfig = {
   models: {
     providers: {
       "custom-proxy": {
@@ -61,10 +61,10 @@ describe("models-config", () => {
           }),
         }));
 
-        const { ensureNewClawModelsJson } = await import("./models-config.js");
+        const { ensureiFlowModelsJson } = await import("./models-config.js");
 
         const agentDir = path.join(home, "agent-default-base-url");
-        await ensureNewClawModelsJson({ models: { providers: {} } }, agentDir);
+        await ensureiFlowModelsJson({ models: { providers: {} } }, agentDir);
 
         const raw = await fs.readFile(path.join(agentDir, "models.json"), "utf8");
         const parsed = JSON.parse(raw) as {
@@ -102,9 +102,9 @@ describe("models-config", () => {
           resolveCopilotApiToken,
         }));
 
-        const { ensureNewClawModelsJson } = await import("./models-config.js");
+        const { ensureiFlowModelsJson } = await import("./models-config.js");
 
-        await ensureNewClawModelsJson({ models: { providers: {} } });
+        await ensureiFlowModelsJson({ models: { providers: {} } });
 
         expect(resolveCopilotApiToken).toHaveBeenCalledWith(
           expect.objectContaining({ githubToken: "copilot-token" }),

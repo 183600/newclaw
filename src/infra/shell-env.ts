@@ -79,7 +79,7 @@ export function loadShellEnvFallback(opts: ShellEnvFallbackOptions): ShellEnvFal
     });
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);
-    logger.warn(`[newclaw] shell env fallback failed: ${msg}`);
+    logger.warn(`[iflow] shell env fallback failed: ${msg}`);
     lastAppliedKeys = [];
     return { ok: false, error: msg, applied: [] };
   }
@@ -104,15 +104,15 @@ export function loadShellEnvFallback(opts: ShellEnvFallbackOptions): ShellEnvFal
 }
 
 export function shouldEnableShellEnvFallback(env: NodeJS.ProcessEnv): boolean {
-  return isTruthyEnvValue(env.NEWCLAW_LOAD_SHELL_ENV);
+  return isTruthyEnvValue(env.IFLOW_LOAD_SHELL_ENV);
 }
 
 export function shouldDeferShellEnvFallback(env: NodeJS.ProcessEnv): boolean {
-  return isTruthyEnvValue(env.NEWCLAW_DEFER_SHELL_ENV_FALLBACK);
+  return isTruthyEnvValue(env.IFLOW_DEFER_SHELL_ENV_FALLBACK);
 }
 
 export function resolveShellEnvFallbackTimeoutMs(env: NodeJS.ProcessEnv): number {
-  const raw = env.NEWCLAW_SHELL_ENV_TIMEOUT_MS?.trim();
+  const raw = env.IFLOW_SHELL_ENV_TIMEOUT_MS?.trim();
   if (!raw) {
     return DEFAULT_TIMEOUT_MS;
   }

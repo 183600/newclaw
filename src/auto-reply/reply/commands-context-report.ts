@@ -5,7 +5,7 @@ import { resolveSessionAgentIds } from "../../agents/agent-scope.js";
 import { resolveBootstrapContextForRun } from "../../agents/bootstrap-files.js";
 import { resolveDefaultModelForAgent } from "../../agents/model-selection.js";
 import { resolveBootstrapMaxChars } from "../../agents/pi-embedded-helpers.js";
-import { createNewClawCodingTools } from "../../agents/pi-tools.js";
+import { createiFlowCodingTools } from "../../agents/pi-tools.js";
 import { resolveSandboxRuntimeStatus } from "../../agents/sandbox.js";
 import { buildWorkspaceSkillSnapshot } from "../../agents/skills.js";
 import { getSkillsSnapshotVersion } from "../../agents/skills/refresh.js";
@@ -83,7 +83,7 @@ async function resolveContextReport(
   });
   const tools = (() => {
     try {
-      return createNewClawCodingTools({
+      return createiFlowCodingTools({
         config: params.cfg,
         workspaceDir,
         sessionKey: params.sessionKey,

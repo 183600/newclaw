@@ -2,13 +2,13 @@ import type {
   ChannelOutboundAdapter,
   ChannelPlugin,
   ChannelSetupInput,
-  NewClawConfig,
-} from "newclaw/plugin-sdk";
+  iFlowConfig,
+} from "iflow/plugin-sdk";
 import {
   applyAccountNameToChannelSection,
   DEFAULT_ACCOUNT_ID,
   normalizeAccountId,
-} from "newclaw/plugin-sdk";
+} from "iflow/plugin-sdk";
 import { tlonChannelConfigSchema } from "./config-schema.js";
 import { monitorTlonProvider } from "./monitor/index.js";
 import { tlonOnboardingAdapter } from "./onboarding.js";
@@ -29,10 +29,10 @@ type TlonSetupInput = ChannelSetupInput & {
 };
 
 function applyTlonSetupConfig(params: {
-  cfg: NewClawConfig;
+  cfg: iFlowConfig;
   accountId: string;
   input: TlonSetupInput;
-}): NewClawConfig {
+}): iFlowConfig {
   const { cfg, accountId, input } = params;
   const useDefault = accountId === DEFAULT_ACCOUNT_ID;
   const namedConfig = applyAccountNameToChannelSection({
@@ -202,7 +202,7 @@ export const tlonPlugin: ChannelPlugin = {
               enabled,
             },
           },
-        } as NewClawConfig;
+        } as iFlowConfig;
       }
       return {
         ...cfg,
@@ -219,7 +219,7 @@ export const tlonPlugin: ChannelPlugin = {
             },
           },
         },
-      } as NewClawConfig;
+      } as iFlowConfig;
     },
     deleteAccount: ({ cfg, accountId }) => {
       const useDefault = !accountId || accountId === "default";
@@ -233,7 +233,7 @@ export const tlonPlugin: ChannelPlugin = {
             ...cfg.channels,
             tlon: rest,
           },
-        } as NewClawConfig;
+        } as iFlowConfig;
       }
       // @ts-expect-error
       // oxlint-disable-next-line no-unused-vars
@@ -247,7 +247,7 @@ export const tlonPlugin: ChannelPlugin = {
             accounts: remainingAccounts,
           },
         },
-      } as NewClawConfig;
+      } as iFlowConfig;
     },
     isConfigured: (account) => account.configured,
     describeAccount: (account) => ({

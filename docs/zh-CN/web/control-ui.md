@@ -18,7 +18,7 @@ x-i18n:
 控制界面是一个由 Gateway网关提供服务的小型 **Vite + Lit** 单页应用：
 
 - 默认地址：`http://<host>:18789/`
-- 可选前缀：设置 `gateway.controlUi.basePath`（例如 `/newclaw`）
+- 可选前缀：设置 `gateway.controlUi.basePath`（例如 `/iflow`）
 
 它通过同一端口**直接与 Gateway网关 WebSocket** 通信。
 
@@ -28,7 +28,7 @@ x-i18n:
 
 - http://127.0.0.1:18789/（或 http://localhost:18789/）
 
-如果页面无法加载，请先启动 Gateway网关：`newclaw gateway`。
+如果页面无法加载，请先启动 Gateway网关：`iflow gateway`。
 
 认证在 WebSocket 握手期间通过以下方式提供：
 
@@ -49,13 +49,13 @@ x-i18n:
 
 ```bash
 # 列出待处理的请求
-newclaw devices list
+iflow devices list
 
 # 通过请求 ID 审批
-newclaw devices approve <requestId>
+iflow devices approve <requestId>
 ```
 
-审批后，设备会被记住，除非你使用 `newclaw devices revoke --device <id> --role <role>` 撤销，否则不需要重新审批。参见
+审批后，设备会被记住，除非你使用 `iflow devices revoke --device <id> --role <role>` 撤销，否则不需要重新审批。参见
 [设备 CLI](/cli/devices) 了解令牌轮换和撤销。
 
 **说明：**
@@ -76,7 +76,7 @@ newclaw devices approve <requestId>
 - Skills：状态、启用/禁用、安装、API 密钥更新（`skills.*`）
 - 节点：列表 + 能力（`node.list`）
 - 执行审批：编辑 Gateway网关或节点允许列表 + `exec host=gateway/node` 的询问策略（`exec.approvals.*`）
-- 配置：查看/编辑 `~/.newclaw/newclaw.json`（`config.get`、`config.set`）
+- 配置：查看/编辑 `~/.iflow/iflow.json`（`config.get`、`config.set`）
 - 配置：应用 + 带验证的重启（`config.apply`）并唤醒最后活跃的会话
 - 配置写入包含基础哈希保护，防止覆盖并发编辑
 - 配置模式 + 表单渲染（`config.schema`，包括插件 + 渠道模式）；原始 JSON 编辑器仍然可用
@@ -101,7 +101,7 @@ newclaw devices approve <requestId>
 将 Gateway网关保持在 local loopback 上，让 Tailscale Serve 通过 HTTPS 代理：
 
 ```bash
-newclaw gateway --tailscale serve
+iflow gateway --tailscale serve
 ```
 
 打开：
@@ -109,14 +109,14 @@ newclaw gateway --tailscale serve
 - `https://<magicdns>/`（或你配置的 `gateway.controlUi.basePath`）
 
 默认情况下，当 `gateway.auth.allowTailscale` 为 `true` 时，Serve 请求可以通过 Tailscale 身份头
-（`tailscale-user-login`）进行认证。NewClaw
+（`tailscale-user-login`）进行认证。iFlow
 通过使用 `tailscale whois` 解析 `x-forwarded-for` 地址并与头信息匹配来验证身份，且仅在请求通过带有 Tailscale `x-forwarded-*` 头的 local loopback 到达时才接受。如果你希望即使对 Serve 流量也要求令牌/密码，请设置
 `gateway.auth.allowTailscale: false`（或强制 `gateway.auth.mode: "password"`）。
 
 ### 绑定到 Tailnet + 令牌
 
 ```bash
-newclaw gateway --bind tailnet --token "$(openssl rand -hex 32)"
+iflow gateway --bind tailnet --token "$(openssl rand -hex 32)"
 ```
 
 然后打开：
@@ -129,7 +129,7 @@ newclaw gateway --bind tailnet --token "$(openssl rand -hex 32)"
 
 如果你通过明文 HTTP（`http://<lan-ip>` 或 `http://<tailscale-ip>`）打开仪表板，
 浏览器运行在**非安全上下文**中并会阻止 WebCrypto。默认情况下，
-NewClaw **会阻止**没有设备身份的控制界面连接。
+iFlow **会阻止**没有设备身份的控制界面连接。
 
 **推荐修复：**使用 HTTPS（Tailscale Serve）或在本地打开 UI：
 
@@ -164,7 +164,7 @@ pnpm ui:build # 首次运行时自动安装 UI 依赖
 可选的绝对基础路径（当你需要固定的资源 URL 时）：
 
 ```bash
-NEWCLAW_CONTROL_UI_BASE_PATH=/newclaw/ pnpm ui:build
+IFLOW_CONTROL_UI_BASE_PATH=/iflow/ pnpm ui:build
 ```
 
 本地开发（独立的开发服务器）：

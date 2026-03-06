@@ -189,12 +189,12 @@ export const resetTestPluginRegistry = () => {
 };
 
 const testConfigRoot = {
-  value: path.join(os.tmpdir(), `newclaw-gateway-test-${process.pid}-${crypto.randomUUID()}`),
+  value: path.join(os.tmpdir(), `iflow-gateway-test-${process.pid}-${crypto.randomUUID()}`),
 };
 
 export const setTestConfigRoot = (root: string) => {
   testConfigRoot.value = root;
-  process.env.NEWCLAW_CONFIG_PATH = path.join(root, "newclaw.json");
+  process.env.IFLOW_CONFIG_PATH = path.join(root, "iflow.json");
 };
 
 export const testTailnetIPv4 = hoisted.testTailnetIPv4;
@@ -287,7 +287,7 @@ vi.mock("../config/sessions.js", async () => {
 
 vi.mock("../config/config.js", async () => {
   const actual = await vi.importActual<typeof import("../config/config.js")>("../config/config.js");
-  const resolveConfigPath = () => path.join(testConfigRoot.value, "newclaw.json");
+  const resolveConfigPath = () => path.join(testConfigRoot.value, "iflow.json");
   const hashConfigRaw = (raw: string | null) =>
     crypto
       .createHash("sha256")
@@ -405,7 +405,7 @@ vi.mock("../config/config.js", async () => {
           : {};
       const defaults = {
         model: { primary: "anthropic/claude-opus-4-5" },
-        workspace: path.join(os.tmpdir(), "newclaw-gateway-test"),
+        workspace: path.join(os.tmpdir(), "iflow-gateway-test"),
         ...fileDefaults,
         ...testState.agentConfig,
       };
@@ -590,7 +590,7 @@ vi.mock("../cli/deps.js", async () => {
   };
 });
 
-process.env.NEWCLAW_SKIP_CHANNELS = "1";
-process.env.NEWCLAW_SKIP_CRON = "1";
-process.env.NEWCLAW_SKIP_CHANNELS = "1";
-process.env.NEWCLAW_SKIP_CRON = "1";
+process.env.IFLOW_SKIP_CHANNELS = "1";
+process.env.IFLOW_SKIP_CRON = "1";
+process.env.IFLOW_SKIP_CHANNELS = "1";
+process.env.IFLOW_SKIP_CRON = "1";

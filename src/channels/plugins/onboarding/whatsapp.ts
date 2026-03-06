@@ -1,6 +1,6 @@
 import fs from "node:fs/promises";
 import path from "node:path";
-import type { NewClawConfig } from "../../../config/config.js";
+import type { iFlowConfig } from "../../../config/config.js";
 import type { DmPolicy } from "../../../config/types.js";
 import type { RuntimeEnv } from "../../../runtime.js";
 import type { WizardPrompter } from "../../../wizard/prompts.js";
@@ -20,15 +20,15 @@ import { promptAccountId } from "./helpers.js";
 
 const channel = "whatsapp" as const;
 
-function setWhatsAppDmPolicy(cfg: NewClawConfig, dmPolicy: DmPolicy): NewClawConfig {
+function setWhatsAppDmPolicy(cfg: iFlowConfig, dmPolicy: DmPolicy): iFlowConfig {
   return mergeWhatsAppConfig(cfg, { dmPolicy });
 }
 
-function setWhatsAppAllowFrom(cfg: NewClawConfig, allowFrom?: string[]): NewClawConfig {
+function setWhatsAppAllowFrom(cfg: iFlowConfig, allowFrom?: string[]): iFlowConfig {
   return mergeWhatsAppConfig(cfg, { allowFrom }, { unsetOnUndefined: ["allowFrom"] });
 }
 
-function setWhatsAppSelfChatMode(cfg: NewClawConfig, selfChatMode: boolean): NewClawConfig {
+function setWhatsAppSelfChatMode(cfg: iFlowConfig, selfChatMode: boolean): iFlowConfig {
   return mergeWhatsAppConfig(cfg, { selfChatMode });
 }
 
@@ -41,25 +41,25 @@ async function pathExists(filePath: string): Promise<boolean> {
   }
 }
 
-async function detectWhatsAppLinked(cfg: NewClawConfig, accountId: string): Promise<boolean> {
+async function detectWhatsAppLinked(cfg: iFlowConfig, accountId: string): Promise<boolean> {
   const { authDir } = resolveWhatsAppAuthDir({ cfg, accountId });
   const credsPath = path.join(authDir, "creds.json");
   return await pathExists(credsPath);
 }
 
 async function promptWhatsAppAllowFrom(
-  cfg: NewClawConfig,
+  cfg: iFlowConfig,
   _runtime: RuntimeEnv,
   prompter: WizardPrompter,
   options?: { forceAllowlist?: boolean },
-): Promise<NewClawConfig> {
+): Promise<iFlowConfig> {
   const existingPolicy = cfg.channels?.whatsapp?.dmPolicy ?? "pairing";
   const existingAllowFrom = cfg.channels?.whatsapp?.allowFrom ?? [];
   const existingLabel = existingAllowFrom.length > 0 ? existingAllowFrom.join(", ") : "unset";
 
   if (options?.forceAllowlist) {
     await prompter.note(
-      "We need the sender/owner number so NewClaw can allowlist you.",
+      "We need the sender/owner number so iFlow can allowlist you.",
       "WhatsApp number",
     );
     const entry = await prompter.text({
@@ -115,13 +115,13 @@ async function promptWhatsAppAllowFrom(
     message: "WhatsApp phone setup",
     options: [
       { value: "personal", label: "This is my personal phone number" },
-      { value: "separate", label: "Separate phone just for NewClaw" },
+      { value: "separate", label: "Separate phone just for iFlow" },
     ],
   });
 
   if (phoneMode === "personal") {
     await prompter.note(
-      "We need the sender/owner number so NewClaw can allowlist you.",
+      "We need the sender/owner number so iFlow can allowlist you.",
       "WhatsApp number",
     );
     const entry = await prompter.text({
@@ -341,7 +341,7 @@ export const whatsappOnboardingAdapter: ChannelOnboardingAdapter = {
       }
     } else if (!linked) {
       await prompter.note(
-        `Run \`${formatCliCommand("newclaw channels login")}\` later to link WhatsApp.`,
+        `Run \`${formatCliCommand("iflow channels login")}\` later to link WhatsApp.`,
         "WhatsApp",
       );
     }

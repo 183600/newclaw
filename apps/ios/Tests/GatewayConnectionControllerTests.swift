@@ -1,8 +1,8 @@
-import NewClawKit
+import iFlowKit
 import Foundation
 import Testing
 import UIKit
-@testable import NewClaw
+@testable import iFlow
 
 private func withUserDefaults<T>(_ updates: [String: Any?], _ body: () throws -> T) rethrows -> T {
     let defaults = UserDefaults.standard
@@ -49,31 +49,31 @@ private func withUserDefaults<T>(_ updates: [String: Any?], _ body: () throws ->
             "node.instanceId": "ios-test",
             "node.displayName": "Test Node",
             "camera.enabled": true,
-            "location.enabledMode": NewClawLocationMode.always.rawValue,
+            "location.enabledMode": iFlowLocationMode.always.rawValue,
             VoiceWakePreferences.enabledKey: true,
         ]) {
             let appModel = NodeAppModel()
             let controller = GatewayConnectionController(appModel: appModel, startDiscovery: false)
             let caps = Set(controller._test_currentCaps())
 
-            #expect(caps.contains(NewClawCapability.canvas.rawValue))
-            #expect(caps.contains(NewClawCapability.screen.rawValue))
-            #expect(caps.contains(NewClawCapability.camera.rawValue))
-            #expect(caps.contains(NewClawCapability.location.rawValue))
-            #expect(caps.contains(NewClawCapability.voiceWake.rawValue))
+            #expect(caps.contains(iFlowCapability.canvas.rawValue))
+            #expect(caps.contains(iFlowCapability.screen.rawValue))
+            #expect(caps.contains(iFlowCapability.camera.rawValue))
+            #expect(caps.contains(iFlowCapability.location.rawValue))
+            #expect(caps.contains(iFlowCapability.voiceWake.rawValue))
         }
     }
 
     @Test @MainActor func currentCommandsIncludeLocationWhenEnabled() {
         withUserDefaults([
             "node.instanceId": "ios-test",
-            "location.enabledMode": NewClawLocationMode.whileUsing.rawValue,
+            "location.enabledMode": iFlowLocationMode.whileUsing.rawValue,
         ]) {
             let appModel = NodeAppModel()
             let controller = GatewayConnectionController(appModel: appModel, startDiscovery: false)
             let commands = Set(controller._test_currentCommands())
 
-            #expect(commands.contains(NewClawLocationCommand.get.rawValue))
+            #expect(commands.contains(iFlowLocationCommand.get.rawValue))
         }
     }
 }

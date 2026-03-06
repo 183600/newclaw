@@ -1,4 +1,4 @@
-import type { RuntimeEnv } from "newclaw/plugin-sdk";
+import type { RuntimeEnv } from "iflow/plugin-sdk";
 import { extractMessageText } from "./utils.js";
 
 export type TlonHistoryEntry = {

@@ -5,7 +5,7 @@ import {
   type OAuthProvider,
 } from "@mariozechner/pi-ai";
 import lockfile from "proper-lockfile";
-import type { NewClawConfig } from "../../config/config.js";
+import type { iFlowConfig } from "../../config/config.js";
 import type { AuthProfileStore } from "./types.js";
 import { refreshQwenPortalCredentials } from "../../providers/qwen-portal-oauth.js";
 import { refreshChutesTokens } from "../chutes-oauth.js";
@@ -106,7 +106,7 @@ async function refreshOAuthTokenWithLock(params: {
 }
 
 async function tryResolveOAuthProfile(params: {
-  cfg?: NewClawConfig;
+  cfg?: iFlowConfig;
   store: AuthProfileStore;
   profileId: string;
   agentDir?: string;
@@ -147,7 +147,7 @@ async function tryResolveOAuthProfile(params: {
 }
 
 export async function resolveApiKeyForProfile(params: {
-  cfg?: NewClawConfig;
+  cfg?: iFlowConfig;
   store: AuthProfileStore;
   profileId: string;
   agentDir?: string;

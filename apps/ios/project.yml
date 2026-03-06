@@ -1,6 +1,6 @@
-name: NewClaw
+name: iFlow
 options:
-  bundleIdPrefix: ai.newclaw
+  bundleIdPrefix: ai.iflow
   deploymentTarget:
     iOS: "18.0"
   xcodeVersion: "16.0"
@@ -10,33 +10,33 @@ settings:
     SWIFT_VERSION: "6.0"
 
 packages:
-  NewClawKit:
-    path: ../shared/NewClawKit
+  iFlowKit:
+    path: ../shared/iFlowKit
   Swabble:
     path: ../../Swabble
 
 schemes:
-  NewClaw:
+  iFlow:
     shared: true
     build:
       targets:
-        NewClaw: all
+        iFlow: all
     test:
       targets:
-        - NewClawTests
+        - iFlowTests
 
 targets:
-  NewClaw:
+  iFlow:
     type: application
     platform: iOS
     sources:
       - path: Sources
     dependencies:
-      - package: NewClawKit
-      - package: NewClawKit
-        product: NewClawChatUI
-      - package: NewClawKit
-        product: NewClawProtocol
+      - package: iFlowKit
+      - package: iFlowKit
+        product: iFlowChatUI
+      - package: iFlowKit
+        product: iFlowProtocol
       - package: Swabble
         product: SwabbleKit
       - sdk: AppIntents.framework
@@ -71,15 +71,15 @@ targets:
         CODE_SIGN_IDENTITY: "Apple Development"
         CODE_SIGN_STYLE: Manual
         DEVELOPMENT_TEAM: Y5PE65HELJ
-        PRODUCT_BUNDLE_IDENTIFIER: ai.newclaw.ios
-        PROVISIONING_PROFILE_SPECIFIER: "ai.newclaw.ios Development"
+        PRODUCT_BUNDLE_IDENTIFIER: ai.iflow.ios
+        PROVISIONING_PROFILE_SPECIFIER: "ai.iflow.ios Development"
         SWIFT_VERSION: "6.0"
         SWIFT_STRICT_CONCURRENCY: complete
         ENABLE_APPINTENTS_METADATA: NO
     info:
       path: Sources/Info.plist
       properties:
-        CFBundleDisplayName: NewClaw
+        CFBundleDisplayName: iFlow
         CFBundleIconName: AppIcon
         CFBundleShortVersionString: "2026.2.2"
         CFBundleVersion: "20260202"
@@ -88,16 +88,16 @@ targets:
           UIApplicationSupportsMultipleScenes: false
         UIBackgroundModes:
           - audio
-        NSLocalNetworkUsageDescription: NewClaw discovers and connects to your NewClaw gateway on the local network.
+        NSLocalNetworkUsageDescription: iFlow discovers and connects to your iFlow gateway on the local network.
         NSAppTransportSecurity:
           NSAllowsArbitraryLoadsInWebContent: true
         NSBonjourServices:
-          - _newclaw-gw._tcp
-        NSCameraUsageDescription: NewClaw can capture photos or short video clips when requested via the gateway.
-        NSLocationWhenInUseUsageDescription: NewClaw uses your location when you allow location sharing.
-        NSLocationAlwaysAndWhenInUseUsageDescription: NewClaw can share your location in the background when you enable Always.
-        NSMicrophoneUsageDescription: NewClaw needs microphone access for voice wake.
-        NSSpeechRecognitionUsageDescription: NewClaw uses on-device speech recognition for voice wake.
+          - _iflow-gw._tcp
+        NSCameraUsageDescription: iFlow can capture photos or short video clips when requested via the gateway.
+        NSLocationWhenInUseUsageDescription: iFlow uses your location when you allow location sharing.
+        NSLocationAlwaysAndWhenInUseUsageDescription: iFlow can share your location in the background when you enable Always.
+        NSMicrophoneUsageDescription: iFlow needs microphone access for voice wake.
+        NSSpeechRecognitionUsageDescription: iFlow uses on-device speech recognition for voice wake.
         UISupportedInterfaceOrientations:
           - UIInterfaceOrientationPortrait
           - UIInterfaceOrientationPortraitUpsideDown
@@ -109,26 +109,26 @@ targets:
           - UIInterfaceOrientationLandscapeLeft
           - UIInterfaceOrientationLandscapeRight
 
-  NewClawTests:
+  iFlowTests:
     type: bundle.unit-test
     platform: iOS
     sources:
       - path: Tests
     dependencies:
-      - target: NewClaw
+      - target: iFlow
       - package: Swabble
         product: SwabbleKit
       - sdk: AppIntents.framework
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: ai.newclaw.ios.tests
+        PRODUCT_BUNDLE_IDENTIFIER: ai.iflow.ios.tests
         SWIFT_VERSION: "6.0"
         SWIFT_STRICT_CONCURRENCY: complete
-        TEST_HOST: "$(BUILT_PRODUCTS_DIR)/NewClaw.app/NewClaw"
+        TEST_HOST: "$(BUILT_PRODUCTS_DIR)/iFlow.app/iFlow"
         BUNDLE_LOADER: "$(TEST_HOST)"
     info:
       path: Tests/Info.plist
       properties:
-        CFBundleDisplayName: NewClawTests
+        CFBundleDisplayName: iFlowTests
         CFBundleShortVersionString: "2026.2.2"
         CFBundleVersion: "20260202"

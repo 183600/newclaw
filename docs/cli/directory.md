@@ -1,12 +1,12 @@
 ---
-summary: "CLI reference for `newclaw directory` (self, peers, groups)"
+summary: "CLI reference for `iflow directory` (self, peers, groups)"
 read_when:
   - You want to look up contacts/groups/self ids for a channel
   - You are developing a channel directory adapter
 title: "directory"
 ---
 
-# `newclaw directory`
+# `iflow directory`
 
 Directory lookups for channels that support it (contacts/peers, groups, and “me”).
 
@@ -18,15 +18,15 @@ Directory lookups for channels that support it (contacts/peers, groups, and “m
 
 ## Notes
 
-- `directory` is meant to help you find IDs you can paste into other commands (especially `newclaw message send --target ...`).
+- `directory` is meant to help you find IDs you can paste into other commands (especially `iflow message send --target ...`).
 - For many channels, results are config-backed (allowlists / configured groups) rather than a live provider directory.
 - Default output is `id` (and sometimes `name`) separated by a tab; use `--json` for scripting.
 
 ## Using results with `message send`
 
 ```bash
-newclaw directory peers list --channel slack --query "U0"
-newclaw message send --channel slack --target user:U012ABCDEF --message "hello"
+iflow directory peers list --channel slack --query "U0"
+iflow message send --channel slack --target user:U012ABCDEF --message "hello"
 ```
 
 ## ID formats (by channel)
@@ -43,21 +43,21 @@ newclaw message send --channel slack --target user:U012ABCDEF --message "hello"
 ## Self (“me”)
 
 ```bash
-newclaw directory self --channel zalouser
+iflow directory self --channel zalouser
 ```
 
 ## Peers (contacts/users)
 
 ```bash
-newclaw directory peers list --channel zalouser
-newclaw directory peers list --channel zalouser --query "name"
-newclaw directory peers list --channel zalouser --limit 50
+iflow directory peers list --channel zalouser
+iflow directory peers list --channel zalouser --query "name"
+iflow directory peers list --channel zalouser --limit 50
 ```
 
 ## Groups
 
 ```bash
-newclaw directory groups list --channel zalouser
-newclaw directory groups list --channel zalouser --query "work"
-newclaw directory groups members --channel zalouser --group-id <id>
+iflow directory groups list --channel zalouser
+iflow directory groups list --channel zalouser --query "work"
+iflow directory groups members --channel zalouser --group-id <id>
 ```

@@ -1,4 +1,4 @@
-import type { NewClawConfig } from "../config/config.js";
+import type { iFlowConfig } from "../config/config.js";
 import type { RuntimeEnv } from "../runtime.js";
 import { resolveGatewayPort } from "../config/config.js";
 import { findTailscaleBinary } from "../infra/tailscale.js";
@@ -10,10 +10,10 @@ import { guardCancel, normalizeGatewayTokenInput, randomToken } from "./onboard-
 type GatewayAuthChoice = "token" | "password";
 
 export async function promptGatewayConfig(
-  cfg: NewClawConfig,
+  cfg: iFlowConfig,
   runtime: RuntimeEnv,
 ): Promise<{
-  config: NewClawConfig;
+  config: iFlowConfig;
   port: number;
   token?: string;
 }> {
@@ -144,9 +144,7 @@ export async function promptGatewayConfig(
   let tailscaleResetOnExit = false;
   if (tailscaleMode !== "off") {
     note(
-      ["Docs:", "https://docs.newclaw.ai/gateway/tailscale", "https://docs.newclaw.ai/web"].join(
-        "\n",
-      ),
+      ["Docs:", "https://docs.iflow.ai/gateway/tailscale", "https://docs.iflow.ai/web"].join("\n"),
       "Tailscale",
     );
     tailscaleResetOnExit = Boolean(

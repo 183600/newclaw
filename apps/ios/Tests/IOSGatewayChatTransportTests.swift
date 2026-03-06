@@ -1,6 +1,6 @@
-import NewClawKit
+import iFlowKit
 import Testing
-@testable import NewClaw
+@testable import iFlow
 
 @Suite struct IOSGatewayChatTransportTests {
     @Test func requestsFailFastWhenGatewayNotConnected() async {

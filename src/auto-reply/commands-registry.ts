@@ -1,5 +1,5 @@
 import type { SkillCommandSpec } from "../agents/skills.js";
-import type { NewClawConfig } from "../config/types.js";
+import type { iFlowConfig } from "../config/types.js";
 import type {
   ChatCommandDefinition,
   CommandArgChoiceContext,
@@ -97,7 +97,7 @@ export function listChatCommands(params?: {
   return [...commands, ...buildSkillCommandDefinitions(params.skillCommands)];
 }
 
-export function isCommandEnabled(cfg: NewClawConfig, commandKey: string): boolean {
+export function isCommandEnabled(cfg: iFlowConfig, commandKey: string): boolean {
   if (commandKey === "config") {
     return cfg.commands?.config === true;
   }
@@ -111,7 +111,7 @@ export function isCommandEnabled(cfg: NewClawConfig, commandKey: string): boolea
 }
 
 export function listChatCommandsForConfig(
-  cfg: NewClawConfig,
+  cfg: iFlowConfig,
   params?: { skillCommands?: SkillCommandSpec[] },
 ): ChatCommandDefinition[] {
   const base = getChatCommands().filter((command) => isCommandEnabled(cfg, command.key));
@@ -155,7 +155,7 @@ export function listNativeCommandSpecs(params?: {
 }
 
 export function listNativeCommandSpecsForConfig(
-  cfg: NewClawConfig,
+  cfg: iFlowConfig,
   params?: { skillCommands?: SkillCommandSpec[]; provider?: string },
 ): NativeCommandSpec[] {
   return listChatCommandsForConfig(cfg, params)
@@ -280,12 +280,12 @@ export function buildCommandTextFromArgs(
   return buildCommandText(commandName, serializeCommandArgs(command, args));
 }
 
-function resolveDefaultCommandContext(cfg?: NewClawConfig): {
+function resolveDefaultCommandContext(cfg?: iFlowConfig): {
   provider: string;
   model: string;
 } {
   const resolved = resolveConfiguredModelRef({
-    cfg: cfg ?? ({} as NewClawConfig),
+    cfg: cfg ?? ({} as iFlowConfig),
     defaultProvider: DEFAULT_PROVIDER,
     defaultModel: DEFAULT_MODEL,
   });
@@ -300,7 +300,7 @@ export type ResolvedCommandArgChoice = { value: string; label: string };
 export function resolveCommandArgChoices(params: {
   command: ChatCommandDefinition;
   arg: CommandArgDefinition;
-  cfg?: NewClawConfig;
+  cfg?: iFlowConfig;
   provider?: string;
   model?: string;
 }): ResolvedCommandArgChoice[] {
@@ -330,7 +330,7 @@ export function resolveCommandArgChoices(params: {
 export function resolveCommandArgMenu(params: {
   command: ChatCommandDefinition;
   args?: CommandArgs;
-  cfg?: NewClawConfig;
+  cfg?: iFlowConfig;
 }): { arg: CommandArgDefinition; choices: ResolvedCommandArgChoice[]; title?: string } | null {
   const { command, args, cfg } = params;
   if (!command.args || !command.argsMenu) {
@@ -421,7 +421,7 @@ export function isCommandMessage(raw: string): boolean {
   return trimmed.startsWith("/");
 }
 
-export function getCommandDetection(_cfg?: NewClawConfig): CommandDetection {
+export function getCommandDetection(_cfg?: iFlowConfig): CommandDetection {
   const commands = getChatCommands();
   if (cachedDetection && cachedDetectionCommands === commands) {
     return cachedDetection;
@@ -454,7 +454,7 @@ export function getCommandDetection(_cfg?: NewClawConfig): CommandDetection {
   return cachedDetection;
 }
 
-export function maybeResolveTextAlias(raw: string, cfg?: NewClawConfig) {
+export function maybeResolveTextAlias(raw: string, cfg?: iFlowConfig) {
   const trimmed = normalizeCommandBody(raw).trim();
   if (!trimmed.startsWith("/")) {
     return null;
@@ -477,7 +477,7 @@ export function maybeResolveTextAlias(raw: string, cfg?: NewClawConfig) {
 
 export function resolveTextCommand(
   raw: string,
-  cfg?: NewClawConfig,
+  cfg?: iFlowConfig,
 ): {
   command: ChatCommandDefinition;
   args?: string;

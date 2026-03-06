@@ -27,10 +27,10 @@ async function withTempHome<T>(fn: (home: string) => Promise<T>): Promise<T> {
     },
     {
       env: {
-        NEWCLAW_AGENT_DIR: (home) => path.join(home, ".newclaw", "agent"),
-        PI_CODING_AGENT_DIR: (home) => path.join(home, ".newclaw", "agent"),
+        IFLOW_AGENT_DIR: (home) => path.join(home, ".iflow", "agent"),
+        PI_CODING_AGENT_DIR: (home) => path.join(home, ".iflow", "agent"),
       },
-      prefix: "newclaw-reply-",
+      prefix: "iflow-reply-",
     },
   );
 }
@@ -72,7 +72,7 @@ describe("directive behavior", () => {
           agents: {
             defaults: {
               model: { primary: "anthropic/claude-opus-4-5" },
-              workspace: path.join(home, "newclaw"),
+              workspace: path.join(home, "iflow"),
               models: {
                 "anthropic/claude-opus-4-5": {},
                 "moonshot/kimi-k2-0905-preview": {},
@@ -120,7 +120,7 @@ describe("directive behavior", () => {
           agents: {
             defaults: {
               model: { primary: "anthropic/claude-opus-4-5" },
-              workspace: path.join(home, "newclaw"),
+              workspace: path.join(home, "iflow"),
               models: {
                 "anthropic/claude-opus-4-5": {},
                 "moonshot/kimi-k2-0905-preview": {},
@@ -163,7 +163,7 @@ describe("directive behavior", () => {
           agents: {
             defaults: {
               model: { primary: "anthropic/claude-opus-4-5" },
-              workspace: path.join(home, "newclaw"),
+              workspace: path.join(home, "iflow"),
               models: {
                 "anthropic/claude-opus-4-5": {},
                 "moonshot/kimi-k2-0905-preview": {},
@@ -206,7 +206,7 @@ describe("directive behavior", () => {
           agents: {
             defaults: {
               model: { primary: "minimax/MiniMax-M2.1" },
-              workspace: path.join(home, "newclaw"),
+              workspace: path.join(home, "iflow"),
               models: {
                 "minimax/MiniMax-M2.1": {},
                 "minimax/MiniMax-M2.1-lightning": {},
@@ -251,7 +251,7 @@ describe("directive behavior", () => {
           agents: {
             defaults: {
               model: { primary: "minimax/MiniMax-M2.1" },
-              workspace: path.join(home, "newclaw"),
+              workspace: path.join(home, "iflow"),
               models: {
                 "minimax/MiniMax-M2.1": {},
                 "minimax/MiniMax-M2.1-lightning": {},

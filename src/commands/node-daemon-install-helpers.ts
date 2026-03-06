@@ -60,7 +60,7 @@ export async function buildNodeInstallPlan(params: {
 
   const environment = buildNodeServiceEnvironment({ env: params.env });
   const description = formatNodeServiceDescription({
-    version: environment.NEWCLAW_SERVICE_VERSION,
+    version: environment.IFLOW_SERVICE_VERSION,
   });
 
   return { programArguments, workingDirectory, environment, description };

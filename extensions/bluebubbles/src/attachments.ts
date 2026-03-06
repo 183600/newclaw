@@ -1,4 +1,4 @@
-import type { NewClawConfig } from "newclaw/plugin-sdk";
+import type { iFlowConfig } from "iflow/plugin-sdk";
 import crypto from "node:crypto";
 import path from "node:path";
 import { resolveBlueBubblesAccount } from "./accounts.js";
@@ -16,7 +16,7 @@ export type BlueBubblesAttachmentOpts = {
   password?: string;
   accountId?: string;
   timeoutMs?: number;
-  cfg?: NewClawConfig;
+  cfg?: iFlowConfig;
 };
 
 const DEFAULT_ATTACHMENT_MAX_BYTES = 8 * 1024 * 1024;

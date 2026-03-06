@@ -52,7 +52,7 @@ describe("getMachineDisplayName", () => {
     setMachineNameDeps(mockDeps);
 
     const result = await getMachineDisplayName();
-    expect(result).toBe("newclaw");
+    expect(result).toBe("iflow");
   });
 
   it("returns fallback hostname when hostname is only whitespace", async () => {
@@ -65,7 +65,7 @@ describe("getMachineDisplayName", () => {
     setMachineNameDeps(mockDeps);
 
     const result = await getMachineDisplayName();
-    expect(result).toBe("newclaw");
+    expect(result).toBe("iflow");
   });
 
   it("trims .local suffix from hostname", async () => {

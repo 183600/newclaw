@@ -44,8 +44,8 @@ export async function onboardCommand(opts: OnboardOptions, runtime: RuntimeEnv =
     runtime.error(
       [
         "Non-interactive onboarding requires explicit risk acknowledgement.",
-        "Read: https://docs.newclaw.ai/security",
-        `Re-run with: ${formatCliCommand("newclaw onboard --non-interactive --accept-risk ...")}`,
+        "Read: https://docs.iflow.ai/security",
+        `Re-run with: ${formatCliCommand("iflow onboard --non-interactive --accept-risk ...")}`,
       ].join("\n"),
     );
     runtime.exit(1);
@@ -63,10 +63,10 @@ export async function onboardCommand(opts: OnboardOptions, runtime: RuntimeEnv =
   if (process.platform === "win32") {
     runtime.log(
       [
-        "Windows detected — NewClaw runs great on WSL2!",
+        "Windows detected — iFlow runs great on WSL2!",
         "Native Windows might be trickier.",
         "Quick setup: wsl --install (one command, one reboot)",
-        "Guide: https://docs.newclaw.ai/windows",
+        "Guide: https://docs.iflow.ai/windows",
       ].join("\n"),
     );
   }

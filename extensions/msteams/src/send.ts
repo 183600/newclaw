@@ -1,5 +1,5 @@
-import type { NewClawConfig } from "newclaw/plugin-sdk";
-import { loadWebMedia, resolveChannelMediaMaxBytes } from "newclaw/plugin-sdk";
+import type { iFlowConfig } from "iflow/plugin-sdk";
+import { loadWebMedia, resolveChannelMediaMaxBytes } from "iflow/plugin-sdk";
 import { createMSTeamsConversationStoreFs } from "./conversation-store-fs.js";
 import {
   classifyMSTeamsSendError,
@@ -21,7 +21,7 @@ import { resolveMSTeamsSendContext, type MSTeamsProactiveContext } from "./send-
 
 export type SendMSTeamsMessageParams = {
   /** Full config (for credentials) */
-  cfg: NewClawConfig;
+  cfg: iFlowConfig;
   /** Conversation ID or user ID to send to */
   to: string;
   /** Message text */
@@ -48,7 +48,7 @@ const MSTEAMS_MAX_MEDIA_BYTES = 100 * 1024 * 1024;
 
 export type SendMSTeamsPollParams = {
   /** Full config (for credentials) */
-  cfg: NewClawConfig;
+  cfg: iFlowConfig;
   /** Conversation ID or user ID to send to */
   to: string;
   /** Poll question */
@@ -67,7 +67,7 @@ export type SendMSTeamsPollResult = {
 
 export type SendMSTeamsCardParams = {
   /** Full config (for credentials) */
-  cfg: NewClawConfig;
+  cfg: iFlowConfig;
   /** Conversation ID or user ID to send to */
   to: string;
   /** Adaptive Card JSON object */

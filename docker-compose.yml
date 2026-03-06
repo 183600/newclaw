@@ -1,19 +1,19 @@
 services:
-  newclaw-gateway:
-    image: ${NEWCLAW_IMAGE:-newclaw:local}
+  iflow-gateway:
+    image: ${IFLOW_IMAGE:-iflow:local}
     environment:
       HOME: /home/node
       TERM: xterm-256color
-      NEWCLAW_GATEWAY_TOKEN: ${NEWCLAW_GATEWAY_TOKEN}
+      IFLOW_GATEWAY_TOKEN: ${IFLOW_GATEWAY_TOKEN}
       CLAUDE_AI_SESSION_KEY: ${CLAUDE_AI_SESSION_KEY}
       CLAUDE_WEB_SESSION_KEY: ${CLAUDE_WEB_SESSION_KEY}
       CLAUDE_WEB_COOKIE: ${CLAUDE_WEB_COOKIE}
     volumes:
-      - ${NEWCLAW_CONFIG_DIR}:/home/node/.newclaw
-      - ${NEWCLAW_WORKSPACE_DIR}:/home/node/.newclaw/workspace
+      - ${IFLOW_CONFIG_DIR}:/home/node/.iflow
+      - ${IFLOW_WORKSPACE_DIR}:/home/node/.iflow/workspace
     ports:
-      - "${NEWCLAW_GATEWAY_PORT:-18789}:18789"
-      - "${NEWCLAW_BRIDGE_PORT:-18790}:18790"
+      - "${IFLOW_GATEWAY_PORT:-18789}:18789"
+      - "${IFLOW_BRIDGE_PORT:-18790}:18790"
     init: true
     restart: unless-stopped
     command:
@@ -22,24 +22,24 @@ services:
         "dist/index.js",
         "gateway",
         "--bind",
-        "${NEWCLAW_GATEWAY_BIND:-lan}",
+        "${IFLOW_GATEWAY_BIND:-lan}",
         "--port",
         "18789",
       ]
 
-  newclaw-cli:
-    image: ${NEWCLAW_IMAGE:-newclaw:local}
+  iflow-cli:
+    image: ${IFLOW_IMAGE:-iflow:local}
     environment:
       HOME: /home/node
       TERM: xterm-256color
-      NEWCLAW_GATEWAY_TOKEN: ${NEWCLAW_GATEWAY_TOKEN}
+      IFLOW_GATEWAY_TOKEN: ${IFLOW_GATEWAY_TOKEN}
       BROWSER: echo
       CLAUDE_AI_SESSION_KEY: ${CLAUDE_AI_SESSION_KEY}
       CLAUDE_WEB_SESSION_KEY: ${CLAUDE_WEB_SESSION_KEY}
       CLAUDE_WEB_COOKIE: ${CLAUDE_WEB_COOKIE}
     volumes:
-      - ${NEWCLAW_CONFIG_DIR}:/home/node/.newclaw
-      - ${NEWCLAW_WORKSPACE_DIR}:/home/node/.newclaw/workspace
+      - ${IFLOW_CONFIG_DIR}:/home/node/.iflow
+      - ${IFLOW_WORKSPACE_DIR}:/home/node/.iflow/workspace
     stdin_open: true
     tty: true
     init: true

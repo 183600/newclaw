@@ -1,6 +1,6 @@
 ---
 read_when:
-  - 你想将 NewClaw 连接到 LINE
+  - 你想将 iFlow 连接到 LINE
   - 你需要 LINE webhook + 凭据设置
   - 你需要 LINE 特定的消息选项
 summary: LINE Messaging API 插件设置、配置和使用
@@ -16,7 +16,7 @@ x-i18n:
 
 # LINE（插件）
 
-LINE 通过 LINE Messaging API 连接到 NewClaw。插件作为 Gateway网关上的 webhook 接收器运行，使用你的频道访问 token + 频道密钥进行认证。
+LINE 通过 LINE Messaging API 连接到 iFlow。插件作为 Gateway网关上的 webhook 接收器运行，使用你的频道访问 token + 频道密钥进行认证。
 
 状态：通过插件支持。支持私信、群聊、媒体、位置、Flex 消息、模板消息和快速回复。不支持回应和线程。
 
@@ -25,13 +25,13 @@ LINE 通过 LINE Messaging API 连接到 NewClaw。插件作为 Gateway网关上
 安装 LINE 插件：
 
 ```bash
-newclaw plugins install @newclaw/line
+iflow plugins install @iflow/line
 ```
 
 本地检出（从 git 仓库运行时）：
 
 ```bash
-newclaw plugins install ./extensions/line
+iflow plugins install ./extensions/line
 ```
 
 ## 设置
@@ -107,8 +107,8 @@ Token/密钥文件：
 私信默认需要配对。未知发送者会收到配对码，在批准之前其消息会被忽略。
 
 ```bash
-newclaw pairing list line
-newclaw pairing approve line <CODE>
+iflow pairing list line
+iflow pairing approve line <CODE>
 ```
 
 允许列表和策略：

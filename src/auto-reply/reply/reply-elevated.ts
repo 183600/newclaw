@@ -1,4 +1,4 @@
-import type { AgentElevatedAllowFromConfig, NewClawConfig } from "../../config/config.js";
+import type { AgentElevatedAllowFromConfig, iFlowConfig } from "../../config/config.js";
 import type { MsgContext } from "../templating.js";
 import { resolveAgentConfig } from "../../agents/agent-scope.js";
 import { getChannelDock } from "../../channels/dock.js";
@@ -132,7 +132,7 @@ function isApprovedElevatedSender(params: {
 }
 
 export function resolveElevatedPermissions(params: {
-  cfg: NewClawConfig;
+  cfg: iFlowConfig;
   agentId: string;
   ctx: MsgContext;
   provider: string;
@@ -225,9 +225,7 @@ export function formatElevatedUnavailableMessage(params: {
   lines.push("- agents.list[].tools.elevated.enabled");
   lines.push("- agents.list[].tools.elevated.allowFrom.<provider>");
   if (params.sessionKey) {
-    lines.push(
-      `See: ${formatCliCommand(`newclaw sandbox explain --session ${params.sessionKey}`)}`,
-    );
+    lines.push(`See: ${formatCliCommand(`iflow sandbox explain --session ${params.sessionKey}`)}`);
   }
   return lines.join("\n");
 }

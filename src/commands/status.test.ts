@@ -3,15 +3,15 @@ import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 let previousProfile: string | undefined;
 
 beforeAll(() => {
-  previousProfile = process.env.NEWCLAW_PROFILE;
-  process.env.NEWCLAW_PROFILE = "isolated";
+  previousProfile = process.env.IFLOW_PROFILE;
+  process.env.IFLOW_PROFILE = "isolated";
 });
 
 afterAll(() => {
   if (previousProfile === undefined) {
-    delete process.env.NEWCLAW_PROFILE;
+    delete process.env.IFLOW_PROFILE;
   } else {
-    process.env.NEWCLAW_PROFILE = previousProfile;
+    process.env.IFLOW_PROFILE = previousProfile;
   }
 });
 
@@ -94,7 +94,7 @@ vi.mock("../memory/manager.js", () => ({
         files: 2,
         chunks: 3,
         dirty: false,
-        workspaceDir: "/tmp/newclaw",
+        workspaceDir: "/tmp/iflow",
         dbPath: "/tmp/memory.sqlite",
         provider: "openai",
         model: "text-embedding-3-small",
@@ -209,8 +209,8 @@ vi.mock("../gateway/call.js", async (importOriginal) => {
 vi.mock("../gateway/session-utils.js", () => ({
   listAgentsForGateway: mocks.listAgentsForGateway,
 }));
-vi.mock("../infra/newclaw-root.js", () => ({
-  resolveNewClawPackageRoot: vi.fn().mockResolvedValue("/tmp/newclaw"),
+vi.mock("../infra/iflow-root.js", () => ({
+  resolveiFlowPackageRoot: vi.fn().mockResolvedValue("/tmp/iflow"),
 }));
 vi.mock("../infra/os-summary.js", () => ({
   resolveOsSummary: () => ({
@@ -222,11 +222,11 @@ vi.mock("../infra/os-summary.js", () => ({
 }));
 vi.mock("../infra/update-check.js", () => ({
   checkUpdateStatus: vi.fn().mockResolvedValue({
-    root: "/tmp/newclaw",
+    root: "/tmp/iflow",
     installKind: "git",
     packageManager: "pnpm",
     git: {
-      root: "/tmp/newclaw",
+      root: "/tmp/iflow",
       branch: "main",
       upstream: "origin/main",
       dirty: false,
@@ -237,8 +237,8 @@ vi.mock("../infra/update-check.js", () => ({
     deps: {
       manager: "pnpm",
       status: "ok",
-      lockfilePath: "/tmp/newclaw/pnpm-lock.yaml",
-      markerPath: "/tmp/newclaw/node_modules/.modules.yaml",
+      lockfilePath: "/tmp/iflow/pnpm-lock.yaml",
+      markerPath: "/tmp/iflow/node_modules/.modules.yaml",
     },
     registry: { latestVersion: "0.0.0" },
   }),
@@ -315,7 +315,7 @@ describe("statusCommand", () => {
     (runtime.log as vi.Mock).mockClear();
     await statusCommand({}, runtime as never);
     const logs = (runtime.log as vi.Mock).mock.calls.map((c) => String(c[0]));
-    expect(logs.some((l) => l.includes("NewClaw status"))).toBe(true);
+    expect(logs.some((l) => l.includes("iFlow status"))).toBe(true);
     expect(logs.some((l) => l.includes("Overview"))).toBe(true);
     expect(logs.some((l) => l.includes("Security audit"))).toBe(true);
     expect(logs.some((l) => l.includes("Summary:"))).toBe(true);
@@ -335,17 +335,17 @@ describe("statusCommand", () => {
     expect(
       logs.some(
         (l) =>
-          l.includes("newclaw status --all") ||
-          l.includes("newclaw --profile isolated status --all") ||
-          l.includes("newclaw status --all") ||
-          l.includes("newclaw --profile isolated status --all"),
+          l.includes("iflow status --all") ||
+          l.includes("iflow --profile isolated status --all") ||
+          l.includes("iflow status --all") ||
+          l.includes("iflow --profile isolated status --all"),
       ),
     ).toBe(true);
   });
 
   it("shows gateway auth when reachable", async () => {
-    const prevToken = process.env.NEWCLAW_GATEWAY_TOKEN;
-    process.env.NEWCLAW_GATEWAY_TOKEN = "abcd1234";
+    const prevToken = process.env.IFLOW_GATEWAY_TOKEN;
+    process.env.IFLOW_GATEWAY_TOKEN = "abcd1234";
     try {
       mocks.probeGateway.mockResolvedValueOnce({
         ok: true,
@@ -364,9 +364,9 @@ describe("statusCommand", () => {
       expect(logs.some((l) => l.includes("auth token"))).toBe(true);
     } finally {
       if (prevToken === undefined) {
-        delete process.env.NEWCLAW_GATEWAY_TOKEN;
+        delete process.env.IFLOW_GATEWAY_TOKEN;
       } else {
-        process.env.NEWCLAW_GATEWAY_TOKEN = prevToken;
+        process.env.IFLOW_GATEWAY_TOKEN = prevToken;
       }
     }
   });

@@ -9,7 +9,7 @@
  * - Abort signal handling
  */
 
-import type { NewClawConfig } from "newclaw/plugin-sdk";
+import type { iFlowConfig } from "iflow/plugin-sdk";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { twitchOutbound } from "./outbound.js";
 
@@ -49,7 +49,7 @@ describe("outbound", () => {
         },
       },
     },
-  } as unknown as NewClawConfig;
+  } as unknown as iFlowConfig;
 
   beforeEach(() => {
     vi.clearAllMocks();

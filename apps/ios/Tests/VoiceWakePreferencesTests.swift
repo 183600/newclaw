@@ -1,10 +1,10 @@
 import Foundation
 import Testing
-@testable import NewClaw
+@testable import iFlow
 
 @Suite struct VoiceWakePreferencesTests {
     @Test func sanitizeTriggerWordsTrimsAndDropsEmpty() {
-        #expect(VoiceWakePreferences.sanitizeTriggerWords([" newclaw ", "", " \nclaude\t"]) == ["newclaw", "claude"])
+        #expect(VoiceWakePreferences.sanitizeTriggerWords([" iflow ", "", " \nclaude\t"]) == ["iflow", "claude"])
     }
 
     @Test func sanitizeTriggerWordsFallsBackToDefaultsWhenEmpty() {
@@ -24,7 +24,7 @@ import Testing
     }
 
     @Test func displayStringUsesSanitizedWords() {
-        #expect(VoiceWakePreferences.displayString(for: ["", " "]) == "newclaw, claude")
+        #expect(VoiceWakePreferences.displayString(for: ["", " "]) == "iflow, claude")
     }
 
     @Test func loadAndSaveTriggerWordsRoundTrip() {

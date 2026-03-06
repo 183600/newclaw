@@ -121,7 +121,7 @@ export async function installSignalCli(runtime: RuntimeEnv): Promise<SignalInsta
   const apiUrl = "https://api.github.com/repos/AsamK/signal-cli/releases/latest";
   const response = await fetch(apiUrl, {
     headers: {
-      "User-Agent": "newclaw",
+      "User-Agent": "iflow",
       Accept: "application/vnd.github+json",
     },
   });
@@ -147,7 +147,7 @@ export async function installSignalCli(runtime: RuntimeEnv): Promise<SignalInsta
     };
   }
 
-  const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "newclaw-signal-"));
+  const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-signal-"));
   const archivePath = path.join(tmpDir, assetName);
 
   runtime.log(`Downloading signal-cli ${version} (${assetName})…`);

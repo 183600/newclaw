@@ -1,12 +1,12 @@
 {
-  "name": "@newclaw/whatsapp",
+  "name": "@iflow/whatsapp",
   "version": "2026.2.2",
-  "description": "NewClaw WhatsApp channel plugin",
+  "description": "iFlow WhatsApp channel plugin",
   "type": "module",
   "devDependencies": {
-    "newclaw": "workspace:*"
+    "iflow": "workspace:*"
   },
-  "newclaw": {
+  "iflow": {
     "extensions": [
       "./index.ts"
     ]

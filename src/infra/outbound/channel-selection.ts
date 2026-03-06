@@ -1,5 +1,5 @@
 import type { ChannelPlugin } from "../../channels/plugins/types.js";
-import type { NewClawConfig } from "../../config/config.js";
+import type { iFlowConfig } from "../../config/config.js";
 import { listChannelPlugins } from "../../channels/plugins/index.js";
 import {
   listDeliverableMessageChannels,
@@ -23,7 +23,7 @@ function isAccountEnabled(account: unknown): boolean {
   return enabled !== false;
 }
 
-async function isPluginConfigured(plugin: ChannelPlugin, cfg: NewClawConfig): Promise<boolean> {
+async function isPluginConfigured(plugin: ChannelPlugin, cfg: iFlowConfig): Promise<boolean> {
   const accountIds = plugin.config.listAccountIds(cfg);
   if (accountIds.length === 0) {
     return false;
@@ -49,9 +49,7 @@ async function isPluginConfigured(plugin: ChannelPlugin, cfg: NewClawConfig): Pr
   return false;
 }
 
-export async function listConfiguredMessageChannels(
-  cfg: NewClawConfig,
-): Promise<MessageChannelId[]> {
+export async function listConfiguredMessageChannels(cfg: iFlowConfig): Promise<MessageChannelId[]> {
   const channels: MessageChannelId[] = [];
   for (const plugin of listChannelPlugins()) {
     if (!isKnownChannel(plugin.id)) {
@@ -65,7 +63,7 @@ export async function listConfiguredMessageChannels(
 }
 
 export async function resolveMessageChannelSelection(params: {
-  cfg: NewClawConfig;
+  cfg: iFlowConfig;
   channel?: string | null;
 }): Promise<{ channel: MessageChannelId; configured: MessageChannelId[] }> {
   const normalized = normalizeMessageChannel(params.channel);

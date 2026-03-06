@@ -1,8 +1,8 @@
-import NewClawKit
+import iFlowKit
 import SwiftUI
 import Testing
 import UIKit
-@testable import NewClaw
+@testable import iFlow
 
 @Suite struct SwiftUIRenderSmokeTests {
     @MainActor private static func host(_ view: some View) -> UIWindow {
@@ -75,7 +75,7 @@ import UIKit
     }
 
     @Test @MainActor func voiceWakeToastBuildsAViewHierarchy() {
-        let root = VoiceWakeToast(command: "newclaw: do something")
+        let root = VoiceWakeToast(command: "iflow: do something")
         _ = Self.host(root)
     }
 }

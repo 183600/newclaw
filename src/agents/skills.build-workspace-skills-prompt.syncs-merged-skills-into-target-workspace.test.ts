@@ -28,8 +28,8 @@ ${body ?? `# ${name}\n`}
 
 describe("buildWorkspaceSkillsPrompt", () => {
   it("syncs merged skills into a target workspace", async () => {
-    const sourceWorkspace = await fs.mkdtemp(path.join(os.tmpdir(), "newclaw-"));
-    const targetWorkspace = await fs.mkdtemp(path.join(os.tmpdir(), "newclaw-"));
+    const sourceWorkspace = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-"));
+    const targetWorkspace = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-"));
     const extraDir = path.join(sourceWorkspace, ".extra");
     const bundledDir = path.join(sourceWorkspace, ".bundled");
     const managedDir = path.join(sourceWorkspace, ".managed");
@@ -75,7 +75,7 @@ describe("buildWorkspaceSkillsPrompt", () => {
     expect(prompt).toContain(path.join(targetWorkspace, "skills", "demo-skill", "SKILL.md"));
   });
   it("filters skills based on env/config gates", async () => {
-    const workspaceDir = await fs.mkdtemp(path.join(os.tmpdir(), "newclaw-"));
+    const workspaceDir = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-"));
     const skillDir = path.join(workspaceDir, "skills", "nano-banana-pro");
     const originalEnv = process.env.GEMINI_API_KEY;
     delete process.env.GEMINI_API_KEY;
@@ -85,8 +85,7 @@ describe("buildWorkspaceSkillsPrompt", () => {
         dir: skillDir,
         name: "nano-banana-pro",
         description: "Generates images",
-        metadata:
-          '{"newclaw":{"requires":{"env":["GEMINI_API_KEY"]},"primaryEnv":"GEMINI_API_KEY"}}',
+        metadata: '{"iflow":{"requires":{"env":["GEMINI_API_KEY"]},"primaryEnv":"GEMINI_API_KEY"}}',
         body: "# Nano Banana\n",
       });
 
@@ -112,7 +111,7 @@ describe("buildWorkspaceSkillsPrompt", () => {
     }
   });
   it("applies skill filters, including empty lists", async () => {
-    const workspaceDir = await fs.mkdtemp(path.join(os.tmpdir(), "newclaw-"));
+    const workspaceDir = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-"));
     await writeSkill({
       dir: path.join(workspaceDir, "skills", "alpha"),
       name: "alpha",

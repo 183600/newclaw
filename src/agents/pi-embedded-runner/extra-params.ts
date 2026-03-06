@@ -1,12 +1,12 @@
 import type { StreamFn } from "@mariozechner/pi-agent-core";
 import type { SimpleStreamOptions } from "@mariozechner/pi-ai";
 import { streamSimple } from "@mariozechner/pi-ai";
-import type { NewClawConfig } from "../../config/config.js";
+import type { iFlowConfig } from "../../config/config.js";
 import { log } from "./logger.js";
 
 const OPENROUTER_APP_HEADERS: Record<string, string> = {
-  "HTTP-Referer": "https://newclaw.ai",
-  "X-Title": "NewClaw",
+  "HTTP-Referer": "https://iflow.ai",
+  "X-Title": "iFlow",
 };
 
 /**
@@ -16,7 +16,7 @@ const OPENROUTER_APP_HEADERS: Record<string, string> = {
  * @internal Exported for testing only
  */
 export function resolveExtraParams(params: {
-  cfg: NewClawConfig | undefined;
+  cfg: iFlowConfig | undefined;
   provider: string;
   modelId: string;
 }): Record<string, unknown> | undefined {
@@ -103,7 +103,7 @@ function createStreamFnWithExtraParams(
 
 /**
  * Create a streamFn wrapper that adds OpenRouter app attribution headers.
- * These headers allow NewClaw to appear on OpenRouter's leaderboard.
+ * These headers allow iFlow to appear on OpenRouter's leaderboard.
  */
 function createOpenRouterHeadersWrapper(baseStreamFn: StreamFn | undefined): StreamFn {
   const underlying = baseStreamFn ?? streamSimple;
@@ -125,7 +125,7 @@ function createOpenRouterHeadersWrapper(baseStreamFn: StreamFn | undefined): Str
  */
 export function applyExtraParamsToAgent(
   agent: { streamFn?: StreamFn },
-  cfg: NewClawConfig | undefined,
+  cfg: iFlowConfig | undefined,
   provider: string,
   modelId: string,
   extraParamsOverride?: Record<string, unknown>,

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { NewClawConfig } from "../config/config.js";
+import type { iFlowConfig } from "../config/config.js";
 import type { AgentBinding } from "../config/types.agents.js";
 import {
   buildChannelAccountBindings,
@@ -10,10 +10,10 @@ import {
 } from "./bindings.js";
 
 describe("routing/bindings", () => {
-  const mockConfig = (bindings: AgentBinding[] = []): NewClawConfig =>
+  const mockConfig = (bindings: AgentBinding[] = []): iFlowConfig =>
     ({
       bindings,
-    }) as NewClawConfig;
+    }) as iFlowConfig;
 
   describe("listBindings", () => {
     it("returns empty array when no bindings", () => {

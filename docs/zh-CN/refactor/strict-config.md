@@ -35,13 +35,13 @@ x-i18n:
 - `plugins.entries.<id>.config` 必须由插件的 schema 进行验证。
   - 如果插件缺少 schema，**拒绝插件加载**并显示明确的错误信息。
 - 未知的 `channels.<id>` 键是错误，除非插件清单声明了该渠道 id。
-- 所有插件都必须提供插件清单（`newclaw.plugin.json`）。
+- 所有插件都必须提供插件清单（`iflow.plugin.json`）。
 
 ## 插件 schema 强制执行
 
 - 每个插件为其配置提供严格的 JSON Schema（内联在清单中）。
 - 插件加载流程：
-  1. 解析插件清单 + schema（`newclaw.plugin.json`）。
+  1. 解析插件清单 + schema（`iflow.plugin.json`）。
   2. 根据 schema 验证配置。
   3. 如果缺少 schema 或配置无效：阻止插件加载，记录错误。
 - 错误信息包括：
@@ -55,8 +55,8 @@ x-i18n:
 - 每次加载配置时都会运行 Doctor（默认 dry-run 模式）。
 - 如果配置无效：
   - 打印摘要 + 可操作的错误信息。
-  - 提示：`newclaw doctor --fix`。
-- `newclaw doctor --fix`：
+  - 提示：`iflow doctor --fix`。
+- `iflow doctor --fix`：
   - 应用迁移。
   - 移除未知键。
   - 写入更新后的配置。
@@ -65,14 +65,14 @@ x-i18n:
 
 允许执行（仅限诊断命令）：
 
-- `newclaw doctor`
-- `newclaw logs`
-- `newclaw health`
-- `newclaw help`
-- `newclaw status`
-- `newclaw gateway status`
+- `iflow doctor`
+- `iflow logs`
+- `iflow health`
+- `iflow help`
+- `iflow status`
+- `iflow gateway status`
 
-其他所有命令必须直接失败并提示："Config invalid. Run `newclaw doctor --fix`."
+其他所有命令必须直接失败并提示："Config invalid. Run `iflow doctor --fix`."
 
 ## 错误用户体验格式
 

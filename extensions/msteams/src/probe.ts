@@ -1,4 +1,4 @@
-import type { MSTeamsConfig } from "newclaw/plugin-sdk";
+import type { MSTeamsConfig } from "iflow/plugin-sdk";
 import { formatUnknownError } from "./errors.js";
 import { loadMSTeamsSdkWithAuth } from "./sdk.js";
 import { resolveMSTeamsCredentials } from "./token.js";

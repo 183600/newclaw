@@ -39,7 +39,7 @@ const logCommand: HookHandler = async (event) => {
 
   try {
     // Create log directory
-    const stateDir = process.env.NEWCLAW_STATE_DIR?.trim() || path.join(os.homedir(), ".newclaw");
+    const stateDir = process.env.IFLOW_STATE_DIR?.trim() || path.join(os.homedir(), ".iflow");
     const logDir = path.join(stateDir, "logs");
     await fs.mkdir(logDir, { recursive: true });
 

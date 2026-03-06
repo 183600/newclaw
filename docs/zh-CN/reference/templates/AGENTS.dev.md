@@ -12,7 +12,7 @@ x-i18n:
   workflow: 15
 ---
 
-# AGENTS.md - NewClaw 工作区
+# AGENTS.md - iFlow 工作区
 
 此文件夹是助手的工作目录。
 

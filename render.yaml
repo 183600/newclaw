@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: newclaw
+    name: iflow
     runtime: docker
     plan: starter
     healthCheckPath: /health
@@ -9,13 +9,13 @@ services:
         value: "8080"
       - key: SETUP_PASSWORD
         sync: false
-      - key: NEWCLAW_STATE_DIR
-        value: /data/.newclaw
-      - key: NEWCLAW_WORKSPACE_DIR
+      - key: IFLOW_STATE_DIR
+        value: /data/.iflow
+      - key: IFLOW_WORKSPACE_DIR
         value: /data/workspace
-      - key: NEWCLAW_GATEWAY_TOKEN
+      - key: IFLOW_GATEWAY_TOKEN
         generateValue: true
     disk:
-      name: newclaw-data
+      name: iflow-data
       mountPath: /data
       sizeGB: 1

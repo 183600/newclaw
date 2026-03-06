@@ -1,5 +1,5 @@
 import type { ChannelDirectoryEntryKind, ChannelId } from "../../channels/plugins/types.js";
-import type { NewClawConfig } from "../../config/config.js";
+import type { iFlowConfig } from "../../config/config.js";
 
 type CacheEntry<T> = {
   value: T;
@@ -21,11 +21,11 @@ export function buildDirectoryCacheKey(key: DirectoryCacheKey): string {
 
 export class DirectoryCache<T> {
   private readonly cache = new Map<string, CacheEntry<T>>();
-  private lastConfigRef: NewClawConfig | null = null;
+  private lastConfigRef: iFlowConfig | null = null;
 
   constructor(private readonly ttlMs: number) {}
 
-  get(key: string, cfg: NewClawConfig): T | undefined {
+  get(key: string, cfg: iFlowConfig): T | undefined {
     this.resetIfConfigChanged(cfg);
     const entry = this.cache.get(key);
     if (!entry) {
@@ -38,7 +38,7 @@ export class DirectoryCache<T> {
     return entry.value;
   }
 
-  set(key: string, value: T, cfg: NewClawConfig): void {
+  set(key: string, value: T, cfg: iFlowConfig): void {
     this.resetIfConfigChanged(cfg);
     this.cache.set(key, { value, fetchedAt: Date.now() });
   }
@@ -51,14 +51,14 @@ export class DirectoryCache<T> {
     }
   }
 
-  clear(cfg?: NewClawConfig): void {
+  clear(cfg?: iFlowConfig): void {
     this.cache.clear();
     if (cfg) {
       this.lastConfigRef = cfg;
     }
   }
 
-  private resetIfConfigChanged(cfg: NewClawConfig): void {
+  private resetIfConfigChanged(cfg: iFlowConfig): void {
     if (this.lastConfigRef && this.lastConfigRef !== cfg) {
       this.cache.clear();
     }

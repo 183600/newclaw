@@ -32,6 +32,6 @@ describe("nodes screen helpers", () => {
       tmpDir: "/tmp",
       id: "id1",
     });
-    expect(p).toBe(path.join("/tmp", "newclaw-screen-record-id1.mp4"));
+    expect(p).toBe(path.join("/tmp", "iflow-screen-record-id1.mp4"));
   });
 });

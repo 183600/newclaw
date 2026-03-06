@@ -1,4 +1,4 @@
-const THEME_STORAGE_KEY = "newclaw:theme";
+const THEME_STORAGE_KEY = "iflow:theme";
 
 function safeGet(key) {
   try {

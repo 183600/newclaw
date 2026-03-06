@@ -30,7 +30,7 @@ ${body ?? `# ${name}\n`}
 
 describe("buildWorkspaceSkillSnapshot", () => {
   it("returns an empty snapshot when skills dirs are missing", async () => {
-    const workspaceDir = await fs.mkdtemp(path.join(os.tmpdir(), "newclaw-"));
+    const workspaceDir = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-"));
 
     const snapshot = buildWorkspaceSkillSnapshot(workspaceDir, {
       managedSkillsDir: path.join(workspaceDir, ".managed"),
@@ -43,7 +43,7 @@ describe("buildWorkspaceSkillSnapshot", () => {
   });
 
   it("omits disable-model-invocation skills from the prompt", async () => {
-    const workspaceDir = await fs.mkdtemp(path.join(os.tmpdir(), "newclaw-"));
+    const workspaceDir = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-"));
     await _writeSkill({
       dir: path.join(workspaceDir, "skills", "visible-skill"),
       name: "visible-skill",

@@ -1,5 +1,5 @@
 import type { OAuthCredentials } from "@mariozechner/pi-ai";
-import type { NewClawConfig } from "../../config/config.js";
+import type { iFlowConfig } from "../../config/config.js";
 
 export type ApiKeyCredential = {
   type: "api_key";
@@ -11,7 +11,7 @@ export type ApiKeyCredential = {
 export type TokenCredential = {
   /**
    * Static bearer-style token (often OAuth access token / PAT).
-   * Not refreshable by NewClaw (unlike `type: "oauth"`).
+   * Not refreshable by iFlow (unlike `type: "oauth"`).
    */
   type: "token";
   provider: string;
@@ -64,7 +64,7 @@ export type AuthProfileStore = {
 };
 
 export type AuthProfileIdRepairResult = {
-  config: NewClawConfig;
+  config: iFlowConfig;
   changes: string[];
   migrated: boolean;
   fromProfileId?: string;

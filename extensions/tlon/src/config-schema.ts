@@ -1,4 +1,4 @@
-import { buildChannelConfigSchema } from "newclaw/plugin-sdk";
+import { buildChannelConfigSchema } from "iflow/plugin-sdk";
 import { z } from "zod";
 
 const ShipSchema = z.string().min(1);

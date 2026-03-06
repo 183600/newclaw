@@ -1,8 +1,8 @@
 import type { AnyAgentTool } from "../agents/tools/common.js";
-import type { NewClawPluginToolContext } from "./types.js";
+import type { iFlowPluginToolContext } from "./types.js";
 import { normalizeToolName } from "../agents/tool-policy.js";
 import { createSubsystemLogger } from "../logging/subsystem.js";
-import { loadNewClawPlugins } from "./loader.js";
+import { loadiFlowPlugins } from "./loader.js";
 
 const log = createSubsystemLogger("plugins");
 
@@ -41,11 +41,11 @@ function isOptionalToolAllowed(params: {
 }
 
 export function resolvePluginTools(params: {
-  context: NewClawPluginToolContext;
+  context: iFlowPluginToolContext;
   existingToolNames?: Set<string>;
   toolAllowlist?: string[];
 }): AnyAgentTool[] {
-  const registry = loadNewClawPlugins({
+  const registry = loadiFlowPlugins({
     config: params.context.config,
     workspaceDir: params.context.workspaceDir,
     logger: {

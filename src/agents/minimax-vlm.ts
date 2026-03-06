@@ -71,7 +71,7 @@ export async function minimaxUnderstandImage(params: {
     headers: {
       Authorization: `Bearer ${apiKey}`,
       "Content-Type": "application/json",
-      "MM-API-Source": "NewClaw",
+      "MM-API-Source": "iFlow",
     },
     body: JSON.stringify({
       prompt,

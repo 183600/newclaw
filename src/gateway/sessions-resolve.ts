@@ -1,4 +1,4 @@
-import type { NewClawConfig } from "../config/config.js";
+import type { iFlowConfig } from "../config/config.js";
 import { loadSessionStore } from "../config/sessions.js";
 import { parseSessionLabel } from "../sessions/session-label.js";
 import {
@@ -16,7 +16,7 @@ import {
 export type SessionsResolveResult = { ok: true; key: string } | { ok: false; error: ErrorShape };
 
 export function resolveSessionKeyFromResolveParams(params: {
-  cfg: NewClawConfig;
+  cfg: iFlowConfig;
   p: SessionsResolveParams;
 }): SessionsResolveResult {
   const { cfg, p } = params;

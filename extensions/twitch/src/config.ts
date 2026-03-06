@@ -1,4 +1,4 @@
-import type { NewClawConfig } from "newclaw/plugin-sdk";
+import type { iFlowConfig } from "iflow/plugin-sdk";
 import type { TwitchAccountConfig } from "./types.js";
 
 /**
@@ -24,7 +24,7 @@ export function getAccountConfig(
     return null;
   }
 
-  const cfg = coreConfig as NewClawConfig;
+  const cfg = coreConfig as iFlowConfig;
   const twitch = cfg.channels?.twitch;
   // Access accounts via unknown to handle union type (single-account vs multi-account)
   const twitchRaw = twitch as Record<string, unknown> | undefined;
@@ -88,7 +88,7 @@ export function getAccountConfig(
  *
  * Includes both explicit accounts and implicit "default" from base-level config
  */
-export function listAccountIds(cfg: NewClawConfig): string[] {
+export function listAccountIds(cfg: iFlowConfig): string[] {
   const twitch = cfg.channels?.twitch;
   // Access accounts via unknown to handle union type (single-account vs multi-account)
   const twitchRaw = twitch as Record<string, unknown> | undefined;

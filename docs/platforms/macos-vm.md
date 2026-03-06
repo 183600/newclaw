@@ -1,14 +1,14 @@
 ---
-summary: "Run NewClaw in a sandboxed macOS VM (local or hosted) when you need isolation or iMessage"
+summary: "Run iFlow in a sandboxed macOS VM (local or hosted) when you need isolation or iMessage"
 read_when:
-  - You want NewClaw isolated from your main macOS environment
+  - You want iFlow isolated from your main macOS environment
   - You want iMessage integration (BlueBubbles) in a sandbox
   - You want a resettable macOS environment you can clone
   - You want to compare local vs hosted macOS VM options
 title: "macOS VMs"
 ---
 
-# NewClaw on macOS VMs (Sandboxing)
+# iFlow on macOS VMs (Sandboxing)
 
 ## Recommended default (most users)
 
@@ -22,7 +22,7 @@ Use a macOS VM when you specifically need macOS-only capabilities (iMessage/Blue
 
 ### Local VM on your Apple Silicon Mac (Lume)
 
-Run NewClaw in a sandboxed macOS VM on your existing Apple Silicon Mac using [Lume](https://cua.ai/docs/lume).
+Run iFlow in a sandboxed macOS VM on your existing Apple Silicon Mac using [Lume](https://cua.ai/docs/lume).
 
 This gives you:
 
@@ -45,10 +45,10 @@ Once you have SSH access to a macOS VM, continue at step 6 below.
 ## Quick path (Lume, experienced users)
 
 1. Install Lume
-2. `lume create newclaw --os macos --ipsw latest`
+2. `lume create iflow --os macos --ipsw latest`
 3. Complete Setup Assistant, enable Remote Login (SSH)
-4. `lume run newclaw --no-display`
-5. SSH in, install NewClaw, configure channels
+4. `lume run iflow --no-display`
+5. SSH in, install iFlow, configure channels
 6. Done
 
 ---
@@ -87,7 +87,7 @@ Docs: [Lume Installation](https://cua.ai/docs/lume/guide/getting-started/install
 ## 2) Create the macOS VM
 
 ```bash
-lume create newclaw --os macos --ipsw latest
+lume create iflow --os macos --ipsw latest
 ```
 
 This downloads macOS and creates the VM. A VNC window opens automatically.
@@ -115,7 +115,7 @@ After setup completes, enable SSH:
 ## 4) Get the VM's IP address
 
 ```bash
-lume get newclaw
+lume get iflow
 ```
 
 Look for the IP address (usually `192.168.64.x`).
@@ -132,13 +132,13 @@ Replace `youruser` with the account you created, and the IP with your VM's IP.
 
 ---
 
-## 6) Install NewClaw
+## 6) Install iFlow
 
 Inside the VM:
 
 ```bash
-npm install -g newclaw@latest
-newclaw onboard --install-daemon
+npm install -g iflow@latest
+iflow onboard --install-daemon
 ```
 
 Follow the onboarding prompts to set up your model provider (Anthropic, OpenAI, etc.).
@@ -150,7 +150,7 @@ Follow the onboarding prompts to set up your model provider (Anthropic, OpenAI, 
 Edit the config file:
 
 ```bash
-nano ~/.newclaw/newclaw.json
+nano ~/.iflow/iflow.json
 ```
 
 Add your channels:
@@ -172,7 +172,7 @@ Add your channels:
 Then login to WhatsApp (scan QR):
 
 ```bash
-newclaw channels login
+iflow channels login
 ```
 
 ---
@@ -182,23 +182,23 @@ newclaw channels login
 Stop the VM and restart without display:
 
 ```bash
-lume stop newclaw
-lume run newclaw --no-display
+lume stop iflow
+lume run iflow --no-display
 ```
 
-The VM runs in the background. NewClaw's daemon keeps the gateway running.
+The VM runs in the background. iFlow's daemon keeps the gateway running.
 
 To check status:
 
 ```bash
-ssh youruser@192.168.64.X "newclaw status"
+ssh youruser@192.168.64.X "iflow status"
 ```
 
 ---
 
 ## Bonus: iMessage integration
 
-This is the killer feature of running on macOS. Use [BlueBubbles](https://bluebubbles.app) to add iMessage to NewClaw.
+This is the killer feature of running on macOS. Use [BlueBubbles](https://bluebubbles.app) to add iMessage to iFlow.
 
 Inside the VM:
 
@@ -207,7 +207,7 @@ Inside the VM:
 3. Enable the Web API and set a password
 4. Point BlueBubbles webhooks at your gateway (example: `https://your-gateway-host:3000/bluebubbles-webhook?password=<password>`)
 
-Add to your NewClaw config:
+Add to your iFlow config:
 
 ```json
 {
@@ -232,16 +232,16 @@ Full setup details: [BlueBubbles channel](/channels/bluebubbles)
 Before customizing further, snapshot your clean state:
 
 ```bash
-lume stop newclaw
-lume clone newclaw newclaw-golden
+lume stop iflow
+lume clone iflow iflow-golden
 ```
 
 Reset anytime:
 
 ```bash
-lume stop newclaw && lume delete newclaw
-lume clone newclaw-golden newclaw
-lume run newclaw --no-display
+lume stop iflow && lume delete iflow
+lume clone iflow-golden iflow
+lume run iflow --no-display
 ```
 
 ---
@@ -260,12 +260,12 @@ For true always-on, consider a dedicated Mac mini or a small VPS. See [VPS hosti
 
 ## Troubleshooting
 
-| Problem                  | Solution                                                                          |
-| ------------------------ | --------------------------------------------------------------------------------- |
-| Can't SSH into VM        | Check "Remote Login" is enabled in VM's System Settings                           |
-| VM IP not showing        | Wait for VM to fully boot, run `lume get newclaw` again                           |
-| Lume command not found   | Add `~/.local/bin` to your PATH                                                   |
-| WhatsApp QR not scanning | Ensure you're logged into the VM (not host) when running `newclaw channels login` |
+| Problem                  | Solution                                                                        |
+| ------------------------ | ------------------------------------------------------------------------------- |
+| Can't SSH into VM        | Check "Remote Login" is enabled in VM's System Settings                         |
+| VM IP not showing        | Wait for VM to fully boot, run `lume get iflow` again                           |
+| Lume command not found   | Add `~/.local/bin` to your PATH                                                 |
+| WhatsApp QR not scanning | Ensure you're logged into the VM (not host) when running `iflow channels login` |
 
 ---
 

@@ -223,25 +223,25 @@ describe("buildServiceEnvironment", () => {
     } else {
       expect(env.PATH).toContain("/usr/bin");
     }
-    expect(env.NEWCLAW_GATEWAY_PORT).toBe("18789");
-    expect(env.NEWCLAW_GATEWAY_TOKEN).toBe("secret");
-    expect(env.NEWCLAW_SERVICE_MARKER).toBe("newclaw");
-    expect(env.NEWCLAW_SERVICE_KIND).toBe("gateway");
-    expect(typeof env.NEWCLAW_SERVICE_VERSION).toBe("string");
-    expect(env.NEWCLAW_SYSTEMD_UNIT).toBe("newclaw-gateway.service");
+    expect(env.IFLOW_GATEWAY_PORT).toBe("18789");
+    expect(env.IFLOW_GATEWAY_TOKEN).toBe("secret");
+    expect(env.IFLOW_SERVICE_MARKER).toBe("iflow");
+    expect(env.IFLOW_SERVICE_KIND).toBe("gateway");
+    expect(typeof env.IFLOW_SERVICE_VERSION).toBe("string");
+    expect(env.IFLOW_SYSTEMD_UNIT).toBe("iflow-gateway.service");
     if (process.platform === "darwin") {
-      expect(env.NEWCLAW_LAUNCHD_LABEL).toBe("ai.newclaw.gateway");
+      expect(env.IFLOW_LAUNCHD_LABEL).toBe("ai.iflow.gateway");
     }
   });
 
   it("uses profile-specific unit and label", () => {
     const env = buildServiceEnvironment({
-      env: { HOME: "/home/user", NEWCLAW_PROFILE: "work" },
+      env: { HOME: "/home/user", IFLOW_PROFILE: "work" },
       port: 18789,
     });
-    expect(env.NEWCLAW_SYSTEMD_UNIT).toBe("newclaw-gateway-work.service");
+    expect(env.IFLOW_SYSTEMD_UNIT).toBe("iflow-gateway-work.service");
     if (process.platform === "darwin") {
-      expect(env.NEWCLAW_LAUNCHD_LABEL).toBe("ai.newclaw.work");
+      expect(env.IFLOW_LAUNCHD_LABEL).toBe("ai.iflow.work");
     }
   });
 });

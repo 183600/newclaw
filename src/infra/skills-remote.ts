@@ -1,5 +1,5 @@
 import type { SkillEligibilityContext, SkillEntry } from "../agents/skills.js";
-import type { NewClawConfig } from "../config/config.js";
+import type { iFlowConfig } from "../config/config.js";
 import type { NodeRegistry } from "../gateway/node-registry.js";
 import { resolveAgentWorkspaceDir, resolveDefaultAgentId } from "../agents/agent-scope.js";
 import { loadWorkspaceSkillEntries } from "../agents/skills.js";
@@ -168,7 +168,7 @@ export function recordRemoteNodeBins(nodeId: string, bins: string[]) {
   upsertNode({ nodeId, bins });
 }
 
-function listWorkspaceDirs(cfg: NewClawConfig): string[] {
+function listWorkspaceDirs(cfg: iFlowConfig): string[] {
   const dirs = new Set<string>();
   const list = cfg.agents?.list;
   if (Array.isArray(list)) {
@@ -253,7 +253,7 @@ export async function refreshRemoteNodeBins(params: {
   platform?: string;
   deviceFamily?: string;
   commands?: string[];
-  cfg: NewClawConfig;
+  cfg: iFlowConfig;
   timeoutMs?: number;
 }) {
   if (!remoteRegistry) {
@@ -344,7 +344,7 @@ export function getRemoteSkillEligibility(): SkillEligibilityContext["remote"] |
   };
 }
 
-export async function refreshRemoteBinsForConnectedNodes(cfg: NewClawConfig) {
+export async function refreshRemoteBinsForConnectedNodes(cfg: iFlowConfig) {
   if (!remoteRegistry) {
     return;
   }

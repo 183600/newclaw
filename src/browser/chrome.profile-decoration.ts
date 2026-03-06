@@ -1,12 +1,9 @@
 import fs from "node:fs";
 import path from "node:path";
-import {
-  DEFAULT_NEWCLAW_BROWSER_COLOR,
-  DEFAULT_NEWCLAW_BROWSER_PROFILE_NAME,
-} from "./constants.js";
+import { DEFAULT_IFLOW_BROWSER_COLOR, DEFAULT_IFLOW_BROWSER_PROFILE_NAME } from "./constants.js";
 
 function decoratedMarkerPath(userDataDir: string) {
-  return path.join(userDataDir, ".newclaw-profile-decorated");
+  return path.join(userDataDir, ".iflow-profile-decorated");
 }
 
 function safeReadJson(filePath: string): Record<string, unknown> | null {
@@ -126,12 +123,12 @@ export function isProfileDecorated(
  * Best-effort profile decoration (name + lobster-orange). Chrome preference keys
  * vary by version; we keep this conservative and idempotent.
  */
-export function decorateNewClawProfile(
+export function decorateiFlowProfile(
   userDataDir: string,
   opts?: { name?: string; color?: string },
 ) {
-  const desiredName = opts?.name ?? DEFAULT_NEWCLAW_BROWSER_PROFILE_NAME;
-  const desiredColor = (opts?.color ?? DEFAULT_NEWCLAW_BROWSER_COLOR).toUpperCase();
+  const desiredName = opts?.name ?? DEFAULT_IFLOW_BROWSER_PROFILE_NAME;
+  const desiredColor = (opts?.color ?? DEFAULT_IFLOW_BROWSER_COLOR).toUpperCase();
   const desiredColorInt = parseHexRgbToSignedArgbInt(desiredColor);
 
   const localStatePath = path.join(userDataDir, "Local State");

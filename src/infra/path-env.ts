@@ -4,7 +4,7 @@ import path from "node:path";
 import { resolveBrewPathDirs } from "./brew.js";
 import { isTruthyEnvValue } from "./env.js";
 
-type EnsureNewClawPathOpts = {
+type EnsureiFlowPathOpts = {
   execPath?: string;
   cwd?: string;
   homeDir?: string;
@@ -47,7 +47,7 @@ function mergePath(params: { existing: string; prepend: string[] }): string {
   return merged.join(path.delimiter);
 }
 
-function candidateBinDirs(opts: EnsureNewClawPathOpts): string[] {
+function candidateBinDirs(opts: EnsureiFlowPathOpts): string[] {
   const execPath = opts.execPath ?? process.execPath;
   const cwd = opts.cwd ?? process.cwd();
   const homeDir = opts.homeDir ?? os.homedir();
@@ -55,10 +55,10 @@ function candidateBinDirs(opts: EnsureNewClawPathOpts): string[] {
 
   const candidates: string[] = [];
 
-  // Bundled macOS app: `newclaw` lives next to the executable (process.execPath).
+  // Bundled macOS app: `iflow` lives next to the executable (process.execPath).
   try {
     const execDir = path.dirname(execPath);
-    const siblingCli = path.join(execDir, "newclaw");
+    const siblingCli = path.join(execDir, "iflow");
     if (isExecutable(siblingCli)) {
       candidates.push(execDir);
     }
@@ -66,10 +66,10 @@ function candidateBinDirs(opts: EnsureNewClawPathOpts): string[] {
     // ignore
   }
 
-  // Project-local installs (best effort): if a `node_modules/.bin/newclaw` exists near cwd,
+  // Project-local installs (best effort): if a `node_modules/.bin/iflow` exists near cwd,
   // include it. This helps when running under launchd or other minimal PATH environments.
   const localBinDir = path.join(cwd, "node_modules", ".bin");
-  if (isExecutable(path.join(localBinDir, "newclaw"))) {
+  if (isExecutable(path.join(localBinDir, "iflow"))) {
     candidates.push(localBinDir);
   }
 
@@ -98,14 +98,14 @@ function candidateBinDirs(opts: EnsureNewClawPathOpts): string[] {
 }
 
 /**
- * Best-effort PATH bootstrap so skills that require the `newclaw` CLI can run
+ * Best-effort PATH bootstrap so skills that require the `iflow` CLI can run
  * under launchd/minimal environments (and inside the macOS app bundle).
  */
-export function ensureNewClawCliOnPath(opts: EnsureNewClawPathOpts = {}) {
-  if (isTruthyEnvValue(process.env.NEWCLAW_PATH_BOOTSTRAPPED)) {
+export function ensureiFlowCliOnPath(opts: EnsureiFlowPathOpts = {}) {
+  if (isTruthyEnvValue(process.env.IFLOW_PATH_BOOTSTRAPPED)) {
     return;
   }
-  process.env.NEWCLAW_PATH_BOOTSTRAPPED = "1";
+  process.env.IFLOW_PATH_BOOTSTRAPPED = "1";
 
   const existing = opts.pathEnv ?? process.env.PATH ?? "";
   const prepend = candidateBinDirs(opts);

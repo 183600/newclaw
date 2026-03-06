@@ -14,30 +14,30 @@ type CommandOptions = Record<string, unknown>;
 
 const SANDBOX_EXAMPLES = {
   main: [
-    ["newclaw sandbox list", "List all sandbox containers."],
-    ["newclaw sandbox list --browser", "List only browser containers."],
-    ["newclaw sandbox recreate --all", "Recreate all containers."],
-    ["newclaw sandbox recreate --session main", "Recreate a specific session."],
-    ["newclaw sandbox recreate --agent mybot", "Recreate agent containers."],
-    ["newclaw sandbox explain", "Explain effective sandbox config."],
+    ["iflow sandbox list", "List all sandbox containers."],
+    ["iflow sandbox list --browser", "List only browser containers."],
+    ["iflow sandbox recreate --all", "Recreate all containers."],
+    ["iflow sandbox recreate --session main", "Recreate a specific session."],
+    ["iflow sandbox recreate --agent mybot", "Recreate agent containers."],
+    ["iflow sandbox explain", "Explain effective sandbox config."],
   ],
   list: [
-    ["newclaw sandbox list", "List all sandbox containers."],
-    ["newclaw sandbox list --browser", "List only browser containers."],
-    ["newclaw sandbox list --json", "JSON output."],
+    ["iflow sandbox list", "List all sandbox containers."],
+    ["iflow sandbox list --browser", "List only browser containers."],
+    ["iflow sandbox list --json", "JSON output."],
   ],
   recreate: [
-    ["newclaw sandbox recreate --all", "Recreate all containers."],
-    ["newclaw sandbox recreate --session main", "Recreate a specific session."],
-    ["newclaw sandbox recreate --agent mybot", "Recreate a specific agent (includes sub-agents)."],
-    ["newclaw sandbox recreate --browser --all", "Recreate only browser containers."],
-    ["newclaw sandbox recreate --all --force", "Skip confirmation."],
+    ["iflow sandbox recreate --all", "Recreate all containers."],
+    ["iflow sandbox recreate --session main", "Recreate a specific session."],
+    ["iflow sandbox recreate --agent mybot", "Recreate a specific agent (includes sub-agents)."],
+    ["iflow sandbox recreate --browser --all", "Recreate only browser containers."],
+    ["iflow sandbox recreate --all --force", "Skip confirmation."],
   ],
   explain: [
-    ["newclaw sandbox explain", "Show effective sandbox config."],
-    ["newclaw sandbox explain --session agent:main:main", "Explain a specific session."],
-    ["newclaw sandbox explain --agent work", "Explain an agent sandbox."],
-    ["newclaw sandbox explain --json", "JSON output."],
+    ["iflow sandbox explain", "Show effective sandbox config."],
+    ["iflow sandbox explain --session agent:main:main", "Explain a specific session."],
+    ["iflow sandbox explain --agent work", "Explain an agent sandbox."],
+    ["iflow sandbox explain --json", "JSON output."],
   ],
 } as const;
 
@@ -67,7 +67,7 @@ export function registerSandboxCli(program: Command) {
     .addHelpText(
       "after",
       () =>
-        `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/sandbox", "docs.newclaw.ai/cli/sandbox")}\n`,
+        `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/sandbox", "docs.iflow.ai/cli/sandbox")}\n`,
     )
     .action(() => {
       sandbox.help({ error: true });

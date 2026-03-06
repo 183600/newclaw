@@ -300,7 +300,7 @@ export async function runTui(opts: TuiOptions) {
     const agentLabel = formatAgentLabel(currentAgentId);
     header.setText(
       theme.header(
-        `newclaw tui - ${client.connection.url} - agent ${agentLabel} - session ${sessionLabel}`,
+        `iflow tui - ${client.connection.url} - agent ${agentLabel} - session ${sessionLabel}`,
       ),
     );
   };

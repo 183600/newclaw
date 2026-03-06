@@ -1,6 +1,6 @@
 import JSON5 from "json5";
 import type {
-  NewClawHookMetadata,
+  iFlowHookMetadata,
   HookEntry,
   HookInstallSpec,
   HookInvocationPolicy,
@@ -76,9 +76,9 @@ function parseFrontmatterBool(value: string | undefined, fallback: boolean): boo
   return parsed === undefined ? fallback : parsed;
 }
 
-export function resolveNewClawMetadata(
+export function resolveiFlowMetadata(
   frontmatter: ParsedHookFrontmatter,
-): NewClawHookMetadata | undefined {
+): iFlowHookMetadata | undefined {
   const raw = getFrontmatterValue(frontmatter, "metadata");
   if (!raw) {
     return undefined;

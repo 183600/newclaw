@@ -1,16 +1,16 @@
 export const GATEWAY_CLIENT_IDS = {
   WEBCHAT_UI: "webchat-ui",
-  CONTROL_UI: "newclaw-control-ui",
+  CONTROL_UI: "iflow-control-ui",
   WEBCHAT: "webchat",
   CLI: "cli",
   GATEWAY_CLIENT: "gateway-client",
-  MACOS_APP: "newclaw-macos",
-  IOS_APP: "newclaw-ios",
-  ANDROID_APP: "newclaw-android",
+  MACOS_APP: "iflow-macos",
+  IOS_APP: "iflow-ios",
+  ANDROID_APP: "iflow-android",
   NODE_HOST: "node-host",
   TEST: "test",
   FINGERPRINT: "fingerprint",
-  PROBE: "newclaw-probe",
+  PROBE: "iflow-probe",
 } as const;
 
 export type GatewayClientId = (typeof GATEWAY_CLIENT_IDS)[keyof typeof GATEWAY_CLIENT_IDS];

@@ -1,8 +1,8 @@
-import type { NewClawConfig } from "../../config/config.js";
+import type { iFlowConfig } from "../../config/config.js";
 import type { AuthProfileStore } from "./types.js";
 
 export function resolveAuthProfileDisplayLabel(params: {
-  cfg?: NewClawConfig;
+  cfg?: iFlowConfig;
   store: AuthProfileStore;
   profileId: string;
 }): string {

@@ -1,5 +1,5 @@
-import type { NewClawPluginApi } from "newclaw/plugin-sdk";
-import { emptyPluginConfigSchema } from "newclaw/plugin-sdk";
+import type { iFlowPluginApi } from "iflow/plugin-sdk";
+import { emptyPluginConfigSchema } from "iflow/plugin-sdk";
 import { nextcloudTalkPlugin } from "./src/channel.js";
 import { setNextcloudTalkRuntime } from "./src/runtime.js";
 
@@ -8,7 +8,7 @@ const plugin = {
   name: "Nextcloud Talk",
   description: "Nextcloud Talk channel plugin",
   configSchema: emptyPluginConfigSchema(),
-  register(api: NewClawPluginApi) {
+  register(api: iFlowPluginApi) {
     setNextcloudTalkRuntime(api.runtime);
     api.registerChannel({ plugin: nextcloudTalkPlugin });
   },

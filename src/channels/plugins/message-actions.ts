@@ -1,9 +1,9 @@
 import type { AgentToolResult } from "@mariozechner/pi-agent-core";
-import type { NewClawConfig } from "../../config/config.js";
+import type { iFlowConfig } from "../../config/config.js";
 import type { ChannelMessageActionContext, ChannelMessageActionName } from "./types.js";
 import { getChannelPlugin, listChannelPlugins } from "./index.js";
 
-export function listChannelMessageActions(cfg: NewClawConfig): ChannelMessageActionName[] {
+export function listChannelMessageActions(cfg: iFlowConfig): ChannelMessageActionName[] {
   const actions = new Set<ChannelMessageActionName>(["send", "broadcast"]);
   for (const plugin of listChannelPlugins()) {
     const list = plugin.actions?.listActions?.({ cfg });
@@ -17,7 +17,7 @@ export function listChannelMessageActions(cfg: NewClawConfig): ChannelMessageAct
   return Array.from(actions);
 }
 
-export function supportsChannelMessageButtons(cfg: NewClawConfig): boolean {
+export function supportsChannelMessageButtons(cfg: iFlowConfig): boolean {
   for (const plugin of listChannelPlugins()) {
     if (plugin.actions?.supportsButtons?.({ cfg })) {
       return true;
@@ -26,7 +26,7 @@ export function supportsChannelMessageButtons(cfg: NewClawConfig): boolean {
   return false;
 }
 
-export function supportsChannelMessageCards(cfg: NewClawConfig): boolean {
+export function supportsChannelMessageCards(cfg: iFlowConfig): boolean {
   for (const plugin of listChannelPlugins()) {
     if (plugin.actions?.supportsCards?.({ cfg })) {
       return true;

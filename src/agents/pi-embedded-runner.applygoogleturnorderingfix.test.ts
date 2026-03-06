@@ -2,8 +2,8 @@ import type { AgentMessage } from "@mariozechner/pi-agent-core";
 import { SessionManager } from "@mariozechner/pi-coding-agent";
 import fs from "node:fs/promises";
 import { describe, expect, it, vi } from "vitest";
-import type { NewClawConfig } from "../config/config.js";
-import { ensureNewClawModelsJson } from "./models-config.js";
+import type { iFlowConfig } from "../config/config.js";
+import { ensureiFlowModelsJson } from "./models-config.js";
 import { applyGoogleTurnOrderingFix } from "./pi-embedded-runner.js";
 
 vi.mock("@mariozechner/pi-ai", async () => {
@@ -69,10 +69,10 @@ const _makeOpenAiConfig = (modelIds: string[]) =>
         },
       },
     },
-  }) satisfies NewClawConfig;
+  }) satisfies iFlowConfig;
 
-const _ensureModels = (cfg: NewClawConfig, agentDir: string) =>
-  ensureNewClawModelsJson(cfg, agentDir) as unknown;
+const _ensureModels = (cfg: iFlowConfig, agentDir: string) =>
+  ensureiFlowModelsJson(cfg, agentDir) as unknown;
 
 const _textFromContent = (content: unknown) => {
   if (typeof content === "string") {

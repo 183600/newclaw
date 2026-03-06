@@ -1,4 +1,4 @@
-import type { NewClawConfig, ConfigFileSnapshot } from "../../config/types.js";
+import type { iFlowConfig, ConfigFileSnapshot } from "../../config/types.js";
 import type { GatewayProbeResult } from "../../gateway/probe.js";
 import { resolveGatewayPort } from "../../config/config.js";
 import { pickPrimaryTailnetIPv4 } from "../../infra/tailnet.js";
@@ -87,7 +87,7 @@ function normalizeWsUrl(value: string): string | null {
   return trimmed;
 }
 
-export function resolveTargets(cfg: NewClawConfig, explicitUrl?: string): GatewayStatusTarget[] {
+export function resolveTargets(cfg: iFlowConfig, explicitUrl?: string): GatewayStatusTarget[] {
   const targets: GatewayStatusTarget[] = [];
   const add = (t: GatewayStatusTarget) => {
     if (!targets.some((x) => x.url === t.url)) {
@@ -144,7 +144,7 @@ export function sanitizeSshTarget(value: unknown): string | null {
 }
 
 export function resolveAuthForTarget(
-  cfg: NewClawConfig,
+  cfg: iFlowConfig,
   target: GatewayStatusTarget,
   overrides: { token?: string; password?: string },
 ): { token?: string; password?: string } {
@@ -165,8 +165,8 @@ export function resolveAuthForTarget(
     };
   }
 
-  const envToken = process.env.NEWCLAW_GATEWAY_TOKEN?.trim() || "";
-  const envPassword = process.env.NEWCLAW_GATEWAY_PASSWORD?.trim() || "";
+  const envToken = process.env.IFLOW_GATEWAY_TOKEN?.trim() || "";
+  const envPassword = process.env.IFLOW_GATEWAY_PASSWORD?.trim() || "";
   const cfgToken =
     typeof cfg.gateway?.auth?.token === "string" ? cfg.gateway.auth.token.trim() : "";
   const cfgPassword =
@@ -263,7 +263,7 @@ export function extractConfigSummary(snapshotUnknown: unknown): GatewayConfigSum
   };
 }
 
-export function buildNetworkHints(cfg: NewClawConfig) {
+export function buildNetworkHints(cfg: iFlowConfig) {
   const tailnetIPv4 = pickPrimaryTailnetIPv4();
   const port = resolveGatewayPort(cfg);
   return {

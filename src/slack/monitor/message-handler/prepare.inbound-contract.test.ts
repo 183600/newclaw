@@ -1,6 +1,6 @@
 import type { App } from "@slack/bolt";
 import { describe, expect, it } from "vitest";
-import type { NewClawConfig } from "../../../config/config.js";
+import type { iFlowConfig } from "../../../config/config.js";
 import type { RuntimeEnv } from "../../../runtime.js";
 import type { ResolvedSlackAccount } from "../../accounts.js";
 import type { SlackMessageEvent } from "../../types.js";
@@ -13,7 +13,7 @@ describe("slack prepareSlackMessage inbound contract", () => {
     const slackCtx = createSlackMonitorContext({
       cfg: {
         channels: { slack: { enabled: true } },
-      } as NewClawConfig,
+      } as iFlowConfig,
       accountId: "default",
       botToken: "token",
       app: { client: {} } as App,
@@ -39,7 +39,7 @@ describe("slack prepareSlackMessage inbound contract", () => {
       threadInheritParent: false,
       slashCommand: {
         enabled: false,
-        name: "newclaw",
+        name: "iflow",
         sessionPrefix: "slack:slash",
         ephemeral: true,
       },
@@ -83,7 +83,7 @@ describe("slack prepareSlackMessage inbound contract", () => {
     const slackCtx = createSlackMonitorContext({
       cfg: {
         channels: { slack: { enabled: true, replyToMode: "all" } },
-      } as NewClawConfig,
+      } as iFlowConfig,
       accountId: "default",
       botToken: "token",
       app: { client: {} } as App,
@@ -109,7 +109,7 @@ describe("slack prepareSlackMessage inbound contract", () => {
       threadInheritParent: false,
       slashCommand: {
         enabled: false,
-        name: "newclaw",
+        name: "iflow",
         sessionPrefix: "slack:slash",
         ephemeral: true,
       },

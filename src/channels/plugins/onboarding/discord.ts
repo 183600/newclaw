@@ -1,4 +1,4 @@
-import type { NewClawConfig } from "../../../config/config.js";
+import type { iFlowConfig } from "../../../config/config.js";
 import type { DiscordGuildEntry } from "../../../config/types.discord.js";
 import type { DmPolicy } from "../../../config/types.js";
 import type { WizardPrompter } from "../../../wizard/prompts.js";
@@ -21,7 +21,7 @@ import { addWildcardAllowFrom, promptAccountId } from "./helpers.js";
 
 const channel = "discord" as const;
 
-function setDiscordDmPolicy(cfg: NewClawConfig, dmPolicy: DmPolicy) {
+function setDiscordDmPolicy(cfg: iFlowConfig, dmPolicy: DmPolicy) {
   const allowFrom =
     dmPolicy === "open" ? addWildcardAllowFrom(cfg.channels?.discord?.dm?.allowFrom) : undefined;
   return {
@@ -55,10 +55,10 @@ async function noteDiscordTokenHelp(prompter: WizardPrompter): Promise<void> {
 }
 
 function setDiscordGroupPolicy(
-  cfg: NewClawConfig,
+  cfg: iFlowConfig,
   accountId: string,
   groupPolicy: "open" | "allowlist" | "disabled",
-): NewClawConfig {
+): iFlowConfig {
   if (accountId === DEFAULT_ACCOUNT_ID) {
     return {
       ...cfg,
@@ -93,13 +93,13 @@ function setDiscordGroupPolicy(
 }
 
 function setDiscordGuildChannelAllowlist(
-  cfg: NewClawConfig,
+  cfg: iFlowConfig,
   accountId: string,
   entries: Array<{
     guildKey: string;
     channelKey?: string;
   }>,
-): NewClawConfig {
+): iFlowConfig {
   const baseGuilds =
     accountId === DEFAULT_ACCOUNT_ID
       ? (cfg.channels?.discord?.guilds ?? {})
@@ -149,7 +149,7 @@ function setDiscordGuildChannelAllowlist(
   };
 }
 
-function setDiscordAllowFrom(cfg: NewClawConfig, allowFrom: string[]): NewClawConfig {
+function setDiscordAllowFrom(cfg: iFlowConfig, allowFrom: string[]): iFlowConfig {
   return {
     ...cfg,
     channels: {
@@ -174,10 +174,10 @@ function parseDiscordAllowFromInput(raw: string): string[] {
 }
 
 async function promptDiscordAllowFrom(params: {
-  cfg: NewClawConfig;
+  cfg: iFlowConfig;
   prompter: WizardPrompter;
   accountId?: string;
-}): Promise<NewClawConfig> {
+}): Promise<iFlowConfig> {
   const accountId =
     params.accountId && normalizeAccountId(params.accountId)
       ? (normalizeAccountId(params.accountId) ?? DEFAULT_ACCOUNT_ID)

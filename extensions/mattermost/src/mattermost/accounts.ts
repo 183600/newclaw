@@ -1,5 +1,5 @@
-import type { NewClawConfig } from "newclaw/plugin-sdk";
-import { DEFAULT_ACCOUNT_ID, normalizeAccountId } from "newclaw/plugin-sdk";
+import type { iFlowConfig } from "iflow/plugin-sdk";
+import { DEFAULT_ACCOUNT_ID, normalizeAccountId } from "iflow/plugin-sdk";
 import type { MattermostAccountConfig, MattermostChatMode } from "../types.js";
 import { normalizeMattermostBaseUrl } from "./client.js";
 
@@ -23,7 +23,7 @@ export type ResolvedMattermostAccount = {
   blockStreamingCoalesce?: MattermostAccountConfig["blockStreamingCoalesce"];
 };
 
-function listConfiguredAccountIds(cfg: NewClawConfig): string[] {
+function listConfiguredAccountIds(cfg: iFlowConfig): string[] {
   const accounts = cfg.channels?.mattermost?.accounts;
   if (!accounts || typeof accounts !== "object") {
     return [];
@@ -31,7 +31,7 @@ function listConfiguredAccountIds(cfg: NewClawConfig): string[] {
   return Object.keys(accounts).filter(Boolean);
 }
 
-export function listMattermostAccountIds(cfg: NewClawConfig): string[] {
+export function listMattermostAccountIds(cfg: iFlowConfig): string[] {
   const ids = listConfiguredAccountIds(cfg);
   if (ids.length === 0) {
     return [DEFAULT_ACCOUNT_ID];
@@ -39,7 +39,7 @@ export function listMattermostAccountIds(cfg: NewClawConfig): string[] {
   return ids.toSorted((a, b) => a.localeCompare(b));
 }
 
-export function resolveDefaultMattermostAccountId(cfg: NewClawConfig): string {
+export function resolveDefaultMattermostAccountId(cfg: iFlowConfig): string {
   const ids = listMattermostAccountIds(cfg);
   if (ids.includes(DEFAULT_ACCOUNT_ID)) {
     return DEFAULT_ACCOUNT_ID;
@@ -48,7 +48,7 @@ export function resolveDefaultMattermostAccountId(cfg: NewClawConfig): string {
 }
 
 function resolveAccountConfig(
-  cfg: NewClawConfig,
+  cfg: iFlowConfig,
   accountId: string,
 ): MattermostAccountConfig | undefined {
   const accounts = cfg.channels?.mattermost?.accounts;
@@ -59,7 +59,7 @@ function resolveAccountConfig(
 }
 
 function mergeMattermostAccountConfig(
-  cfg: NewClawConfig,
+  cfg: iFlowConfig,
   accountId: string,
 ): MattermostAccountConfig {
   const { accounts: _ignored, ...base } = (cfg.channels?.mattermost ??
@@ -82,7 +82,7 @@ function resolveMattermostRequireMention(config: MattermostAccountConfig): boole
 }
 
 export function resolveMattermostAccount(params: {
-  cfg: NewClawConfig;
+  cfg: iFlowConfig;
   accountId?: string | null;
 }): ResolvedMattermostAccount {
   const accountId = normalizeAccountId(params.accountId);
@@ -121,7 +121,7 @@ export function resolveMattermostAccount(params: {
   };
 }
 
-export function listEnabledMattermostAccounts(cfg: NewClawConfig): ResolvedMattermostAccount[] {
+export function listEnabledMattermostAccounts(cfg: iFlowConfig): ResolvedMattermostAccount[] {
   return listMattermostAccountIds(cfg)
     .map((accountId) => resolveMattermostAccount({ cfg, accountId }))
     .filter((account) => account.enabled);

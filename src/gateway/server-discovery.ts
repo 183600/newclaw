@@ -14,17 +14,17 @@ export type ResolveBonjourCliPathOptions = {
 export function formatBonjourInstanceName(displayName: string) {
   const trimmed = displayName.trim();
   if (!trimmed) {
-    return "NewClaw";
+    return "iFlow";
   }
-  if (/newclaw/i.test(trimmed)) {
+  if (/iflow/i.test(trimmed)) {
     return trimmed;
   }
-  return `${trimmed} (NewClaw)`;
+  return `${trimmed} (iFlow)`;
 }
 
 export function resolveBonjourCliPath(opts: ResolveBonjourCliPathOptions = {}): string | undefined {
   const env = opts.env ?? process.env;
-  const envPath = env.NEWCLAW_CLI_PATH?.trim();
+  const envPath = env.IFLOW_CLI_PATH?.trim();
   if (envPath) {
     return envPath;
   }
@@ -40,7 +40,7 @@ export function resolveBonjourCliPath(opts: ResolveBonjourCliPathOptions = {}): 
 
   const execPath = opts.execPath ?? process.execPath;
   const execDir = path.dirname(execPath);
-  const siblingCli = path.join(execDir, "newclaw");
+  const siblingCli = path.join(execDir, "iflow");
   if (isFile(siblingCli)) {
     return siblingCli;
   }
@@ -56,7 +56,7 @@ export function resolveBonjourCliPath(opts: ResolveBonjourCliPathOptions = {}): 
   if (isFile(distCli)) {
     return distCli;
   }
-  const binCli = path.join(cwd, "bin", "newclaw");
+  const binCli = path.join(cwd, "bin", "iflow");
   if (isFile(binCli)) {
     return binCli;
   }
@@ -70,7 +70,7 @@ export async function resolveTailnetDnsHint(opts?: {
   enabled?: boolean;
 }): Promise<string | undefined> {
   const env = opts?.env ?? process.env;
-  const envRaw = env.NEWCLAW_TAILNET_DNS?.trim();
+  const envRaw = env.IFLOW_TAILNET_DNS?.trim();
   const envValue = envRaw && envRaw.length > 0 ? envRaw.replace(/\.$/, "") : "";
   if (envValue) {
     return envValue;

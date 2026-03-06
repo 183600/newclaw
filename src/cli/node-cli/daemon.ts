@@ -47,7 +47,7 @@ type NodeDaemonStatusOptions = {
 };
 
 function renderNodeServiceStartHints(): string[] {
-  const base = [formatCliCommand("newclaw node install"), formatCliCommand("newclaw node start")];
+  const base = [formatCliCommand("iflow node install"), formatCliCommand("iflow node start")];
   switch (process.platform) {
     case "darwin":
       return [
@@ -173,7 +173,7 @@ export async function runNodeDaemonInstall(opts: NodeDaemonInstallOptions) {
     });
     if (!json) {
       defaultRuntime.log(`Node service already ${service.loadedText}.`);
-      defaultRuntime.log(`Reinstall with: ${formatCliCommand("newclaw node install --force")}`);
+      defaultRuntime.log(`Reinstall with: ${formatCliCommand("iflow node install --force")}`);
     }
     return;
   }
@@ -588,7 +588,7 @@ export async function runNodeDaemonStatus(opts: NodeDaemonStatusOptions = {}) {
   };
   const hintEnv = {
     ...baseEnv,
-    NEWCLAW_LOG_PREFIX: baseEnv.NEWCLAW_LOG_PREFIX ?? "node",
+    IFLOW_LOG_PREFIX: baseEnv.IFLOW_LOG_PREFIX ?? "node",
   } as NodeJS.ProcessEnv;
 
   if (runtime?.missingUnit) {

@@ -1,13 +1,13 @@
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { NewClawApp } from "./app.ts";
+import { iFlowApp } from "./app.ts";
 import "../styles.css";
 
 // oxlint-disable-next-line typescript/unbound-method
-const originalConnect = NewClawApp.prototype.connect;
+const originalConnect = iFlowApp.prototype.connect;
 
 function mountApp(pathname: string) {
   window.history.replaceState({}, "", pathname);
-  const app = document.createElement("newclaw-app") as NewClawApp;
+  const app = document.createElement("iflow-app") as iFlowApp;
   document.body.append(app);
   return app;
 }
@@ -19,17 +19,17 @@ function nextFrame() {
 }
 
 beforeEach(() => {
-  NewClawApp.prototype.connect = () => {
+  iFlowApp.prototype.connect = () => {
     // no-op: avoid real gateway WS connections in browser tests
   };
-  window.__NEWCLAW_CONTROL_UI_BASE_PATH__ = undefined;
+  window.__IFLOW_CONTROL_UI_BASE_PATH__ = undefined;
   localStorage.clear();
   document.body.innerHTML = "";
 });
 
 afterEach(() => {
-  NewClawApp.prototype.connect = originalConnect;
-  window.__NEWCLAW_CONTROL_UI_BASE_PATH__ = undefined;
+  iFlowApp.prototype.connect = originalConnect;
+  window.__IFLOW_CONTROL_UI_BASE_PATH__ = undefined;
   localStorage.clear();
   document.body.innerHTML = "";
 });
@@ -53,22 +53,22 @@ describe("control UI routing", () => {
   });
 
   it("infers nested base paths", async () => {
-    const app = mountApp("/apps/newclaw/cron");
+    const app = mountApp("/apps/iflow/cron");
     await app.updateComplete;
 
-    expect(app.basePath).toBe("/apps/newclaw");
+    expect(app.basePath).toBe("/apps/iflow");
     expect(app.tab).toBe("cron");
-    expect(window.location.pathname).toBe("/apps/newclaw/cron");
+    expect(window.location.pathname).toBe("/apps/iflow/cron");
   });
 
   it("honors explicit base path overrides", async () => {
-    window.__NEWCLAW_CONTROL_UI_BASE_PATH__ = "/newclaw";
-    const app = mountApp("/newclaw/sessions");
+    window.__IFLOW_CONTROL_UI_BASE_PATH__ = "/iflow";
+    const app = mountApp("/iflow/sessions");
     await app.updateComplete;
 
-    expect(app.basePath).toBe("/newclaw");
+    expect(app.basePath).toBe("/iflow");
     expect(app.tab).toBe("sessions");
-    expect(window.location.pathname).toBe("/newclaw/sessions");
+    expect(window.location.pathname).toBe("/iflow/sessions");
   });
 
   it("updates the URL when clicking nav items", async () => {
@@ -170,10 +170,7 @@ describe("control UI routing", () => {
   });
 
   it("hydrates token from URL params even when settings already set", async () => {
-    localStorage.setItem(
-      "newclaw.control.settings.v1",
-      JSON.stringify({ token: "existing-token" }),
-    );
+    localStorage.setItem("iflow.control.settings.v1", JSON.stringify({ token: "existing-token" }));
     const app = mountApp("/ui/overview?token=abc123");
     await app.updateComplete;
 

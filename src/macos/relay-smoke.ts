@@ -19,7 +19,7 @@ export function parseRelaySmokeTest(args: string[], env: NodeJS.ProcessEnv): Rel
 
   // Back-compat: only run env-based smoke mode when no CLI args are present,
   // to avoid surprising early-exit when users set env vars globally.
-  if (args.length === 0 && (env.NEWCLAW_SMOKE_QR === "1" || env.NEWCLAW_SMOKE === "qr")) {
+  if (args.length === 0 && (env.IFLOW_SMOKE_QR === "1" || env.IFLOW_SMOKE === "qr")) {
     return "qr";
   }
 

@@ -3,9 +3,9 @@ import { parseSystemdExecStart } from "./systemd-unit.js";
 
 describe("parseSystemdExecStart", () => {
   it("splits on whitespace outside quotes", () => {
-    const execStart = "/usr/bin/newclaw gateway start --foo bar";
+    const execStart = "/usr/bin/iflow gateway start --foo bar";
     expect(parseSystemdExecStart(execStart)).toEqual([
-      "/usr/bin/newclaw",
+      "/usr/bin/iflow",
       "gateway",
       "start",
       "--foo",
@@ -14,9 +14,9 @@ describe("parseSystemdExecStart", () => {
   });
 
   it("preserves quoted arguments", () => {
-    const execStart = '/usr/bin/newclaw gateway start --name "My Bot"';
+    const execStart = '/usr/bin/iflow gateway start --name "My Bot"';
     expect(parseSystemdExecStart(execStart)).toEqual([
-      "/usr/bin/newclaw",
+      "/usr/bin/iflow",
       "gateway",
       "start",
       "--name",
@@ -25,13 +25,13 @@ describe("parseSystemdExecStart", () => {
   });
 
   it("parses path arguments", () => {
-    const execStart = "/usr/bin/newclaw gateway start --path /tmp/newclaw";
+    const execStart = "/usr/bin/iflow gateway start --path /tmp/iflow";
     expect(parseSystemdExecStart(execStart)).toEqual([
-      "/usr/bin/newclaw",
+      "/usr/bin/iflow",
       "gateway",
       "start",
       "--path",
-      "/tmp/newclaw",
+      "/tmp/iflow",
     ]);
   });
 });

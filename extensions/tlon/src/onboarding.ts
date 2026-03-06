@@ -1,4 +1,4 @@
-import type { NewClawConfig } from "newclaw/plugin-sdk";
+import type { iFlowConfig } from "iflow/plugin-sdk";
 import {
   formatDocsLink,
   promptAccountId,
@@ -6,7 +6,7 @@ import {
   normalizeAccountId,
   type ChannelOnboardingAdapter,
   type WizardPrompter,
-} from "newclaw/plugin-sdk";
+} from "iflow/plugin-sdk";
 import type { TlonResolvedAccount } from "./types.js";
 import { listTlonAccountIds, resolveTlonAccount } from "./types.js";
 
@@ -17,7 +17,7 @@ function isConfigured(account: TlonResolvedAccount): boolean {
 }
 
 function applyAccountConfig(params: {
-  cfg: NewClawConfig;
+  cfg: iFlowConfig;
   accountId: string;
   input: {
     name?: string;
@@ -28,7 +28,7 @@ function applyAccountConfig(params: {
     dmAllowlist?: string[];
     autoDiscoverChannels?: boolean;
   };
-}): NewClawConfig {
+}): iFlowConfig {
   const { cfg, accountId, input } = params;
   const useDefault = accountId === DEFAULT_ACCOUNT_ID;
   const base = cfg.channels?.tlon ?? {};

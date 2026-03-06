@@ -1,4 +1,4 @@
-import type { NewClawConfig } from "../config/config.js";
+import type { iFlowConfig } from "../config/config.js";
 import type { WizardPrompter, WizardSelectOption } from "../wizard/prompts.js";
 import { ensureAuthProfileStore, listProfilesForProvider } from "../agents/auth-profiles.js";
 import { DEFAULT_MODEL, DEFAULT_PROVIDER } from "../agents/defaults.js";
@@ -23,7 +23,7 @@ const PROVIDER_FILTER_THRESHOLD = 30;
 const HIDDEN_ROUTER_MODELS = new Set(["openrouter/auto"]);
 
 type PromptDefaultModelParams = {
-  config: NewClawConfig;
+  config: iFlowConfig;
   prompter: WizardPrompter;
   allowKeep?: boolean;
   includeManual?: boolean;
@@ -38,7 +38,7 @@ type PromptModelAllowlistResult = { models?: string[] };
 
 function hasAuthForProvider(
   provider: string,
-  cfg: NewClawConfig,
+  cfg: iFlowConfig,
   store: ReturnType<typeof ensureAuthProfileStore>,
 ) {
   if (listProfilesForProvider(store, provider).length > 0) {
@@ -53,7 +53,7 @@ function hasAuthForProvider(
   return false;
 }
 
-function resolveConfiguredModelRaw(cfg: NewClawConfig): string {
+function resolveConfiguredModelRaw(cfg: iFlowConfig): string {
   const raw = cfg.agents?.defaults?.model as { primary?: string } | string | undefined;
   if (typeof raw === "string") {
     return raw.trim();
@@ -61,7 +61,7 @@ function resolveConfiguredModelRaw(cfg: NewClawConfig): string {
   return raw?.primary?.trim() ?? "";
 }
 
-function resolveConfiguredModelKeys(cfg: NewClawConfig): string[] {
+function resolveConfiguredModelKeys(cfg: iFlowConfig): string[] {
   const models = cfg.agents?.defaults?.models ?? {};
   return Object.keys(models)
     .map((key) => String(key ?? "").trim())
@@ -298,7 +298,7 @@ export async function promptDefaultModel(
 }
 
 export async function promptModelAllowlist(params: {
-  config: NewClawConfig;
+  config: iFlowConfig;
   prompter: WizardPrompter;
   message?: string;
   agentDir?: string;
@@ -449,7 +449,7 @@ export async function promptModelAllowlist(params: {
   return { models: [] };
 }
 
-export function applyPrimaryModel(cfg: NewClawConfig, model: string): NewClawConfig {
+export function applyPrimaryModel(cfg: iFlowConfig, model: string): iFlowConfig {
   const defaults = cfg.agents?.defaults;
   const existingModel = defaults?.model;
   const existingModels = defaults?.models;
@@ -476,7 +476,7 @@ export function applyPrimaryModel(cfg: NewClawConfig, model: string): NewClawCon
   };
 }
 
-export function applyModelAllowlist(cfg: NewClawConfig, models: string[]): NewClawConfig {
+export function applyModelAllowlist(cfg: iFlowConfig, models: string[]): iFlowConfig {
   const defaults = cfg.agents?.defaults;
   const normalized = normalizeModelKeys(models);
   if (normalized.length === 0) {
@@ -512,9 +512,9 @@ export function applyModelAllowlist(cfg: NewClawConfig, models: string[]): NewCl
 }
 
 export function applyModelFallbacksFromSelection(
-  cfg: NewClawConfig,
+  cfg: iFlowConfig,
   selection: string[],
-): NewClawConfig {
+): iFlowConfig {
   const normalized = normalizeModelKeys(selection);
   if (normalized.length <= 1) {
     return cfg;

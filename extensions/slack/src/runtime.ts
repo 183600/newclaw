@@ -1,4 +1,4 @@
-import type { PluginRuntime } from "newclaw/plugin-sdk";
+import type { PluginRuntime } from "iflow/plugin-sdk";
 
 let runtime: PluginRuntime | null = null;
 

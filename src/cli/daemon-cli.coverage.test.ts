@@ -81,43 +81,43 @@ vi.mock("./progress.js", () => ({
 
 describe("daemon-cli coverage", () => {
   const originalEnv = {
-    NEWCLAW_STATE_DIR: process.env.NEWCLAW_STATE_DIR,
-    NEWCLAW_CONFIG_PATH: process.env.NEWCLAW_CONFIG_PATH,
-    NEWCLAW_GATEWAY_PORT: process.env.NEWCLAW_GATEWAY_PORT,
-    NEWCLAW_PROFILE: process.env.NEWCLAW_PROFILE,
+    IFLOW_STATE_DIR: process.env.IFLOW_STATE_DIR,
+    IFLOW_CONFIG_PATH: process.env.IFLOW_CONFIG_PATH,
+    IFLOW_GATEWAY_PORT: process.env.IFLOW_GATEWAY_PORT,
+    IFLOW_PROFILE: process.env.IFLOW_PROFILE,
   };
 
   beforeEach(() => {
-    process.env.NEWCLAW_STATE_DIR = "/tmp/newclaw-cli-state";
-    process.env.NEWCLAW_CONFIG_PATH = "/tmp/newclaw-cli-state/newclaw.json";
-    delete process.env.NEWCLAW_GATEWAY_PORT;
-    delete process.env.NEWCLAW_PROFILE;
+    process.env.IFLOW_STATE_DIR = "/tmp/iflow-cli-state";
+    process.env.IFLOW_CONFIG_PATH = "/tmp/iflow-cli-state/iflow.json";
+    delete process.env.IFLOW_GATEWAY_PORT;
+    delete process.env.IFLOW_PROFILE;
     serviceReadCommand.mockResolvedValue(null);
   });
 
   afterEach(() => {
-    if (originalEnv.NEWCLAW_STATE_DIR !== undefined) {
-      process.env.NEWCLAW_STATE_DIR = originalEnv.NEWCLAW_STATE_DIR;
+    if (originalEnv.IFLOW_STATE_DIR !== undefined) {
+      process.env.IFLOW_STATE_DIR = originalEnv.IFLOW_STATE_DIR;
     } else {
-      delete process.env.NEWCLAW_STATE_DIR;
+      delete process.env.IFLOW_STATE_DIR;
     }
 
-    if (originalEnv.NEWCLAW_CONFIG_PATH !== undefined) {
-      process.env.NEWCLAW_CONFIG_PATH = originalEnv.NEWCLAW_CONFIG_PATH;
+    if (originalEnv.IFLOW_CONFIG_PATH !== undefined) {
+      process.env.IFLOW_CONFIG_PATH = originalEnv.IFLOW_CONFIG_PATH;
     } else {
-      delete process.env.NEWCLAW_CONFIG_PATH;
+      delete process.env.IFLOW_CONFIG_PATH;
     }
 
-    if (originalEnv.NEWCLAW_GATEWAY_PORT !== undefined) {
-      process.env.NEWCLAW_GATEWAY_PORT = originalEnv.NEWCLAW_GATEWAY_PORT;
+    if (originalEnv.IFLOW_GATEWAY_PORT !== undefined) {
+      process.env.IFLOW_GATEWAY_PORT = originalEnv.IFLOW_GATEWAY_PORT;
     } else {
-      delete process.env.NEWCLAW_GATEWAY_PORT;
+      delete process.env.IFLOW_GATEWAY_PORT;
     }
 
-    if (originalEnv.NEWCLAW_PROFILE !== undefined) {
-      process.env.NEWCLAW_PROFILE = originalEnv.NEWCLAW_PROFILE;
+    if (originalEnv.IFLOW_PROFILE !== undefined) {
+      process.env.IFLOW_PROFILE = originalEnv.IFLOW_PROFILE;
     } else {
-      delete process.env.NEWCLAW_PROFILE;
+      delete process.env.IFLOW_PROFILE;
     }
   });
 
@@ -148,10 +148,10 @@ describe("daemon-cli coverage", () => {
     serviceReadCommand.mockResolvedValueOnce({
       programArguments: ["/bin/node", "cli", "gateway", "--port", "19001"],
       environment: {
-        NEWCLAW_PROFILE: "dev",
-        NEWCLAW_STATE_DIR: "/tmp/newclaw-daemon-state",
-        NEWCLAW_CONFIG_PATH: "/tmp/newclaw-daemon-state/newclaw.json",
-        NEWCLAW_GATEWAY_PORT: "19001",
+        IFLOW_PROFILE: "dev",
+        IFLOW_STATE_DIR: "/tmp/iflow-daemon-state",
+        IFLOW_CONFIG_PATH: "/tmp/iflow-daemon-state/iflow.json",
+        IFLOW_GATEWAY_PORT: "19001",
       },
       sourcePath: "/tmp/bot.molt.gateway.plist",
     });

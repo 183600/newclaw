@@ -23,7 +23,7 @@ x-i18n:
 
 ## 模型延迟基准测试（本地密钥）
 
-脚本：[`scripts/bench-model.ts`](https://github.com/newclaw/newclaw/blob/main/scripts/bench-model.ts)
+脚本：[`scripts/bench-model.ts`](https://github.com/iflow/iflow/blob/main/scripts/bench-model.ts)
 
 用法：
 
@@ -46,7 +46,7 @@ Docker 是可选的；仅在需要容器化新手引导冒烟测试时使用。
 scripts/e2e/onboard-docker.sh
 ```
 
-此脚本通过伪终端驱动交互式向导，验证配置/工作区/会话文件，然后启动 Gateway网关并运行 `newclaw health`。
+此脚本通过伪终端驱动交互式向导，验证配置/工作区/会话文件，然后启动 Gateway网关并运行 `iflow health`。
 
 ## QR 导入冒烟测试（Docker）
 

@@ -5,7 +5,7 @@ import { describe, expect, it } from "vitest";
 import { createConfigIO } from "./io.js";
 
 async function withTempHome(run: (home: string) => Promise<void>): Promise<void> {
-  const home = await fs.mkdtemp(path.join(os.tmpdir(), "newclaw-config-"));
+  const home = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-config-"));
   try {
     await run(home);
   } finally {
@@ -15,9 +15,9 @@ async function withTempHome(run: (home: string) => Promise<void>): Promise<void>
 
 async function writeConfig(
   home: string,
-  dirname: ".newclaw",
+  dirname: ".iflow",
   port: number,
-  filename: string = "newclaw.json",
+  filename: string = "iflow.json",
 ) {
   const dir = path.join(home, dirname);
   await fs.mkdir(dir, { recursive: true });
@@ -27,9 +27,9 @@ async function writeConfig(
 }
 
 describe("config io paths", () => {
-  it("uses ~/.newclaw/newclaw.json when config exists", async () => {
+  it("uses ~/.iflow/iflow.json when config exists", async () => {
     await withTempHome(async (home) => {
-      const configPath = await writeConfig(home, ".newclaw", 19001);
+      const configPath = await writeConfig(home, ".iflow", 19001);
       const io = createConfigIO({
         env: {} as NodeJS.ProcessEnv,
         homedir: () => home,
@@ -39,21 +39,21 @@ describe("config io paths", () => {
     });
   });
 
-  it("defaults to ~/.newclaw/newclaw.json when config is missing", async () => {
+  it("defaults to ~/.iflow/iflow.json when config is missing", async () => {
     await withTempHome(async (home) => {
       const io = createConfigIO({
         env: {} as NodeJS.ProcessEnv,
         homedir: () => home,
       });
-      expect(io.configPath).toBe(path.join(home, ".newclaw", "newclaw.json"));
+      expect(io.configPath).toBe(path.join(home, ".iflow", "iflow.json"));
     });
   });
 
-  it("honors explicit NEWCLAW_CONFIG_PATH override", async () => {
+  it("honors explicit IFLOW_CONFIG_PATH override", async () => {
     await withTempHome(async (home) => {
-      const customPath = await writeConfig(home, ".newclaw", 20002, "custom.json");
+      const customPath = await writeConfig(home, ".iflow", 20002, "custom.json");
       const io = createConfigIO({
-        env: { NEWCLAW_CONFIG_PATH: customPath } as NodeJS.ProcessEnv,
+        env: { IFLOW_CONFIG_PATH: customPath } as NodeJS.ProcessEnv,
         homedir: () => home,
       });
       expect(io.configPath).toBe(customPath);

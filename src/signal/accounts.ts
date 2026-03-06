@@ -1,4 +1,4 @@
-import type { NewClawConfig } from "../config/config.js";
+import type { iFlowConfig } from "../config/config.js";
 import type { SignalAccountConfig } from "../config/types.js";
 import { DEFAULT_ACCOUNT_ID, normalizeAccountId } from "../routing/session-key.js";
 
@@ -11,7 +11,7 @@ export type ResolvedSignalAccount = {
   config: SignalAccountConfig;
 };
 
-function listConfiguredAccountIds(cfg: NewClawConfig): string[] {
+function listConfiguredAccountIds(cfg: iFlowConfig): string[] {
   const accounts = cfg.channels?.signal?.accounts;
   if (!accounts || typeof accounts !== "object") {
     return [];
@@ -19,7 +19,7 @@ function listConfiguredAccountIds(cfg: NewClawConfig): string[] {
   return Object.keys(accounts).filter(Boolean);
 }
 
-export function listSignalAccountIds(cfg: NewClawConfig): string[] {
+export function listSignalAccountIds(cfg: iFlowConfig): string[] {
   const ids = listConfiguredAccountIds(cfg);
   if (ids.length === 0) {
     return [DEFAULT_ACCOUNT_ID];
@@ -27,7 +27,7 @@ export function listSignalAccountIds(cfg: NewClawConfig): string[] {
   return ids.toSorted((a, b) => a.localeCompare(b));
 }
 
-export function resolveDefaultSignalAccountId(cfg: NewClawConfig): string {
+export function resolveDefaultSignalAccountId(cfg: iFlowConfig): string {
   const ids = listSignalAccountIds(cfg);
   if (ids.includes(DEFAULT_ACCOUNT_ID)) {
     return DEFAULT_ACCOUNT_ID;
@@ -36,7 +36,7 @@ export function resolveDefaultSignalAccountId(cfg: NewClawConfig): string {
 }
 
 function resolveAccountConfig(
-  cfg: NewClawConfig,
+  cfg: iFlowConfig,
   accountId: string,
 ): SignalAccountConfig | undefined {
   const accounts = cfg.channels?.signal?.accounts;
@@ -46,7 +46,7 @@ function resolveAccountConfig(
   return accounts[accountId] as SignalAccountConfig | undefined;
 }
 
-function mergeSignalAccountConfig(cfg: NewClawConfig, accountId: string): SignalAccountConfig {
+function mergeSignalAccountConfig(cfg: iFlowConfig, accountId: string): SignalAccountConfig {
   const { accounts: _ignored, ...base } = (cfg.channels?.signal ?? {}) as SignalAccountConfig & {
     accounts?: unknown;
   };
@@ -55,7 +55,7 @@ function mergeSignalAccountConfig(cfg: NewClawConfig, accountId: string): Signal
 }
 
 export function resolveSignalAccount(params: {
-  cfg: NewClawConfig;
+  cfg: iFlowConfig;
   accountId?: string | null;
 }): ResolvedSignalAccount {
   const accountId = normalizeAccountId(params.accountId);
@@ -84,7 +84,7 @@ export function resolveSignalAccount(params: {
   };
 }
 
-export function listEnabledSignalAccounts(cfg: NewClawConfig): ResolvedSignalAccount[] {
+export function listEnabledSignalAccounts(cfg: iFlowConfig): ResolvedSignalAccount[] {
   return listSignalAccountIds(cfg)
     .map((accountId) => resolveSignalAccount({ cfg, accountId }))
     .filter((account) => account.enabled);

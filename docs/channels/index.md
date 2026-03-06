@@ -1,14 +1,14 @@
 ---
-summary: "Messaging platforms NewClaw can connect to"
+summary: "Messaging platforms iFlow can connect to"
 read_when:
-  - You want to choose a chat channel for NewClaw
+  - You want to choose a chat channel for iFlow
   - You need a quick overview of supported messaging platforms
 title: "Chat Channels"
 ---
 
 # Chat Channels
 
-NewClaw can talk to you on any chat app you already use. Each channel connects via the Gateway.
+iFlow can talk to you on any chat app you already use. Each channel connects via the Gateway.
 Text is supported everywhere; media and reactions vary by channel.
 
 ## Supported channels
@@ -35,7 +35,7 @@ Text is supported everywhere; media and reactions vary by channel.
 
 ## Notes
 
-- Channels can run simultaneously; configure multiple and NewClaw will route per chat.
+- Channels can run simultaneously; configure multiple and iFlow will route per chat.
 - Fastest setup is usually **Telegram** (simple bot token). WhatsApp requires QR pairing and
   stores more state on disk.
 - Group behavior varies by channel; see [Groups](/concepts/groups).

@@ -1,11 +1,11 @@
 # SOUL Evil Hook
 
-Small persona swap hook for NewClaw.
+Small persona swap hook for iFlow.
 
-Docs: https://docs.newclaw.ai/hooks/soul-evil
+Docs: https://docs.iflow.ai/hooks/soul-evil
 
 ## Setup
 
-1. `newclaw hooks enable soul-evil`
+1. `iflow hooks enable soul-evil`
 2. Create `SOUL_EVIL.md` next to `SOUL.md` in your agent workspace
 3. Configure `hooks.internal.entries.soul-evil` (see docs)

@@ -1,5 +1,5 @@
-import type { NewClawPluginApi } from "newclaw/plugin-sdk";
-import { emptyPluginConfigSchema } from "newclaw/plugin-sdk";
+import type { iFlowPluginApi } from "iflow/plugin-sdk";
+import { emptyPluginConfigSchema } from "iflow/plugin-sdk";
 import { twitchPlugin } from "./src/plugin.js";
 import { setTwitchRuntime } from "./src/runtime.js";
 
@@ -10,7 +10,7 @@ const plugin = {
   name: "Twitch",
   description: "Twitch channel plugin",
   configSchema: emptyPluginConfigSchema(),
-  register(api: NewClawPluginApi) {
+  register(api: iFlowPluginApi) {
     setTwitchRuntime(api.runtime);
     // oxlint-disable-next-line typescript/no-explicit-any
     api.registerChannel({ plugin: twitchPlugin as any });

@@ -1,15 +1,15 @@
 ---
 name: soul-evil
 description: "Swap SOUL.md with SOUL_EVIL.md during a purge window or by random chance"
-homepage: https://docs.newclaw.ai/hooks/soul-evil
+homepage: https://docs.iflow.ai/hooks/soul-evil
 metadata:
   {
-    "newclaw":
+    "iflow":
       {
         "emoji": "😈",
         "events": ["agent:bootstrap"],
         "requires": { "config": ["hooks.internal.entries.soul-evil.enabled"] },
-        "install": [{ "id": "bundled", "kind": "bundled", "label": "Bundled with NewClaw" }],
+        "install": [{ "id": "bundled", "kind": "bundled", "label": "Bundled with iFlow" }],
       },
   }
 ---
@@ -31,7 +31,7 @@ You can change the filename via hook config.
 
 ## Configuration
 
-Add this to your config (`~/.newclaw/newclaw.json`):
+Add this to your config (`~/.iflow/iflow.json`):
 
 ```json
 {
@@ -67,5 +67,5 @@ Add this to your config (`~/.newclaw/newclaw.json`):
 ## Enable
 
 ```bash
-newclaw hooks enable soul-evil
+iflow hooks enable soul-evil
 ```

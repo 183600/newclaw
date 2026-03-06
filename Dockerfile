@@ -8,10 +8,10 @@ RUN corepack enable
 
 WORKDIR /app
 
-ARG NEWCLAW_DOCKER_APT_PACKAGES=""
-RUN if [ -n "$NEWCLAW_DOCKER_APT_PACKAGES" ]; then \
+ARG IFLOW_DOCKER_APT_PACKAGES=""
+RUN if [ -n "$IFLOW_DOCKER_APT_PACKAGES" ]; then \
       apt-get update && \
-      DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends $NEWCLAW_DOCKER_APT_PACKAGES && \
+      DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends $IFLOW_DOCKER_APT_PACKAGES && \
       apt-get clean && \
       rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*; \
     fi
@@ -24,9 +24,9 @@ COPY scripts ./scripts
 RUN pnpm install --frozen-lockfile
 
 COPY . .
-RUN NEWCLAW_A2UI_SKIP_MISSING=1 pnpm build
+RUN IFLOW_A2UI_SKIP_MISSING=1 pnpm build
 # Force pnpm for UI build (Bun may fail on ARM/Synology architectures)
-ENV NEWCLAW_PREFER_PNPM=1
+ENV IFLOW_PREFER_PNPM=1
 RUN pnpm ui:build
 
 ENV NODE_ENV=production
@@ -43,6 +43,6 @@ USER node
 # Binds to loopback (127.0.0.1) by default for security.
 #
 # For container platforms requiring external health checks:
-#   1. Set NEWCLAW_GATEWAY_TOKEN or NEWCLAW_GATEWAY_PASSWORD env var
+#   1. Set IFLOW_GATEWAY_TOKEN or IFLOW_GATEWAY_PASSWORD env var
 #   2. Override CMD: ["node","dist/index.js","gateway","--allow-unconfigured","--bind","lan"]
 CMD ["node", "dist/index.js", "gateway", "--allow-unconfigured"]

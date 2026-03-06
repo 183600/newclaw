@@ -148,26 +148,26 @@ export function buildServiceEnvironment(params: {
   launchdLabel?: string;
 }): Record<string, string | undefined> {
   const { env, port, token, launchdLabel } = params;
-  const profile = env.NEWCLAW_PROFILE;
+  const profile = env.IFLOW_PROFILE;
   const resolvedLaunchdLabel =
     launchdLabel ||
     (process.platform === "darwin" ? resolveGatewayLaunchAgentLabel(profile) : undefined);
   const systemdUnit = `${resolveGatewaySystemdServiceName(profile)}.service`;
-  const stateDir = env.NEWCLAW_STATE_DIR;
-  const configPath = env.NEWCLAW_CONFIG_PATH;
+  const stateDir = env.IFLOW_STATE_DIR;
+  const configPath = env.IFLOW_CONFIG_PATH;
   return {
     HOME: env.HOME,
     PATH: buildMinimalServicePath({ env }),
-    NEWCLAW_PROFILE: profile,
-    NEWCLAW_STATE_DIR: stateDir,
-    NEWCLAW_CONFIG_PATH: configPath,
-    NEWCLAW_GATEWAY_PORT: String(port),
-    NEWCLAW_GATEWAY_TOKEN: token,
-    NEWCLAW_LAUNCHD_LABEL: resolvedLaunchdLabel,
-    NEWCLAW_SYSTEMD_UNIT: systemdUnit,
-    NEWCLAW_SERVICE_MARKER: GATEWAY_SERVICE_MARKER,
-    NEWCLAW_SERVICE_KIND: GATEWAY_SERVICE_KIND,
-    NEWCLAW_SERVICE_VERSION: VERSION,
+    IFLOW_PROFILE: profile,
+    IFLOW_STATE_DIR: stateDir,
+    IFLOW_CONFIG_PATH: configPath,
+    IFLOW_GATEWAY_PORT: String(port),
+    IFLOW_GATEWAY_TOKEN: token,
+    IFLOW_LAUNCHD_LABEL: resolvedLaunchdLabel,
+    IFLOW_SYSTEMD_UNIT: systemdUnit,
+    IFLOW_SERVICE_MARKER: GATEWAY_SERVICE_MARKER,
+    IFLOW_SERVICE_KIND: GATEWAY_SERVICE_KIND,
+    IFLOW_SERVICE_VERSION: VERSION,
   };
 }
 
@@ -175,20 +175,20 @@ export function buildNodeServiceEnvironment(params: {
   env: Record<string, string | undefined>;
 }): Record<string, string | undefined> {
   const { env } = params;
-  const stateDir = env.NEWCLAW_STATE_DIR;
-  const configPath = env.NEWCLAW_CONFIG_PATH;
+  const stateDir = env.IFLOW_STATE_DIR;
+  const configPath = env.IFLOW_CONFIG_PATH;
   return {
     HOME: env.HOME,
     PATH: buildMinimalServicePath({ env }),
-    NEWCLAW_STATE_DIR: stateDir,
-    NEWCLAW_CONFIG_PATH: configPath,
-    NEWCLAW_LAUNCHD_LABEL: resolveNodeLaunchAgentLabel(),
-    NEWCLAW_SYSTEMD_UNIT: resolveNodeSystemdServiceName(),
-    NEWCLAW_WINDOWS_TASK_NAME: resolveNodeWindowsTaskName(),
-    NEWCLAW_TASK_SCRIPT_NAME: NODE_WINDOWS_TASK_SCRIPT_NAME,
-    NEWCLAW_LOG_PREFIX: "node",
-    NEWCLAW_SERVICE_MARKER: NODE_SERVICE_MARKER,
-    NEWCLAW_SERVICE_KIND: NODE_SERVICE_KIND,
-    NEWCLAW_SERVICE_VERSION: VERSION,
+    IFLOW_STATE_DIR: stateDir,
+    IFLOW_CONFIG_PATH: configPath,
+    IFLOW_LAUNCHD_LABEL: resolveNodeLaunchAgentLabel(),
+    IFLOW_SYSTEMD_UNIT: resolveNodeSystemdServiceName(),
+    IFLOW_WINDOWS_TASK_NAME: resolveNodeWindowsTaskName(),
+    IFLOW_TASK_SCRIPT_NAME: NODE_WINDOWS_TASK_SCRIPT_NAME,
+    IFLOW_LOG_PREFIX: "node",
+    IFLOW_SERVICE_MARKER: NODE_SERVICE_MARKER,
+    IFLOW_SERVICE_KIND: NODE_SERVICE_KIND,
+    IFLOW_SERVICE_VERSION: VERSION,
   };
 }

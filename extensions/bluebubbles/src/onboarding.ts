@@ -1,17 +1,17 @@
 import type {
   ChannelOnboardingAdapter,
   ChannelOnboardingDmPolicy,
-  NewClawConfig,
+  iFlowConfig,
   DmPolicy,
   WizardPrompter,
-} from "newclaw/plugin-sdk";
+} from "iflow/plugin-sdk";
 import {
   DEFAULT_ACCOUNT_ID,
   addWildcardAllowFrom,
   formatDocsLink,
   normalizeAccountId,
   promptAccountId,
-} from "newclaw/plugin-sdk";
+} from "iflow/plugin-sdk";
 import {
   listBlueBubblesAccountIds,
   resolveBlueBubblesAccount,
@@ -22,7 +22,7 @@ import { normalizeBlueBubblesServerUrl } from "./types.js";
 
 const channel = "bluebubbles" as const;
 
-function setBlueBubblesDmPolicy(cfg: NewClawConfig, dmPolicy: DmPolicy): NewClawConfig {
+function setBlueBubblesDmPolicy(cfg: iFlowConfig, dmPolicy: DmPolicy): iFlowConfig {
   const allowFrom =
     dmPolicy === "open" ? addWildcardAllowFrom(cfg.channels?.bluebubbles?.allowFrom) : undefined;
   return {
@@ -39,10 +39,10 @@ function setBlueBubblesDmPolicy(cfg: NewClawConfig, dmPolicy: DmPolicy): NewClaw
 }
 
 function setBlueBubblesAllowFrom(
-  cfg: NewClawConfig,
+  cfg: iFlowConfig,
   accountId: string,
   allowFrom: string[],
-): NewClawConfig {
+): iFlowConfig {
   if (accountId === DEFAULT_ACCOUNT_ID) {
     return {
       ...cfg,
@@ -81,10 +81,10 @@ function parseBlueBubblesAllowFromInput(raw: string): string[] {
 }
 
 async function promptBlueBubblesAllowFrom(params: {
-  cfg: NewClawConfig;
+  cfg: iFlowConfig;
   prompter: WizardPrompter;
   accountId?: string;
-}): Promise<NewClawConfig> {
+}): Promise<iFlowConfig> {
   const accountId =
     params.accountId && normalizeAccountId(params.accountId)
       ? (normalizeAccountId(params.accountId) ?? DEFAULT_ACCOUNT_ID)
@@ -330,7 +330,7 @@ export const blueBubblesOnboardingAdapter: ChannelOnboardingAdapter = {
       [
         "Configure the webhook URL in BlueBubbles Server:",
         "1. Open BlueBubbles Server → Settings → Webhooks",
-        "2. Add your NewClaw gateway URL + webhook path",
+        "2. Add your iFlow gateway URL + webhook path",
         "   Example: https://your-gateway-host:3000/bluebubbles-webhook",
         "3. Enable the webhook and save",
         "",

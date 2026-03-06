@@ -1,7 +1,7 @@
 ---
 summary: "Context: what the model sees, how it is built, and how to inspect it"
 read_when:
-  - You want to understand what “context” means in NewClaw
+  - You want to understand what “context” means in iFlow
   - You are debugging why the model “knows” something (or forgot it)
   - You want to reduce context overhead (/context, /status, /compact)
 title: "Context"
@@ -9,11 +9,11 @@ title: "Context"
 
 # Context
 
-“Context” is **everything NewClaw sends to the model for a run**. It is bounded by the model’s **context window** (token limit).
+“Context” is **everything iFlow sends to the model for a run**. It is bounded by the model’s **context window** (token limit).
 
 Beginner mental model:
 
-- **System prompt** (NewClaw-built): rules, tools, skills list, time/runtime, and injected workspace files.
+- **System prompt** (iFlow-built): rules, tools, skills list, time/runtime, and injected workspace files.
 - **Conversation history**: your messages + the assistant’s messages for this session.
 - **Tool calls/results + attachments**: command output, file reads, images/audio, etc.
 
@@ -87,9 +87,9 @@ Everything the model receives counts, including:
 - Compaction summaries and pruning artifacts.
 - Provider “wrappers” or hidden headers (not visible, still counted).
 
-## How NewClaw builds the system prompt
+## How iFlow builds the system prompt
 
-The system prompt is **NewClaw-owned** and rebuilt each run. It includes:
+The system prompt is **iFlow-owned** and rebuilt each run. It includes:
 
 - Tool list + short descriptions.
 - Skills list (metadata only; see below).
@@ -102,7 +102,7 @@ Full breakdown: [System Prompt](/concepts/system-prompt).
 
 ## Injected workspace files (Project Context)
 
-By default, NewClaw injects a fixed set of workspace files (if present):
+By default, iFlow injects a fixed set of workspace files (if present):
 
 - `AGENTS.md`
 - `SOUL.md`

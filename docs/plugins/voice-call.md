@@ -1,14 +1,14 @@
 ---
 summary: "Voice Call plugin: outbound + inbound calls via Twilio/Telnyx/Plivo (plugin install + config + CLI)"
 read_when:
-  - You want to place an outbound voice call from NewClaw
+  - You want to place an outbound voice call from iFlow
   - You are configuring or developing the voice-call plugin
 title: "Voice Call Plugin"
 ---
 
 # Voice Call (plugin)
 
-Voice calls for NewClaw via a plugin. Supports outbound notifications and
+Voice calls for iFlow via a plugin. Supports outbound notifications and
 multi-turn conversations with inbound policies.
 
 Current providers:
@@ -23,7 +23,7 @@ Quick mental model:
 - Install plugin
 - Restart Gateway
 - Configure under `plugins.entries.voice-call.config`
-- Use `newclaw voicecall ...` or the `voice_call` tool
+- Use `iflow voicecall ...` or the `voice_call` tool
 
 ## Where it runs (local vs remote)
 
@@ -36,7 +36,7 @@ If you use a remote Gateway, install/configure the plugin on the **machine runni
 ### Option A: install from npm (recommended)
 
 ```bash
-newclaw plugins install @newclaw/voice-call
+iflow plugins install @iflow/voice-call
 ```
 
 Restart the Gateway afterwards.
@@ -44,7 +44,7 @@ Restart the Gateway afterwards.
 ### Option B: install from a local folder (dev, no copying)
 
 ```bash
-newclaw plugins install ./extensions/voice-call
+iflow plugins install ./extensions/voice-call
 cd ./extensions/voice-call && pnpm install
 ```
 
@@ -214,13 +214,13 @@ Auto-responses use the agent system. Tune with:
 ## CLI
 
 ```bash
-newclaw voicecall call --to "+15555550123" --message "Hello from NewClaw"
-newclaw voicecall continue --call-id <id> --message "Any questions?"
-newclaw voicecall speak --call-id <id> --message "One moment"
-newclaw voicecall end --call-id <id>
-newclaw voicecall status --call-id <id>
-newclaw voicecall tail
-newclaw voicecall expose --mode funnel
+iflow voicecall call --to "+15555550123" --message "Hello from iFlow"
+iflow voicecall continue --call-id <id> --message "Any questions?"
+iflow voicecall speak --call-id <id> --message "One moment"
+iflow voicecall end --call-id <id>
+iflow voicecall status --call-id <id>
+iflow voicecall tail
+iflow voicecall expose --mode funnel
 ```
 
 ## Agent tool

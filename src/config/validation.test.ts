@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { NewClawConfig } from "./types.js";
+import type { iFlowConfig } from "./types.js";
 import { validateConfigObject, validateConfigObjectWithPlugins } from "./validation.js";
 
 describe("validateConfigObject", () => {
@@ -10,7 +10,7 @@ describe("validateConfigObject", () => {
           model: { primary: "test-model" },
         },
       },
-    } as NewClawConfig;
+    } as iFlowConfig;
 
     const result = validateConfigObject(config);
 
@@ -49,7 +49,7 @@ describe("validateConfigObject", () => {
       agents: {
         list: [{ id: "test-agent", agentDir: "/test/dir" }],
       },
-    } as NewClawConfig;
+    } as iFlowConfig;
     const result = validateConfigObject(config);
 
     expect(result.ok).toBe(true); // This actually passes since no duplicates are found
@@ -67,7 +67,7 @@ describe("validateConfigObject", () => {
           },
         ],
       },
-    } as NewClawConfig;
+    } as iFlowConfig;
     const result = validateConfigObject(config);
 
     // This might pass or fail depending on the actual workspace resolution
@@ -87,7 +87,7 @@ describe("validateConfigObject", () => {
           },
         ],
       },
-    } as NewClawConfig;
+    } as iFlowConfig;
     const result = validateConfigObject(config);
 
     expect(result.ok).toBe(true);
@@ -106,7 +106,7 @@ describe("validateConfigObject", () => {
           },
         ],
       },
-    } as NewClawConfig;
+    } as iFlowConfig;
     const result = validateConfigObject(config);
 
     expect(result.ok).toBe(true);
@@ -126,7 +126,7 @@ describe("validateConfigObjectWithPlugins", () => {
           "test-plugin": { config: {} },
         },
       },
-    } as NewClawConfig;
+    } as iFlowConfig;
 
     const result = validateConfigObjectWithPlugins(config);
 
@@ -142,7 +142,7 @@ describe("validateConfigObjectWithPlugins", () => {
           "test-plugin": { config: {} },
         },
       },
-    } as NewClawConfig;
+    } as iFlowConfig;
 
     const result = validateConfigObjectWithPlugins(config);
 
@@ -162,7 +162,7 @@ describe("validateConfigObjectWithPlugins", () => {
           "test-plugin": { config: {} },
         },
       },
-    } as NewClawConfig;
+    } as iFlowConfig;
 
     const result = validateConfigObjectWithPlugins(config);
 
@@ -177,7 +177,7 @@ describe("validateConfigObjectWithPlugins", () => {
           "unknown-plugin": { config: {} },
         },
       },
-    } as NewClawConfig;
+    } as iFlowConfig;
 
     const result = validateConfigObjectWithPlugins(config);
 
@@ -193,7 +193,7 @@ describe("validateConfigObjectWithPlugins", () => {
       plugins: {
         allow: ["unknown-plugin"],
       },
-    } as NewClawConfig;
+    } as iFlowConfig;
 
     const result = validateConfigObjectWithPlugins(config);
 
@@ -209,7 +209,7 @@ describe("validateConfigObjectWithPlugins", () => {
       plugins: {
         deny: ["unknown-plugin"],
       },
-    } as NewClawConfig;
+    } as iFlowConfig;
 
     const result = validateConfigObjectWithPlugins(config);
 
@@ -227,7 +227,7 @@ describe("validateConfigObjectWithPlugins", () => {
           memory: "unknown-memory-plugin",
         },
       },
-    } as NewClawConfig;
+    } as iFlowConfig;
 
     const result = validateConfigObjectWithPlugins(config);
 
@@ -243,7 +243,7 @@ describe("validateConfigObjectWithPlugins", () => {
       channels: {
         "unknown-channel": {},
       },
-    } as NewClawConfig;
+    } as iFlowConfig;
 
     const result = validateConfigObjectWithPlugins(config);
 
@@ -263,7 +263,7 @@ describe("validateConfigObjectWithPlugins", () => {
           },
         },
       },
-    } as NewClawConfig;
+    } as iFlowConfig;
 
     const result = validateConfigObjectWithPlugins(config);
 

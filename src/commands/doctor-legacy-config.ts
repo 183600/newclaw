@@ -1,10 +1,10 @@
-import type { NewClawConfig } from "../config/config.js";
-export function normalizeLegacyConfigValues(cfg: NewClawConfig): {
-  config: NewClawConfig;
+import type { iFlowConfig } from "../config/config.js";
+export function normalizeLegacyConfigValues(cfg: iFlowConfig): {
+  config: iFlowConfig;
   changes: string[];
 } {
   const changes: string[] = [];
-  let next: NewClawConfig = cfg;
+  let next: iFlowConfig = cfg;
 
   const legacyAckReaction = cfg.messages?.ackReaction?.trim();
   const hasWhatsAppConfig = cfg.channels?.whatsapp !== undefined;

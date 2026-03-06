@@ -1,6 +1,6 @@
 import AVFAudio
-import NewClawKit
-import NewClawProtocol
+import iFlowKit
+import iFlowProtocol
 import Foundation
 import Observation
 import OSLog

@@ -6,7 +6,7 @@ import { resolveControlUiDistIndexPath, resolveControlUiRepoRoot } from "./contr
 
 describe("control UI assets helpers", () => {
   it("resolves repo root from src argv1", async () => {
-    const tmp = await fs.mkdtemp(path.join(os.tmpdir(), "newclaw-ui-"));
+    const tmp = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-ui-"));
     try {
       await fs.mkdir(path.join(tmp, "ui"), { recursive: true });
       await fs.writeFile(path.join(tmp, "ui", "vite.config.ts"), "export {};\n");
@@ -21,7 +21,7 @@ describe("control UI assets helpers", () => {
   });
 
   it("resolves repo root from dist argv1", async () => {
-    const tmp = await fs.mkdtemp(path.join(os.tmpdir(), "newclaw-ui-"));
+    const tmp = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-ui-"));
     try {
       await fs.mkdir(path.join(tmp, "ui"), { recursive: true });
       await fs.writeFile(path.join(tmp, "ui", "vite.config.ts"), "export {};\n");
@@ -44,14 +44,14 @@ describe("control UI assets helpers", () => {
   });
 
   it("resolves dist control-ui index path from package root argv1", async () => {
-    const tmp = await fs.mkdtemp(path.join(os.tmpdir(), "newclaw-ui-"));
+    const tmp = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-ui-"));
     try {
-      await fs.writeFile(path.join(tmp, "package.json"), JSON.stringify({ name: "newclaw" }));
-      await fs.writeFile(path.join(tmp, "newclaw.mjs"), "export {};\n");
+      await fs.writeFile(path.join(tmp, "package.json"), JSON.stringify({ name: "iflow" }));
+      await fs.writeFile(path.join(tmp, "iflow.mjs"), "export {};\n");
       await fs.mkdir(path.join(tmp, "dist", "control-ui"), { recursive: true });
       await fs.writeFile(path.join(tmp, "dist", "control-ui", "index.html"), "<html></html>\n");
 
-      expect(await resolveControlUiDistIndexPath(path.join(tmp, "newclaw.mjs"))).toBe(
+      expect(await resolveControlUiDistIndexPath(path.join(tmp, "iflow.mjs"))).toBe(
         path.join(tmp, "dist", "control-ui", "index.html"),
       );
     } finally {
@@ -60,17 +60,17 @@ describe("control UI assets helpers", () => {
   });
 
   it("resolves dist control-ui index path from .bin argv1", async () => {
-    const tmp = await fs.mkdtemp(path.join(os.tmpdir(), "newclaw-ui-"));
+    const tmp = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-ui-"));
     try {
       const binDir = path.join(tmp, "node_modules", ".bin");
-      const pkgRoot = path.join(tmp, "node_modules", "newclaw");
+      const pkgRoot = path.join(tmp, "node_modules", "iflow");
       await fs.mkdir(binDir, { recursive: true });
       await fs.mkdir(path.join(pkgRoot, "dist", "control-ui"), { recursive: true });
-      await fs.writeFile(path.join(binDir, "newclaw"), "#!/usr/bin/env node\n");
-      await fs.writeFile(path.join(pkgRoot, "package.json"), JSON.stringify({ name: "newclaw" }));
+      await fs.writeFile(path.join(binDir, "iflow"), "#!/usr/bin/env node\n");
+      await fs.writeFile(path.join(pkgRoot, "package.json"), JSON.stringify({ name: "iflow" }));
       await fs.writeFile(path.join(pkgRoot, "dist", "control-ui", "index.html"), "<html></html>\n");
 
-      expect(await resolveControlUiDistIndexPath(path.join(binDir, "newclaw"))).toBe(
+      expect(await resolveControlUiDistIndexPath(path.join(binDir, "iflow"))).toBe(
         path.join(pkgRoot, "dist", "control-ui", "index.html"),
       );
     } finally {

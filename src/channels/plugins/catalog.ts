@@ -1,10 +1,10 @@
 import fs from "node:fs";
 import path from "node:path";
-import type { NewClawPackageManifest } from "../../plugins/manifest.js";
+import type { iFlowPackageManifest } from "../../plugins/manifest.js";
 import type { PluginOrigin } from "../../plugins/types.js";
 import type { ChannelMeta } from "./types.js";
 import { MANIFEST_KEY } from "../../compat/legacy-names.js";
-import { discoverNewClawPlugins } from "../../plugins/discovery.js";
+import { discoveriFlowPlugins } from "../../plugins/discovery.js";
 import { CONFIG_DIR, resolveUserPath } from "../../utils.js";
 
 export type ChannelUiMetaEntry = {
@@ -49,7 +49,7 @@ type ExternalCatalogEntry = {
   name?: string;
   version?: string;
   description?: string;
-} & Partial<Record<ManifestKey, NewClawPackageManifest>>;
+} & Partial<Record<ManifestKey, iFlowPackageManifest>>;
 
 const DEFAULT_CATALOG_PATHS = [
   path.join(CONFIG_DIR, "mpm", "plugins.json"),
@@ -57,7 +57,7 @@ const DEFAULT_CATALOG_PATHS = [
   path.join(CONFIG_DIR, "plugins", "catalog.json"),
 ];
 
-const ENV_CATALOG_PATHS = ["NEWCLAW_PLUGIN_CATALOG_PATHS", "NEWCLAW_MPM_CATALOG_PATHS"];
+const ENV_CATALOG_PATHS = ["IFLOW_PLUGIN_CATALOG_PATHS", "IFLOW_MPM_CATALOG_PATHS"];
 
 type ManifestKey = typeof MANIFEST_KEY;
 
@@ -123,7 +123,7 @@ function loadExternalCatalogEntries(options: CatalogOptions): ExternalCatalogEnt
 }
 
 function toChannelMeta(params: {
-  channel: NonNullable<NewClawPackageManifest["channel"]>;
+  channel: NonNullable<iFlowPackageManifest["channel"]>;
   id: string;
 }): ChannelMeta | null {
   const label = params.channel.label?.trim();
@@ -173,7 +173,7 @@ function toChannelMeta(params: {
 }
 
 function resolveInstallInfo(params: {
-  manifest: NewClawPackageManifest;
+  manifest: iFlowPackageManifest;
   packageName?: string;
   packageDir?: string;
   workspaceDir?: string;
@@ -198,7 +198,7 @@ function buildCatalogEntry(candidate: {
   packageName?: string;
   packageDir?: string;
   workspaceDir?: string;
-  packageManifest?: NewClawPackageManifest;
+  packageManifest?: iFlowPackageManifest;
 }): ChannelPluginCatalogEntry | null {
   const manifest = candidate.packageManifest;
   if (!manifest?.channel) {
@@ -263,7 +263,7 @@ export function buildChannelUiCatalog(
 export function listChannelPluginCatalogEntries(
   options: CatalogOptions = {},
 ): ChannelPluginCatalogEntry[] {
-  const discovery = discoverNewClawPlugins({ workspaceDir: options.workspaceDir });
+  const discovery = discoveriFlowPlugins({ workspaceDir: options.workspaceDir });
   const resolved = new Map<string, { entry: ChannelPluginCatalogEntry; priority: number }>();
 
   for (const candidate of discovery.candidates) {

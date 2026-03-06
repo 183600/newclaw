@@ -4,8 +4,8 @@ import { buildSandboxCreateArgs, type SandboxDockerConfig } from "./sandbox.js";
 describe("buildSandboxCreateArgs", () => {
   it("includes hardening and resource flags", () => {
     const cfg: SandboxDockerConfig = {
-      image: "newclaw-sandbox:bookworm-slim",
-      containerPrefix: "newclaw-sbx-",
+      image: "iflow-sandbox:bookworm-slim",
+      containerPrefix: "iflow-sbx-",
       workdir: "/workspace",
       readOnlyRoot: true,
       tmpfs: ["/tmp"],
@@ -23,32 +23,32 @@ describe("buildSandboxCreateArgs", () => {
         core: "0",
       },
       seccompProfile: "/tmp/seccomp.json",
-      apparmorProfile: "newclaw-sandbox",
+      apparmorProfile: "iflow-sandbox",
       dns: ["1.1.1.1"],
       extraHosts: ["internal.service:10.0.0.5"],
     };
 
     const args = buildSandboxCreateArgs({
-      name: "newclaw-sbx-test",
+      name: "iflow-sbx-test",
       cfg,
       scopeKey: "main",
       createdAtMs: 1700000000000,
-      labels: { "newclaw.sandboxBrowser": "1" },
+      labels: { "iflow.sandboxBrowser": "1" },
     });
 
     expect(args).toEqual(
       expect.arrayContaining([
         "create",
         "--name",
-        "newclaw-sbx-test",
+        "iflow-sbx-test",
         "--label",
-        "newclaw.sandbox=1",
+        "iflow.sandbox=1",
         "--label",
-        "newclaw.sessionKey=main",
+        "iflow.sessionKey=main",
         "--label",
-        "newclaw.createdAtMs=1700000000000",
+        "iflow.createdAtMs=1700000000000",
         "--label",
-        "newclaw.sandboxBrowser=1",
+        "iflow.sandboxBrowser=1",
         "--read-only",
         "--tmpfs",
         "/tmp",
@@ -63,7 +63,7 @@ describe("buildSandboxCreateArgs", () => {
         "--security-opt",
         "seccomp=/tmp/seccomp.json",
         "--security-opt",
-        "apparmor=newclaw-sandbox",
+        "apparmor=iflow-sandbox",
         "--dns",
         "1.1.1.1",
         "--add-host",
@@ -95,8 +95,8 @@ describe("buildSandboxCreateArgs", () => {
 
   it("emits -v flags for custom binds", () => {
     const cfg: SandboxDockerConfig = {
-      image: "newclaw-sandbox:bookworm-slim",
-      containerPrefix: "newclaw-sbx-",
+      image: "iflow-sandbox:bookworm-slim",
+      containerPrefix: "iflow-sbx-",
       workdir: "/workspace",
       readOnlyRoot: false,
       tmpfs: [],
@@ -106,7 +106,7 @@ describe("buildSandboxCreateArgs", () => {
     };
 
     const args = buildSandboxCreateArgs({
-      name: "newclaw-sbx-binds",
+      name: "iflow-sbx-binds",
       cfg,
       scopeKey: "main",
       createdAtMs: 1700000000000,
@@ -128,8 +128,8 @@ describe("buildSandboxCreateArgs", () => {
 
   it("omits -v flags when binds is empty or undefined", () => {
     const cfg: SandboxDockerConfig = {
-      image: "newclaw-sandbox:bookworm-slim",
-      containerPrefix: "newclaw-sbx-",
+      image: "iflow-sandbox:bookworm-slim",
+      containerPrefix: "iflow-sbx-",
       workdir: "/workspace",
       readOnlyRoot: false,
       tmpfs: [],
@@ -139,7 +139,7 @@ describe("buildSandboxCreateArgs", () => {
     };
 
     const args = buildSandboxCreateArgs({
-      name: "newclaw-sbx-no-binds",
+      name: "iflow-sbx-no-binds",
       cfg,
       scopeKey: "main",
       createdAtMs: 1700000000000,

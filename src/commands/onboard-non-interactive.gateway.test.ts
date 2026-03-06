@@ -99,15 +99,15 @@ const runtime = {
 describe("onboard (non-interactive): gateway and remote auth", () => {
   const prev = {
     home: process.env.HOME,
-    stateDir: process.env.NEWCLAW_STATE_DIR,
-    configPath: process.env.NEWCLAW_CONFIG_PATH,
-    skipChannels: process.env.NEWCLAW_SKIP_CHANNELS,
-    skipGmail: process.env.NEWCLAW_SKIP_GMAIL_WATCHER,
-    skipCron: process.env.NEWCLAW_SKIP_CRON,
-    skipCanvas: process.env.NEWCLAW_SKIP_CANVAS_HOST,
-    skipBrowser: process.env.NEWCLAW_SKIP_BROWSER_CONTROL_SERVER,
-    token: process.env.NEWCLAW_GATEWAY_TOKEN,
-    password: process.env.NEWCLAW_GATEWAY_PASSWORD,
+    stateDir: process.env.IFLOW_STATE_DIR,
+    configPath: process.env.IFLOW_CONFIG_PATH,
+    skipChannels: process.env.IFLOW_SKIP_CHANNELS,
+    skipGmail: process.env.IFLOW_SKIP_GMAIL_WATCHER,
+    skipCron: process.env.IFLOW_SKIP_CRON,
+    skipCanvas: process.env.IFLOW_SKIP_CANVAS_HOST,
+    skipBrowser: process.env.IFLOW_SKIP_BROWSER_CONTROL_SERVER,
+    token: process.env.IFLOW_GATEWAY_TOKEN,
+    password: process.env.IFLOW_GATEWAY_PASSWORD,
   };
   let tempHome: string | undefined;
 
@@ -116,21 +116,21 @@ describe("onboard (non-interactive): gateway and remote auth", () => {
       throw new Error("temp home not initialized");
     }
     const stateDir = await fs.mkdtemp(path.join(tempHome, prefix));
-    process.env.NEWCLAW_STATE_DIR = stateDir;
-    delete process.env.NEWCLAW_CONFIG_PATH;
+    process.env.IFLOW_STATE_DIR = stateDir;
+    delete process.env.IFLOW_CONFIG_PATH;
     return stateDir;
   };
 
   beforeAll(async () => {
-    process.env.NEWCLAW_SKIP_CHANNELS = "1";
-    process.env.NEWCLAW_SKIP_GMAIL_WATCHER = "1";
-    process.env.NEWCLAW_SKIP_CRON = "1";
-    process.env.NEWCLAW_SKIP_CANVAS_HOST = "1";
-    process.env.NEWCLAW_SKIP_BROWSER_CONTROL_SERVER = "1";
-    delete process.env.NEWCLAW_GATEWAY_TOKEN;
-    delete process.env.NEWCLAW_GATEWAY_PASSWORD;
+    process.env.IFLOW_SKIP_CHANNELS = "1";
+    process.env.IFLOW_SKIP_GMAIL_WATCHER = "1";
+    process.env.IFLOW_SKIP_CRON = "1";
+    process.env.IFLOW_SKIP_CANVAS_HOST = "1";
+    process.env.IFLOW_SKIP_BROWSER_CONTROL_SERVER = "1";
+    delete process.env.IFLOW_GATEWAY_TOKEN;
+    delete process.env.IFLOW_GATEWAY_PASSWORD;
 
-    tempHome = await fs.mkdtemp(path.join(os.tmpdir(), "newclaw-onboard-"));
+    tempHome = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-onboard-"));
     process.env.HOME = tempHome;
   });
 
@@ -139,21 +139,21 @@ describe("onboard (non-interactive): gateway and remote auth", () => {
       await fs.rm(tempHome, { recursive: true, force: true });
     }
     process.env.HOME = prev.home;
-    process.env.NEWCLAW_STATE_DIR = prev.stateDir;
-    process.env.NEWCLAW_CONFIG_PATH = prev.configPath;
-    process.env.NEWCLAW_SKIP_CHANNELS = prev.skipChannels;
-    process.env.NEWCLAW_SKIP_GMAIL_WATCHER = prev.skipGmail;
-    process.env.NEWCLAW_SKIP_CRON = prev.skipCron;
-    process.env.NEWCLAW_SKIP_CANVAS_HOST = prev.skipCanvas;
-    process.env.NEWCLAW_SKIP_BROWSER_CONTROL_SERVER = prev.skipBrowser;
-    process.env.NEWCLAW_GATEWAY_TOKEN = prev.token;
-    process.env.NEWCLAW_GATEWAY_PASSWORD = prev.password;
+    process.env.IFLOW_STATE_DIR = prev.stateDir;
+    process.env.IFLOW_CONFIG_PATH = prev.configPath;
+    process.env.IFLOW_SKIP_CHANNELS = prev.skipChannels;
+    process.env.IFLOW_SKIP_GMAIL_WATCHER = prev.skipGmail;
+    process.env.IFLOW_SKIP_CRON = prev.skipCron;
+    process.env.IFLOW_SKIP_CANVAS_HOST = prev.skipCanvas;
+    process.env.IFLOW_SKIP_BROWSER_CONTROL_SERVER = prev.skipBrowser;
+    process.env.IFLOW_GATEWAY_TOKEN = prev.token;
+    process.env.IFLOW_GATEWAY_PASSWORD = prev.password;
   });
 
   it("writes gateway token auth into config and gateway enforces it", async () => {
     const stateDir = await initStateDir("state-noninteractive-");
     const token = "tok_test_123";
-    const workspace = path.join(stateDir, "newclaw");
+    const workspace = path.join(stateDir, "iflow");
 
     const { runNonInteractiveOnboarding } = await import("./onboard-non-interactive.js");
     await runNonInteractiveOnboarding(
@@ -236,11 +236,11 @@ describe("onboard (non-interactive): gateway and remote auth", () => {
       return;
     }
     const stateDir = await initStateDir("state-lan-");
-    process.env.NEWCLAW_STATE_DIR = stateDir;
-    process.env.NEWCLAW_CONFIG_PATH = path.join(stateDir, "newclaw.json");
+    process.env.IFLOW_STATE_DIR = stateDir;
+    process.env.IFLOW_CONFIG_PATH = path.join(stateDir, "iflow.json");
 
     const port = await getFreeGatewayPort();
-    const workspace = path.join(stateDir, "newclaw");
+    const workspace = path.join(stateDir, "iflow");
 
     // Other test files mock ../config/config.js. This onboarding flow needs the real
     // implementation so it can persist the config and then read it back (Windows CI

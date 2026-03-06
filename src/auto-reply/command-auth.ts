@@ -1,6 +1,6 @@
 import type { ChannelDock } from "../channels/dock.js";
 import type { ChannelId } from "../channels/plugins/types.js";
-import type { NewClawConfig } from "../config/config.js";
+import type { iFlowConfig } from "../config/config.js";
 import type { MsgContext } from "./templating.js";
 import { getChannelDock, listChannelDocks } from "../channels/dock.js";
 import { normalizeAnyChannelId } from "../channels/registry.js";
@@ -14,7 +14,7 @@ export type CommandAuthorization = {
   to?: string;
 };
 
-function resolveProviderFromContext(ctx: MsgContext, cfg: NewClawConfig): ChannelId | undefined {
+function resolveProviderFromContext(ctx: MsgContext, cfg: iFlowConfig): ChannelId | undefined {
   const direct =
     normalizeAnyChannelId(ctx.Provider) ??
     normalizeAnyChannelId(ctx.Surface) ??
@@ -54,7 +54,7 @@ function resolveProviderFromContext(ctx: MsgContext, cfg: NewClawConfig): Channe
 
 function formatAllowFromList(params: {
   dock?: ChannelDock;
-  cfg: NewClawConfig;
+  cfg: iFlowConfig;
   accountId?: string | null;
   allowFrom: Array<string | number>;
 }): string[] {
@@ -70,7 +70,7 @@ function formatAllowFromList(params: {
 
 function normalizeAllowFromEntry(params: {
   dock?: ChannelDock;
-  cfg: NewClawConfig;
+  cfg: iFlowConfig;
   accountId?: string | null;
   value: string;
 }): string[] {
@@ -86,7 +86,7 @@ function normalizeAllowFromEntry(params: {
 function resolveSenderCandidates(params: {
   dock?: ChannelDock;
   providerId?: ChannelId;
-  cfg: NewClawConfig;
+  cfg: iFlowConfig;
   accountId?: string | null;
   senderId?: string | null;
   senderE164?: string | null;
@@ -124,7 +124,7 @@ function resolveSenderCandidates(params: {
 
 export function resolveCommandAuthorization(params: {
   ctx: MsgContext;
-  cfg: NewClawConfig;
+  cfg: iFlowConfig;
   commandAuthorized: boolean;
 }): CommandAuthorization {
   const { ctx, cfg, commandAuthorized } = params;

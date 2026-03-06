@@ -1,4 +1,4 @@
-import type { MSTeamsConfig } from "newclaw/plugin-sdk";
+import type { MSTeamsConfig } from "iflow/plugin-sdk";
 import { describe, expect, it } from "vitest";
 import {
   isMSTeamsGroupAllowed,

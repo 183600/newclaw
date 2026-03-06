@@ -1,12 +1,12 @@
 ---
-summary: "SSH tunnel setup for NewClaw.app connecting to a remote gateway"
+summary: "SSH tunnel setup for iFlow.app connecting to a remote gateway"
 read_when: "Connecting the macOS app to a remote gateway over SSH"
 title: "Remote Gateway Setup"
 ---
 
-# Running NewClaw.app with a Remote Gateway
+# Running iFlow.app with a Remote Gateway
 
-NewClaw.app uses SSH tunneling to connect to a remote gateway. This guide shows you how to set it up.
+iFlow.app uses SSH tunneling to connect to a remote gateway. This guide shows you how to set it up.
 
 ## Overview
 
@@ -14,7 +14,7 @@ NewClaw.app uses SSH tunneling to connect to a remote gateway. This guide shows 
 ┌─────────────────────────────────────────────────────────────┐
 │                        Client Machine                          │
 │                                                              │
-│  NewClaw.app ──► ws://127.0.0.1:18789 (local port)           │
+│  iFlow.app ──► ws://127.0.0.1:18789 (local port)           │
 │                     │                                        │
 │                     ▼                                        │
 │  SSH Tunnel ────────────────────────────────────────────────│
@@ -57,7 +57,7 @@ ssh-copy-id -i ~/.ssh/id_rsa <REMOTE_USER>@<REMOTE_IP>
 ### Step 3: Set Gateway Token
 
 ```bash
-launchctl setenv NEWCLAW_GATEWAY_TOKEN "<your-token>"
+launchctl setenv IFLOW_GATEWAY_TOKEN "<your-token>"
 ```
 
 ### Step 4: Start SSH Tunnel
@@ -66,11 +66,11 @@ launchctl setenv NEWCLAW_GATEWAY_TOKEN "<your-token>"
 ssh -N remote-gateway &
 ```
 
-### Step 5: Restart NewClaw.app
+### Step 5: Restart iFlow.app
 
 ```bash
-# Quit NewClaw.app (⌘Q), then reopen:
-open /path/to/NewClaw.app
+# Quit iFlow.app (⌘Q), then reopen:
+open /path/to/iFlow.app
 ```
 
 The app will now connect to the remote gateway through the SSH tunnel.
@@ -118,7 +118,7 @@ The tunnel will now:
 - Restart if it crashes
 - Keep running in the background
 
-Legacy note: remove any leftover `com.newclaw.ssh-tunnel` LaunchAgent if present.
+Legacy note: remove any leftover `com.iflow.ssh-tunnel` LaunchAgent if present.
 
 ---
 
@@ -154,4 +154,4 @@ launchctl bootout gui/$UID/bot.molt.ssh-tunnel
 | `KeepAlive`                          | Automatically restarts tunnel if it crashes                  |
 | `RunAtLoad`                          | Starts tunnel when the agent loads                           |
 
-NewClaw.app connects to `ws://127.0.0.1:18789` on your client machine. The SSH tunnel forwards that connection to port 18789 on the remote machine where the Gateway is running.
+iFlow.app connects to `ws://127.0.0.1:18789` on your client machine. The SSH tunnel forwards that connection to port 18789 on the remote machine where the Gateway is running.

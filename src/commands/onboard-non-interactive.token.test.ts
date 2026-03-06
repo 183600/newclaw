@@ -7,27 +7,27 @@ describe("onboard (non-interactive): token auth", () => {
   it("writes token profile config and stores the token", async () => {
     const prev = {
       home: process.env.HOME,
-      stateDir: process.env.NEWCLAW_STATE_DIR,
-      configPath: process.env.NEWCLAW_CONFIG_PATH,
-      skipChannels: process.env.NEWCLAW_SKIP_CHANNELS,
-      skipGmail: process.env.NEWCLAW_SKIP_GMAIL_WATCHER,
-      skipCron: process.env.NEWCLAW_SKIP_CRON,
-      skipCanvas: process.env.NEWCLAW_SKIP_CANVAS_HOST,
-      token: process.env.NEWCLAW_GATEWAY_TOKEN,
-      password: process.env.NEWCLAW_GATEWAY_PASSWORD,
+      stateDir: process.env.IFLOW_STATE_DIR,
+      configPath: process.env.IFLOW_CONFIG_PATH,
+      skipChannels: process.env.IFLOW_SKIP_CHANNELS,
+      skipGmail: process.env.IFLOW_SKIP_GMAIL_WATCHER,
+      skipCron: process.env.IFLOW_SKIP_CRON,
+      skipCanvas: process.env.IFLOW_SKIP_CANVAS_HOST,
+      token: process.env.IFLOW_GATEWAY_TOKEN,
+      password: process.env.IFLOW_GATEWAY_PASSWORD,
     };
 
-    process.env.NEWCLAW_SKIP_CHANNELS = "1";
-    process.env.NEWCLAW_SKIP_GMAIL_WATCHER = "1";
-    process.env.NEWCLAW_SKIP_CRON = "1";
-    process.env.NEWCLAW_SKIP_CANVAS_HOST = "1";
-    delete process.env.NEWCLAW_GATEWAY_TOKEN;
-    delete process.env.NEWCLAW_GATEWAY_PASSWORD;
+    process.env.IFLOW_SKIP_CHANNELS = "1";
+    process.env.IFLOW_SKIP_GMAIL_WATCHER = "1";
+    process.env.IFLOW_SKIP_CRON = "1";
+    process.env.IFLOW_SKIP_CANVAS_HOST = "1";
+    delete process.env.IFLOW_GATEWAY_TOKEN;
+    delete process.env.IFLOW_GATEWAY_PASSWORD;
 
-    const tempHome = await fs.mkdtemp(path.join(os.tmpdir(), "newclaw-onboard-token-"));
+    const tempHome = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-onboard-token-"));
     process.env.HOME = tempHome;
-    process.env.NEWCLAW_STATE_DIR = tempHome;
-    process.env.NEWCLAW_CONFIG_PATH = path.join(tempHome, "newclaw.json");
+    process.env.IFLOW_STATE_DIR = tempHome;
+    process.env.IFLOW_CONFIG_PATH = path.join(tempHome, "iflow.json");
     vi.resetModules();
 
     const token = `sk-ant-oat01-${"a".repeat(80)}`;
@@ -79,14 +79,14 @@ describe("onboard (non-interactive): token auth", () => {
     } finally {
       await fs.rm(tempHome, { recursive: true, force: true });
       process.env.HOME = prev.home;
-      process.env.NEWCLAW_STATE_DIR = prev.stateDir;
-      process.env.NEWCLAW_CONFIG_PATH = prev.configPath;
-      process.env.NEWCLAW_SKIP_CHANNELS = prev.skipChannels;
-      process.env.NEWCLAW_SKIP_GMAIL_WATCHER = prev.skipGmail;
-      process.env.NEWCLAW_SKIP_CRON = prev.skipCron;
-      process.env.NEWCLAW_SKIP_CANVAS_HOST = prev.skipCanvas;
-      process.env.NEWCLAW_GATEWAY_TOKEN = prev.token;
-      process.env.NEWCLAW_GATEWAY_PASSWORD = prev.password;
+      process.env.IFLOW_STATE_DIR = prev.stateDir;
+      process.env.IFLOW_CONFIG_PATH = prev.configPath;
+      process.env.IFLOW_SKIP_CHANNELS = prev.skipChannels;
+      process.env.IFLOW_SKIP_GMAIL_WATCHER = prev.skipGmail;
+      process.env.IFLOW_SKIP_CRON = prev.skipCron;
+      process.env.IFLOW_SKIP_CANVAS_HOST = prev.skipCanvas;
+      process.env.IFLOW_GATEWAY_TOKEN = prev.token;
+      process.env.IFLOW_GATEWAY_PASSWORD = prev.password;
     }
   }, 60_000);
 });

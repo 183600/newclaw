@@ -1,8 +1,8 @@
 ---
 read_when:
   - 添加或修改智能体工具
-  - 停用或更改 `newclaw-*` Skills
-summary: NewClaw 的智能体工具集（browser、canvas、nodes、message、cron），替代旧版 `newclaw-*` Skills
+  - 停用或更改 `iflow-*` Skills
+summary: iFlow 的智能体工具集（browser、canvas、nodes、message、cron），替代旧版 `iflow-*` Skills
 title: 工具
 x-i18n:
   generated_at: "2026-02-01T21:44:06Z"
@@ -13,15 +13,15 @@ x-i18n:
   workflow: 15
 ---
 
-# 工具（NewClaw）
+# 工具（iFlow）
 
-NewClaw 提供**一等智能体工具**，涵盖 browser、canvas、nodes 和 cron。
-这些工具替代了旧的 `newclaw-*` Skills：工具是类型化的，无需 shell 调用，
+iFlow 提供**一等智能体工具**，涵盖 browser、canvas、nodes 和 cron。
+这些工具替代了旧的 `iflow-*` Skills：工具是类型化的，无需 shell 调用，
 智能体应直接依赖这些工具。
 
 ## 禁用工具
 
-你可以通过 `newclaw.json` 中的 `tools.allow` / `tools.deny` 全局允许/拒绝工具
+你可以通过 `iflow.json` 中的 `tools.allow` / `tools.deny` 全局允许/拒绝工具
 （deny 优先）。这会阻止被拒绝的工具发送给模型提供商。
 
 ```json5
@@ -34,7 +34,7 @@ NewClaw 提供**一等智能体工具**，涵盖 browser、canvas、nodes 和 cr
 
 - 匹配不区分大小写。
 - 支持 `*` 通配符（`"*"` 表示所有工具）。
-- 如果 `tools.allow` 仅引用了未知或未加载的插件工具名称，NewClaw 会记录警告并忽略允许列表，以确保核心工具保持可用。
+- 如果 `tools.allow` 仅引用了未知或未加载的插件工具名称，iFlow 会记录警告并忽略允许列表，以确保核心工具保持可用。
 
 ## 工具配置文件（基础允许列表）
 
@@ -158,7 +158,7 @@ NewClaw 提供**一等智能体工具**，涵盖 browser、canvas、nodes 和 cr
 - `group:automation`：`cron`、`gateway`
 - `group:messaging`：`message`
 - `group:nodes`：`nodes`
-- `group:newclaw`：所有内置 NewClaw 工具（不包括提供商插件）
+- `group:iflow`：所有内置 iFlow 工具（不包括提供商插件）
 
 示例（仅允许文件工具 + browser）：
 
@@ -211,7 +211,7 @@ NewClaw 提供**一等智能体工具**，涵盖 browser、canvas、nodes 和 cr
 - 如果 `process` 被禁止，`exec` 将同步运行并忽略 `yieldMs`/`background`。
 - `elevated` 受 `tools.elevated` 以及任何 `agents.list[].tools.elevated` 覆盖的门控（两者都必须允许），且是 `host=gateway` + `security=full` 的别名。
 - `elevated` 仅在智能体处于沙箱时改变行为（否则为空操作）。
-- `host=node` 可以指向 macOS 伴侣应用或无头节点主机（`newclaw node run`）。
+- `host=node` 可以指向 macOS 伴侣应用或无头节点主机（`iflow node run`）。
 - Gateway网关/节点审批和允许列表：[Exec 审批](/tools/exec-approvals)。
 
 ### `process`
@@ -239,7 +239,7 @@ NewClaw 提供**一等智能体工具**，涵盖 browser、canvas、nodes 和 cr
 
 说明：
 
-- 需要 Brave API 密钥（推荐：`newclaw configure --section web`，或设置 `BRAVE_API_KEY`）。
+- 需要 Brave API 密钥（推荐：`iflow configure --section web`，或设置 `BRAVE_API_KEY`）。
 - 通过 `tools.web.search.enabled` 启用。
 - 响应会被缓存（默认 15 分钟）。
 - 参见 [Web 工具](/tools/web)了解设置方法。
@@ -264,7 +264,7 @@ NewClaw 提供**一等智能体工具**，涵盖 browser、canvas、nodes 和 cr
 
 ### `browser`
 
-控制 NewClaw 管理的专用浏览器。
+控制 iFlow 管理的专用浏览器。
 
 核心操作：
 
@@ -316,7 +316,7 @@ NewClaw 提供**一等智能体工具**，涵盖 browser、canvas、nodes 和 cr
 - 底层使用 Gateway网关的 `node.invoke`。
 - 如果未提供 `node`，工具会选择默认值（单个已连接节点或本地 mac 节点）。
 - A2UI 仅支持 v0.8（无 `createSurface`）；CLI 会拒绝 v0.9 JSONL 并报告行错误。
-- 快速测试：`newclaw nodes canvas a2ui push --node <id> --text "Hello from A2UI"`。
+- 快速测试：`iflow nodes canvas a2ui push --node <id> --text "Hello from A2UI"`。
 
 ### `nodes`
 
@@ -418,7 +418,7 @@ NewClaw 提供**一等智能体工具**，涵盖 browser、canvas、nodes 和 cr
 
 核心操作：
 
-- `restart`（授权 + 发送 `SIGUSR1` 进行进程内重启；`newclaw gateway` 原地重启）
+- `restart`（授权 + 发送 `SIGUSR1` 进行进程内重启；`iflow gateway` 原地重启）
 - `config.get` / `config.schema`
 - `config.apply`（验证 + 写入配置 + 重启 + 唤醒）
 - `config.patch`（合并部分更新 + 重启 + 唤醒）

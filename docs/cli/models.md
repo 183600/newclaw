@@ -1,12 +1,12 @@
 ---
-summary: "CLI reference for `newclaw models` (status/list/set/scan, aliases, fallbacks, auth)"
+summary: "CLI reference for `iflow models` (status/list/set/scan, aliases, fallbacks, auth)"
 read_when:
   - You want to change default models or view provider auth status
   - You want to scan available models/providers and debug auth profiles
 title: "models"
 ---
 
-# `newclaw models`
+# `iflow models`
 
 Model discovery, scanning, and configuration (default model, fallbacks, auth profiles).
 
@@ -18,26 +18,26 @@ Related:
 ## Common commands
 
 ```bash
-newclaw models status
-newclaw models list
-newclaw models set <model-or-alias>
-newclaw models scan
+iflow models status
+iflow models list
+iflow models set <model-or-alias>
+iflow models scan
 ```
 
-`newclaw models status` shows the resolved default/fallbacks plus an auth overview.
+`iflow models status` shows the resolved default/fallbacks plus an auth overview.
 When provider usage snapshots are available, the OAuth/token status section includes
 provider usage headers.
 Add `--probe` to run live auth probes against each configured provider profile.
 Probes are real requests (may consume tokens and trigger rate limits).
 Use `--agent <id>` to inspect a configured agent’s model/auth state. When omitted,
-the command uses `NEWCLAW_AGENT_DIR`/`PI_CODING_AGENT_DIR` if set, otherwise the
+the command uses `IFLOW_AGENT_DIR`/`PI_CODING_AGENT_DIR` if set, otherwise the
 configured default agent.
 
 Notes:
 
 - `models set <model-or-alias>` accepts `provider/model` or an alias.
 - Model refs are parsed by splitting on the **first** `/`. If the model ID includes `/` (OpenRouter-style), include the provider prefix (example: `openrouter/moonshotai/kimi-k2`).
-- If you omit the provider, NewClaw treats the input as an alias or a model for the **default provider** (only works when there is no `/` in the model ID).
+- If you omit the provider, iFlow treats the input as an alias or a model for the **default provider** (only works when there is no `/` in the model ID).
 
 ### `models status`
 
@@ -52,26 +52,26 @@ Options:
 - `--probe-timeout <ms>`
 - `--probe-concurrency <n>`
 - `--probe-max-tokens <n>`
-- `--agent <id>` (configured agent id; overrides `NEWCLAW_AGENT_DIR`/`PI_CODING_AGENT_DIR`)
+- `--agent <id>` (configured agent id; overrides `IFLOW_AGENT_DIR`/`PI_CODING_AGENT_DIR`)
 
 ## Aliases + fallbacks
 
 ```bash
-newclaw models aliases list
-newclaw models fallbacks list
+iflow models aliases list
+iflow models fallbacks list
 ```
 
 ## Auth profiles
 
 ```bash
-newclaw models auth add
-newclaw models auth login --provider <id>
-newclaw models auth setup-token
-newclaw models auth paste-token
+iflow models auth add
+iflow models auth login --provider <id>
+iflow models auth setup-token
+iflow models auth paste-token
 ```
 
 `models auth login` runs a provider plugin’s auth flow (OAuth/API key). Use
-`newclaw plugins list` to see which providers are installed.
+`iflow plugins list` to see which providers are installed.
 
 Notes:
 

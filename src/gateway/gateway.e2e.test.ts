@@ -27,39 +27,39 @@ describe("gateway e2e", () => {
     async () => {
       const prev = {
         home: process.env.HOME,
-        configPath: process.env.NEWCLAW_CONFIG_PATH,
-        token: process.env.NEWCLAW_GATEWAY_TOKEN,
-        skipChannels: process.env.NEWCLAW_SKIP_CHANNELS,
-        skipGmail: process.env.NEWCLAW_SKIP_GMAIL_WATCHER,
-        skipCron: process.env.NEWCLAW_SKIP_CRON,
-        skipCanvas: process.env.NEWCLAW_SKIP_CANVAS_HOST,
-        skipBrowser: process.env.NEWCLAW_SKIP_BROWSER_CONTROL_SERVER,
+        configPath: process.env.IFLOW_CONFIG_PATH,
+        token: process.env.IFLOW_GATEWAY_TOKEN,
+        skipChannels: process.env.IFLOW_SKIP_CHANNELS,
+        skipGmail: process.env.IFLOW_SKIP_GMAIL_WATCHER,
+        skipCron: process.env.IFLOW_SKIP_CRON,
+        skipCanvas: process.env.IFLOW_SKIP_CANVAS_HOST,
+        skipBrowser: process.env.IFLOW_SKIP_BROWSER_CONTROL_SERVER,
       };
 
       const { baseUrl: openaiBaseUrl, restore } = installOpenAiResponsesMock();
 
-      const tempHome = await fs.mkdtemp(path.join(os.tmpdir(), "newclaw-gw-mock-home-"));
+      const tempHome = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-gw-mock-home-"));
       process.env.HOME = tempHome;
-      process.env.NEWCLAW_SKIP_CHANNELS = "1";
-      process.env.NEWCLAW_SKIP_GMAIL_WATCHER = "1";
-      process.env.NEWCLAW_SKIP_CRON = "1";
-      process.env.NEWCLAW_SKIP_CANVAS_HOST = "1";
-      process.env.NEWCLAW_SKIP_BROWSER_CONTROL_SERVER = "1";
+      process.env.IFLOW_SKIP_CHANNELS = "1";
+      process.env.IFLOW_SKIP_GMAIL_WATCHER = "1";
+      process.env.IFLOW_SKIP_CRON = "1";
+      process.env.IFLOW_SKIP_CANVAS_HOST = "1";
+      process.env.IFLOW_SKIP_BROWSER_CONTROL_SERVER = "1";
 
       const token = `test-${randomUUID()}`;
-      process.env.NEWCLAW_GATEWAY_TOKEN = token;
+      process.env.IFLOW_GATEWAY_TOKEN = token;
 
-      const workspaceDir = path.join(tempHome, "newclaw");
+      const workspaceDir = path.join(tempHome, "iflow");
       await fs.mkdir(workspaceDir, { recursive: true });
 
       const nonceA = randomUUID();
       const nonceB = randomUUID();
-      const toolProbePath = path.join(workspaceDir, `.newclaw-tool-probe.${nonceA}.txt`);
+      const toolProbePath = path.join(workspaceDir, `.iflow-tool-probe.${nonceA}.txt`);
       await fs.writeFile(toolProbePath, `nonceA=${nonceA}\nnonceB=${nonceB}\n`);
 
-      const configDir = path.join(tempHome, ".newclaw");
+      const configDir = path.join(tempHome, ".iflow");
       await fs.mkdir(configDir, { recursive: true });
-      const configPath = path.join(configDir, "newclaw.json");
+      const configPath = path.join(configDir, "iflow.json");
 
       const cfg = {
         agents: { defaults: { workspace: workspaceDir } },
@@ -89,7 +89,7 @@ describe("gateway e2e", () => {
       };
 
       await fs.writeFile(configPath, `${JSON.stringify(cfg, null, 2)}\n`);
-      process.env.NEWCLAW_CONFIG_PATH = configPath;
+      process.env.IFLOW_CONFIG_PATH = configPath;
 
       const port = await getFreeGatewayPort();
       const server = await startGatewayServer(port, {
@@ -139,13 +139,13 @@ describe("gateway e2e", () => {
         await fs.rm(tempHome, { recursive: true, force: true });
         restore();
         process.env.HOME = prev.home;
-        process.env.NEWCLAW_CONFIG_PATH = prev.configPath;
-        process.env.NEWCLAW_GATEWAY_TOKEN = prev.token;
-        process.env.NEWCLAW_SKIP_CHANNELS = prev.skipChannels;
-        process.env.NEWCLAW_SKIP_GMAIL_WATCHER = prev.skipGmail;
-        process.env.NEWCLAW_SKIP_CRON = prev.skipCron;
-        process.env.NEWCLAW_SKIP_CANVAS_HOST = prev.skipCanvas;
-        process.env.NEWCLAW_SKIP_BROWSER_CONTROL_SERVER = prev.skipBrowser;
+        process.env.IFLOW_CONFIG_PATH = prev.configPath;
+        process.env.IFLOW_GATEWAY_TOKEN = prev.token;
+        process.env.IFLOW_SKIP_CHANNELS = prev.skipChannels;
+        process.env.IFLOW_SKIP_GMAIL_WATCHER = prev.skipGmail;
+        process.env.IFLOW_SKIP_CRON = prev.skipCron;
+        process.env.IFLOW_SKIP_CANVAS_HOST = prev.skipCanvas;
+        process.env.IFLOW_SKIP_BROWSER_CONTROL_SERVER = prev.skipBrowser;
       }
     },
   );
@@ -153,27 +153,27 @@ describe("gateway e2e", () => {
   it("runs wizard over ws and writes auth token config", { timeout: 90_000 }, async () => {
     const prev = {
       home: process.env.HOME,
-      stateDir: process.env.NEWCLAW_STATE_DIR,
-      configPath: process.env.NEWCLAW_CONFIG_PATH,
-      token: process.env.NEWCLAW_GATEWAY_TOKEN,
-      skipChannels: process.env.NEWCLAW_SKIP_CHANNELS,
-      skipGmail: process.env.NEWCLAW_SKIP_GMAIL_WATCHER,
-      skipCron: process.env.NEWCLAW_SKIP_CRON,
-      skipCanvas: process.env.NEWCLAW_SKIP_CANVAS_HOST,
-      skipBrowser: process.env.NEWCLAW_SKIP_BROWSER_CONTROL_SERVER,
+      stateDir: process.env.IFLOW_STATE_DIR,
+      configPath: process.env.IFLOW_CONFIG_PATH,
+      token: process.env.IFLOW_GATEWAY_TOKEN,
+      skipChannels: process.env.IFLOW_SKIP_CHANNELS,
+      skipGmail: process.env.IFLOW_SKIP_GMAIL_WATCHER,
+      skipCron: process.env.IFLOW_SKIP_CRON,
+      skipCanvas: process.env.IFLOW_SKIP_CANVAS_HOST,
+      skipBrowser: process.env.IFLOW_SKIP_BROWSER_CONTROL_SERVER,
     };
 
-    process.env.NEWCLAW_SKIP_CHANNELS = "1";
-    process.env.NEWCLAW_SKIP_GMAIL_WATCHER = "1";
-    process.env.NEWCLAW_SKIP_CRON = "1";
-    process.env.NEWCLAW_SKIP_CANVAS_HOST = "1";
-    process.env.NEWCLAW_SKIP_BROWSER_CONTROL_SERVER = "1";
-    delete process.env.NEWCLAW_GATEWAY_TOKEN;
+    process.env.IFLOW_SKIP_CHANNELS = "1";
+    process.env.IFLOW_SKIP_GMAIL_WATCHER = "1";
+    process.env.IFLOW_SKIP_CRON = "1";
+    process.env.IFLOW_SKIP_CANVAS_HOST = "1";
+    process.env.IFLOW_SKIP_BROWSER_CONTROL_SERVER = "1";
+    delete process.env.IFLOW_GATEWAY_TOKEN;
 
-    const tempHome = await fs.mkdtemp(path.join(os.tmpdir(), "newclaw-wizard-home-"));
+    const tempHome = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-wizard-home-"));
     process.env.HOME = tempHome;
-    delete process.env.NEWCLAW_STATE_DIR;
-    delete process.env.NEWCLAW_CONFIG_PATH;
+    delete process.env.IFLOW_STATE_DIR;
+    delete process.env.IFLOW_CONFIG_PATH;
 
     const wizardToken = `wiz-${randomUUID()}`;
     const port = await getFreeGatewayPort();
@@ -265,14 +265,14 @@ describe("gateway e2e", () => {
       await server2.close({ reason: "wizard auth verify" });
       await fs.rm(tempHome, { recursive: true, force: true });
       process.env.HOME = prev.home;
-      process.env.NEWCLAW_STATE_DIR = prev.stateDir;
-      process.env.NEWCLAW_CONFIG_PATH = prev.configPath;
-      process.env.NEWCLAW_GATEWAY_TOKEN = prev.token;
-      process.env.NEWCLAW_SKIP_CHANNELS = prev.skipChannels;
-      process.env.NEWCLAW_SKIP_GMAIL_WATCHER = prev.skipGmail;
-      process.env.NEWCLAW_SKIP_CRON = prev.skipCron;
-      process.env.NEWCLAW_SKIP_CANVAS_HOST = prev.skipCanvas;
-      process.env.NEWCLAW_SKIP_BROWSER_CONTROL_SERVER = prev.skipBrowser;
+      process.env.IFLOW_STATE_DIR = prev.stateDir;
+      process.env.IFLOW_CONFIG_PATH = prev.configPath;
+      process.env.IFLOW_GATEWAY_TOKEN = prev.token;
+      process.env.IFLOW_SKIP_CHANNELS = prev.skipChannels;
+      process.env.IFLOW_SKIP_GMAIL_WATCHER = prev.skipGmail;
+      process.env.IFLOW_SKIP_CRON = prev.skipCron;
+      process.env.IFLOW_SKIP_CANVAS_HOST = prev.skipCanvas;
+      process.env.IFLOW_SKIP_BROWSER_CONTROL_SERVER = prev.skipBrowser;
     }
   });
 });

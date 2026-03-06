@@ -1,6 +1,6 @@
-# @newclaw/voice-call
+# @iflow/voice-call
 
-Official Voice Call plugin for **NewClaw**.
+Official Voice Call plugin for **iFlow**.
 
 Providers:
 
@@ -9,15 +9,15 @@ Providers:
 - **Plivo** (Voice API + XML transfer + GetInput speech)
 - **Mock** (dev/no network)
 
-Docs: `https://docs.newclaw.ai/plugins/voice-call`
-Plugin system: `https://docs.newclaw.ai/plugin`
+Docs: `https://docs.iflow.ai/plugins/voice-call`
+Plugin system: `https://docs.iflow.ai/plugin`
 
 ## Install (local dev)
 
-### Option A: install via NewClaw (recommended)
+### Option A: install via iFlow (recommended)
 
 ```bash
-newclaw plugins install @newclaw/voice-call
+iflow plugins install @iflow/voice-call
 ```
 
 Restart the Gateway afterwards.
@@ -25,9 +25,9 @@ Restart the Gateway afterwards.
 ### Option B: copy into your global extensions folder (dev)
 
 ```bash
-mkdir -p ~/.newclaw/extensions
-cp -R extensions/voice-call ~/.newclaw/extensions/voice-call
-cd ~/.newclaw/extensions/voice-call && pnpm install
+mkdir -p ~/.iflow/extensions
+cp -R extensions/voice-call ~/.iflow/extensions/voice-call
+cd ~/.iflow/extensions/voice-call && pnpm install
 ```
 
 ## Config
@@ -103,13 +103,13 @@ Notes:
 ## CLI
 
 ```bash
-newclaw voicecall call --to "+15555550123" --message "Hello from NewClaw"
-newclaw voicecall continue --call-id <id> --message "Any questions?"
-newclaw voicecall speak --call-id <id> --message "One moment"
-newclaw voicecall end --call-id <id>
-newclaw voicecall status --call-id <id>
-newclaw voicecall tail
-newclaw voicecall expose --mode funnel
+iflow voicecall call --to "+15555550123" --message "Hello from iFlow"
+iflow voicecall continue --call-id <id> --message "Any questions?"
+iflow voicecall speak --call-id <id> --message "One moment"
+iflow voicecall end --call-id <id>
+iflow voicecall status --call-id <id>
+iflow voicecall tail
+iflow voicecall expose --mode funnel
 ```
 
 ## Tool

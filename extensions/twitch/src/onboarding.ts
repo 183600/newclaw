@@ -2,14 +2,14 @@
  * Twitch onboarding adapter for CLI setup wizard.
  */
 
-import type { NewClawConfig } from "newclaw/plugin-sdk";
+import type { iFlowConfig } from "iflow/plugin-sdk";
 import {
   formatDocsLink,
   promptChannelAccessConfig,
   type ChannelOnboardingAdapter,
   type ChannelOnboardingDmPolicy,
   type WizardPrompter,
-} from "newclaw/plugin-sdk";
+} from "iflow/plugin-sdk";
 import type { TwitchAccountConfig, TwitchRole } from "./types.js";
 import { DEFAULT_ACCOUNT_ID, getAccountConfig } from "./config.js";
 import { isAccountConfigured } from "./utils/twitch.js";
@@ -19,10 +19,7 @@ const channel = "twitch" as const;
 /**
  * Set Twitch account configuration
  */
-function setTwitchAccount(
-  cfg: NewClawConfig,
-  account: Partial<TwitchAccountConfig>,
-): NewClawConfig {
+function setTwitchAccount(cfg: iFlowConfig, account: Partial<TwitchAccountConfig>): iFlowConfig {
   const existing = getAccountConfig(cfg, DEFAULT_ACCOUNT_ID);
   const merged: TwitchAccountConfig = {
     username: account.username ?? existing?.username ?? "",
@@ -70,7 +67,7 @@ async function noteTwitchSetupHelp(prompter: WizardPrompter): Promise<void> {
       "2. Generate a token with scopes: chat:read and chat:write",
       "   Use https://twitchtokengenerator.com/ or https://twitchapps.com/tmi/",
       "3. Copy the token (starts with 'oauth:') and Client ID",
-      "Env vars supported: NEWCLAW_TWITCH_ACCESS_TOKEN",
+      "Env vars supported: IFLOW_TWITCH_ACCESS_TOKEN",
       `Docs: ${formatDocsLink("/channels/twitch", "channels/twitch")}`,
     ].join("\n"),
     "Twitch setup",
@@ -207,15 +204,15 @@ async function promptRefreshTokenSetup(
  * Configure with env token path (returns early if user chooses env token).
  */
 async function configureWithEnvToken(
-  cfg: NewClawConfig,
+  cfg: iFlowConfig,
   prompter: WizardPrompter,
   account: TwitchAccountConfig | null,
   envToken: string,
   forceAllowFrom: boolean,
   dmPolicy: ChannelOnboardingDmPolicy,
-): Promise<{ cfg: NewClawConfig } | null> {
+): Promise<{ cfg: iFlowConfig } | null> {
   const useEnv = await prompter.confirm({
-    message: "Twitch env var NEWCLAW_TWITCH_ACCESS_TOKEN detected. Use env token?",
+    message: "Twitch env var IFLOW_TWITCH_ACCESS_TOKEN detected. Use env token?",
     initialValue: true,
   });
   if (!useEnv) {
@@ -243,10 +240,10 @@ async function configureWithEnvToken(
  * Set Twitch access control (role-based)
  */
 function setTwitchAccessControl(
-  cfg: NewClawConfig,
+  cfg: iFlowConfig,
   allowedRoles: TwitchRole[],
   requireMention: boolean,
-): NewClawConfig {
+): iFlowConfig {
   const account = getAccountConfig(cfg, DEFAULT_ACCOUNT_ID);
   if (!account) {
     return cfg;
@@ -322,7 +319,7 @@ export const twitchOnboardingAdapter: ChannelOnboardingAdapter = {
       await noteTwitchSetupHelp(prompter);
     }
 
-    const envToken = process.env.NEWCLAW_TWITCH_ACCESS_TOKEN?.trim();
+    const envToken = process.env.IFLOW_TWITCH_ACCESS_TOKEN?.trim();
 
     // Check if env var is set and config is empty
     if (envToken && !account?.accessToken) {

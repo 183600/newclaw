@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { NewClawConfig } from "../../config/config.js";
+import type { iFlowConfig } from "../../config/config.js";
 import { slackPlugin } from "../../../extensions/slack/src/channel.js";
 import { setActivePluginRegistry } from "../../plugins/runtime.js";
 import { createTestRegistry } from "../../test-utils/channel-plugins.js";
@@ -38,7 +38,7 @@ const slackConfig = {
       appToken: "xapp-test",
     },
   },
-} as NewClawConfig;
+} as iFlowConfig;
 
 describe("runMessageAction Slack threading", () => {
   beforeEach(async () => {

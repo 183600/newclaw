@@ -7,7 +7,7 @@ import {
   extensionForMime,
   extractOriginalFilename,
   getFileExtension,
-} from "newclaw/plugin-sdk";
+} from "iflow/plugin-sdk";
 import path from "node:path";
 
 /**

@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { NewClawConfig } from "../config/config.js";
+import type { iFlowConfig } from "../config/config.js";
 import type { RuntimeEnv } from "../runtime.js";
 import type { WizardPrompter } from "../wizard/prompts.js";
 import { discordPlugin } from "../../extensions/discord/src/channel.js";
@@ -75,7 +75,7 @@ describe("setupChannels", () => {
       }),
     };
 
-    await setupChannels({} as NewClawConfig, runtime, prompter, {
+    await setupChannels({} as iFlowConfig, runtime, prompter, {
       skipConfirm: true,
       quickstartDefaults: true,
       forceAllowFromChannels: ["whatsapp"],
@@ -130,7 +130,7 @@ describe("setupChannels", () => {
             botToken: "token",
           },
         },
-      } as NewClawConfig,
+      } as iFlowConfig,
       runtime,
       prompter,
       {
@@ -194,7 +194,7 @@ describe("setupChannels", () => {
             enabled: false,
           },
         },
-      } as NewClawConfig,
+      } as iFlowConfig,
       runtime,
       prompter,
       {

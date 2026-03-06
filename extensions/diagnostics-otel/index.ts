@@ -1,5 +1,5 @@
-import type { NewClawPluginApi } from "newclaw/plugin-sdk";
-import { emptyPluginConfigSchema } from "newclaw/plugin-sdk";
+import type { iFlowPluginApi } from "iflow/plugin-sdk";
+import { emptyPluginConfigSchema } from "iflow/plugin-sdk";
 import { createDiagnosticsOtelService } from "./src/service.js";
 
 const plugin = {
@@ -7,7 +7,7 @@ const plugin = {
   name: "Diagnostics OpenTelemetry",
   description: "Export diagnostics events to OpenTelemetry",
   configSchema: emptyPluginConfigSchema(),
-  register(api: NewClawPluginApi) {
+  register(api: iFlowPluginApi) {
     api.registerService(createDiagnosticsOtelService());
   },
 };

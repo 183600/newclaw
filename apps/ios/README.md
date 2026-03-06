@@ -1,4 +1,4 @@
-# NewClaw (iOS)
+# iFlow (iOS)
 
 Internal-only SwiftUI app scaffold.
 
@@ -11,11 +11,11 @@ brew install swiftformat swiftlint
 ```bash
 cd apps/ios
 xcodegen generate
-open NewClaw.xcodeproj
+open iFlow.xcodeproj
 ```
 
 ## Shared packages
-- `../shared/NewClawKit` — shared types/constants used by iOS (and later macOS bridge + gateway routing).
+- `../shared/iFlowKit` — shared types/constants used by iOS (and later macOS bridge + gateway routing).
 
 ## fastlane
 ```bash

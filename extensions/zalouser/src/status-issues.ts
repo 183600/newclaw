@@ -1,4 +1,4 @@
-import type { ChannelAccountSnapshot, ChannelStatusIssue } from "newclaw/plugin-sdk";
+import type { ChannelAccountSnapshot, ChannelStatusIssue } from "iflow/plugin-sdk";
 
 type ZalouserAccountStatus = {
   accountId?: unknown;
@@ -68,7 +68,7 @@ export function collectZalouserStatusIssues(
           accountId,
           kind: "auth",
           message: "Not authenticated (no zca session).",
-          fix: "Run: newclaw channels login --channel zalouser",
+          fix: "Run: iflow channels login --channel zalouser",
         });
       }
       continue;

@@ -1,4 +1,4 @@
-import type { ChannelDirectoryEntry } from "newclaw/plugin-sdk";
+import type { ChannelDirectoryEntry } from "iflow/plugin-sdk";
 import { resolveMatrixAuth } from "./matrix/client.js";
 
 type MatrixUserResult = {

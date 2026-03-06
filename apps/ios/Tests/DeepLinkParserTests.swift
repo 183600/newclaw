@@ -1,15 +1,15 @@
-import NewClawKit
+import iFlowKit
 import Foundation
 import Testing
 
 @Suite struct DeepLinkParserTests {
     @Test func parseRejectsUnknownHost() {
-        let url = URL(string: "newclaw://nope?message=hi")!
+        let url = URL(string: "iflow://nope?message=hi")!
         #expect(DeepLinkParser.parse(url) == nil)
     }
 
     @Test func parseHostIsCaseInsensitive() {
-        let url = URL(string: "newclaw://AGENT?message=Hello")!
+        let url = URL(string: "iflow://AGENT?message=Hello")!
         #expect(DeepLinkParser.parse(url) == .agent(.init(
             message: "Hello",
             sessionKey: nil,
@@ -21,19 +21,19 @@ import Testing
             key: nil)))
     }
 
-    @Test func parseRejectsNonNewClawScheme() {
+    @Test func parseRejectsNoniFlowScheme() {
         let url = URL(string: "https://example.com/agent?message=hi")!
         #expect(DeepLinkParser.parse(url) == nil)
     }
 
     @Test func parseRejectsEmptyMessage() {
-        let url = URL(string: "newclaw://agent?message=%20%20%0A")!
+        let url = URL(string: "iflow://agent?message=%20%20%0A")!
         #expect(DeepLinkParser.parse(url) == nil)
     }
 
     @Test func parseAgentLinkParsesCommonFields() {
         let url =
-            URL(string: "newclaw://agent?message=Hello&deliver=1&sessionKey=node-test&thinking=low&timeoutSeconds=30")!
+            URL(string: "iflow://agent?message=Hello&deliver=1&sessionKey=node-test&thinking=low&timeoutSeconds=30")!
         #expect(
             DeepLinkParser.parse(url) == .agent(
                 .init(
@@ -50,7 +50,7 @@ import Testing
     @Test func parseAgentLinkParsesTargetRoutingFields() {
         let url =
             URL(
-                string: "newclaw://agent?message=Hello%20World&deliver=1&to=%2B15551234567&channel=whatsapp&key=secret")!
+                string: "iflow://agent?message=Hello%20World&deliver=1&to=%2B15551234567&channel=whatsapp&key=secret")!
         #expect(
             DeepLinkParser.parse(url) == .agent(
                 .init(
@@ -65,7 +65,7 @@ import Testing
     }
 
     @Test func parseRejectsNegativeTimeoutSeconds() {
-        let url = URL(string: "newclaw://agent?message=Hello&timeoutSeconds=-1")!
+        let url = URL(string: "iflow://agent?message=Hello&timeoutSeconds=-1")!
         #expect(DeepLinkParser.parse(url) == .agent(.init(
             message: "Hello",
             sessionKey: nil,

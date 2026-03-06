@@ -1,6 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
-import type { NewClawConfig } from "../config/config.js";
+import type { iFlowConfig } from "../config/config.js";
 import type { RuntimeEnv } from "../runtime.js";
 import type { DoctorPrompter } from "./doctor-prompter.js";
 import {
@@ -89,17 +89,17 @@ async function dockerImageExists(image: string): Promise<boolean> {
   }
 }
 
-function resolveSandboxDockerImage(cfg: NewClawConfig): string {
+function resolveSandboxDockerImage(cfg: iFlowConfig): string {
   const image = cfg.agents?.defaults?.sandbox?.docker?.image?.trim();
   return image ? image : DEFAULT_SANDBOX_IMAGE;
 }
 
-function resolveSandboxBrowserImage(cfg: NewClawConfig): string {
+function resolveSandboxBrowserImage(cfg: iFlowConfig): string {
   const image = cfg.agents?.defaults?.sandbox?.browser?.image?.trim();
   return image ? image : DEFAULT_SANDBOX_BROWSER_IMAGE;
 }
 
-function updateSandboxDockerImage(cfg: NewClawConfig, image: string): NewClawConfig {
+function updateSandboxDockerImage(cfg: iFlowConfig, image: string): iFlowConfig {
   return {
     ...cfg,
     agents: {
@@ -118,7 +118,7 @@ function updateSandboxDockerImage(cfg: NewClawConfig, image: string): NewClawCon
   };
 }
 
-function updateSandboxBrowserImage(cfg: NewClawConfig, image: string): NewClawConfig {
+function updateSandboxBrowserImage(cfg: iFlowConfig, image: string): iFlowConfig {
   return {
     ...cfg,
     agents: {
@@ -176,10 +176,10 @@ async function handleMissingSandboxImage(
 }
 
 export async function maybeRepairSandboxImages(
-  cfg: NewClawConfig,
+  cfg: iFlowConfig,
   runtime: RuntimeEnv,
   prompter: DoctorPrompter,
-): Promise<NewClawConfig> {
+): Promise<iFlowConfig> {
   const sandbox = cfg.agents?.defaults?.sandbox;
   const mode = sandbox?.mode ?? "off";
   if (!sandbox || mode === "off") {
@@ -238,7 +238,7 @@ export async function maybeRepairSandboxImages(
   return next;
 }
 
-export function noteSandboxScopeWarnings(cfg: NewClawConfig) {
+export function noteSandboxScopeWarnings(cfg: iFlowConfig) {
   const globalSandbox = cfg.agents?.defaults?.sandbox;
   const agents = Array.isArray(cfg.agents?.list) ? cfg.agents.list : [];
   const warnings: string[] = [];

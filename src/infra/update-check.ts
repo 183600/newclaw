@@ -316,7 +316,7 @@ export async function fetchNpmTagVersion(params: {
   const tag = params.tag;
   try {
     const res = await fetchWithTimeout(
-      `https://registry.npmjs.org/newclaw/${encodeURIComponent(tag)}`,
+      `https://registry.npmjs.org/iflow/${encodeURIComponent(tag)}`,
       timeoutMs,
     );
     if (!res.ok) {

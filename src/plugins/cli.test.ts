@@ -7,7 +7,7 @@ const mocks = vi.hoisted(() => ({
 }));
 
 vi.mock("./loader.js", () => ({
-  loadNewClawPlugins: () => ({
+  loadiFlowPlugins: () => ({
     cliRegistrars: [
       {
         pluginId: "memory-core",

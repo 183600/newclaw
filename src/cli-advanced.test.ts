@@ -126,105 +126,99 @@ describe("parseDurationMs", () => {
 
 describe("formatCliCommand", () => {
   describe("basic formatting", () => {
-    it("passes through non-newclaw commands", () => {
+    it("passes through non-iflow commands", () => {
       expect(formatCliCommand("git status")).toBe("git status");
       expect(formatCliCommand("npm run build")).toBe("npm run build");
       expect(formatCliCommand("ls -la")).toBe("ls -la");
     });
 
-    it("handles newclaw commands without profile", () => {
-      const env = { NEWCLAW_PROFILE: undefined };
-      expect(formatCliCommand("newclaw status", env)).toBe("newclaw status");
-      expect(formatCliCommand("pnpm newclaw status", env)).toBe("pnpm newclaw status");
-      expect(formatCliCommand("npm run newclaw status", env)).toBe("npm run newclaw status");
+    it("handles iflow commands without profile", () => {
+      const env = { IFLOW_PROFILE: undefined };
+      expect(formatCliCommand("iflow status", env)).toBe("iflow status");
+      expect(formatCliCommand("pnpm iflow status", env)).toBe("pnpm iflow status");
+      expect(formatCliCommand("npm run iflow status", env)).toBe("npm run iflow status");
     });
 
-    it("adds profile flag when NEWCLAW_PROFILE is set", () => {
-      const env = { NEWCLAW_PROFILE: "test" };
-      expect(formatCliCommand("newclaw status", env)).toBe("newclaw --profile test status");
-      expect(formatCliCommand("pnpm newclaw status", env)).toBe(
-        "pnpm newclaw --profile test status",
-      );
-      expect(formatCliCommand("npx newclaw status", env)).toBe("npx newclaw --profile test status");
-      expect(formatCliCommand("bunx newclaw status", env)).toBe(
-        "bunx newclaw --profile test status",
-      );
+    it("adds profile flag when IFLOW_PROFILE is set", () => {
+      const env = { IFLOW_PROFILE: "test" };
+      expect(formatCliCommand("iflow status", env)).toBe("iflow --profile test status");
+      expect(formatCliCommand("pnpm iflow status", env)).toBe("pnpm iflow --profile test status");
+      expect(formatCliCommand("npx iflow status", env)).toBe("npx iflow --profile test status");
+      expect(formatCliCommand("bunx iflow status", env)).toBe("bunx iflow --profile test status");
     });
 
     it("handles different profile names", () => {
-      expect(formatCliCommand("newclaw status", { NEWCLAW_PROFILE: "prod" })).toBe(
-        "newclaw --profile prod status",
+      expect(formatCliCommand("iflow status", { IFLOW_PROFILE: "prod" })).toBe(
+        "iflow --profile prod status",
       );
-      expect(formatCliCommand("newclaw status", { NEWCLAW_PROFILE: "dev" })).toBe(
-        "newclaw --profile dev status",
+      expect(formatCliCommand("iflow status", { IFLOW_PROFILE: "dev" })).toBe(
+        "iflow --profile dev status",
       );
-      expect(formatCliCommand("newclaw status", { NEWCLAW_PROFILE: "staging" })).toBe(
-        "newclaw --profile staging status",
+      expect(formatCliCommand("iflow status", { IFLOW_PROFILE: "staging" })).toBe(
+        "iflow --profile staging status",
       );
     });
   });
 
   describe("existing flags", () => {
     it("doesn't add profile when --profile already exists", () => {
-      const env = { NEWCLAW_PROFILE: "test" };
-      expect(formatCliCommand("newclaw --profile prod status", env)).toBe(
-        "newclaw --profile prod status",
+      const env = { IFLOW_PROFILE: "test" };
+      expect(formatCliCommand("iflow --profile prod status", env)).toBe(
+        "iflow --profile prod status",
       );
-      expect(formatCliCommand("newclaw status --profile prod", env)).toBe(
-        "newclaw status --profile prod",
+      expect(formatCliCommand("iflow status --profile prod", env)).toBe(
+        "iflow status --profile prod",
       );
-      expect(formatCliCommand("pnpm newclaw --profile=prod status", env)).toBe(
-        "pnpm newclaw --profile=prod status",
+      expect(formatCliCommand("pnpm iflow --profile=prod status", env)).toBe(
+        "pnpm iflow --profile=prod status",
       );
     });
 
     it("doesn't add profile when --dev flag exists", () => {
-      const env = { NEWCLAW_PROFILE: "test" };
-      expect(formatCliCommand("newclaw --dev status", env)).toBe("newclaw --dev status");
-      expect(formatCliCommand("newclaw status --dev", env)).toBe("newclaw status --dev");
-      expect(formatCliCommand("pnpm newclaw --dev status", env)).toBe("pnpm newclaw --dev status");
+      const env = { IFLOW_PROFILE: "test" };
+      expect(formatCliCommand("iflow --dev status", env)).toBe("iflow --dev status");
+      expect(formatCliCommand("iflow status --dev", env)).toBe("iflow status --dev");
+      expect(formatCliCommand("pnpm iflow --dev status", env)).toBe("pnpm iflow --dev status");
     });
 
     it("handles multiple flags", () => {
-      const env = { NEWCLAW_PROFILE: "test" };
-      expect(formatCliCommand("newclaw --verbose --dev status", env)).toBe(
-        "newclaw --verbose --dev status",
+      const env = { IFLOW_PROFILE: "test" };
+      expect(formatCliCommand("iflow --verbose --dev status", env)).toBe(
+        "iflow --verbose --dev status",
       );
-      expect(formatCliCommand("newclaw --profile prod --dev status", env)).toBe(
-        "newclaw --profile prod --dev status",
+      expect(formatCliCommand("iflow --profile prod --dev status", env)).toBe(
+        "iflow --profile prod --dev status",
       );
     });
   });
 
   describe("edge cases", () => {
     it("handles empty commands", () => {
-      expect(formatCliCommand("", { NEWCLAW_PROFILE: "test" })).toBe("");
-      expect(formatCliCommand("   ", { NEWCLAW_PROFILE: "test" })).toBe("   ");
+      expect(formatCliCommand("", { IFLOW_PROFILE: "test" })).toBe("");
+      expect(formatCliCommand("   ", { IFLOW_PROFILE: "test" })).toBe("   ");
     });
 
-    it("handles commands with just newclaw", () => {
-      expect(formatCliCommand("newclaw", { NEWCLAW_PROFILE: "test" })).toBe(
-        "newclaw --profile test",
-      );
-      expect(formatCliCommand("pnpm newclaw", { NEWCLAW_PROFILE: "test" })).toBe(
-        "pnpm newclaw --profile test",
+    it("handles commands with just iflow", () => {
+      expect(formatCliCommand("iflow", { IFLOW_PROFILE: "test" })).toBe("iflow --profile test");
+      expect(formatCliCommand("pnpm iflow", { IFLOW_PROFILE: "test" })).toBe(
+        "pnpm iflow --profile test",
       );
     });
 
     it("handles complex command structures", () => {
       expect(
-        formatCliCommand("newclaw agent --mode interactive --verbose", {
-          NEWCLAW_PROFILE: "test",
+        formatCliCommand("iflow agent --mode interactive --verbose", {
+          IFLOW_PROFILE: "test",
         }),
-      ).toBe("newclaw --profile test agent --mode interactive --verbose");
-      expect(
-        formatCliCommand("pnpm newclaw gateway run --force", { NEWCLAW_PROFILE: "prod" }),
-      ).toBe("pnpm newclaw --profile prod gateway run --force");
+      ).toBe("iflow --profile test agent --mode interactive --verbose");
+      expect(formatCliCommand("pnpm iflow gateway run --force", { IFLOW_PROFILE: "prod" })).toBe(
+        "pnpm iflow --profile prod gateway run --force",
+      );
     });
 
     it("handles multiple spaces", () => {
-      expect(formatCliCommand("newclaw  status  --verbose", { NEWCLAW_PROFILE: "test" })).toBe(
-        "newclaw --profile test  status  --verbose",
+      expect(formatCliCommand("iflow  status  --verbose", { IFLOW_PROFILE: "test" })).toBe(
+        "iflow --profile test  status  --verbose",
       );
     });
   });

@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import type { NewClawConfig } from "../../config/config.js";
+import type { iFlowConfig } from "../../config/config.js";
 import { handleWhatsAppAction } from "./whatsapp-actions.js";
 
 const sendReactionWhatsApp = vi.fn(async () => undefined);
@@ -12,7 +12,7 @@ vi.mock("../../web/outbound.js", () => ({
 
 const enabledConfig = {
   channels: { whatsapp: { actions: { reactions: true } } },
-} as NewClawConfig;
+} as iFlowConfig;
 
 describe("handleWhatsAppAction", () => {
   it("adds reactions", async () => {
@@ -94,7 +94,7 @@ describe("handleWhatsAppAction", () => {
   it("respects reaction gating", async () => {
     const cfg = {
       channels: { whatsapp: { actions: { reactions: false } } },
-    } as NewClawConfig;
+    } as iFlowConfig;
     await expect(
       handleWhatsAppAction(
         {

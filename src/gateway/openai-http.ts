@@ -202,7 +202,7 @@ export async function handleOpenAiHttpRequest(
 
   const payload = coerceRequest(body);
   const stream = Boolean(payload.stream);
-  const model = typeof payload.model === "string" ? payload.model : "newclaw";
+  const model = typeof payload.model === "string" ? payload.model : "iflow";
   const user = typeof payload.user === "string" ? payload.user : undefined;
 
   const agentId = resolveAgentIdForRequest({ req, model });
@@ -244,7 +244,7 @@ export async function handleOpenAiHttpRequest(
               .map((p) => (typeof p.text === "string" ? p.text : ""))
               .filter(Boolean)
               .join("\n\n")
-          : "No response from NewClaw.";
+          : "No response from iFlow.";
 
       sendJson(res, 200, {
         id: runId,
@@ -373,7 +373,7 @@ export async function handleOpenAiHttpRequest(
                 .map((p) => (typeof p.text === "string" ? p.text : ""))
                 .filter(Boolean)
                 .join("\n\n")
-            : "No response from NewClaw.";
+            : "No response from iFlow.";
 
         sawAssistantDelta = true;
         writeSse(res, {

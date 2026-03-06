@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { NewClawConfig } from "../config/config.js";
+import type { iFlowConfig } from "../config/config.js";
 import type { SessionEntry } from "../config/sessions.js";
 import { normalizeSendPolicy, resolveSendPolicy } from "./send-policy.js";
 
@@ -25,12 +25,12 @@ describe("normalizeSendPolicy", () => {
 });
 
 describe("resolveSendPolicy", () => {
-  const mockConfig = (policy?: unknown): NewClawConfig =>
+  const mockConfig = (policy?: unknown): iFlowConfig =>
     ({
       session: {
         sendPolicy: policy,
       },
-    }) as NewClawConfig;
+    }) as iFlowConfig;
 
   const mockEntry = (overrides?: Partial<SessionEntry>): SessionEntry =>
     ({

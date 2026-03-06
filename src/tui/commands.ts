@@ -1,5 +1,5 @@
 import type { SlashCommand } from "@mariozechner/pi-tui";
-import type { NewClawConfig } from "../config/types.js";
+import type { iFlowConfig } from "../config/types.js";
 import { listChatCommands, listChatCommandsForConfig } from "../auto-reply/commands-registry.js";
 import { formatThinkingLevels, listThinkingLevelLabels } from "../auto-reply/thinking.js";
 
@@ -15,7 +15,7 @@ export type ParsedCommand = {
 };
 
 export type SlashCommandOptions = {
-  cfg?: NewClawConfig;
+  cfg?: iFlowConfig;
   provider?: string;
   model?: string;
 };

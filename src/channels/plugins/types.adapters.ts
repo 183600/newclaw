@@ -1,5 +1,5 @@
 import type { ReplyPayload } from "../../auto-reply/types.js";
-import type { NewClawConfig } from "../../config/config.js";
+import type { iFlowConfig } from "../../config/config.js";
 import type { GroupToolPolicyConfig } from "../../config/types.tools.js";
 import type { OutboundDeliveryResult, OutboundSendDeps } from "../../infra/outbound/deliver.js";
 import type { RuntimeEnv } from "../../runtime.js";
@@ -20,45 +20,45 @@ import type {
 } from "./types.core.js";
 
 export type ChannelSetupAdapter = {
-  resolveAccountId?: (params: { cfg: NewClawConfig; accountId?: string }) => string;
+  resolveAccountId?: (params: { cfg: iFlowConfig; accountId?: string }) => string;
   applyAccountName?: (params: {
-    cfg: NewClawConfig;
+    cfg: iFlowConfig;
     accountId: string;
     name?: string;
-  }) => NewClawConfig;
+  }) => iFlowConfig;
   applyAccountConfig: (params: {
-    cfg: NewClawConfig;
+    cfg: iFlowConfig;
     accountId: string;
     input: ChannelSetupInput;
-  }) => NewClawConfig;
+  }) => iFlowConfig;
   validateInput?: (params: {
-    cfg: NewClawConfig;
+    cfg: iFlowConfig;
     accountId: string;
     input: ChannelSetupInput;
   }) => string | null;
 };
 
 export type ChannelConfigAdapter<ResolvedAccount> = {
-  listAccountIds: (cfg: NewClawConfig) => string[];
-  resolveAccount: (cfg: NewClawConfig, accountId?: string | null) => ResolvedAccount;
-  defaultAccountId?: (cfg: NewClawConfig) => string;
+  listAccountIds: (cfg: iFlowConfig) => string[];
+  resolveAccount: (cfg: iFlowConfig, accountId?: string | null) => ResolvedAccount;
+  defaultAccountId?: (cfg: iFlowConfig) => string;
   setAccountEnabled?: (params: {
-    cfg: NewClawConfig;
+    cfg: iFlowConfig;
     accountId: string;
     enabled: boolean;
-  }) => NewClawConfig;
-  deleteAccount?: (params: { cfg: NewClawConfig; accountId: string }) => NewClawConfig;
-  isEnabled?: (account: ResolvedAccount, cfg: NewClawConfig) => boolean;
-  disabledReason?: (account: ResolvedAccount, cfg: NewClawConfig) => string;
-  isConfigured?: (account: ResolvedAccount, cfg: NewClawConfig) => boolean | Promise<boolean>;
-  unconfiguredReason?: (account: ResolvedAccount, cfg: NewClawConfig) => string;
-  describeAccount?: (account: ResolvedAccount, cfg: NewClawConfig) => ChannelAccountSnapshot;
+  }) => iFlowConfig;
+  deleteAccount?: (params: { cfg: iFlowConfig; accountId: string }) => iFlowConfig;
+  isEnabled?: (account: ResolvedAccount, cfg: iFlowConfig) => boolean;
+  disabledReason?: (account: ResolvedAccount, cfg: iFlowConfig) => string;
+  isConfigured?: (account: ResolvedAccount, cfg: iFlowConfig) => boolean | Promise<boolean>;
+  unconfiguredReason?: (account: ResolvedAccount, cfg: iFlowConfig) => string;
+  describeAccount?: (account: ResolvedAccount, cfg: iFlowConfig) => ChannelAccountSnapshot;
   resolveAllowFrom?: (params: {
-    cfg: NewClawConfig;
+    cfg: iFlowConfig;
     accountId?: string | null;
   }) => string[] | undefined;
   formatAllowFrom?: (params: {
-    cfg: NewClawConfig;
+    cfg: iFlowConfig;
     accountId?: string | null;
     allowFrom: Array<string | number>;
   }) => string[];
@@ -71,7 +71,7 @@ export type ChannelGroupAdapter = {
 };
 
 export type ChannelOutboundContext = {
-  cfg: NewClawConfig;
+  cfg: iFlowConfig;
   to: string;
   text: string;
   mediaUrl?: string;
@@ -93,7 +93,7 @@ export type ChannelOutboundAdapter = {
   textChunkLimit?: number;
   pollMaxOptions?: number;
   resolveTarget?: (params: {
-    cfg?: NewClawConfig;
+    cfg?: iFlowConfig;
     to?: string;
     allowFrom?: string[];
     accountId?: string | null;
@@ -109,37 +109,37 @@ export type ChannelStatusAdapter<ResolvedAccount> = {
   defaultRuntime?: ChannelAccountSnapshot;
   buildChannelSummary?: (params: {
     account: ResolvedAccount;
-    cfg: NewClawConfig;
+    cfg: iFlowConfig;
     defaultAccountId: string;
     snapshot: ChannelAccountSnapshot;
   }) => Record<string, unknown> | Promise<Record<string, unknown>>;
   probeAccount?: (params: {
     account: ResolvedAccount;
     timeoutMs: number;
-    cfg: NewClawConfig;
+    cfg: iFlowConfig;
   }) => Promise<unknown>;
   auditAccount?: (params: {
     account: ResolvedAccount;
     timeoutMs: number;
-    cfg: NewClawConfig;
+    cfg: iFlowConfig;
     probe?: unknown;
   }) => Promise<unknown>;
   buildAccountSnapshot?: (params: {
     account: ResolvedAccount;
-    cfg: NewClawConfig;
+    cfg: iFlowConfig;
     runtime?: ChannelAccountSnapshot;
     probe?: unknown;
     audit?: unknown;
   }) => ChannelAccountSnapshot | Promise<ChannelAccountSnapshot>;
   logSelfId?: (params: {
     account: ResolvedAccount;
-    cfg: NewClawConfig;
+    cfg: iFlowConfig;
     runtime: RuntimeEnv;
     includeChannelPrefix?: boolean;
   }) => void;
   resolveAccountState?: (params: {
     account: ResolvedAccount;
-    cfg: NewClawConfig;
+    cfg: iFlowConfig;
     configured: boolean;
     enabled: boolean;
   }) => ChannelAccountState;
@@ -147,7 +147,7 @@ export type ChannelStatusAdapter<ResolvedAccount> = {
 };
 
 export type ChannelGatewayContext<ResolvedAccount = unknown> = {
-  cfg: NewClawConfig;
+  cfg: iFlowConfig;
   accountId: string;
   account: ResolvedAccount;
   runtime: RuntimeEnv;
@@ -174,7 +174,7 @@ export type ChannelLoginWithQrWaitResult = {
 };
 
 export type ChannelLogoutContext<ResolvedAccount = unknown> = {
-  cfg: NewClawConfig;
+  cfg: iFlowConfig;
   accountId: string;
   account: ResolvedAccount;
   runtime: RuntimeEnv;
@@ -185,7 +185,7 @@ export type ChannelPairingAdapter = {
   idLabel: string;
   normalizeAllowEntry?: (entry: string) => string;
   notifyApproval?: (params: {
-    cfg: NewClawConfig;
+    cfg: iFlowConfig;
     id: string;
     runtime?: RuntimeEnv;
   }) => Promise<void>;
@@ -209,7 +209,7 @@ export type ChannelGatewayAdapter<ResolvedAccount = unknown> = {
 
 export type ChannelAuthAdapter = {
   login?: (params: {
-    cfg: NewClawConfig;
+    cfg: iFlowConfig;
     accountId?: string | null;
     runtime: RuntimeEnv;
     verbose?: boolean;
@@ -219,11 +219,11 @@ export type ChannelAuthAdapter = {
 
 export type ChannelHeartbeatAdapter = {
   checkReady?: (params: {
-    cfg: NewClawConfig;
+    cfg: iFlowConfig;
     accountId?: string | null;
     deps?: ChannelHeartbeatDeps;
   }) => Promise<{ ok: boolean; reason: string }>;
-  resolveRecipients?: (params: { cfg: NewClawConfig; opts?: { to?: string; all?: boolean } }) => {
+  resolveRecipients?: (params: { cfg: iFlowConfig; opts?: { to?: string; all?: boolean } }) => {
     recipients: string[];
     source: string;
   };
@@ -231,40 +231,40 @@ export type ChannelHeartbeatAdapter = {
 
 export type ChannelDirectoryAdapter = {
   self?: (params: {
-    cfg: NewClawConfig;
+    cfg: iFlowConfig;
     accountId?: string | null;
     runtime: RuntimeEnv;
   }) => Promise<ChannelDirectoryEntry | null>;
   listPeers?: (params: {
-    cfg: NewClawConfig;
+    cfg: iFlowConfig;
     accountId?: string | null;
     query?: string | null;
     limit?: number | null;
     runtime: RuntimeEnv;
   }) => Promise<ChannelDirectoryEntry[]>;
   listPeersLive?: (params: {
-    cfg: NewClawConfig;
+    cfg: iFlowConfig;
     accountId?: string | null;
     query?: string | null;
     limit?: number | null;
     runtime: RuntimeEnv;
   }) => Promise<ChannelDirectoryEntry[]>;
   listGroups?: (params: {
-    cfg: NewClawConfig;
+    cfg: iFlowConfig;
     accountId?: string | null;
     query?: string | null;
     limit?: number | null;
     runtime: RuntimeEnv;
   }) => Promise<ChannelDirectoryEntry[]>;
   listGroupsLive?: (params: {
-    cfg: NewClawConfig;
+    cfg: iFlowConfig;
     accountId?: string | null;
     query?: string | null;
     limit?: number | null;
     runtime: RuntimeEnv;
   }) => Promise<ChannelDirectoryEntry[]>;
   listGroupMembers?: (params: {
-    cfg: NewClawConfig;
+    cfg: iFlowConfig;
     accountId?: string | null;
     groupId: string;
     limit?: number | null;
@@ -284,7 +284,7 @@ export type ChannelResolveResult = {
 
 export type ChannelResolverAdapter = {
   resolveTargets: (params: {
-    cfg: NewClawConfig;
+    cfg: iFlowConfig;
     accountId?: string | null;
     inputs: string[];
     kind: ChannelResolveKind;
@@ -294,7 +294,7 @@ export type ChannelResolverAdapter = {
 
 export type ChannelElevatedAdapter = {
   allowFromFallback?: (params: {
-    cfg: NewClawConfig;
+    cfg: iFlowConfig;
     accountId?: string | null;
   }) => Array<string | number> | undefined;
 };

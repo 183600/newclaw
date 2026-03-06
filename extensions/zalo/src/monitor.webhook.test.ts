@@ -1,4 +1,4 @@
-import type { NewClawConfig, PluginRuntime } from "newclaw/plugin-sdk";
+import type { iFlowConfig, PluginRuntime } from "iflow/plugin-sdk";
 import type { AddressInfo } from "node:net";
 import { createServer } from "node:http";
 import { describe, expect, it } from "vitest";
@@ -37,7 +37,7 @@ describe("handleZaloWebhookRequest", () => {
     const unregister = registerZaloWebhookTarget({
       token: "tok",
       account,
-      config: {} as NewClawConfig,
+      config: {} as iFlowConfig,
       runtime: {},
       core,
       secret: "secret",

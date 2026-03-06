@@ -3,7 +3,7 @@ name: sherpa-onnx-tts
 description: Local text-to-speech via sherpa-onnx (offline, no cloud)
 metadata:
   {
-    "newclaw":
+    "iflow":
       {
         "emoji": "🗣️",
         "os": ["darwin", "linux", "win32"],
@@ -18,7 +18,7 @@ metadata:
               "archive": "tar.bz2",
               "extract": true,
               "stripComponents": 1,
-              "targetDir": "~/.newclaw/tools/sherpa-onnx-tts/runtime",
+              "targetDir": "~/.iflow/tools/sherpa-onnx-tts/runtime",
               "label": "Download sherpa-onnx runtime (macOS)",
             },
             {
@@ -29,7 +29,7 @@ metadata:
               "archive": "tar.bz2",
               "extract": true,
               "stripComponents": 1,
-              "targetDir": "~/.newclaw/tools/sherpa-onnx-tts/runtime",
+              "targetDir": "~/.iflow/tools/sherpa-onnx-tts/runtime",
               "label": "Download sherpa-onnx runtime (Linux x64)",
             },
             {
@@ -40,7 +40,7 @@ metadata:
               "archive": "tar.bz2",
               "extract": true,
               "stripComponents": 1,
-              "targetDir": "~/.newclaw/tools/sherpa-onnx-tts/runtime",
+              "targetDir": "~/.iflow/tools/sherpa-onnx-tts/runtime",
               "label": "Download sherpa-onnx runtime (Windows x64)",
             },
             {
@@ -49,7 +49,7 @@ metadata:
               "url": "https://github.com/k2-fsa/sherpa-onnx/releases/download/tts-models/vits-piper-en_US-lessac-high.tar.bz2",
               "archive": "tar.bz2",
               "extract": true,
-              "targetDir": "~/.newclaw/tools/sherpa-onnx-tts/models",
+              "targetDir": "~/.iflow/tools/sherpa-onnx-tts/models",
               "label": "Download Piper en_US lessac (high)",
             },
           ],
@@ -63,10 +63,10 @@ Local TTS using the sherpa-onnx offline CLI.
 
 ## Install
 
-1. Download the runtime for your OS (extracts into `~/.newclaw/tools/sherpa-onnx-tts/runtime`)
-2. Download a voice model (extracts into `~/.newclaw/tools/sherpa-onnx-tts/models`)
+1. Download the runtime for your OS (extracts into `~/.iflow/tools/sherpa-onnx-tts/runtime`)
+2. Download a voice model (extracts into `~/.iflow/tools/sherpa-onnx-tts/models`)
 
-Update `~/.newclaw/newclaw.json`:
+Update `~/.iflow/iflow.json`:
 
 ```json5
 {
@@ -74,8 +74,8 @@ Update `~/.newclaw/newclaw.json`:
     entries: {
       "sherpa-onnx-tts": {
         env: {
-          SHERPA_ONNX_RUNTIME_DIR: "~/.newclaw/tools/sherpa-onnx-tts/runtime",
-          SHERPA_ONNX_MODEL_DIR: "~/.newclaw/tools/sherpa-onnx-tts/models/vits-piper-en_US-lessac-high",
+          SHERPA_ONNX_RUNTIME_DIR: "~/.iflow/tools/sherpa-onnx-tts/runtime",
+          SHERPA_ONNX_MODEL_DIR: "~/.iflow/tools/sherpa-onnx-tts/models/vits-piper-en_US-lessac-high",
         },
       },
     },

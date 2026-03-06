@@ -1,4 +1,4 @@
-import type { NewClawConfig } from "../../config/config.js";
+import type { iFlowConfig } from "../../config/config.js";
 import type { BlockStreamingCoalesceConfig } from "../../config/types.js";
 import { getChannelDock } from "../../channels/dock.js";
 import { normalizeChannelId } from "../../channels/plugins/index.js";
@@ -31,7 +31,7 @@ type ProviderBlockStreamingConfig = {
 };
 
 function resolveProviderBlockStreamingCoalesce(params: {
-  cfg: NewClawConfig | undefined;
+  cfg: iFlowConfig | undefined;
   providerKey?: TextChunkProvider;
   accountId?: string | null;
 }): BlockStreamingCoalesceConfig | undefined {
@@ -59,7 +59,7 @@ export type BlockStreamingCoalescing = {
 };
 
 export function resolveBlockStreamingChunking(
-  cfg: NewClawConfig | undefined,
+  cfg: iFlowConfig | undefined,
   provider?: string,
   accountId?: string | null,
 ): {
@@ -102,7 +102,7 @@ export function resolveBlockStreamingChunking(
 }
 
 export function resolveBlockStreamingCoalescing(
-  cfg: NewClawConfig | undefined,
+  cfg: iFlowConfig | undefined,
   provider?: string,
   accountId?: string | null,
   chunking?: {

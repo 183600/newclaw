@@ -1,4 +1,4 @@
-import type { NewClawConfig } from "../../config/config.js";
+import type { iFlowConfig } from "../../config/config.js";
 import { normalizeChatChannelId } from "../../channels/registry.js";
 import { loadSessionStore, resolveStorePath } from "../../config/sessions.js";
 import { normalizeE164 } from "../../utils.js";
@@ -6,7 +6,7 @@ import { normalizeE164 } from "../../utils.js";
 type HeartbeatRecipientsResult = { recipients: string[]; source: string };
 type HeartbeatRecipientsOpts = { to?: string; all?: boolean };
 
-function getSessionRecipients(cfg: NewClawConfig) {
+function getSessionRecipients(cfg: iFlowConfig) {
   const sessionCfg = cfg.session;
   const scope = sessionCfg?.scope ?? "per-sender";
   if (scope === "global") {
@@ -43,7 +43,7 @@ function getSessionRecipients(cfg: NewClawConfig) {
 }
 
 export function resolveWhatsAppHeartbeatRecipients(
-  cfg: NewClawConfig,
+  cfg: iFlowConfig,
   opts: HeartbeatRecipientsOpts = {},
 ): HeartbeatRecipientsResult {
   if (opts.to) {

@@ -6,10 +6,10 @@ import { withTempHome } from "./test-helpers.js";
 describe("config compaction settings", () => {
   it("preserves memory flush config values", async () => {
     await withTempHome(async (home) => {
-      const configDir = path.join(home, ".newclaw");
+      const configDir = path.join(home, ".iflow");
       await fs.mkdir(configDir, { recursive: true });
       await fs.writeFile(
-        path.join(configDir, "newclaw.json"),
+        path.join(configDir, "iflow.json"),
         JSON.stringify(
           {
             agents: {
@@ -48,10 +48,10 @@ describe("config compaction settings", () => {
 
   it("defaults compaction mode to safeguard", async () => {
     await withTempHome(async (home) => {
-      const configDir = path.join(home, ".newclaw");
+      const configDir = path.join(home, ".iflow");
       await fs.mkdir(configDir, { recursive: true });
       await fs.writeFile(
-        path.join(configDir, "newclaw.json"),
+        path.join(configDir, "iflow.json"),
         JSON.stringify(
           {
             agents: {

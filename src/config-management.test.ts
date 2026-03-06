@@ -11,8 +11,8 @@ describe("Configuration Management", () => {
   let configPath: string;
 
   beforeEach(() => {
-    tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "newclaw-config-test-"));
-    configDir = path.join(tempDir, ".newclaw");
+    tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "iflow-config-test-"));
+    configDir = path.join(tempDir, ".iflow");
     configPath = path.join(configDir, "config.json5");
     fs.mkdirSync(configDir, { recursive: true });
   });
@@ -98,16 +98,16 @@ describe("Configuration Management", () => {
   });
 
   describe("resolveConfigDir", () => {
-    it("resolves to .newclaw directory by default", () => {
+    it("resolves to .iflow directory by default", () => {
       const env = {};
 
       const resolved = resolveConfigDir(env, () => tempDir);
-      expect(resolved).toContain(".newclaw");
+      expect(resolved).toContain(".iflow");
     });
 
-    it("prefers .newclaw when legacy dir is missing", () => {
+    it("prefers .iflow when legacy dir is missing", () => {
       const env = {};
-      const newClawDir = path.join(tempDir, ".newclaw");
+      const newClawDir = path.join(tempDir, ".iflow");
       fs.mkdirSync(newClawDir, { recursive: true });
 
       const resolved = resolveConfigDir(env, () => tempDir);
@@ -118,7 +118,7 @@ describe("Configuration Management", () => {
       const customConfigDir = path.join(tempDir, "custom-config");
       fs.mkdirSync(customConfigDir, { recursive: true });
 
-      const env = { NEWCLAW_STATE_DIR: customConfigDir };
+      const env = { IFLOW_STATE_DIR: customConfigDir };
 
       const resolved = resolveConfigDir(env, () => tempDir);
       expect(resolved).toBe(customConfigDir);

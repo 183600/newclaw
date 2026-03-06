@@ -109,7 +109,7 @@ function buildMessagingSection(params: {
     "## Messaging",
     "- Reply in current session → automatically routes to the source channel (Signal, Telegram, etc.)",
     "- Cross-session messaging → use sessions_send(sessionKey, message)",
-    "- Never use exec/curl for provider messaging; NewClaw handles all routing internally.",
+    "- Never use exec/curl for provider messaging; iFlow handles all routing internally.",
     params.availableTools.has("message")
       ? [
           "",
@@ -150,13 +150,13 @@ function buildDocsSection(params: { docsPath?: string; isMinimal: boolean; readT
   }
   return [
     "## Documentation",
-    `NewClaw docs: ${docsPath}`,
-    "Mirror: https://docs.newclaw.ai",
-    "Source: https://github.com/newclaw/newclaw",
+    `iFlow docs: ${docsPath}`,
+    "Mirror: https://docs.iflow.ai",
+    "Source: https://github.com/iflow/iflow",
     "Community: https://discord.com/invite/clawd",
     "Find new skills: https://clawhub.com",
-    "For NewClaw behavior, commands, config, or architecture: consult local docs first.",
-    "When diagnosing issues, run `newclaw status` yourself when possible; only ask the user if you lack access (e.g., sandboxed).",
+    "For iFlow behavior, commands, config, or architecture: consult local docs first.",
+    "When diagnosing issues, run `iflow status` yourself when possible; only ask the user if you lack access (e.g., sandboxed).",
     "",
   ];
 }
@@ -233,7 +233,7 @@ export function buildAgentSystemPrompt(params: {
     nodes: "List/describe/notify/camera/screen on paired nodes",
     cron: "Manage cron jobs and wake events (use for reminders; when scheduling a reminder, write the systemEvent text as something that will read like a reminder when it fires, and mention that it is a reminder depending on the time gap between setting and firing; include recent context in reminder text if appropriate)",
     message: "Send messages and channel actions",
-    gateway: "Restart, apply config, or run updates on the running NewClaw process",
+    gateway: "Restart, apply config, or run updates on the running iFlow process",
     agents_list: "List agent ids allowed for sessions_spawn",
     sessions_list: "List other sessions (incl. sub-agents) with filters/last",
     sessions_history: "Fetch history for another session/sub-agent",
@@ -373,11 +373,11 @@ export function buildAgentSystemPrompt(params: {
 
   // For "none" mode, return just the basic identity line
   if (promptMode === "none") {
-    return "You are a personal assistant running inside NewClaw.";
+    return "You are a personal assistant running inside iFlow.";
   }
 
   const lines = [
-    "You are a personal assistant running inside NewClaw.",
+    "You are a personal assistant running inside iFlow.",
     "",
     "## Tooling",
     "Tool availability (filtered by policy):",
@@ -392,7 +392,7 @@ export function buildAgentSystemPrompt(params: {
           "- apply_patch: apply multi-file patches",
           `- ${execToolName}: run shell commands (supports background via yieldMs/background)`,
           `- ${processToolName}: manage background exec sessions`,
-          "- browser: control NewClaw's dedicated browser",
+          "- browser: control iFlow's dedicated browser",
           "- canvas: present/eval/snapshot the Canvas",
           "- nodes: list/describe/notify/camera/screen on paired nodes",
           "- cron: manage cron jobs and wake events (use for reminders; when scheduling a reminder, write the systemEvent text as something that will read like a reminder when it fires, and mention that it is a reminder depending on the time gap between setting and firing; include recent context in reminder text if appropriate)",
@@ -411,25 +411,25 @@ export function buildAgentSystemPrompt(params: {
     "Use plain human language for narration unless in a technical context.",
     "",
     ...safetySection,
-    "## NewClaw CLI Quick Reference",
-    "NewClaw is controlled via subcommands. Do not invent commands.",
+    "## iFlow CLI Quick Reference",
+    "iFlow is controlled via subcommands. Do not invent commands.",
     "To manage the Gateway daemon service (start/stop/restart):",
-    "- newclaw gateway status",
-    "- newclaw gateway start",
-    "- newclaw gateway stop",
-    "- newclaw gateway restart",
-    "If unsure, ask the user to run `newclaw help` (or `newclaw gateway --help`) and paste the output.",
+    "- iflow gateway status",
+    "- iflow gateway start",
+    "- iflow gateway stop",
+    "- iflow gateway restart",
+    "If unsure, ask the user to run `iflow help` (or `iflow gateway --help`) and paste the output.",
     "",
     ...skillsSection,
     ...memorySection,
     // Skip self-update for subagent/none modes
-    hasGateway && !isMinimal ? "## NewClaw Self-Update" : "",
+    hasGateway && !isMinimal ? "## iFlow Self-Update" : "",
     hasGateway && !isMinimal
       ? [
           "Get Updates (self-update) is ONLY allowed when the user explicitly asks for it.",
           "Do not run config.apply or update.run unless the user explicitly requests an update or config change; if it's not explicit, ask first.",
           "Actions: config.get, config.schema, config.apply (validate + write full config, then restart), update.run (update deps or git, then restart).",
-          "After restart, NewClaw pings the last active session automatically.",
+          "After restart, iFlow pings the last active session automatically.",
         ].join("\n")
       : "",
     hasGateway && !isMinimal ? "" : "",
@@ -501,7 +501,7 @@ export function buildAgentSystemPrompt(params: {
       userTimezone,
     }),
     "## Workspace Files (injected)",
-    "These user-editable files are loaded by NewClaw and included below in Project Context.",
+    "These user-editable files are loaded by iFlow and included below in Project Context.",
     "",
     ...buildReplyTagsSection(isMinimal),
     ...buildMessagingSection({
@@ -592,7 +592,7 @@ export function buildAgentSystemPrompt(params: {
       heartbeatPromptLine,
       "If you receive a heartbeat poll (a user message matching the heartbeat prompt above), and there is nothing that needs attention, reply exactly:",
       "HEARTBEAT_OK",
-      'NewClaw treats a leading/trailing "HEARTBEAT_OK" as a heartbeat ack (and may discard it).',
+      'iFlow treats a leading/trailing "HEARTBEAT_OK" as a heartbeat ack (and may discard it).',
       'If something needs attention, do NOT include "HEARTBEAT_OK"; reply with the alert text instead.',
       "",
     );

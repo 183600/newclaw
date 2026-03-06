@@ -82,25 +82,25 @@ export function extractGatewayMiskeys(parsed: unknown): {
 }
 
 export function renderGatewayServiceStopHints(env: NodeJS.ProcessEnv = process.env): string[] {
-  const profile = env.NEWCLAW_PROFILE;
+  const profile = env.IFLOW_PROFILE;
   switch (process.platform) {
     case "darwin":
       return [
-        `Tip: ${formatCliCommand("newclaw gateway stop")}`,
+        `Tip: ${formatCliCommand("iflow gateway stop")}`,
         `Or: launchctl bootout gui/$UID/${resolveGatewayLaunchAgentLabel(profile)}`,
       ];
     case "linux":
       return [
-        `Tip: ${formatCliCommand("newclaw gateway stop")}`,
+        `Tip: ${formatCliCommand("iflow gateway stop")}`,
         `Or: systemctl --user stop ${resolveGatewaySystemdServiceName(profile)}.service`,
       ];
     case "win32":
       return [
-        `Tip: ${formatCliCommand("newclaw gateway stop")}`,
+        `Tip: ${formatCliCommand("iflow gateway stop")}`,
         `Or: schtasks /End /TN "${resolveGatewayWindowsTaskName(profile)}"`,
       ];
     default:
-      return [`Tip: ${formatCliCommand("newclaw gateway stop")}`];
+      return [`Tip: ${formatCliCommand("iflow gateway stop")}`];
   }
 }
 

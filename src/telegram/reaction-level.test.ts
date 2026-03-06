@@ -1,5 +1,5 @@
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
-import type { NewClawConfig } from "../config/config.js";
+import type { iFlowConfig } from "../config/config.js";
 import { resolveTelegramReactionLevel } from "./reaction-level.js";
 
 describe("resolveTelegramReactionLevel", () => {
@@ -18,7 +18,7 @@ describe("resolveTelegramReactionLevel", () => {
   });
 
   it("defaults to minimal level when reactionLevel is not set", () => {
-    const cfg: NewClawConfig = {
+    const cfg: iFlowConfig = {
       channels: { telegram: {} },
     };
 
@@ -30,7 +30,7 @@ describe("resolveTelegramReactionLevel", () => {
   });
 
   it("returns off level with no reactions enabled", () => {
-    const cfg: NewClawConfig = {
+    const cfg: iFlowConfig = {
       channels: { telegram: { reactionLevel: "off" } },
     };
 
@@ -42,7 +42,7 @@ describe("resolveTelegramReactionLevel", () => {
   });
 
   it("returns ack level with only ackEnabled", () => {
-    const cfg: NewClawConfig = {
+    const cfg: iFlowConfig = {
       channels: { telegram: { reactionLevel: "ack" } },
     };
 
@@ -54,7 +54,7 @@ describe("resolveTelegramReactionLevel", () => {
   });
 
   it("returns minimal level with agent reactions enabled and minimal guidance", () => {
-    const cfg: NewClawConfig = {
+    const cfg: iFlowConfig = {
       channels: { telegram: { reactionLevel: "minimal" } },
     };
 
@@ -66,7 +66,7 @@ describe("resolveTelegramReactionLevel", () => {
   });
 
   it("returns extensive level with agent reactions enabled and extensive guidance", () => {
-    const cfg: NewClawConfig = {
+    const cfg: iFlowConfig = {
       channels: { telegram: { reactionLevel: "extensive" } },
     };
 
@@ -78,7 +78,7 @@ describe("resolveTelegramReactionLevel", () => {
   });
 
   it("resolves reaction level from a specific account", () => {
-    const cfg: NewClawConfig = {
+    const cfg: iFlowConfig = {
       channels: {
         telegram: {
           reactionLevel: "ack",
@@ -97,7 +97,7 @@ describe("resolveTelegramReactionLevel", () => {
   });
 
   it("falls back to global level when account has no reactionLevel", () => {
-    const cfg: NewClawConfig = {
+    const cfg: iFlowConfig = {
       channels: {
         telegram: {
           reactionLevel: "minimal",

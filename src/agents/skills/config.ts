@@ -1,6 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
-import type { NewClawConfig, SkillConfig } from "../../config/config.js";
+import type { iFlowConfig, SkillConfig } from "../../config/config.js";
 import type { SkillEligibilityContext, SkillEntry } from "./types.js";
 import { resolveSkillKey } from "./frontmatter.js";
 
@@ -25,7 +25,7 @@ function isTruthy(value: unknown): boolean {
   return true;
 }
 
-export function resolveConfigPath(config: NewClawConfig | undefined, pathStr: string) {
+export function resolveConfigPath(config: iFlowConfig | undefined, pathStr: string) {
   const parts = pathStr.split(".").filter(Boolean);
   let current: unknown = config;
   for (const part of parts) {
@@ -37,7 +37,7 @@ export function resolveConfigPath(config: NewClawConfig | undefined, pathStr: st
   return current;
 }
 
-export function isConfigPathTruthy(config: NewClawConfig | undefined, pathStr: string): boolean {
+export function isConfigPathTruthy(config: iFlowConfig | undefined, pathStr: string): boolean {
   const value = resolveConfigPath(config, pathStr);
   if (value === undefined && pathStr in DEFAULT_CONFIG_VALUES) {
     return DEFAULT_CONFIG_VALUES[pathStr];
@@ -46,7 +46,7 @@ export function isConfigPathTruthy(config: NewClawConfig | undefined, pathStr: s
 }
 
 export function resolveSkillConfig(
-  config: NewClawConfig | undefined,
+  config: iFlowConfig | undefined,
   skillKey: string,
 ): SkillConfig | undefined {
   const skills = config?.skills?.entries;
@@ -75,13 +75,13 @@ function normalizeAllowlist(input: unknown): string[] | undefined {
   return normalized.length > 0 ? normalized : undefined;
 }
 
-const BUNDLED_SOURCES = new Set(["newclaw-bundled"]);
+const BUNDLED_SOURCES = new Set(["iflow-bundled"]);
 
 function isBundledSkill(entry: SkillEntry): boolean {
   return BUNDLED_SOURCES.has(entry.skill.source);
 }
 
-export function resolveBundledAllowlist(config?: NewClawConfig): string[] | undefined {
+export function resolveBundledAllowlist(config?: iFlowConfig): string[] | undefined {
   return normalizeAllowlist(config?.skills?.allowBundled);
 }
 
@@ -113,7 +113,7 @@ export function hasBinary(bin: string): boolean {
 
 export function shouldIncludeSkill(params: {
   entry: SkillEntry;
-  config?: NewClawConfig;
+  config?: iFlowConfig;
   eligibility?: SkillEligibilityContext;
 }): boolean {
   const { entry, config, eligibility } = params;

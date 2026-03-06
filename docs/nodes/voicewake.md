@@ -8,7 +8,7 @@ title: "Voice Wake"
 
 # Voice Wake (Global Wake Words)
 
-NewClaw treats **wake words as a single global list** owned by the **Gateway**.
+iFlow treats **wake words as a single global list** owned by the **Gateway**.
 
 - There are **no per-node custom wake words**.
 - **Any node/app UI may edit** the list; changes are persisted by the Gateway and broadcast to everyone.
@@ -18,12 +18,12 @@ NewClaw treats **wake words as a single global list** owned by the **Gateway**.
 
 Wake words are stored on the gateway machine at:
 
-- `~/.newclaw/settings/voicewake.json`
+- `~/.iflow/settings/voicewake.json`
 
 Shape:
 
 ```json
-{ "triggers": ["newclaw", "claude", "computer"], "updatedAtMs": 1730000000000 }
+{ "triggers": ["iflow", "claude", "computer"], "updatedAtMs": 1730000000000 }
 ```
 
 ## Protocol

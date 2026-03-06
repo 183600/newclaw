@@ -1,7 +1,7 @@
 {
-  "name": "@newclaw/memory-lancedb",
+  "name": "@iflow/memory-lancedb",
   "version": "2026.2.2",
-  "description": "NewClaw LanceDB-backed long-term memory plugin with auto-recall/capture",
+  "description": "iFlow LanceDB-backed long-term memory plugin with auto-recall/capture",
   "type": "module",
   "dependencies": {
     "@lancedb/lancedb": "^0.23.0",
@@ -9,9 +9,9 @@
     "openai": "^6.17.0"
   },
   "devDependencies": {
-    "newclaw": "workspace:*"
+    "iflow": "workspace:*"
   },
-  "newclaw": {
+  "iflow": {
     "extensions": [
       "./index.ts"
     ]

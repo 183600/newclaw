@@ -1,12 +1,12 @@
 {
-  "name": "@newclaw/bluebubbles",
+  "name": "@iflow/bluebubbles",
   "version": "2026.2.2",
-  "description": "NewClaw BlueBubbles channel plugin",
+  "description": "iFlow BlueBubbles channel plugin",
   "type": "module",
   "devDependencies": {
-    "newclaw": "workspace:*"
+    "iflow": "workspace:*"
   },
-  "newclaw": {
+  "iflow": {
     "extensions": [
       "./index.ts"
     ],
@@ -28,7 +28,7 @@
       "order": 75
     },
     "install": {
-      "npmSpec": "@newclaw/bluebubbles",
+      "npmSpec": "@iflow/bluebubbles",
       "localPath": "extensions/bluebubbles",
       "defaultChoice": "npm"
     }

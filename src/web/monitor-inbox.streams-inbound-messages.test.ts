@@ -85,7 +85,7 @@ describe("web monitor inbox", () => {
       created: true,
     });
     resetWebInboundDedupe();
-    authDir = fsSync.mkdtempSync(path.join(os.tmpdir(), "newclaw-auth-"));
+    authDir = fsSync.mkdtempSync(path.join(os.tmpdir(), "iflow-auth-"));
   });
 
   afterEach(() => {

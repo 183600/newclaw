@@ -1,9 +1,9 @@
-import type { NewClawConfig } from "newclaw/plugin-sdk";
-import { DEFAULT_ACCOUNT_ID, normalizeAccountId } from "newclaw/plugin-sdk";
+import type { iFlowConfig } from "iflow/plugin-sdk";
+import { DEFAULT_ACCOUNT_ID, normalizeAccountId } from "iflow/plugin-sdk";
 import type { ResolvedZaloAccount, ZaloAccountConfig, ZaloConfig } from "./types.js";
 import { resolveZaloToken } from "./token.js";
 
-function listConfiguredAccountIds(cfg: NewClawConfig): string[] {
+function listConfiguredAccountIds(cfg: iFlowConfig): string[] {
   const accounts = (cfg.channels?.zalo as ZaloConfig | undefined)?.accounts;
   if (!accounts || typeof accounts !== "object") {
     return [];
@@ -11,7 +11,7 @@ function listConfiguredAccountIds(cfg: NewClawConfig): string[] {
   return Object.keys(accounts).filter(Boolean);
 }
 
-export function listZaloAccountIds(cfg: NewClawConfig): string[] {
+export function listZaloAccountIds(cfg: iFlowConfig): string[] {
   const ids = listConfiguredAccountIds(cfg);
   if (ids.length === 0) {
     return [DEFAULT_ACCOUNT_ID];
@@ -19,7 +19,7 @@ export function listZaloAccountIds(cfg: NewClawConfig): string[] {
   return ids.toSorted((a, b) => a.localeCompare(b));
 }
 
-export function resolveDefaultZaloAccountId(cfg: NewClawConfig): string {
+export function resolveDefaultZaloAccountId(cfg: iFlowConfig): string {
   const zaloConfig = cfg.channels?.zalo as ZaloConfig | undefined;
   if (zaloConfig?.defaultAccount?.trim()) {
     return zaloConfig.defaultAccount.trim();
@@ -31,10 +31,7 @@ export function resolveDefaultZaloAccountId(cfg: NewClawConfig): string {
   return ids[0] ?? DEFAULT_ACCOUNT_ID;
 }
 
-function resolveAccountConfig(
-  cfg: NewClawConfig,
-  accountId: string,
-): ZaloAccountConfig | undefined {
+function resolveAccountConfig(cfg: iFlowConfig, accountId: string): ZaloAccountConfig | undefined {
   const accounts = (cfg.channels?.zalo as ZaloConfig | undefined)?.accounts;
   if (!accounts || typeof accounts !== "object") {
     return undefined;
@@ -42,7 +39,7 @@ function resolveAccountConfig(
   return accounts[accountId] as ZaloAccountConfig | undefined;
 }
 
-function mergeZaloAccountConfig(cfg: NewClawConfig, accountId: string): ZaloAccountConfig {
+function mergeZaloAccountConfig(cfg: iFlowConfig, accountId: string): ZaloAccountConfig {
   const raw = (cfg.channels?.zalo ?? {}) as ZaloConfig;
   const { accounts: _ignored, defaultAccount: _ignored2, ...base } = raw;
   const account = resolveAccountConfig(cfg, accountId) ?? {};
@@ -50,7 +47,7 @@ function mergeZaloAccountConfig(cfg: NewClawConfig, accountId: string): ZaloAcco
 }
 
 export function resolveZaloAccount(params: {
-  cfg: NewClawConfig;
+  cfg: iFlowConfig;
   accountId?: string | null;
 }): ResolvedZaloAccount {
   const accountId = normalizeAccountId(params.accountId);
@@ -73,7 +70,7 @@ export function resolveZaloAccount(params: {
   };
 }
 
-export function listEnabledZaloAccounts(cfg: NewClawConfig): ResolvedZaloAccount[] {
+export function listEnabledZaloAccounts(cfg: iFlowConfig): ResolvedZaloAccount[] {
   return listZaloAccountIds(cfg)
     .map((accountId) => resolveZaloAccount({ cfg, accountId }))
     .filter((account) => account.enabled);

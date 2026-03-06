@@ -1,4 +1,4 @@
-import type { NewClawConfig } from "../../config/config.js";
+import type { iFlowConfig } from "../../config/config.js";
 import type { DmPolicy } from "../../config/types.js";
 import type { RuntimeEnv } from "../../runtime.js";
 import type { WizardPrompter } from "../../wizard/prompts.js";
@@ -23,11 +23,11 @@ export type SetupChannelsOptions = {
 };
 
 export type PromptAccountIdParams = {
-  cfg: NewClawConfig;
+  cfg: iFlowConfig;
   prompter: WizardPrompter;
   label: string;
   currentId?: string;
-  listAccountIds: (cfg: NewClawConfig) => string[];
+  listAccountIds: (cfg: iFlowConfig) => string[];
   defaultAccountId: string;
 };
 
@@ -42,13 +42,13 @@ export type ChannelOnboardingStatus = {
 };
 
 export type ChannelOnboardingStatusContext = {
-  cfg: NewClawConfig;
+  cfg: iFlowConfig;
   options?: SetupChannelsOptions;
   accountOverrides: Partial<Record<ChannelId, string>>;
 };
 
 export type ChannelOnboardingConfigureContext = {
-  cfg: NewClawConfig;
+  cfg: iFlowConfig;
   runtime: RuntimeEnv;
   prompter: WizardPrompter;
   options?: SetupChannelsOptions;
@@ -58,7 +58,7 @@ export type ChannelOnboardingConfigureContext = {
 };
 
 export type ChannelOnboardingResult = {
-  cfg: NewClawConfig;
+  cfg: iFlowConfig;
   accountId?: string;
 };
 
@@ -67,13 +67,13 @@ export type ChannelOnboardingDmPolicy = {
   channel: ChannelId;
   policyKey: string;
   allowFromKey: string;
-  getCurrent: (cfg: NewClawConfig) => DmPolicy;
-  setPolicy: (cfg: NewClawConfig, policy: DmPolicy) => NewClawConfig;
+  getCurrent: (cfg: iFlowConfig) => DmPolicy;
+  setPolicy: (cfg: iFlowConfig, policy: DmPolicy) => iFlowConfig;
   promptAllowFrom?: (params: {
-    cfg: NewClawConfig;
+    cfg: iFlowConfig;
     prompter: WizardPrompter;
     accountId?: string;
-  }) => Promise<NewClawConfig>;
+  }) => Promise<iFlowConfig>;
 };
 
 export type ChannelOnboardingAdapter = {
@@ -82,5 +82,5 @@ export type ChannelOnboardingAdapter = {
   configure: (ctx: ChannelOnboardingConfigureContext) => Promise<ChannelOnboardingResult>;
   dmPolicy?: ChannelOnboardingDmPolicy;
   onAccountRecorded?: (accountId: string, options?: SetupChannelsOptions) => void;
-  disable?: (cfg: NewClawConfig) => NewClawConfig;
+  disable?: (cfg: iFlowConfig) => iFlowConfig;
 };

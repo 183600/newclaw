@@ -19,22 +19,22 @@ x-i18n:
 ## 简介
 
 - 始终运行的进程，拥有唯一的 Baileys/Telegram 连接以及控制/事件平面。
-- 替代旧版 `gateway` 命令。CLI 入口：`newclaw gateway`。
+- 替代旧版 `gateway` 命令。CLI 入口：`iflow gateway`。
 - 持续运行直到被停止；遇到致命错误时以非零状态退出，以便 supervisor 重启。
 
 ## 如何运行（本地）
 
 ```bash
-newclaw gateway --port 18789
+iflow gateway --port 18789
 # 在标准输出中获取完整的调试/跟踪日志：
-newclaw gateway --port 18789 --verbose
+iflow gateway --port 18789 --verbose
 # 如果端口被占用，先终止监听进程再启动：
-newclaw gateway --force
+iflow gateway --force
 # 开发循环（TS 文件变更时自动重载）：
 pnpm gateway:watch
 ```
 
-- 配置热重载会监视 `~/.newclaw/newclaw.json`（或 `NEWCLAW_CONFIG_PATH`）。
+- 配置热重载会监视 `~/.iflow/iflow.json`（或 `IFLOW_CONFIG_PATH`）。
   - 默认模式：`gateway.reload.mode="hybrid"`（安全变更热应用，关键变更则重启）。
   - 热重载在需要时通过 **SIGUSR1** 进行进程内重启。
   - 通过 `gateway.reload.mode="off"` 禁用。
@@ -43,15 +43,15 @@ pnpm gateway:watch
   - OpenAI Chat Completions (HTTP)：[`/v1/chat/completions`](/gateway/openai-http-api)。
   - OpenResponses (HTTP)：[`/v1/responses`](/gateway/openresponses-http-api)。
   - Tools Invoke (HTTP)：[`/tools/invoke`](/gateway/tools-invoke-http-api)。
-- 默认在 `canvasHost.port`（默认 `18793`）启动 Canvas 文件服务器，从 `~/.newclaw/workspace/canvas` 提供 `http://<gateway-host>:18793/__newclaw__/canvas/` 服务。通过 `canvasHost.enabled=false` 或 `NEWCLAW_SKIP_CANVAS_HOST=1` 禁用。
+- 默认在 `canvasHost.port`（默认 `18793`）启动 Canvas 文件服务器，从 `~/.iflow/workspace/canvas` 提供 `http://<gateway-host>:18793/__iflow__/canvas/` 服务。通过 `canvasHost.enabled=false` 或 `IFLOW_SKIP_CANVAS_HOST=1` 禁用。
 - 日志输出到标准输出；使用 launchd/systemd 保持进程存活并轮转日志。
 - 传入 `--verbose` 可在故障排除时将调试日志（握手、请求/响应、事件）从日志文件镜像到标准输出。
 - `--force` 使用 `lsof` 查找所选端口上的监听进程，发送 SIGTERM，记录被终止的进程，然后启动 Gateway网关（如果缺少 `lsof` 则快速失败）。
 - 如果在 supervisor（launchd/systemd/mac app 子进程模式）下运行，停止/重启通常发送 **SIGTERM**；旧版本可能将其显示为 `pnpm` `ELIFECYCLE` 退出码 **143**（SIGTERM），这是正常关闭，不是崩溃。
 - **SIGUSR1** 在授权时触发进程内重启（Gateway网关工具/配置应用/更新，或启用 `commands.restart` 以进行手动重启）。
-- 默认需要 Gateway网关认证：设置 `gateway.auth.token`（或 `NEWCLAW_GATEWAY_TOKEN`）或 `gateway.auth.password`。客户端必须发送 `connect.params.auth.token/password`，除非使用 Tailscale Serve 身份。
+- 默认需要 Gateway网关认证：设置 `gateway.auth.token`（或 `IFLOW_GATEWAY_TOKEN`）或 `gateway.auth.password`。客户端必须发送 `connect.params.auth.token/password`，除非使用 Tailscale Serve 身份。
 - 向导现在默认生成令牌，即使在 local loopback 上也是如此。
-- 端口优先级：`--port` > `NEWCLAW_GATEWAY_PORT` > `gateway.port` > 默认 `18789`。
+- 端口优先级：`--port` > `IFLOW_GATEWAY_PORT` > `gateway.port` > 默认 `18789`。
 
 ## 远程访问
 
@@ -70,15 +70,15 @@ pnpm gateway:watch
 
 服务名称是配置文件感知的：
 
-- macOS：`bot.molt.<profile>`（旧版 `com.newclaw.*` 可能仍然存在）
-- Linux：`newclaw-gateway-<profile>.service`
-- Windows：`NewClaw Gateway网关 (<profile>)`
+- macOS：`bot.molt.<profile>`（旧版 `com.iflow.*` 可能仍然存在）
+- Linux：`iflow-gateway-<profile>.service`
+- Windows：`iFlow Gateway网关 (<profile>)`
 
 安装元数据嵌入在服务配置中：
 
-- `NEWCLAW_SERVICE_MARKER=newclaw`
-- `NEWCLAW_SERVICE_KIND=gateway`
-- `NEWCLAW_SERVICE_VERSION=<version>`
+- `IFLOW_SERVICE_MARKER=iflow`
+- `IFLOW_SERVICE_KIND=gateway`
+- `IFLOW_SERVICE_VERSION=<version>`
 
 救援机器人模式：保持第二个 Gateway网关隔离，使用独立的配置文件、状态目录、工作区和基础端口间距。完整指南：[救援机器人指南](/gateway/multiple-gateways#rescue-bot-guide)。
 
@@ -87,49 +87,49 @@ pnpm gateway:watch
 快速路径：运行完全隔离的开发实例（配置/状态/工作区），不影响主要设置。
 
 ```bash
-newclaw --dev setup
-newclaw --dev gateway --allow-unconfigured
+iflow --dev setup
+iflow --dev gateway --allow-unconfigured
 # 然后指向开发实例：
-newclaw --dev status
-newclaw --dev health
+iflow --dev status
+iflow --dev health
 ```
 
 默认值（可通过环境变量/标志/配置覆盖）：
 
-- `NEWCLAW_STATE_DIR=~/.newclaw-dev`
-- `NEWCLAW_CONFIG_PATH=~/.newclaw-dev/newclaw.json`
-- `NEWCLAW_GATEWAY_PORT=19001`（Gateway网关 WS + HTTP）
+- `IFLOW_STATE_DIR=~/.iflow-dev`
+- `IFLOW_CONFIG_PATH=~/.iflow-dev/iflow.json`
+- `IFLOW_GATEWAY_PORT=19001`（Gateway网关 WS + HTTP）
 - 浏览器控制服务端口 = `19003`（派生：`gateway.port+2`，仅 local loopback）
 - `canvasHost.port=19005`（派生：`gateway.port+4`）
-- 在 `--dev` 下运行 `setup`/`onboard` 时，`agents.defaults.workspace` 默认变为 `~/.newclaw/workspace-dev`。
+- 在 `--dev` 下运行 `setup`/`onboard` 时，`agents.defaults.workspace` 默认变为 `~/.iflow/workspace-dev`。
 
 派生端口（经验规则）：
 
-- 基础端口 = `gateway.port`（或 `NEWCLAW_GATEWAY_PORT` / `--port`）
+- 基础端口 = `gateway.port`（或 `IFLOW_GATEWAY_PORT` / `--port`）
 - 浏览器控制服务端口 = 基础端口 + 2（仅 local loopback）
-- `canvasHost.port = 基础端口 + 4`（或 `NEWCLAW_CANVAS_HOST_PORT` / 配置覆盖）
+- `canvasHost.port = 基础端口 + 4`（或 `IFLOW_CANVAS_HOST_PORT` / 配置覆盖）
 - 浏览器配置文件 CDP 端口从 `browser.controlPort + 9 .. + 108` 自动分配（按配置文件持久化）。
 
 每个实例的检查清单：
 
 - 唯一的 `gateway.port`
-- 唯一的 `NEWCLAW_CONFIG_PATH`
-- 唯一的 `NEWCLAW_STATE_DIR`
+- 唯一的 `IFLOW_CONFIG_PATH`
+- 唯一的 `IFLOW_STATE_DIR`
 - 唯一的 `agents.defaults.workspace`
 - 独立的 WhatsApp 号码（如果使用 WA）
 
 按配置文件安装服务：
 
 ```bash
-newclaw --profile main gateway install
-newclaw --profile rescue gateway install
+iflow --profile main gateway install
+iflow --profile rescue gateway install
 ```
 
 示例：
 
 ```bash
-NEWCLAW_CONFIG_PATH=~/.newclaw/a.json NEWCLAW_STATE_DIR=~/.newclaw-a newclaw gateway --port 19001
-NEWCLAW_CONFIG_PATH=~/.newclaw/b.json NEWCLAW_STATE_DIR=~/.newclaw-b newclaw gateway --port 19002
+IFLOW_CONFIG_PATH=~/.iflow/a.json IFLOW_STATE_DIR=~/.iflow-a iflow gateway --port 19001
+IFLOW_CONFIG_PATH=~/.iflow/b.json IFLOW_STATE_DIR=~/.iflow-b iflow gateway --port 19002
 ```
 
 ## 协议（运维视角）
@@ -145,7 +145,7 @@ NEWCLAW_CONFIG_PATH=~/.newclaw/b.json NEWCLAW_STATE_DIR=~/.newclaw-b newclaw gat
 
 ## 方法（初始集合）
 
-- `health` — 完整健康快照（与 `newclaw health --json` 形状相同）。
+- `health` — 完整健康快照（与 `iflow health --json` 形状相同）。
 - `status` — 简短摘要。
 - `system-presence` — 当前在线状态列表。
 - `system-event` — 发布在线状态/系统通知（结构化）。
@@ -205,26 +205,26 @@ NEWCLAW_CONFIG_PATH=~/.newclaw/b.json NEWCLAW_STATE_DIR=~/.newclaw-b newclaw gat
 ## 进程监管（macOS 示例）
 
 - 使用 launchd 保持服务存活：
-  - Program：`newclaw` 的路径
+  - Program：`iflow` 的路径
   - Arguments：`gateway`
   - KeepAlive：true
   - StandardOut/Err：文件路径或 `syslog`
 - 失败时 launchd 会重启；致命的配置错误应持续退出，以便运维人员注意到。
 - LaunchAgents 是按用户的，需要已登录的会话；对于无头设置，请使用自定义 LaunchDaemon（未随附）。
-  - `newclaw gateway install` 写入 `~/Library/LaunchAgents/bot.molt.gateway.plist`
-    （或 `bot.molt.<profile>.plist`；旧版 `com.newclaw.*` 会被清理）。
-  - `newclaw doctor` 审计 LaunchAgent 配置，并可将其更新为当前推荐的默认值。
+  - `iflow gateway install` 写入 `~/Library/LaunchAgents/bot.molt.gateway.plist`
+    （或 `bot.molt.<profile>.plist`；旧版 `com.iflow.*` 会被清理）。
+  - `iflow doctor` 审计 LaunchAgent 配置，并可将其更新为当前推荐的默认值。
 
 ## Gateway网关服务管理（CLI）
 
 使用 Gateway网关 CLI 进行安装/启动/停止/重启/状态查询：
 
 ```bash
-newclaw gateway status
-newclaw gateway install
-newclaw gateway stop
-newclaw gateway restart
-newclaw logs --follow
+iflow gateway status
+iflow gateway install
+iflow gateway stop
+iflow gateway restart
+iflow logs --follow
 ```
 
 注意事项：
@@ -237,39 +237,39 @@ newclaw logs --follow
 - `gateway status` 打印配置路径 + 探测目标，以避免"localhost vs LAN 绑定"混淆和配置文件不匹配。
 - `gateway status` 在服务看起来正在运行但端口已关闭时包含最后一条 Gateway网关错误行。
 - `logs` 通过 RPC 跟踪 Gateway网关文件日志（无需手动 `tail`/`grep`）。
-- 如果检测到其他类似 Gateway网关的服务，CLI 会发出警告，除非它们是 NewClaw 配置文件服务。
+- 如果检测到其他类似 Gateway网关的服务，CLI 会发出警告，除非它们是 iFlow 配置文件服务。
   我们仍建议大多数场景下**每台机器一个 Gateway网关**；使用隔离的配置文件/端口实现冗余或救援机器人。参见 [多 Gateway网关](/gateway/multiple-gateways)。
-  - 清理：`newclaw gateway uninstall`（当前服务）和 `newclaw doctor`（旧版迁移）。
-- `gateway install` 在已安装时为空操作；使用 `newclaw gateway install --force` 重新安装（配置文件/环境/路径变更）。
+  - 清理：`iflow gateway uninstall`（当前服务）和 `iflow doctor`（旧版迁移）。
+- `gateway install` 在已安装时为空操作；使用 `iflow gateway install --force` 重新安装（配置文件/环境/路径变更）。
 
 捆绑的 Mac 应用：
 
-- NewClaw.app 可以捆绑一个基于 Node 的 Gateway网关中继，并安装按用户的 LaunchAgent，标签为
-  `bot.molt.gateway`（或 `bot.molt.<profile>`；旧版 `com.newclaw.*` 标签仍可正常卸载）。
-- 要正常停止，使用 `newclaw gateway stop`（或 `launchctl bootout gui/$UID/bot.molt.gateway`）。
-- 要重启，使用 `newclaw gateway restart`（或 `launchctl kickstart -k gui/$UID/bot.molt.gateway`）。
-  - `launchctl` 仅在 LaunchAgent 已安装时有效；否则先使用 `newclaw gateway install`。
+- iFlow.app 可以捆绑一个基于 Node 的 Gateway网关中继，并安装按用户的 LaunchAgent，标签为
+  `bot.molt.gateway`（或 `bot.molt.<profile>`；旧版 `com.iflow.*` 标签仍可正常卸载）。
+- 要正常停止，使用 `iflow gateway stop`（或 `launchctl bootout gui/$UID/bot.molt.gateway`）。
+- 要重启，使用 `iflow gateway restart`（或 `launchctl kickstart -k gui/$UID/bot.molt.gateway`）。
+  - `launchctl` 仅在 LaunchAgent 已安装时有效；否则先使用 `iflow gateway install`。
   - 运行命名配置文件时，将标签替换为 `bot.molt.<profile>`。
 
 ## 进程监管（systemd 用户单元）
 
-NewClaw 在 Linux/WSL2 上默认安装 **systemd 用户服务**。我们推荐单用户机器使用用户服务（更简单的环境，按用户配置）。对于多用户或始终在线的服务器，使用**系统服务**（无需 lingering，共享监管）。
+iFlow 在 Linux/WSL2 上默认安装 **systemd 用户服务**。我们推荐单用户机器使用用户服务（更简单的环境，按用户配置）。对于多用户或始终在线的服务器，使用**系统服务**（无需 lingering，共享监管）。
 
-`newclaw gateway install` 写入用户单元。`newclaw doctor` 审计该单元，并可将其更新为当前推荐的默认值。
+`iflow gateway install` 写入用户单元。`iflow doctor` 审计该单元，并可将其更新为当前推荐的默认值。
 
-创建 `~/.config/systemd/user/newclaw-gateway[-<profile>].service`：
+创建 `~/.config/systemd/user/iflow-gateway[-<profile>].service`：
 
 ```
 [Unit]
-Description=NewClaw Gateway网关 (profile: <profile>, v<version>)
+Description=iFlow Gateway网关 (profile: <profile>, v<version>)
 After=network-online.target
 Wants=network-online.target
 
 [Service]
-ExecStart=/usr/local/bin/newclaw gateway --port 18789
+ExecStart=/usr/local/bin/iflow gateway --port 18789
 Restart=always
 RestartSec=5
-Environment=NEWCLAW_GATEWAY_TOKEN=
+Environment=IFLOW_GATEWAY_TOKEN=
 WorkingDirectory=/home/youruser
 
 [Install]
@@ -286,14 +286,14 @@ sudo loginctl enable-linger youruser
 然后启用服务：
 
 ```
-systemctl --user enable --now newclaw-gateway[-<profile>].service
+systemctl --user enable --now iflow-gateway[-<profile>].service
 ```
 
-**替代方案（系统服务）** - 对于始终在线或多用户服务器，可以安装 systemd **系统**单元而非用户单元（无需 lingering）。创建 `/etc/systemd/system/newclaw-gateway[-<profile>].service`（复制上述单元，将 `WantedBy=multi-user.target`，设置 `User=` + `WorkingDirectory=`），然后：
+**替代方案（系统服务）** - 对于始终在线或多用户服务器，可以安装 systemd **系统**单元而非用户单元（无需 lingering）。创建 `/etc/systemd/system/iflow-gateway[-<profile>].service`（复制上述单元，将 `WantedBy=multi-user.target`，设置 `User=` + `WorkingDirectory=`），然后：
 
 ```
 sudo systemctl daemon-reload
-sudo systemctl enable --now newclaw-gateway[-<profile>].service
+sudo systemctl enable --now iflow-gateway[-<profile>].service
 ```
 
 ## Windows (WSL2)
@@ -315,14 +315,14 @@ Windows 安装应使用 **WSL2** 并遵循上述 Linux systemd 部分。
 
 ## CLI 辅助工具
 
-- `newclaw gateway health|status` — 通过 Gateway网关 WS 请求健康/状态信息。
-- `newclaw message send --target <num> --message "hi" [--media ...]` — 通过 Gateway网关发送（对 WhatsApp 具有幂等性）。
-- `newclaw agent --message "hi" --to <num>` — 运行智能体回合（默认等待最终结果）。
-- `newclaw gateway call <method> --params '{"k":"v"}'` — 用于调试的原始方法调用器。
-- `newclaw gateway stop|restart` — 停止/重启受监管的 Gateway网关服务（launchd/systemd）。
+- `iflow gateway health|status` — 通过 Gateway网关 WS 请求健康/状态信息。
+- `iflow message send --target <num> --message "hi" [--media ...]` — 通过 Gateway网关发送（对 WhatsApp 具有幂等性）。
+- `iflow agent --message "hi" --to <num>` — 运行智能体回合（默认等待最终结果）。
+- `iflow gateway call <method> --params '{"k":"v"}'` — 用于调试的原始方法调用器。
+- `iflow gateway stop|restart` — 停止/重启受监管的 Gateway网关服务（launchd/systemd）。
 - Gateway网关辅助子命令假设 Gateway网关已在 `--url` 上运行；它们不再自动启动 Gateway网关。
 
 ## 迁移指南
 
-- 弃用 `newclaw gateway` 和旧版 TCP 控制端口的用法。
+- 弃用 `iflow gateway` 和旧版 TCP 控制端口的用法。
 - 更新客户端以使用带有强制 connect 和结构化在线状态的 WS 协议。

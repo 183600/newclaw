@@ -1,16 +1,16 @@
 {
-  "name": "@newclaw/zalo",
+  "name": "@iflow/zalo",
   "version": "2026.2.2",
-  "description": "NewClaw Zalo channel plugin",
+  "description": "iFlow Zalo channel plugin",
   "type": "module",
   "dependencies": {
-    "newclaw": "workspace:*",
+    "iflow": "workspace:*",
     "undici": "7.20.0"
   },
   "devDependencies": {
-    "newclaw": "workspace:*"
+    "iflow": "workspace:*"
   },
-  "newclaw": {
+  "iflow": {
     "extensions": [
       "./index.ts"
     ],
@@ -28,7 +28,7 @@
       "quickstartAllowFrom": true
     },
     "install": {
-      "npmSpec": "@newclaw/zalo",
+      "npmSpec": "@iflow/zalo",
       "localPath": "extensions/zalo",
       "defaultChoice": "npm"
     }

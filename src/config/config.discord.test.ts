@@ -16,10 +16,10 @@ describe("config discord", () => {
 
   it("loads discord guild map + dm group settings", async () => {
     await withTempHome(async (home) => {
-      const configDir = path.join(home, ".newclaw");
+      const configDir = path.join(home, ".iflow");
       await fs.mkdir(configDir, { recursive: true });
       await fs.writeFile(
-        path.join(configDir, "newclaw.json"),
+        path.join(configDir, "iflow.json"),
         JSON.stringify(
           {
             channels: {
@@ -29,7 +29,7 @@ describe("config discord", () => {
                   enabled: true,
                   allowFrom: ["steipete"],
                   groupEnabled: true,
-                  groupChannels: ["newclaw-dm"],
+                  groupChannels: ["iflow-dm"],
                 },
                 actions: {
                   emojiUploads: true,
@@ -38,7 +38,7 @@ describe("config discord", () => {
                 },
                 guilds: {
                   "123": {
-                    slug: "friends-of-newclaw",
+                    slug: "friends-of-iflow",
                     requireMention: false,
                     users: ["steipete"],
                     channels: {
@@ -61,11 +61,11 @@ describe("config discord", () => {
 
       expect(cfg.channels?.discord?.enabled).toBe(true);
       expect(cfg.channels?.discord?.dm?.groupEnabled).toBe(true);
-      expect(cfg.channels?.discord?.dm?.groupChannels).toEqual(["newclaw-dm"]);
+      expect(cfg.channels?.discord?.dm?.groupChannels).toEqual(["iflow-dm"]);
       expect(cfg.channels?.discord?.actions?.emojiUploads).toBe(true);
       expect(cfg.channels?.discord?.actions?.stickerUploads).toBe(false);
       expect(cfg.channels?.discord?.actions?.channels).toBe(true);
-      expect(cfg.channels?.discord?.guilds?.["123"]?.slug).toBe("friends-of-newclaw");
+      expect(cfg.channels?.discord?.guilds?.["123"]?.slug).toBe("friends-of-iflow");
       expect(cfg.channels?.discord?.guilds?.["123"]?.channels?.general?.allow).toBe(true);
     });
   });

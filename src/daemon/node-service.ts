@@ -14,13 +14,13 @@ function withNodeServiceEnv(
 ): Record<string, string | undefined> {
   return {
     ...env,
-    NEWCLAW_LAUNCHD_LABEL: resolveNodeLaunchAgentLabel(),
-    NEWCLAW_SYSTEMD_UNIT: resolveNodeSystemdServiceName(),
-    NEWCLAW_WINDOWS_TASK_NAME: resolveNodeWindowsTaskName(),
-    NEWCLAW_TASK_SCRIPT_NAME: NODE_WINDOWS_TASK_SCRIPT_NAME,
-    NEWCLAW_LOG_PREFIX: "node",
-    NEWCLAW_SERVICE_MARKER: NODE_SERVICE_MARKER,
-    NEWCLAW_SERVICE_KIND: NODE_SERVICE_KIND,
+    IFLOW_LAUNCHD_LABEL: resolveNodeLaunchAgentLabel(),
+    IFLOW_SYSTEMD_UNIT: resolveNodeSystemdServiceName(),
+    IFLOW_WINDOWS_TASK_NAME: resolveNodeWindowsTaskName(),
+    IFLOW_TASK_SCRIPT_NAME: NODE_WINDOWS_TASK_SCRIPT_NAME,
+    IFLOW_LOG_PREFIX: "node",
+    IFLOW_SERVICE_MARKER: NODE_SERVICE_MARKER,
+    IFLOW_SERVICE_KIND: NODE_SERVICE_KIND,
   };
 }
 
@@ -30,13 +30,13 @@ function withNodeInstallEnv(args: GatewayServiceInstallArgs): GatewayServiceInst
     env: withNodeServiceEnv(args.env),
     environment: {
       ...args.environment,
-      NEWCLAW_LAUNCHD_LABEL: resolveNodeLaunchAgentLabel(),
-      NEWCLAW_SYSTEMD_UNIT: resolveNodeSystemdServiceName(),
-      NEWCLAW_WINDOWS_TASK_NAME: resolveNodeWindowsTaskName(),
-      NEWCLAW_TASK_SCRIPT_NAME: NODE_WINDOWS_TASK_SCRIPT_NAME,
-      NEWCLAW_LOG_PREFIX: "node",
-      NEWCLAW_SERVICE_MARKER: NODE_SERVICE_MARKER,
-      NEWCLAW_SERVICE_KIND: NODE_SERVICE_KIND,
+      IFLOW_LAUNCHD_LABEL: resolveNodeLaunchAgentLabel(),
+      IFLOW_SYSTEMD_UNIT: resolveNodeSystemdServiceName(),
+      IFLOW_WINDOWS_TASK_NAME: resolveNodeWindowsTaskName(),
+      IFLOW_TASK_SCRIPT_NAME: NODE_WINDOWS_TASK_SCRIPT_NAME,
+      IFLOW_LOG_PREFIX: "node",
+      IFLOW_SERVICE_MARKER: NODE_SERVICE_MARKER,
+      IFLOW_SERVICE_KIND: NODE_SERVICE_KIND,
     },
   };
 }

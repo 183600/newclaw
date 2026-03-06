@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-INSTALL_URL="${NEWCLAW_INSTALL_URL:-https://newclaw.bot/install.sh}"
-SMOKE_PREVIOUS_VERSION="${NEWCLAW_INSTALL_SMOKE_PREVIOUS:-}"
-SKIP_PREVIOUS="${NEWCLAW_INSTALL_SMOKE_SKIP_PREVIOUS:-0}"
-DEFAULT_PACKAGE="newclaw"
-PACKAGE_NAME="${NEWCLAW_INSTALL_PACKAGE:-$DEFAULT_PACKAGE}"
+INSTALL_URL="${IFLOW_INSTALL_URL:-https://iflow.bot/install.sh}"
+SMOKE_PREVIOUS_VERSION="${IFLOW_INSTALL_SMOKE_PREVIOUS:-}"
+SKIP_PREVIOUS="${IFLOW_INSTALL_SMOKE_SKIP_PREVIOUS:-0}"
+DEFAULT_PACKAGE="iflow"
+PACKAGE_NAME="${IFLOW_INSTALL_PACKAGE:-$DEFAULT_PACKAGE}"
 
 echo "==> Resolve npm versions"
 LATEST_VERSION="$(npm view "$PACKAGE_NAME" version)"
@@ -41,7 +41,7 @@ fi
 echo "package=$PACKAGE_NAME latest=$LATEST_VERSION previous=$PREVIOUS_VERSION"
 
 if [[ "$SKIP_PREVIOUS" == "1" ]]; then
-  echo "==> Skip preinstall previous (NEWCLAW_INSTALL_SMOKE_SKIP_PREVIOUS=1)"
+  echo "==> Skip preinstall previous (IFLOW_INSTALL_SMOKE_SKIP_PREVIOUS=1)"
 else
   echo "==> Preinstall previous (forces installer upgrade path)"
   npm install -g "${PACKAGE_NAME}@${PREVIOUS_VERSION}"
@@ -56,8 +56,8 @@ if ! command -v "$CLI_NAME" >/dev/null 2>&1; then
   echo "ERROR: $PACKAGE_NAME is not on PATH" >&2
   exit 1
 fi
-if [[ -n "${NEWCLAW_INSTALL_LATEST_OUT:-}" ]]; then
-  printf "%s" "$LATEST_VERSION" > "${NEWCLAW_INSTALL_LATEST_OUT:-}"
+if [[ -n "${IFLOW_INSTALL_LATEST_OUT:-}" ]]; then
+  printf "%s" "$LATEST_VERSION" > "${IFLOW_INSTALL_LATEST_OUT:-}"
 fi
 INSTALLED_VERSION="$("$CLI_NAME" --version 2>/dev/null | head -n 1 | tr -d '\r')"
 echo "cli=$CLI_NAME installed=$INSTALLED_VERSION expected=$LATEST_VERSION"

@@ -3,11 +3,11 @@ import Ajv from "ajv";
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-// NOTE: This extension is intended to be bundled with NewClaw.
-// When running from source (tests/dev), NewClaw internals live under src/.
+// NOTE: This extension is intended to be bundled with iFlow.
+// When running from source (tests/dev), iFlow internals live under src/.
 // When running from a built install, internals live under dist/ (no src/ tree).
 // So we resolve internal imports dynamically with src-first, dist-fallback.
-import type { NewClawPluginApi } from "../../../src/plugins/types.js";
+import type { iFlowPluginApi } from "../../../src/plugins/types.js";
 
 type RunEmbeddedPiAgentFn = (params: Record<string, unknown>) => Promise<unknown>;
 
@@ -66,11 +66,11 @@ type PluginCfg = {
   timeoutMs?: number;
 };
 
-export function createLlmTaskTool(api: NewClawPluginApi) {
+export function createLlmTaskTool(api: iFlowPluginApi) {
   return {
     name: "llm-task",
     description:
-      "Run a generic JSON-only LLM task and return schema-validated JSON. Designed for orchestration from Lobster workflows via newclaw.invoke.",
+      "Run a generic JSON-only LLM task and return schema-validated JSON. Designed for orchestration from Lobster workflows via iflow.invoke.",
     parameters: Type.Object({
       prompt: Type.String({ description: "Task instruction for the LLM." }),
       input: Type.Optional(Type.Unknown({ description: "Optional input payload for the task." })),
@@ -175,7 +175,7 @@ export function createLlmTaskTool(api: NewClawPluginApi) {
 
       let tmpDir: string | null = null;
       try {
-        tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "newclaw-llm-task-"));
+        tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-llm-task-"));
         const sessionId = `llm-task-${Date.now()}`;
         const sessionFile = path.join(tmpDir, "session.json");
 

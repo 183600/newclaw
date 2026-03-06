@@ -1,6 +1,6 @@
 # Bundled Hooks
 
-This directory contains hooks that ship with NewClaw. These hooks are automatically discovered and can be enabled/disabled via CLI or configuration.
+This directory contains hooks that ship with iFlow. These hooks are automatically discovered and can be enabled/disabled via CLI or configuration.
 
 ## Available Hooks
 
@@ -10,12 +10,12 @@ Automatically saves session context to memory when you issue `/new`.
 
 **Events**: `command:new`
 **What it does**: Creates a dated memory file with LLM-generated slug based on conversation content.
-**Output**: `<workspace>/memory/YYYY-MM-DD-slug.md` (defaults to `~/.newclaw/workspace`)
+**Output**: `<workspace>/memory/YYYY-MM-DD-slug.md` (defaults to `~/.iflow/workspace`)
 
 **Enable**:
 
 ```bash
-newclaw hooks enable session-memory
+iflow hooks enable session-memory
 ```
 
 ### 📝 command-logger
@@ -24,12 +24,12 @@ Logs all command events to a centralized audit file.
 
 **Events**: `command` (all commands)
 **What it does**: Appends JSONL entries to command log file.
-**Output**: `~/.newclaw/logs/commands.log`
+**Output**: `~/.iflow/logs/commands.log`
 
 **Enable**:
 
 ```bash
-newclaw hooks enable command-logger
+iflow hooks enable command-logger
 ```
 
 ### 😈 soul-evil
@@ -39,12 +39,12 @@ Swaps injected `SOUL.md` content with `SOUL_EVIL.md` during a purge window or by
 **Events**: `agent:bootstrap`
 **What it does**: Overrides the injected SOUL content before the system prompt is built.
 **Output**: No files written; swaps happen in-memory only.
-**Docs**: https://docs.newclaw.ai/hooks/soul-evil
+**Docs**: https://docs.iflow.ai/hooks/soul-evil
 
 **Enable**:
 
 ```bash
-newclaw hooks enable soul-evil
+iflow hooks enable soul-evil
 ```
 
 ### 🚀 boot-md
@@ -58,7 +58,7 @@ Runs `BOOT.md` whenever the gateway starts (after channels start).
 **Enable**:
 
 ```bash
-newclaw hooks enable boot-md
+iflow hooks enable boot-md
 ```
 
 ## Hook Structure
@@ -82,9 +82,9 @@ session-memory/
 ---
 name: my-hook
 description: "Short description"
-homepage: https://docs.newclaw.ai/hooks#my-hook
+homepage: https://docs.iflow.ai/hooks#my-hook
 metadata:
-  { "newclaw": { "emoji": "🔗", "events": ["command:new"], "requires": { "bins": ["node"] } } }
+  { "iflow": { "emoji": "🔗", "events": ["command:new"], "requires": { "bins": ["node"] } } }
 ---
 # Hook Title
 
@@ -108,7 +108,7 @@ Documentation goes here...
 To create your own hooks, place them in:
 
 - **Workspace hooks**: `<workspace>/hooks/` (highest precedence)
-- **Managed hooks**: `~/.newclaw/hooks/` (shared across workspaces)
+- **Managed hooks**: `~/.iflow/hooks/` (shared across workspaces)
 
 Custom hooks follow the same structure as bundled hooks.
 
@@ -117,31 +117,31 @@ Custom hooks follow the same structure as bundled hooks.
 List all hooks:
 
 ```bash
-newclaw hooks list
+iflow hooks list
 ```
 
 Show hook details:
 
 ```bash
-newclaw hooks info session-memory
+iflow hooks info session-memory
 ```
 
 Check hook status:
 
 ```bash
-newclaw hooks check
+iflow hooks check
 ```
 
 Enable/disable:
 
 ```bash
-newclaw hooks enable session-memory
-newclaw hooks disable command-logger
+iflow hooks enable session-memory
+iflow hooks disable command-logger
 ```
 
 ## Configuration
 
-Hooks can be configured in `~/.newclaw/newclaw.json`:
+Hooks can be configured in `~/.iflow/iflow.json`:
 
 ```json
 {
@@ -214,11 +214,11 @@ export default myHandler;
 Test your hooks by:
 
 1. Place hook in workspace hooks directory
-2. Restart gateway: `pkill -9 -f 'newclaw.*gateway' && pnpm newclaw gateway`
-3. Enable the hook: `newclaw hooks enable my-hook`
+2. Restart gateway: `pkill -9 -f 'iflow.*gateway' && pnpm iflow gateway`
+3. Enable the hook: `iflow hooks enable my-hook`
 4. Trigger the event (e.g., send `/new` command)
 5. Check gateway logs for hook execution
 
 ## Documentation
 
-Full documentation: https://docs.newclaw.ai/hooks
+Full documentation: https://docs.iflow.ai/hooks

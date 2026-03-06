@@ -1,7 +1,7 @@
 ---
 read_when:
   - 排查运行时问题或故障时
-summary: 常见 NewClaw 故障的快速解决问题指南
+summary: 常见 iFlow 故障的快速解决问题指南
 title: 故障排除
 x-i18n:
   generated_at: "2026-02-01T21:08:01Z"
@@ -14,7 +14,7 @@ x-i18n:
 
 # 故障排除 🔧
 
-当 NewClaw 出现异常时，以下是修复方法。
+当 iFlow 出现异常时，以下是修复方法。
 
 如果你只想快速分诊，请先查看常见问题的[前 60 秒](/help/faq#first-60-seconds-if-somethings-broken)。本页将深入介绍运行时故障和诊断方法。
 
@@ -24,17 +24,17 @@ x-i18n:
 
 快速分诊命令（按顺序执行）：
 
-| 命令                              | 告诉你什么                                                                           | 何时使用                         |
-| --------------------------------- | ------------------------------------------------------------------------------------ | -------------------------------- |
-| `newclaw status`                  | 本地摘要：操作系统 + 更新、Gateway网关可达性/模式、服务、智能体/会话、提供商配置状态 | 首次检查，快速概览               |
-| `newclaw status --all`            | 完整本地诊断（只读、可粘贴、基本安全）包含日志尾部                                   | 需要分享调试报告时               |
-| `newclaw status --deep`           | 运行 Gateway网关健康检查（包括提供商探测；需要 Gateway网关可达）                     | 当"已配置"不等于"正常工作"时     |
-| `newclaw gateway probe`           | Gateway网关发现 + 可达性（本地 + 远程目标）                                          | 怀疑探测了错误的 Gateway网关时   |
-| `newclaw channels status --probe` | 向运行中的 Gateway网关查询渠道状态（可选探测）                                       | Gateway网关可达但渠道异常时      |
-| `newclaw gateway status`          | 管理器状态（launchd/systemd/schtasks）、运行时 PID/退出码、最后一次 Gateway网关错误  | 服务"看起来已加载"但实际未运行时 |
-| `newclaw logs --follow`           | 实时日志（运行时问题的最佳信号源）                                                   | 需要查看实际失败原因时           |
+| 命令                            | 告诉你什么                                                                           | 何时使用                         |
+| ------------------------------- | ------------------------------------------------------------------------------------ | -------------------------------- |
+| `iflow status`                  | 本地摘要：操作系统 + 更新、Gateway网关可达性/模式、服务、智能体/会话、提供商配置状态 | 首次检查，快速概览               |
+| `iflow status --all`            | 完整本地诊断（只读、可粘贴、基本安全）包含日志尾部                                   | 需要分享调试报告时               |
+| `iflow status --deep`           | 运行 Gateway网关健康检查（包括提供商探测；需要 Gateway网关可达）                     | 当"已配置"不等于"正常工作"时     |
+| `iflow gateway probe`           | Gateway网关发现 + 可达性（本地 + 远程目标）                                          | 怀疑探测了错误的 Gateway网关时   |
+| `iflow channels status --probe` | 向运行中的 Gateway网关查询渠道状态（可选探测）                                       | Gateway网关可达但渠道异常时      |
+| `iflow gateway status`          | 管理器状态（launchd/systemd/schtasks）、运行时 PID/退出码、最后一次 Gateway网关错误  | 服务"看起来已加载"但实际未运行时 |
+| `iflow logs --follow`           | 实时日志（运行时问题的最佳信号源）                                                   | 需要查看实际失败原因时           |
 
-**分享输出：** 优先使用 `newclaw status --all`（它会脱敏令牌）。如果粘贴 `newclaw status` 的输出，建议先设置 `NEWCLAW_SHOW_SECRETS=0`（令牌预览）。
+**分享输出：** 优先使用 `iflow status --all`（它会脱敏令牌）。如果粘贴 `iflow status` 的输出，建议先设置 `IFLOW_SHOW_SECRETS=0`（令牌预览）。
 
 另见：[健康检查](/gateway/health) 和 [日志](/logging)。
 
@@ -50,14 +50,14 @@ x-i18n:
 - 重新运行新手引导，为该智能体选择 **Anthropic**。
 - 或者在 **Gateway网关主机**上粘贴 setup-token：
   ```bash
-  newclaw models auth setup-token --provider anthropic
+  iflow models auth setup-token --provider anthropic
   ```
 - 或将主智能体目录中的 `auth-profiles.json` 复制到新智能体目录。
 
 验证：
 
 ```bash
-newclaw models status
+iflow models status
 ```
 
 ### OAuth token refresh failed (Anthropic Claude subscription)
@@ -70,15 +70,15 @@ newclaw models status
 
 ```bash
 # 在 Gateway网关主机上运行（粘贴 setup-token）
-newclaw models auth setup-token --provider anthropic
-newclaw models status
+iflow models auth setup-token --provider anthropic
+iflow models status
 ```
 
 如果你在其他地方生成了令牌：
 
 ```bash
-newclaw models auth paste-token --provider anthropic
-newclaw models status
+iflow models auth paste-token --provider anthropic
+iflow models status
 ```
 
 更多详情：[Anthropic](/providers/anthropic) 和 [OAuth](/concepts/oauth)。
@@ -110,19 +110,19 @@ newclaw models status
 **检查：**
 
 ```bash
-newclaw gateway status
-newclaw doctor
+iflow gateway status
+iflow doctor
 ```
 
 Doctor/service 会显示运行时状态（PID/上次退出码）和日志提示。
 
 **日志：**
 
-- 推荐：`newclaw logs --follow`
-- 文件日志（始终可用）：`/tmp/newclaw/newclaw-YYYY-MM-DD.log`（或你配置的 `logging.file`）
-- macOS LaunchAgent（如已安装）：`$NEWCLAW_STATE_DIR/logs/gateway.log` 和 `gateway.err.log`
-- Linux systemd（如已安装）：`journalctl --user -u newclaw-gateway[-<profile>].service -n 200 --no-pager`
-- Windows：`schtasks /Query /TN "NewClaw Gateway网关 (<profile>)" /V /FO LIST`
+- 推荐：`iflow logs --follow`
+- 文件日志（始终可用）：`/tmp/iflow/iflow-YYYY-MM-DD.log`（或你配置的 `logging.file`）
+- macOS LaunchAgent（如已安装）：`$IFLOW_STATE_DIR/logs/gateway.log` 和 `gateway.err.log`
+- Linux systemd（如已安装）：`journalctl --user -u iflow-gateway[-<profile>].service -n 200 --no-pager`
+- Windows：`schtasks /Query /TN "iFlow Gateway网关 (<profile>)" /V /FO LIST`
 
 **启用更详细的日志：**
 
@@ -147,25 +147,25 @@ Gateway网关拒绝启动。
 
 - 运行向导并将 Gateway网关运行模式设置为 **Local**：
   ```bash
-  newclaw configure
+  iflow configure
   ```
 - 或直接设置：
   ```bash
-  newclaw config set gateway.mode local
+  iflow config set gateway.mode local
   ```
 
 **如果你打算运行远程 Gateway网关：**
 
 - 设置远程 URL 并保持 `gateway.mode=remote`：
   ```bash
-  newclaw config set gateway.mode remote
-  newclaw config set gateway.remote.url "wss://gateway.example.com"
+  iflow config set gateway.mode remote
+  iflow config set gateway.remote.url "wss://gateway.example.com"
   ```
 
 **仅限临时/开发用途：** 传递 `--allow-unconfigured` 以在未设置
 `gateway.mode=local` 的情况下启动 Gateway网关。
 
-**还没有配置文件？** 运行 `newclaw setup` 创建初始配置，然后重新运行
+**还没有配置文件？** 运行 `iflow setup` 创建初始配置，然后重新运行
 Gateway网关。
 
 ### 服务环境（PATH + 运行时）
@@ -177,13 +177,13 @@ Gateway网关服务运行时使用**最小化 PATH**，以避免 shell/管理器
 
 这有意排除了版本管理器（nvm/fnm/volta/asdf）和包
 管理器（pnpm/npm），因为服务不会加载你的 shell 初始化脚本。运行时
-变量如 `DISPLAY` 应放在 `~/.newclaw/.env` 中（由 Gateway网关在启动早期加载）。
+变量如 `DISPLAY` 应放在 `~/.iflow/.env` 中（由 Gateway网关在启动早期加载）。
 在 `host=gateway` 上的 Exec 运行会将你的登录 shell `PATH` 合并到执行环境中，
 因此缺少工具通常意味着你的 shell 初始化脚本没有导出它们（或设置
 `tools.exec.pathPrepend`）。参见 [/tools/exec](/tools/exec)。
 
 WhatsApp + Telegram 渠道需要 **Node**；不支持 Bun。如果你的
-服务安装时使用了 Bun 或版本管理器管理的 Node 路径，请运行 `newclaw doctor`
+服务安装时使用了 Bun 或版本管理器管理的 Node 路径，请运行 `iflow doctor`
 以迁移到系统级 Node 安装。
 
 ### Skills 在沙箱中缺少 API 密钥
@@ -196,7 +196,7 @@ WhatsApp + Telegram 渠道需要 **Node**；不支持 Bun。如果你的
 
 - 设置 `agents.defaults.sandbox.docker.env`（或按智能体设置 `agents.list[].sandbox.docker.env`）
 - 或将密钥内置到自定义沙箱镜像中
-- 然后运行 `newclaw sandbox recreate --agent <id>`（或 `--all`）
+- 然后运行 `iflow sandbox recreate --agent <id>`（或 `--all`）
 
 ### 服务在运行但端口未监听
 
@@ -211,31 +211,31 @@ Gateway网关很可能拒绝了绑定。
 
 **检查：**
 
-- `gateway.mode` 对于 `newclaw gateway` 和服务必须为 `local`。
-- 如果你设置了 `gateway.mode=remote`，**CLI 默认**使用远程 URL。服务可能仍在本地运行，但你的 CLI 可能在探测错误的位置。使用 `newclaw gateway status` 查看服务解析的端口 + 探测目标（或传递 `--url`）。
-- `newclaw gateway status` 和 `newclaw doctor` 会在服务看起来正在运行但端口未打开时显示**最后一次 Gateway网关错误**日志。
+- `gateway.mode` 对于 `iflow gateway` 和服务必须为 `local`。
+- 如果你设置了 `gateway.mode=remote`，**CLI 默认**使用远程 URL。服务可能仍在本地运行，但你的 CLI 可能在探测错误的位置。使用 `iflow gateway status` 查看服务解析的端口 + 探测目标（或传递 `--url`）。
+- `iflow gateway status` 和 `iflow doctor` 会在服务看起来正在运行但端口未打开时显示**最后一次 Gateway网关错误**日志。
 - 非 local loopback 绑定（`lan`/`tailnet`/`custom`，或 local loopback 不可用时的 `auto`）需要认证：
-  `gateway.auth.token`（或 `NEWCLAW_GATEWAY_TOKEN`）。
+  `gateway.auth.token`（或 `IFLOW_GATEWAY_TOKEN`）。
 - `gateway.remote.token` 仅用于远程 CLI 调用；它**不会**启用本地认证。
 - `gateway.token` 会被忽略；请使用 `gateway.auth.token`。
 
-**如果 `newclaw gateway status` 显示配置不匹配**
+**如果 `iflow gateway status` 显示配置不匹配**
 
 - `Config (cli): ...` 和 `Config (service): ...` 通常应该一致。
 - 如果不一致，几乎可以确定你在编辑一个配置而服务在运行另一个配置。
-- 修复：从你希望服务使用的相同 `--profile` / `NEWCLAW_STATE_DIR` 重新运行 `newclaw gateway install --force`。
+- 修复：从你希望服务使用的相同 `--profile` / `IFLOW_STATE_DIR` 重新运行 `iflow gateway install --force`。
 
-**如果 `newclaw gateway status` 报告服务配置问题**
+**如果 `iflow gateway status` 报告服务配置问题**
 
 - 管理器配置（launchd/systemd/schtasks）缺少当前默认值。
-- 修复：运行 `newclaw doctor` 更新配置（或 `newclaw gateway install --force` 完整重写）。
+- 修复：运行 `iflow doctor` 更新配置（或 `iflow gateway install --force` 完整重写）。
 
 **如果 `Last gateway error:` 提到 "refusing to bind … without auth"**
 
 - 你将 `gateway.bind` 设置为非 local loopback 模式（`lan`/`tailnet`/`custom`，或 local loopback 不可用时的 `auto`）但未配置认证。
-- 修复：设置 `gateway.auth.mode` + `gateway.auth.token`（或导出 `NEWCLAW_GATEWAY_TOKEN`）并重启服务。
+- 修复：设置 `gateway.auth.mode` + `gateway.auth.token`（或导出 `IFLOW_GATEWAY_TOKEN`）并重启服务。
 
-**如果 `newclaw gateway status` 显示 `bind=tailnet` 但未找到 tailnet 接口**
+**如果 `iflow gateway status` 显示 `bind=tailnet` 但未找到 tailnet 接口**
 
 - Gateway网关尝试绑定到 Tailscale IP（100.64.0.0/10）但主机上未检测到。
 - 修复：在该机器上启动 Tailscale（或将 `gateway.bind` 改为 `loopback`/`lan`）。
@@ -252,7 +252,7 @@ Gateway网关很可能拒绝了绑定。
 **检查：**
 
 ```bash
-newclaw gateway status
+iflow gateway status
 ```
 
 它会显示监听者和可能的原因（Gateway网关已在运行、SSH 隧道）。
@@ -260,7 +260,7 @@ newclaw gateway status
 
 ### 检测到多余的工作区文件夹
 
-如果你从旧版本升级，磁盘上可能仍有 `~/newclaw`。
+如果你从旧版本升级，磁盘上可能仍有 `~/iflow`。
 多个工作区目录可能导致认证或状态漂移的混乱，因为
 只有一个工作区是活跃的。
 
@@ -269,7 +269,7 @@ newclaw gateway status
 
 ### 主聊天在沙箱工作区中运行
 
-症状：`pwd` 或文件工具显示 `~/.newclaw/sandboxes/...`，但你
+症状：`pwd` 或文件工具显示 `~/.iflow/sandboxes/...`，但你
 期望的是主机工作区。
 
 **原因：** `agents.defaults.sandbox.mode: "non-main"` 基于 `session.mainKey`（默认 `"main"`）判断。
@@ -295,15 +295,15 @@ newclaw gateway status
 
 ### "Agent failed before reply: Unknown model: anthropic/claude-haiku-3-5"
 
-NewClaw 有意拒绝**旧版/不安全的模型**（特别是那些更
+iFlow 有意拒绝**旧版/不安全的模型**（特别是那些更
 容易受到提示注入攻击的模型）。如果你看到此错误，说明该模型名称
 已不再支持。
 
 **修复：**
 
 - 为该提供商选择一个**最新**模型，并更新你的配置或模型别名。
-- 如果不确定有哪些可用模型，运行 `newclaw models list` 或
-  `newclaw models scan` 并选择一个受支持的模型。
+- 如果不确定有哪些可用模型，运行 `iflow models list` 或
+  `iflow models scan` 并选择一个受支持的模型。
 - 检查 Gateway网关日志了解详细的失败原因。
 
 另见：[模型 CLI](/cli/models) 和 [模型提供商](/concepts/model-providers)。
@@ -313,7 +313,7 @@ NewClaw 有意拒绝**旧版/不安全的模型**（特别是那些更
 **检查 1：** 发送者是否在白名单中？
 
 ```bash
-newclaw status
+iflow status
 ```
 
 在输出中查找 `AllowFrom: ...`。
@@ -324,15 +324,15 @@ newclaw status
 # 消息必须匹配 mentionPatterns 或显式提及；默认值在渠道 groups/guilds 中。
 # 多智能体：`agents.list[].groupChat.mentionPatterns` 覆盖全局模式。
 grep -n "agents\\|groupChat\\|mentionPatterns\\|channels\\.whatsapp\\.groups\\|channels\\.telegram\\.groups\\|channels\\.imessage\\.groups\\|channels\\.discord\\.guilds" \
-  "${NEWCLAW_CONFIG_PATH:-$HOME/.newclaw/newclaw.json}"
+  "${IFLOW_CONFIG_PATH:-$HOME/.iflow/iflow.json}"
 ```
 
 **检查 3：** 查看日志
 
 ```bash
-newclaw logs --follow
+iflow logs --follow
 # 或者快速过滤：
-tail -f "$(ls -t /tmp/newclaw/newclaw-*.log | head -1)" | grep "blocked\\|skip\\|unauthorized"
+tail -f "$(ls -t /tmp/iflow/iflow-*.log | head -1)" | grep "blocked\\|skip\\|unauthorized"
 ```
 
 ### 配对码未送达
@@ -342,7 +342,7 @@ tail -f "$(ls -t /tmp/newclaw/newclaw-*.log | head -1)" | grep "blocked\\|skip\\
 **检查 1：** 是否已有待处理的请求？
 
 ```bash
-newclaw pairing list <channel>
+iflow pairing list <channel>
 ```
 
 每个渠道默认最多 **3 个**待处理的 私信 配对请求。如果列表已满，新请求在有一个被批准或过期之前不会生成验证码。
@@ -350,7 +350,7 @@ newclaw pairing list <channel>
 **检查 2：** 请求是否已创建但未发送回复？
 
 ```bash
-newclaw logs --follow | grep "pairing request"
+iflow logs --follow | grep "pairing request"
 ```
 
 **检查 3：** 确认该渠道的 `dmPolicy` 不是 `open`/`allowlist`。
@@ -361,15 +361,15 @@ newclaw logs --follow | grep "pairing request"
 
 **解决方法：** 在提及时添加一些文本：
 
-- ❌ `@newclaw` + 图片
-- ✅ `@newclaw check this` + 图片
+- ❌ `@iflow` + 图片
+- ✅ `@iflow check this` + 图片
 
 ### 会话未恢复
 
 **检查 1：** 会话文件是否存在？
 
 ```bash
-ls -la ~/.newclaw/agents/<agentId>/sessions/
+ls -la ~/.iflow/agents/<agentId>/sessions/
 ```
 
 **检查 2：** 重置窗口是否太短？
@@ -406,26 +406,26 @@ ls -la ~/.newclaw/agents/<agentId>/sessions/
 
 ```bash
 # 检查本地状态（凭据、会话、排队事件）
-newclaw status
+iflow status
 # 探测运行中的 Gateway网关 + 渠道（WA 连接 + Telegram + Discord API）
-newclaw status --deep
+iflow status --deep
 
 # 查看最近的连接事件
-newclaw logs --limit 200 | grep "connection\\|disconnect\\|logout"
+iflow logs --limit 200 | grep "connection\\|disconnect\\|logout"
 ```
 
 **修复：** 通常在 Gateway网关运行后会自动重连。如果卡住，重启 Gateway网关进程（无论你用什么方式管理），或手动运行并附带详细输出：
 
 ```bash
-newclaw gateway --verbose
+iflow gateway --verbose
 ```
 
 如果你已被登出/取消关联：
 
 ```bash
-newclaw channels logout
-trash "${NEWCLAW_STATE_DIR:-$HOME/.newclaw}/credentials" # 如果 logout 无法完全清除
-newclaw channels login --verbose       # 重新扫描二维码
+iflow channels logout
+trash "${IFLOW_STATE_DIR:-$HOME/.iflow}/credentials" # 如果 logout 无法完全清除
+iflow channels login --verbose       # 重新扫描二维码
 ```
 
 ### 媒体发送失败
@@ -445,12 +445,12 @@ ls -la /path/to/your/image.jpg
 **检查 3：** 查看媒体日志
 
 ```bash
-grep "media\\|fetch\\|download" "$(ls -t /tmp/newclaw/newclaw-*.log | head -1)" | tail -20
+grep "media\\|fetch\\|download" "$(ls -t /tmp/iflow/iflow-*.log | head -1)" | tail -20
 ```
 
 ### 内存使用过高
 
-NewClaw 将对话历史保存在内存中。
+iFlow 将对话历史保存在内存中。
 
 **修复：** 定期重启或设置会话限制：
 
@@ -466,28 +466,28 @@ NewClaw 将对话历史保存在内存中。
 
 ### "Gateway网关 won't start — configuration invalid"
 
-NewClaw 现在会在配置包含未知键、格式错误的值或无效类型时拒绝启动。
+iFlow 现在会在配置包含未知键、格式错误的值或无效类型时拒绝启动。
 这是出于安全考虑的有意设计。
 
 使用 Doctor 修复：
 
 ```bash
-newclaw doctor
-newclaw doctor --fix
+iflow doctor
+iflow doctor --fix
 ```
 
 说明：
 
-- `newclaw doctor` 会报告每个无效条目。
-- `newclaw doctor --fix` 会应用迁移/修复并重写配置。
-- 诊断命令如 `newclaw logs`、`newclaw health`、`newclaw status`、`newclaw gateway status` 和 `newclaw gateway probe` 即使配置无效也能运行。
+- `iflow doctor` 会报告每个无效条目。
+- `iflow doctor --fix` 会应用迁移/修复并重写配置。
+- 诊断命令如 `iflow logs`、`iflow health`、`iflow status`、`iflow gateway status` 和 `iflow gateway probe` 即使配置无效也能运行。
 
 ### "All models failed" — 我应该先检查什么？
 
 - 正在使用的提供商是否存在**凭据**（认证配置文件 + 环境变量）。
 - **模型路由**：确认 `agents.defaults.model.primary` 和回退模型是你能访问的模型。
-- `/tmp/newclaw/…` 中的 **Gateway网关日志**查看具体的提供商错误。
-- **模型状态**：使用 `/model status`（聊天中）或 `newclaw models status`（CLI）。
+- `/tmp/iflow/…` 中的 **Gateway网关日志**查看具体的提供商错误。
+- **模型状态**：使用 `/model status`（聊天中）或 `iflow models status`（CLI）。
 
 ### 我用个人 WhatsApp 号码运行 — 为什么自聊行为异常？
 
@@ -512,13 +512,13 @@ newclaw doctor --fix
 重新运行登录命令并扫描二维码：
 
 ```bash
-newclaw channels login
+iflow channels login
 ```
 
 ### `main` 分支构建错误 — 标准修复路径是什么？
 
 1. `git pull origin main && pnpm install`
-2. `newclaw doctor`
+2. `iflow doctor`
 3. 查看 GitHub issues 或 Discord
 4. 临时解决方案：回退到较旧的提交
 
@@ -533,8 +533,8 @@ newclaw channels login
 git status   # 确保你在仓库根目录
 pnpm install
 pnpm build
-newclaw doctor
-newclaw gateway restart
+iflow doctor
+iflow gateway restart
 ```
 
 原因：pnpm 是此仓库配置的包管理器。
@@ -547,13 +547,13 @@ newclaw gateway restart
 切换**到 git 安装**：
 
 ```bash
-curl -fsSL https://newclaw.ai/install.sh | bash -s -- --install-method git --no-onboard
+curl -fsSL https://iflow.ai/install.sh | bash -s -- --install-method git --no-onboard
 ```
 
 切换**到 npm 全局安装**：
 
 ```bash
-curl -fsSL https://newclaw.ai/install.sh | bash
+curl -fsSL https://iflow.ai/install.sh | bash
 ```
 
 说明：
@@ -561,8 +561,8 @@ curl -fsSL https://newclaw.ai/install.sh | bash
 - git 流程仅在仓库干净时才会 rebase。请先提交或暂存更改。
 - 切换后运行：
   ```bash
-  newclaw doctor
-  newclaw gateway restart
+  iflow doctor
+  iflow gateway restart
   ```
 
 ### Telegram 块式流不在工具调用之间拆分文本。为什么？
@@ -597,20 +597,20 @@ curl -fsSL https://newclaw.ai/install.sh | bash
 3. 将 `requireMention: false` 放在 `channels.discord.guilds` **下方**（全局或按频道）。
    顶层 `channels.discord.requireMention` 不是受支持的键。
 4. 确保机器人拥有 **Message Content Intent** 和频道权限。
-5. 运行 `newclaw channels status --probe` 获取审计提示。
+5. 运行 `iflow channels status --probe` 获取审计提示。
 
 文档：[Discord](/channels/discord)、[渠道故障排除](/channels/troubleshooting)。
 
 ### Cloud Code Assist API 错误：invalid tool schema (400)。怎么办？
 
 这几乎总是**工具 schema 兼容性**问题。Cloud Code Assist
-端点接受 JSON Schema 的严格子集。NewClaw 在当前 `main` 中会清洗/规范化工具
+端点接受 JSON Schema 的严格子集。iFlow 在当前 `main` 中会清洗/规范化工具
 schema，但此修复尚未包含在最新发布版中（截至
 2026 年 1 月 13 日）。
 
 修复清单：
 
-1. **更新 NewClaw**：
+1. **更新 iFlow**：
    - 如果你能从源码运行，拉取 `main` 并重启 Gateway网关。
    - 否则，等待包含 schema 清洗器的下一个版本。
 2. 避免不受支持的关键字，如 `anyOf/oneOf/allOf`、`patternProperties`、
@@ -633,7 +633,7 @@ tccutil reset All bot.molt.mac.debug
 ```
 
 **修复 2：强制使用新 Bundle ID**
-如果重置无效，更改 [`scripts/package-mac-app.sh`](https://github.com/newclaw/newclaw/blob/main/scripts/package-mac-app.sh) 中的 `BUNDLE_ID`（例如添加 `.test` 后缀）并重新构建。这会强制 macOS 将其视为新应用。
+如果重置无效，更改 [`scripts/package-mac-app.sh`](https://github.com/iflow/iflow/blob/main/scripts/package-mac-app.sh) 中的 `BUNDLE_ID`（例如添加 `.test` 后缀）并重新构建。这会强制 macOS 将其视为新应用。
 
 ### Gateway网关卡在"Starting..."
 
@@ -643,9 +643,9 @@ tccutil reset All bot.molt.mac.debug
 如果 Gateway网关由 launchd 管理，杀死 PID 只会让它重新启动。先停止管理器：
 
 ```bash
-newclaw gateway status
-newclaw gateway stop
-# 或：launchctl bootout gui/$UID/bot.molt.gateway（替换为 bot.molt.<profile>；旧版 com.newclaw.* 仍可用）
+iflow gateway status
+iflow gateway stop
+# 或：launchctl bootout gui/$UID/bot.molt.gateway（替换为 bot.molt.<profile>；旧版 com.iflow.* 仍可用）
 ```
 
 **修复 2：端口被占用（查找监听者）**
@@ -663,11 +663,11 @@ kill -9 <PID> # 最后手段
 ```
 
 **修复 3：检查 CLI 安装**
-确保全局 `newclaw` CLI 已安装且版本与应用匹配：
+确保全局 `iflow` CLI 已安装且版本与应用匹配：
 
 ```bash
-newclaw --version
-npm install -g newclaw@<version>
+iflow --version
+npm install -g iflow@<version>
 ```
 
 ## 调试模式
@@ -676,43 +676,43 @@ npm install -g newclaw@<version>
 
 ```bash
 # 在配置中开启 trace 日志：
-#   ${NEWCLAW_CONFIG_PATH:-$HOME/.newclaw/newclaw.json} -> { logging: { level: "trace" } }
+#   ${IFLOW_CONFIG_PATH:-$HOME/.iflow/iflow.json} -> { logging: { level: "trace" } }
 #
 # 然后运行 verbose 命令将调试输出镜像到标准输出：
-newclaw gateway --verbose
-newclaw channels login --verbose
+iflow gateway --verbose
+iflow channels login --verbose
 ```
 
 ## 日志位置
 
-| 日志                          | 位置                                                                                                                                                                                                                                                                                                                     |
-| ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Gateway网关文件日志（结构化） | `/tmp/newclaw/newclaw-YYYY-MM-DD.log`（或 `logging.file`）                                                                                                                                                                                                                                                               |
-| Gateway网关服务日志（管理器） | macOS：`$NEWCLAW_STATE_DIR/logs/gateway.log` + `gateway.err.log`（默认：`~/.newclaw/logs/...`；profile 使用 `~/.newclaw-<profile>/logs/...`）<br />Linux：`journalctl --user -u newclaw-gateway[-<profile>].service -n 200 --no-pager`<br />Windows：`schtasks /Query /TN "NewClaw Gateway网关 (<profile>)" /V /FO LIST` |
-| 会话文件                      | `$NEWCLAW_STATE_DIR/agents/<agentId>/sessions/`                                                                                                                                                                                                                                                                          |
-| 媒体缓存                      | `$NEWCLAW_STATE_DIR/media/`                                                                                                                                                                                                                                                                                              |
-| 凭据                          | `$NEWCLAW_STATE_DIR/credentials/`                                                                                                                                                                                                                                                                                        |
+| 日志                          | 位置                                                                                                                                                                                                                                                                                                           |
+| ----------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Gateway网关文件日志（结构化） | `/tmp/iflow/iflow-YYYY-MM-DD.log`（或 `logging.file`）                                                                                                                                                                                                                                                         |
+| Gateway网关服务日志（管理器） | macOS：`$IFLOW_STATE_DIR/logs/gateway.log` + `gateway.err.log`（默认：`~/.iflow/logs/...`；profile 使用 `~/.iflow-<profile>/logs/...`）<br />Linux：`journalctl --user -u iflow-gateway[-<profile>].service -n 200 --no-pager`<br />Windows：`schtasks /Query /TN "iFlow Gateway网关 (<profile>)" /V /FO LIST` |
+| 会话文件                      | `$IFLOW_STATE_DIR/agents/<agentId>/sessions/`                                                                                                                                                                                                                                                                  |
+| 媒体缓存                      | `$IFLOW_STATE_DIR/media/`                                                                                                                                                                                                                                                                                      |
+| 凭据                          | `$IFLOW_STATE_DIR/credentials/`                                                                                                                                                                                                                                                                                |
 
 ## 健康检查
 
 ```bash
 # 管理器 + 探测目标 + 配置路径
-newclaw gateway status
+iflow gateway status
 # 包含系统级扫描（旧版/多余服务、端口监听者）
-newclaw gateway status --deep
+iflow gateway status --deep
 
 # Gateway网关是否可达？
-newclaw health --json
+iflow health --json
 # 如果失败，附带连接详情重新运行：
-newclaw health --verbose
+iflow health --verbose
 
 # 默认端口上是否有监听？
 lsof -nP -iTCP:18789 -sTCP:LISTEN
 
 # 最近活动（RPC 日志尾部）
-newclaw logs --follow
+iflow logs --follow
 # RPC 不可用时的备选方案
-tail -20 /tmp/newclaw/newclaw-*.log
+tail -20 /tmp/iflow/iflow-*.log
 ```
 
 ## 重置一切
@@ -720,23 +720,23 @@ tail -20 /tmp/newclaw/newclaw-*.log
 核弹选项：
 
 ```bash
-newclaw gateway stop
+iflow gateway stop
 # 如果你安装了服务并想全新安装：
-# newclaw gateway uninstall
+# iflow gateway uninstall
 
-trash "${NEWCLAW_STATE_DIR:-$HOME/.newclaw}"
-newclaw channels login         # 重新配对 WhatsApp
-newclaw gateway restart           # 或：newclaw gateway
+trash "${IFLOW_STATE_DIR:-$HOME/.iflow}"
+iflow channels login         # 重新配对 WhatsApp
+iflow gateway restart           # 或：iflow gateway
 ```
 
 ⚠️ 这会丢失所有会话并需要重新配对 WhatsApp。
 
 ## 获取帮助
 
-1. 先查看日志：`/tmp/newclaw/`（默认：`newclaw-YYYY-MM-DD.log`，或你配置的 `logging.file`）
+1. 先查看日志：`/tmp/iflow/`（默认：`iflow-YYYY-MM-DD.log`，或你配置的 `logging.file`）
 2. 在 GitHub 上搜索现有 issues
 3. 提交新 issue 并附上：
-   - NewClaw 版本
+   - iFlow 版本
    - 相关日志片段
    - 复现步骤
    - 你的配置（脱敏！）

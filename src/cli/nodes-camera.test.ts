@@ -51,11 +51,11 @@ describe("nodes camera helpers", () => {
       tmpDir: "/tmp",
       id: "id1",
     });
-    expect(p).toBe(path.join("/tmp", "newclaw-camera-snap-front-id1.jpg"));
+    expect(p).toBe(path.join("/tmp", "iflow-camera-snap-front-id1.jpg"));
   });
 
   it("writes base64 to file", async () => {
-    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "newclaw-test-"));
+    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-test-"));
     const out = path.join(dir, "x.bin");
     await writeBase64ToFile(out, "aGk=");
     await expect(fs.readFile(out, "utf8")).resolves.toBe("hi");

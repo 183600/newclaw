@@ -1,5 +1,5 @@
 import chokidar from "chokidar";
-import type { NewClawConfig, ConfigFileSnapshot, GatewayReloadMode } from "../config/config.js";
+import type { iFlowConfig, ConfigFileSnapshot, GatewayReloadMode } from "../config/config.js";
 import { type ChannelId, listChannelPlugins } from "../channels/plugins/index.js";
 import { getActivePluginRegistry } from "../plugins/runtime.js";
 
@@ -164,7 +164,7 @@ export function diffConfigPaths(prev: unknown, next: unknown, prefix = ""): stri
   return [prefix || "<root>"];
 }
 
-export function resolveGatewayReloadSettings(cfg: NewClawConfig): GatewayReloadSettings {
+export function resolveGatewayReloadSettings(cfg: iFlowConfig): GatewayReloadSettings {
   const rawMode = cfg.gateway?.reload?.mode;
   const mode =
     rawMode === "off" || rawMode === "restart" || rawMode === "hot" || rawMode === "hybrid"
@@ -254,10 +254,10 @@ export type GatewayConfigReloader = {
 };
 
 export function startGatewayConfigReloader(opts: {
-  initialConfig: NewClawConfig;
+  initialConfig: iFlowConfig;
   readSnapshot: () => Promise<ConfigFileSnapshot>;
-  onHotReload: (plan: GatewayReloadPlan, nextConfig: NewClawConfig) => Promise<void>;
-  onRestart: (plan: GatewayReloadPlan, nextConfig: NewClawConfig) => void;
+  onHotReload: (plan: GatewayReloadPlan, nextConfig: iFlowConfig) => Promise<void>;
+  onRestart: (plan: GatewayReloadPlan, nextConfig: iFlowConfig) => void;
   log: {
     info: (msg: string) => void;
     warn: (msg: string) => void;

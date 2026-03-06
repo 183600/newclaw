@@ -1,12 +1,12 @@
 import Foundation
 import Testing
-@testable import NewClaw
+@testable import iFlow
 
 @Suite struct VoiceWakeGatewaySyncTests {
     @Test func decodeGatewayTriggersFromJSONSanitizes() {
-        let payload = #"{"triggers":[" newclaw  ","", "computer"]}"#
+        let payload = #"{"triggers":[" iflow  ","", "computer"]}"#
         let triggers = VoiceWakePreferences.decodeGatewayTriggers(from: payload)
-        #expect(triggers == ["newclaw", "computer"])
+        #expect(triggers == ["iflow", "computer"])
     }
 
     @Test func decodeGatewayTriggersFromJSONFallsBackWhenEmpty() {

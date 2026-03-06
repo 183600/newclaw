@@ -95,10 +95,10 @@ const spawnGatewayInstance = async (name: string): Promise<GatewayInstance> => {
   const port = await getFreePort();
   const hookToken = `token-${name}-${randomUUID()}`;
   const gatewayToken = `gateway-${name}-${randomUUID()}`;
-  const homeDir = await fs.mkdtemp(path.join(os.tmpdir(), `newclaw-e2e-${name}-`));
-  const configDir = path.join(homeDir, ".newclaw");
+  const homeDir = await fs.mkdtemp(path.join(os.tmpdir(), `iflow-e2e-${name}-`));
+  const configDir = path.join(homeDir, ".iflow");
   await fs.mkdir(configDir, { recursive: true });
-  const configPath = path.join(configDir, "newclaw.json");
+  const configPath = path.join(configDir, "iflow.json");
   const stateDir = path.join(configDir, "state");
   const config = {
     gateway: { port, auth: { mode: "token", token: gatewayToken } },
@@ -127,13 +127,13 @@ const spawnGatewayInstance = async (name: string): Promise<GatewayInstance> => {
         env: {
           ...process.env,
           HOME: homeDir,
-          NEWCLAW_CONFIG_PATH: configPath,
-          NEWCLAW_STATE_DIR: stateDir,
-          NEWCLAW_GATEWAY_TOKEN: "",
-          NEWCLAW_GATEWAY_PASSWORD: "",
-          NEWCLAW_SKIP_CHANNELS: "1",
-          NEWCLAW_SKIP_BROWSER_CONTROL_SERVER: "1",
-          NEWCLAW_SKIP_CANVAS_HOST: "1",
+          IFLOW_CONFIG_PATH: configPath,
+          IFLOW_STATE_DIR: stateDir,
+          IFLOW_GATEWAY_TOKEN: "",
+          IFLOW_GATEWAY_PASSWORD: "",
+          IFLOW_SKIP_CHANNELS: "1",
+          IFLOW_SKIP_BROWSER_CONTROL_SERVER: "1",
+          IFLOW_SKIP_CANVAS_HOST: "1",
         },
         stdio: ["ignore", "pipe", "pipe"],
       },
@@ -344,8 +344,8 @@ const waitForNodeStatus = async (inst: GatewayInstance, nodeId: string, timeoutM
     const list = (await runCliJson(
       ["nodes", "status", "--json", "--url", `ws://127.0.0.1:${inst.port}`],
       {
-        NEWCLAW_GATEWAY_TOKEN: inst.gatewayToken,
-        NEWCLAW_GATEWAY_PASSWORD: "",
+        IFLOW_GATEWAY_TOKEN: inst.gatewayToken,
+        IFLOW_GATEWAY_PASSWORD: "",
       },
     )) as NodeListPayload;
     const match = list.nodes?.find((n) => n.nodeId === nodeId);
@@ -381,14 +381,14 @@ describe("gateway multi-instance e2e", () => {
 
       const [healthA, healthB] = (await Promise.all([
         runCliJson(["health", "--json", "--timeout", "10000"], {
-          NEWCLAW_GATEWAY_PORT: String(gwA.port),
-          NEWCLAW_GATEWAY_TOKEN: gwA.gatewayToken,
-          NEWCLAW_GATEWAY_PASSWORD: "",
+          IFLOW_GATEWAY_PORT: String(gwA.port),
+          IFLOW_GATEWAY_TOKEN: gwA.gatewayToken,
+          IFLOW_GATEWAY_PASSWORD: "",
         }),
         runCliJson(["health", "--json", "--timeout", "10000"], {
-          NEWCLAW_GATEWAY_PORT: String(gwB.port),
-          NEWCLAW_GATEWAY_TOKEN: gwB.gatewayToken,
-          NEWCLAW_GATEWAY_PASSWORD: "",
+          IFLOW_GATEWAY_PORT: String(gwB.port),
+          IFLOW_GATEWAY_TOKEN: gwB.gatewayToken,
+          IFLOW_GATEWAY_PASSWORD: "",
         }),
       ])) as [HealthPayload, HealthPayload];
       expect(healthA.ok).toBe(true);

@@ -6,8 +6,8 @@
     {
       "layers" : [
         {
-          "image-name" : "newclaw-mac.png",
-          "name" : "newclaw-mac",
+          "image-name" : "iflow-mac.png",
+          "name" : "iflow-mac",
           "position" : {
             "scale" : 1.07,
             "translation-in-points" : [

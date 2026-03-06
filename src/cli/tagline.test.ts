@@ -28,21 +28,21 @@ describe("pickTagline", () => {
   });
 
   it("should handle environment override for tagline index", () => {
-    const env = { NEWCLAW_TAGLINE_INDEX: "0" };
+    const env = { IFLOW_TAGLINE_INDEX: "0" };
     const tagline = pickTagline({ env });
 
     expect(tagline).toBe(TAGLINES[0]);
   });
 
   it("should handle out-of-bounds environment override", () => {
-    const env = { NEWCLAW_TAGLINE_INDEX: "999999" };
+    const env = { IFLOW_TAGLINE_INDEX: "999999" };
     const tagline = pickTagline({ env });
 
     expect(TAGLINES).toContain(tagline);
   });
 
   it("should handle invalid environment override", () => {
-    const env = { NEWCLAW_TAGLINE_INDEX: "invalid" };
+    const env = { IFLOW_TAGLINE_INDEX: "invalid" };
     const tagline = pickTagline({ env });
 
     expect(TAGLINES).toContain(tagline);

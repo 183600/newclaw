@@ -1,4 +1,4 @@
-import { emptyPluginConfigSchema } from "newclaw/plugin-sdk";
+import { emptyPluginConfigSchema } from "iflow/plugin-sdk";
 import { loginQwenPortalOAuth } from "./oauth.js";
 
 const PROVIDER_ID = "qwen-portal";

@@ -9,7 +9,7 @@ title: "Logging"
 
 # Logging
 
-NewClaw logs in two places:
+iFlow logs in two places:
 
 - **File logs** (JSON lines) written by the Gateway.
 - **Console output** shown in terminals and the Control UI.
@@ -21,16 +21,16 @@ levels and formats.
 
 By default, the Gateway writes a rolling log file under:
 
-`/tmp/newclaw/newclaw-YYYY-MM-DD.log`
+`/tmp/iflow/iflow-YYYY-MM-DD.log`
 
 The date uses the gateway host's local timezone.
 
-You can override this in `~/.newclaw/newclaw.json`:
+You can override this in `~/.iflow/iflow.json`:
 
 ```json
 {
   "logging": {
-    "file": "/path/to/newclaw.log"
+    "file": "/path/to/iflow.log"
   }
 }
 ```
@@ -42,7 +42,7 @@ You can override this in `~/.newclaw/newclaw.json`:
 Use the CLI to tail the gateway log file via RPC:
 
 ```bash
-newclaw logs --follow
+iflow logs --follow
 ```
 
 Output modes:
@@ -63,7 +63,7 @@ In JSON mode, the CLI emits `type`-tagged objects:
 If the Gateway is unreachable, the CLI prints a short hint to run:
 
 ```bash
-newclaw doctor
+iflow doctor
 ```
 
 ### Control UI (web)
@@ -76,7 +76,7 @@ See [/web/control-ui](/web/control-ui) for how to open it.
 To filter channel activity (WhatsApp/Telegram/etc), use:
 
 ```bash
-newclaw channels logs --channel whatsapp
+iflow channels logs --channel whatsapp
 ```
 
 ## Log formats
@@ -98,13 +98,13 @@ Console formatting is controlled by `logging.consoleStyle`.
 
 ## Configuring logging
 
-All logging configuration lives under `logging` in `~/.newclaw/newclaw.json`.
+All logging configuration lives under `logging` in `~/.iflow/iflow.json`.
 
 ```json
 {
   "logging": {
     "level": "info",
-    "file": "/tmp/newclaw/newclaw-YYYY-MM-DD.log",
+    "file": "/tmp/iflow/iflow-YYYY-MM-DD.log",
     "consoleLevel": "info",
     "consoleStyle": "pretty",
     "redactSensitive": "tools",
@@ -150,7 +150,7 @@ diagnostics + the exporter plugin are enabled.
 
 - **OpenTelemetry (OTel)**: the data model + SDKs for traces, metrics, and logs.
 - **OTLP**: the wire protocol used to export OTel data to a collector/backend.
-- NewClaw exports via **OTLP/HTTP (protobuf)** today.
+- iFlow exports via **OTLP/HTTP (protobuf)** today.
 
 ### Signals exported
 
@@ -210,7 +210,7 @@ Flags are case-insensitive and support wildcards (e.g. `telegram.*` or `*`).
 Env override (one-off):
 
 ```
-NEWCLAW_DIAGNOSTICS=telegram.http,telegram.payload
+IFLOW_DIAGNOSTICS=telegram.http,telegram.payload
 ```
 
 Notes:
@@ -240,7 +240,7 @@ works with any OpenTelemetry collector/backend that accepts OTLP/HTTP.
       "enabled": true,
       "endpoint": "http://otel-collector:4318",
       "protocol": "http/protobuf",
-      "serviceName": "newclaw-gateway",
+      "serviceName": "iflow-gateway",
       "traces": true,
       "metrics": true,
       "logs": true,
@@ -253,7 +253,7 @@ works with any OpenTelemetry collector/backend that accepts OTLP/HTTP.
 
 Notes:
 
-- You can also enable the plugin with `newclaw plugins enable diagnostics-otel`.
+- You can also enable the plugin with `iflow plugins enable diagnostics-otel`.
 - `protocol` currently supports `http/protobuf` only. `grpc` is ignored.
 - Metrics include token usage, cost, context size, run duration, and message-flow
   counters/histograms (webhooks, queueing, session state, queue depth/wait).
@@ -267,60 +267,60 @@ Notes:
 
 Model usage:
 
-- `newclaw.tokens` (counter, attrs: `newclaw.token`, `newclaw.channel`,
-  `newclaw.provider`, `newclaw.model`)
-- `newclaw.cost.usd` (counter, attrs: `newclaw.channel`, `newclaw.provider`,
-  `newclaw.model`)
-- `newclaw.run.duration_ms` (histogram, attrs: `newclaw.channel`,
-  `newclaw.provider`, `newclaw.model`)
-- `newclaw.context.tokens` (histogram, attrs: `newclaw.context`,
-  `newclaw.channel`, `newclaw.provider`, `newclaw.model`)
+- `iflow.tokens` (counter, attrs: `iflow.token`, `iflow.channel`,
+  `iflow.provider`, `iflow.model`)
+- `iflow.cost.usd` (counter, attrs: `iflow.channel`, `iflow.provider`,
+  `iflow.model`)
+- `iflow.run.duration_ms` (histogram, attrs: `iflow.channel`,
+  `iflow.provider`, `iflow.model`)
+- `iflow.context.tokens` (histogram, attrs: `iflow.context`,
+  `iflow.channel`, `iflow.provider`, `iflow.model`)
 
 Message flow:
 
-- `newclaw.webhook.received` (counter, attrs: `newclaw.channel`,
-  `newclaw.webhook`)
-- `newclaw.webhook.error` (counter, attrs: `newclaw.channel`,
-  `newclaw.webhook`)
-- `newclaw.webhook.duration_ms` (histogram, attrs: `newclaw.channel`,
-  `newclaw.webhook`)
-- `newclaw.message.queued` (counter, attrs: `newclaw.channel`,
-  `newclaw.source`)
-- `newclaw.message.processed` (counter, attrs: `newclaw.channel`,
-  `newclaw.outcome`)
-- `newclaw.message.duration_ms` (histogram, attrs: `newclaw.channel`,
-  `newclaw.outcome`)
+- `iflow.webhook.received` (counter, attrs: `iflow.channel`,
+  `iflow.webhook`)
+- `iflow.webhook.error` (counter, attrs: `iflow.channel`,
+  `iflow.webhook`)
+- `iflow.webhook.duration_ms` (histogram, attrs: `iflow.channel`,
+  `iflow.webhook`)
+- `iflow.message.queued` (counter, attrs: `iflow.channel`,
+  `iflow.source`)
+- `iflow.message.processed` (counter, attrs: `iflow.channel`,
+  `iflow.outcome`)
+- `iflow.message.duration_ms` (histogram, attrs: `iflow.channel`,
+  `iflow.outcome`)
 
 Queues + sessions:
 
-- `newclaw.queue.lane.enqueue` (counter, attrs: `newclaw.lane`)
-- `newclaw.queue.lane.dequeue` (counter, attrs: `newclaw.lane`)
-- `newclaw.queue.depth` (histogram, attrs: `newclaw.lane` or
-  `newclaw.channel=heartbeat`)
-- `newclaw.queue.wait_ms` (histogram, attrs: `newclaw.lane`)
-- `newclaw.session.state` (counter, attrs: `newclaw.state`, `newclaw.reason`)
-- `newclaw.session.stuck` (counter, attrs: `newclaw.state`)
-- `newclaw.session.stuck_age_ms` (histogram, attrs: `newclaw.state`)
-- `newclaw.run.attempt` (counter, attrs: `newclaw.attempt`)
+- `iflow.queue.lane.enqueue` (counter, attrs: `iflow.lane`)
+- `iflow.queue.lane.dequeue` (counter, attrs: `iflow.lane`)
+- `iflow.queue.depth` (histogram, attrs: `iflow.lane` or
+  `iflow.channel=heartbeat`)
+- `iflow.queue.wait_ms` (histogram, attrs: `iflow.lane`)
+- `iflow.session.state` (counter, attrs: `iflow.state`, `iflow.reason`)
+- `iflow.session.stuck` (counter, attrs: `iflow.state`)
+- `iflow.session.stuck_age_ms` (histogram, attrs: `iflow.state`)
+- `iflow.run.attempt` (counter, attrs: `iflow.attempt`)
 
 ### Exported spans (names + key attributes)
 
-- `newclaw.model.usage`
-  - `newclaw.channel`, `newclaw.provider`, `newclaw.model`
-  - `newclaw.sessionKey`, `newclaw.sessionId`
-  - `newclaw.tokens.*` (input/output/cache_read/cache_write/total)
-- `newclaw.webhook.processed`
-  - `newclaw.channel`, `newclaw.webhook`, `newclaw.chatId`
-- `newclaw.webhook.error`
-  - `newclaw.channel`, `newclaw.webhook`, `newclaw.chatId`,
-    `newclaw.error`
-- `newclaw.message.processed`
-  - `newclaw.channel`, `newclaw.outcome`, `newclaw.chatId`,
-    `newclaw.messageId`, `newclaw.sessionKey`, `newclaw.sessionId`,
-    `newclaw.reason`
-- `newclaw.session.stuck`
-  - `newclaw.state`, `newclaw.ageMs`, `newclaw.queueDepth`,
-    `newclaw.sessionKey`, `newclaw.sessionId`
+- `iflow.model.usage`
+  - `iflow.channel`, `iflow.provider`, `iflow.model`
+  - `iflow.sessionKey`, `iflow.sessionId`
+  - `iflow.tokens.*` (input/output/cache_read/cache_write/total)
+- `iflow.webhook.processed`
+  - `iflow.channel`, `iflow.webhook`, `iflow.chatId`
+- `iflow.webhook.error`
+  - `iflow.channel`, `iflow.webhook`, `iflow.chatId`,
+    `iflow.error`
+- `iflow.message.processed`
+  - `iflow.channel`, `iflow.outcome`, `iflow.chatId`,
+    `iflow.messageId`, `iflow.sessionKey`, `iflow.sessionId`,
+    `iflow.reason`
+- `iflow.session.stuck`
+  - `iflow.state`, `iflow.ageMs`, `iflow.queueDepth`,
+    `iflow.sessionKey`, `iflow.sessionId`
 
 ### Sampling + flushing
 
@@ -344,7 +344,7 @@ Queues + sessions:
 
 ## Troubleshooting tips
 
-- **Gateway not reachable?** Run `newclaw doctor` first.
+- **Gateway not reachable?** Run `iflow doctor` first.
 - **Logs empty?** Check that the Gateway is running and writing to the file path
   in `logging.file`.
 - **Need more detail?** Set `logging.level` to `debug` or `trace` and retry.

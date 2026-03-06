@@ -5,7 +5,7 @@ import fsSync from "node:fs";
 import fs from "node:fs/promises";
 import path from "node:path";
 import type { ResolvedMemorySearchConfig } from "../agents/memory-search.js";
-import type { NewClawConfig } from "../config/config.js";
+import type { iFlowConfig } from "../config/config.js";
 import type {
   MemoryEmbeddingProbeResult,
   MemoryProviderStatus,
@@ -107,7 +107,7 @@ const vectorToBlob = (embedding: number[]): Buffer =>
 
 export class MemoryIndexManager implements MemorySearchManager {
   private readonly cacheKey: string;
-  private readonly cfg: NewClawConfig;
+  private readonly cfg: iFlowConfig;
   private readonly agentId: string;
   private readonly workspaceDir: string;
   private readonly settings: ResolvedMemorySearchConfig;
@@ -163,7 +163,7 @@ export class MemoryIndexManager implements MemorySearchManager {
   private syncing: Promise<void> | null = null;
 
   static async get(params: {
-    cfg: NewClawConfig;
+    cfg: iFlowConfig;
     agentId: string;
   }): Promise<MemoryIndexManager | null> {
     const { cfg, agentId } = params;
@@ -200,7 +200,7 @@ export class MemoryIndexManager implements MemorySearchManager {
 
   private constructor(params: {
     cacheKey: string;
-    cfg: NewClawConfig;
+    cfg: iFlowConfig;
     agentId: string;
     workspaceDir: string;
     settings: ResolvedMemorySearchConfig;

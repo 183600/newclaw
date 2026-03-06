@@ -1,6 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
-import type { NewClawConfig } from "../config/config.js";
+import type { iFlowConfig } from "../config/config.js";
 import {
   formatUserTime,
   resolveUserTimeFormat,
@@ -31,7 +31,7 @@ export type SystemPromptRuntimeParams = {
 };
 
 export function buildSystemPromptParams(params: {
-  config?: NewClawConfig;
+  config?: iFlowConfig;
   agentId?: string;
   runtime: Omit<RuntimeInfoInput, "agentId">;
   workspaceDir?: string;
@@ -58,7 +58,7 @@ export function buildSystemPromptParams(params: {
 }
 
 function resolveRepoRoot(params: {
-  config?: NewClawConfig;
+  config?: iFlowConfig;
   workspaceDir?: string;
   cwd?: string;
 }): string | undefined {

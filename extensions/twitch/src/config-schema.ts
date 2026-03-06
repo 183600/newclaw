@@ -1,4 +1,4 @@
-import { MarkdownConfigSchema } from "newclaw/plugin-sdk";
+import { MarkdownConfigSchema } from "iflow/plugin-sdk";
 import { z } from "zod";
 
 /**

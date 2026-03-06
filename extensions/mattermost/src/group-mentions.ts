@@ -1,4 +1,4 @@
-import type { ChannelGroupContext } from "newclaw/plugin-sdk";
+import type { ChannelGroupContext } from "iflow/plugin-sdk";
 import { resolveMattermostAccount } from "./mattermost/accounts.js";
 
 export function resolveMattermostGroupRequireMention(

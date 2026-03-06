@@ -1,24 +1,24 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import type { NewClawConfig } from "./types.js";
+import type { iFlowConfig } from "./types.js";
 
 /**
- * Nix mode detection: When NEWCLAW_NIX_MODE=1, the gateway is running under Nix.
+ * Nix mode detection: When IFLOW_NIX_MODE=1, the gateway is running under Nix.
  * In this mode:
  * - No auto-install flows should be attempted
  * - Missing dependencies should produce actionable Nix-specific error messages
  * - Config is managed externally (read-only from Nix perspective)
  */
 export function resolveIsNixMode(env: NodeJS.ProcessEnv = process.env): boolean {
-  return env.NEWCLAW_NIX_MODE === "1";
+  return env.IFLOW_NIX_MODE === "1";
 }
 
 export const isNixMode = resolveIsNixMode();
 
 const LEGACY_STATE_DIRNAMES = [".clawdbot", ".moltbot", ".moldbot"] as const;
-const NEW_STATE_DIRNAME = ".newclaw";
-const CONFIG_FILENAME = "newclaw.json";
+const NEW_STATE_DIRNAME = ".iflow";
+const CONFIG_FILENAME = "iflow.json";
 const LEGACY_CONFIG_FILENAMES = ["clawdbot.json", "moltbot.json", "moldbot.json"] as const;
 
 function legacyStateDirs(homedir: () => string = os.homedir): string[] {
@@ -43,14 +43,14 @@ export function resolveNewStateDir(homedir: () => string = os.homedir): string {
 
 /**
  * State directory for mutable data (sessions, logs, caches).
- * Can be overridden via NEWCLAW_STATE_DIR.
- * Default: ~/.newclaw
+ * Can be overridden via IFLOW_STATE_DIR.
+ * Default: ~/.iflow
  */
 export function resolveStateDir(
   env: NodeJS.ProcessEnv = process.env,
   homedir: () => string = os.homedir,
 ): string {
-  const override = env.NEWCLAW_STATE_DIR?.trim() || env.CLAWDBOT_STATE_DIR?.trim();
+  const override = env.IFLOW_STATE_DIR?.trim() || env.CLAWDBOT_STATE_DIR?.trim();
   if (override) {
     return resolveUserPath(override);
   }
@@ -89,14 +89,14 @@ export const STATE_DIR = resolveStateDir();
 
 /**
  * Config file path (JSON5).
- * Can be overridden via NEWCLAW_CONFIG_PATH.
- * Default: ~/.newclaw/newclaw.json (or $NEWCLAW_STATE_DIR/newclaw.json)
+ * Can be overridden via IFLOW_CONFIG_PATH.
+ * Default: ~/.iflow/iflow.json (or $IFLOW_STATE_DIR/iflow.json)
  */
 export function resolveCanonicalConfigPath(
   env: NodeJS.ProcessEnv = process.env,
   stateDir: string = resolveStateDir(env, os.homedir),
 ): string {
-  const override = env.NEWCLAW_CONFIG_PATH?.trim() || env.CLAWDBOT_CONFIG_PATH?.trim();
+  const override = env.IFLOW_CONFIG_PATH?.trim() || env.CLAWDBOT_CONFIG_PATH?.trim();
   if (override) {
     return resolveUserPath(override);
   }
@@ -133,11 +133,11 @@ export function resolveConfigPath(
   stateDir: string = resolveStateDir(env, os.homedir),
   homedir: () => string = os.homedir,
 ): string {
-  const override = env.NEWCLAW_CONFIG_PATH?.trim();
+  const override = env.IFLOW_CONFIG_PATH?.trim();
   if (override) {
     return resolveUserPath(override);
   }
-  const stateOverride = env.NEWCLAW_STATE_DIR?.trim();
+  const stateOverride = env.IFLOW_STATE_DIR?.trim();
   const candidates = [
     path.join(stateDir, CONFIG_FILENAME),
     ...LEGACY_CONFIG_FILENAMES.map((name) => path.join(stateDir, name)),
@@ -172,15 +172,15 @@ export function resolveDefaultConfigCandidates(
   env: NodeJS.ProcessEnv = process.env,
   homedir: () => string = os.homedir,
 ): string[] {
-  const explicit = env.NEWCLAW_CONFIG_PATH?.trim() || env.CLAWDBOT_CONFIG_PATH?.trim();
+  const explicit = env.IFLOW_CONFIG_PATH?.trim() || env.CLAWDBOT_CONFIG_PATH?.trim();
   if (explicit) {
     return [resolveUserPath(explicit)];
   }
 
   const candidates: string[] = [];
-  const newclawStateDir = env.NEWCLAW_STATE_DIR?.trim() || env.CLAWDBOT_STATE_DIR?.trim();
-  if (newclawStateDir) {
-    const resolved = resolveUserPath(newclawStateDir);
+  const iflowStateDir = env.IFLOW_STATE_DIR?.trim() || env.CLAWDBOT_STATE_DIR?.trim();
+  if (iflowStateDir) {
+    const resolved = resolveUserPath(iflowStateDir);
     candidates.push(path.join(resolved, CONFIG_FILENAME));
     candidates.push(...LEGACY_CONFIG_FILENAMES.map((name) => path.join(resolved, name)));
   }
@@ -197,12 +197,12 @@ export const DEFAULT_GATEWAY_PORT = 18789;
 
 /**
  * Gateway lock directory (ephemeral).
- * Default: os.tmpdir()/newclaw-<uid> (uid suffix when available).
+ * Default: os.tmpdir()/iflow-<uid> (uid suffix when available).
  */
 export function resolveGatewayLockDir(tmpdir: () => string = os.tmpdir): string {
   const base = tmpdir();
   const uid = typeof process.getuid === "function" ? process.getuid() : undefined;
-  const suffix = uid != null ? `newclaw-${uid}` : "newclaw";
+  const suffix = uid != null ? `iflow-${uid}` : "iflow";
   return path.join(base, suffix);
 }
 
@@ -212,14 +212,14 @@ const OAUTH_FILENAME = "oauth.json";
  * OAuth credentials storage directory.
  *
  * Precedence:
- * - `NEWCLAW_OAUTH_DIR` (explicit override)
+ * - `IFLOW_OAUTH_DIR` (explicit override)
  * - `$*_STATE_DIR/credentials` (canonical server/default)
  */
 export function resolveOAuthDir(
   env: NodeJS.ProcessEnv = process.env,
   stateDir: string = resolveStateDir(env, os.homedir),
 ): string {
-  const override = env.NEWCLAW_OAUTH_DIR?.trim();
+  const override = env.IFLOW_OAUTH_DIR?.trim();
   if (override) {
     return resolveUserPath(override);
   }
@@ -234,10 +234,10 @@ export function resolveOAuthPath(
 }
 
 export function resolveGatewayPort(
-  cfg?: NewClawConfig,
+  cfg?: iFlowConfig,
   env: NodeJS.ProcessEnv = process.env,
 ): number {
-  const envRaw = env.NEWCLAW_GATEWAY_PORT?.trim() || env.CLAWDBOT_GATEWAY_PORT?.trim();
+  const envRaw = env.IFLOW_GATEWAY_PORT?.trim() || env.CLAWDBOT_GATEWAY_PORT?.trim();
   if (envRaw) {
     const parsed = Number.parseInt(envRaw, 10);
     if (Number.isFinite(parsed) && parsed > 0) {

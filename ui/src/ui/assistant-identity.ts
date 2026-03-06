@@ -12,8 +12,8 @@ export type AssistantIdentity = {
 
 declare global {
   interface Window {
-    __NEWCLAW_ASSISTANT_NAME__?: string;
-    __NEWCLAW_ASSISTANT_AVATAR__?: string;
+    __IFLOW_ASSISTANT_NAME__?: string;
+    __IFLOW_ASSISTANT_AVATAR__?: string;
   }
 }
 
@@ -46,7 +46,7 @@ export function resolveInjectedAssistantIdentity(): AssistantIdentity {
     return normalizeAssistantIdentity({});
   }
   return normalizeAssistantIdentity({
-    name: window.__NEWCLAW_ASSISTANT_NAME__,
-    avatar: window.__NEWCLAW_ASSISTANT_AVATAR__,
+    name: window.__IFLOW_ASSISTANT_NAME__,
+    avatar: window.__IFLOW_ASSISTANT_AVATAR__,
   });
 }

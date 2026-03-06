@@ -14,8 +14,8 @@ async function writeJsonSchema() {
 
   const rootSchema = {
     $schema: "http://json-schema.org/draft-07/schema#",
-    $id: "https://newclaw.ai/protocol.schema.json",
-    title: "NewClaw Gateway Protocol",
+    $id: "https://iflow.ai/protocol.schema.json",
+    title: "iFlow Gateway Protocol",
     description: "Handshake, request/response, and event frames for the Gateway WebSocket.",
     oneOf: [
       { $ref: "#/definitions/RequestFrame" },

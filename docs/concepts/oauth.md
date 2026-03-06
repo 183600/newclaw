@@ -1,7 +1,7 @@
 ---
-summary: "OAuth in NewClaw: token exchange, storage, and multi-account patterns"
+summary: "OAuth in iFlow: token exchange, storage, and multi-account patterns"
 read_when:
-  - You want to understand NewClaw OAuth end-to-end
+  - You want to understand iFlow OAuth end-to-end
   - You hit token invalidation / logout issues
   - You want setup-token or OAuth auth flows
   - You want multiple accounts or profile routing
@@ -10,17 +10,17 @@ title: "OAuth"
 
 # OAuth
 
-NewClaw supports “subscription auth” via OAuth for providers that offer it (notably **OpenAI Codex (ChatGPT OAuth)**). For Anthropic subscriptions, use the **setup-token** flow. This page explains:
+iFlow supports “subscription auth” via OAuth for providers that offer it (notably **OpenAI Codex (ChatGPT OAuth)**). For Anthropic subscriptions, use the **setup-token** flow. This page explains:
 
 - how the OAuth **token exchange** works (PKCE)
 - where tokens are **stored** (and why)
 - how to handle **multiple accounts** (profiles + per-session overrides)
 
-NewClaw also supports **provider plugins** that ship their own OAuth or API‑key
+iFlow also supports **provider plugins** that ship their own OAuth or API‑key
 flows. Run them via:
 
 ```bash
-newclaw models auth login --provider <id>
+iflow models auth login --provider <id>
 ```
 
 ## The token sink (why it exists)
@@ -29,9 +29,9 @@ OAuth providers commonly mint a **new refresh token** during login/refresh flows
 
 Practical symptom:
 
-- you log in via NewClaw _and_ via Claude Code / Codex CLI → one of them randomly gets “logged out” later
+- you log in via iFlow _and_ via Claude Code / Codex CLI → one of them randomly gets “logged out” later
 
-To reduce that, NewClaw treats `auth-profiles.json` as a **token sink**:
+To reduce that, iFlow treats `auth-profiles.json` as a **token sink**:
 
 - the runtime reads credentials from **one place**
 - we can keep multiple profiles and route them deterministically
@@ -40,48 +40,48 @@ To reduce that, NewClaw treats `auth-profiles.json` as a **token sink**:
 
 Secrets are stored **per-agent**:
 
-- Auth profiles (OAuth + API keys): `~/.newclaw/agents/<agentId>/agent/auth-profiles.json`
-- Runtime cache (managed automatically; don’t edit): `~/.newclaw/agents/<agentId>/agent/auth.json`
+- Auth profiles (OAuth + API keys): `~/.iflow/agents/<agentId>/agent/auth-profiles.json`
+- Runtime cache (managed automatically; don’t edit): `~/.iflow/agents/<agentId>/agent/auth.json`
 
 Legacy import-only file (still supported, but not the main store):
 
-- `~/.newclaw/credentials/oauth.json` (imported into `auth-profiles.json` on first use)
+- `~/.iflow/credentials/oauth.json` (imported into `auth-profiles.json` on first use)
 
-All of the above also respect `$NEWCLAW_STATE_DIR` (state dir override). Full reference: [/gateway/configuration](/gateway/configuration#auth-storage-oauth--api-keys)
+All of the above also respect `$IFLOW_STATE_DIR` (state dir override). Full reference: [/gateway/configuration](/gateway/configuration#auth-storage-oauth--api-keys)
 
 ## Anthropic setup-token (subscription auth)
 
-Run `claude setup-token` on any machine, then paste it into NewClaw:
+Run `claude setup-token` on any machine, then paste it into iFlow:
 
 ```bash
-newclaw models auth setup-token --provider anthropic
+iflow models auth setup-token --provider anthropic
 ```
 
 If you generated the token elsewhere, paste it manually:
 
 ```bash
-newclaw models auth paste-token --provider anthropic
+iflow models auth paste-token --provider anthropic
 ```
 
 Verify:
 
 ```bash
-newclaw models status
+iflow models status
 ```
 
 ## OAuth exchange (how login works)
 
-NewClaw’s interactive login flows are implemented in `@mariozechner/pi-ai` and wired into the wizards/commands.
+iFlow’s interactive login flows are implemented in `@mariozechner/pi-ai` and wired into the wizards/commands.
 
 ### Anthropic (Claude Pro/Max) setup-token
 
 Flow shape:
 
 1. run `claude setup-token`
-2. paste the token into NewClaw
+2. paste the token into iFlow
 3. store as a token auth profile (no refresh)
 
-The wizard path is `newclaw onboard` → auth choice `setup-token` (Anthropic).
+The wizard path is `iflow onboard` → auth choice `setup-token` (Anthropic).
 
 ### OpenAI Codex (ChatGPT OAuth)
 
@@ -94,7 +94,7 @@ Flow shape (PKCE):
 5. exchange at `https://auth.openai.com/oauth/token`
 6. extract `accountId` from the access token and store `{ access, refresh, expires, accountId }`
 
-Wizard path is `newclaw onboard` → auth choice `openai-codex`.
+Wizard path is `iflow onboard` → auth choice `openai-codex`.
 
 ## Refresh + expiry
 
@@ -116,8 +116,8 @@ Two patterns:
 If you want “personal” and “work” to never interact, use isolated agents (separate sessions + credentials + workspace):
 
 ```bash
-newclaw agents add work
-newclaw agents add personal
+iflow agents add work
+iflow agents add personal
 ```
 
 Then configure auth per-agent (wizard) and route chats to the right agent.
@@ -137,7 +137,7 @@ Example (session override):
 
 How to see what profile IDs exist:
 
-- `newclaw channels list --json` (shows `auth[]`)
+- `iflow channels list --json` (shows `auth[]`)
 
 Related docs:
 

@@ -1,5 +1,5 @@
 import Testing
-@testable import NewClaw
+@testable import iFlow
 
 @Suite struct CameraControllerClampTests {
     @Test func clampQualityDefaultsAndBounds() {

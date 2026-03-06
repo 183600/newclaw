@@ -132,7 +132,7 @@ export function isUnhandledRejectionHandled(reason: unknown): boolean {
       }
     } catch (err) {
       console.error(
-        "[newclaw] Unhandled rejection handler failed:",
+        "[iflow] Unhandled rejection handler failed:",
         err instanceof Error ? (err.stack ?? err.message) : err,
       );
     }
@@ -149,31 +149,31 @@ export function installUnhandledRejectionHandler(): void {
     // AbortError is typically an intentional cancellation (e.g., during shutdown)
     // Log it but don't crash - these are expected during graceful shutdown
     if (isAbortError(reason)) {
-      console.warn("[newclaw] Suppressed AbortError:", formatUncaughtError(reason));
+      console.warn("[iflow] Suppressed AbortError:", formatUncaughtError(reason));
       return;
     }
 
     if (isFatalError(reason)) {
-      console.error("[newclaw] FATAL unhandled rejection:", formatUncaughtError(reason));
+      console.error("[iflow] FATAL unhandled rejection:", formatUncaughtError(reason));
       process.exit(1);
       return;
     }
 
     if (isConfigError(reason)) {
-      console.error("[newclaw] CONFIGURATION ERROR - requires fix:", formatUncaughtError(reason));
+      console.error("[iflow] CONFIGURATION ERROR - requires fix:", formatUncaughtError(reason));
       process.exit(1);
       return;
     }
 
     if (isTransientNetworkError(reason)) {
       console.warn(
-        "[newclaw] Non-fatal unhandled rejection (continuing):",
+        "[iflow] Non-fatal unhandled rejection (continuing):",
         formatUncaughtError(reason),
       );
       return;
     }
 
-    console.error("[newclaw] Unhandled promise rejection:", formatUncaughtError(reason));
+    console.error("[iflow] Unhandled promise rejection:", formatUncaughtError(reason));
     process.exit(1);
   });
 }

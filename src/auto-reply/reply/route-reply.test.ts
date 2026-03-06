@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { ChannelOutboundAdapter, ChannelPlugin } from "../../channels/plugins/types.js";
-import type { NewClawConfig } from "../../config/config.js";
+import type { iFlowConfig } from "../../config/config.js";
 import type { PluginRegistry } from "../../plugins/registry.js";
 import { discordOutbound } from "../../channels/plugins/outbound/discord.js";
 import { imessageOutbound } from "../../channels/plugins/outbound/imessage.js";
@@ -171,8 +171,8 @@ describe("routeReply", () => {
   it("applies responsePrefix when routing", async () => {
     mocks.sendMessageSlack.mockClear();
     const cfg = {
-      messages: { responsePrefix: "[newclaw]" },
-    } as unknown as NewClawConfig;
+      messages: { responsePrefix: "[iflow]" },
+    } as unknown as iFlowConfig;
     await routeReply({
       payload: { text: "hi" },
       channel: "slack",
@@ -181,7 +181,7 @@ describe("routeReply", () => {
     });
     expect(mocks.sendMessageSlack).toHaveBeenCalledWith(
       "channel:C123",
-      "[newclaw] hi",
+      "[iflow] hi",
       expect.any(Object),
     );
   });
@@ -198,7 +198,7 @@ describe("routeReply", () => {
         ],
       },
       messages: {},
-    } as unknown as NewClawConfig;
+    } as unknown as iFlowConfig;
     await routeReply({
       payload: { text: "hi" },
       channel: "slack",
@@ -345,7 +345,7 @@ describe("routeReply", () => {
           enabled: true,
         },
       },
-    } as unknown as NewClawConfig;
+    } as unknown as iFlowConfig;
     await routeReply({
       payload: { text: "hi" },
       channel: "msteams",

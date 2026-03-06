@@ -68,7 +68,7 @@ async function withTempHome<T>(fn: (home: string) => Promise<T>): Promise<T> {
       vi.mocked(abortEmbeddedPiRun).mockClear();
       return await fn(home);
     },
-    { prefix: "newclaw-triggers-" },
+    { prefix: "iflow-triggers-" },
   );
 }
 
@@ -77,7 +77,7 @@ function _makeCfg(home: string) {
     agents: {
       defaults: {
         model: "anthropic/claude-opus-4-5",
-        workspace: join(home, "newclaw"),
+        workspace: join(home, "iflow"),
       },
     },
     channels: {
@@ -100,7 +100,7 @@ describe("trigger handling", () => {
         agents: {
           defaults: {
             model: "anthropic/claude-opus-4-5",
-            workspace: join(home, "newclaw"),
+            workspace: join(home, "iflow"),
           },
         },
         tools: {
@@ -142,7 +142,7 @@ describe("trigger handling", () => {
         agents: {
           defaults: {
             model: "anthropic/claude-opus-4-5",
-            workspace: join(home, "newclaw"),
+            workspace: join(home, "iflow"),
           },
         },
         tools: {
@@ -191,7 +191,7 @@ describe("trigger handling", () => {
         agents: {
           defaults: {
             model: "anthropic/claude-opus-4-5",
-            workspace: join(home, "newclaw"),
+            workspace: join(home, "iflow"),
           },
         },
         tools: {

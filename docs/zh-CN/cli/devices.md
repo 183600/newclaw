@@ -2,7 +2,7 @@
 read_when:
   - 你正在审批设备配对请求
   - 你需要轮换或吊销设备令牌
-summary: "`newclaw devices` 的 CLI 参考（设备配对 + 令牌轮换/吊销）"
+summary: "`iflow devices` 的 CLI 参考（设备配对 + 令牌轮换/吊销）"
 title: devices
 x-i18n:
   generated_at: "2026-02-01T19:58:53Z"
@@ -13,51 +13,51 @@ x-i18n:
   workflow: 14
 ---
 
-# `newclaw devices`
+# `iflow devices`
 
 管理设备配对请求和设备范围的令牌。
 
 ## 命令
 
-### `newclaw devices list`
+### `iflow devices list`
 
 列出待处理的配对请求和已配对的设备。
 
 ```
-newclaw devices list
-newclaw devices list --json
+iflow devices list
+iflow devices list --json
 ```
 
-### `newclaw devices approve <requestId>`
+### `iflow devices approve <requestId>`
 
 批准待处理的设备配对请求。
 
 ```
-newclaw devices approve <requestId>
+iflow devices approve <requestId>
 ```
 
-### `newclaw devices reject <requestId>`
+### `iflow devices reject <requestId>`
 
 拒绝待处理的设备配对请求。
 
 ```
-newclaw devices reject <requestId>
+iflow devices reject <requestId>
 ```
 
-### `newclaw devices rotate --device <id> --role <role> [--scope <scope...>]`
+### `iflow devices rotate --device <id> --role <role> [--scope <scope...>]`
 
 轮换特定角色的设备令牌（可选择更新权限范围）。
 
 ```
-newclaw devices rotate --device <deviceId> --role operator --scope operator.read --scope operator.write
+iflow devices rotate --device <deviceId> --role operator --scope operator.read --scope operator.write
 ```
 
-### `newclaw devices revoke --device <id> --role <role>`
+### `iflow devices revoke --device <id> --role <role>`
 
 吊销特定角色的设备令牌。
 
 ```
-newclaw devices revoke --device <deviceId> --role node
+iflow devices revoke --device <deviceId> --role node
 ```
 
 ## 通用选项

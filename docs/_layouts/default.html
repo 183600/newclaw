@@ -17,7 +17,7 @@
     <script>
       (() => {
         try {
-          const stored = localStorage.getItem("newclaw:theme");
+          const stored = localStorage.getItem("iflow:theme");
           if (stored === "light" || stored === "dark") document.documentElement.dataset.theme = stored;
         } catch {
           // ignore
@@ -35,7 +35,7 @@
     <header class="shell">
       <div class="shell__frame" role="banner">
         <div class="shell__titlebar">
-          <div class="brand" aria-label="NewClaw docs terminal">
+          <div class="brand" aria-label="iFlow docs terminal">
             <img
               class="brand__logo"
               src="{{ "/assets/pixel-lobster.svg" | relative_url }}"
@@ -45,17 +45,17 @@
               decoding="async"
             />
             <div class="brand__text">
-              <div class="brand__name">NewClaw</div>
+              <div class="brand__name">iFlow</div>
               <div class="brand__hint">docs // lobster terminal</div>
             </div>
           </div>
 
           <div class="titlebar__actions">
-            <a class="titlebar__cta" href="https://github.com/newclaw/newclaw">
+            <a class="titlebar__cta" href="https://github.com/iflow/iflow">
               <span class="titlebar__cta-label">GitHub</span>
               <span class="titlebar__cta-meta">repo</span>
             </a>
-            <a class="titlebar__cta titlebar__cta--accent" href="https://github.com/newclaw/newclaw/releases/latest">
+            <a class="titlebar__cta titlebar__cta--accent" href="https://github.com/iflow/iflow/releases/latest">
               <span class="titlebar__cta-label">Download</span>
               <span class="titlebar__cta-meta">latest</span>
             </a>
@@ -90,7 +90,7 @@
     <main id="content" class="content" role="main">
       <div class="terminal">
         <div class="terminal__prompt" aria-hidden="true">
-          <span class="prompt__user">newclaw</span>@<span class="prompt__host">newclaw</span>:<span class="prompt__path">~/docs</span>$<span class="prompt__cmd">
+          <span class="prompt__user">iflow</span>@<span class="prompt__host">iflow</span>:<span class="prompt__path">~/docs</span>$<span class="prompt__cmd">
             {% if page.url == "/" %}cat index.md{% else %}less {{ page.path }}{% endif %}
           </span>
         </div>
@@ -116,11 +116,11 @@
 
         <footer class="terminal__footer" role="contentinfo">
           <div class="footer__line">
-            <span class="footer__sig">newclaw.ai</span>
+            <span class="footer__sig">iflow.ai</span>
             <span class="footer__sep">·</span>
-            <a href="https://github.com/newclaw/newclaw">source</a>
+            <a href="https://github.com/iflow/iflow">source</a>
             <span class="footer__sep">·</span>
-            <a href="https://github.com/newclaw/newclaw/releases">releases</a>
+            <a href="https://github.com/iflow/iflow/releases">releases</a>
           </div>
           <div class="footer__hint" aria-hidden="true">
             tip: press <kbd>F2</kbd> (Mac: <kbd>fn</kbd>+<kbd>F2</kbd>) to flip

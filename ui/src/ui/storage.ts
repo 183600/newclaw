@@ -1,4 +1,4 @@
-const KEY = "newclaw.control.settings.v1";
+const KEY = "iflow.control.settings.v1";
 
 import type { ThemeMode } from "./theme.ts";
 

@@ -1,4 +1,4 @@
-import type { NewClawConfig } from "./types.js";
+import type { iFlowConfig } from "./types.js";
 import { resolveUserPath } from "../utils.js";
 
 const PATH_VALUE_RE = /^~(?=$|[\\/])/;
@@ -64,7 +64,7 @@ function normalizeAny(key: string | undefined, value: unknown): unknown {
  * Goal: accept `~/...` consistently across config file + env overrides, while
  * keeping the surface area small and predictable.
  */
-export function normalizeConfigPaths(cfg: NewClawConfig): NewClawConfig {
+export function normalizeConfigPaths(cfg: iFlowConfig): iFlowConfig {
   if (!cfg || typeof cfg !== "object") {
     return cfg;
   }

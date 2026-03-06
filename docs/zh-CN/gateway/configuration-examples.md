@@ -1,9 +1,9 @@
 ---
 read_when:
-  - 学习如何配置 NewClaw
+  - 学习如何配置 iFlow
   - 查找配置示例
-  - 首次设置 NewClaw
-summary: 常见 NewClaw 设置的符合 Schema 的配置示例
+  - 首次设置 iFlow
+summary: 常见 iFlow 设置的符合 Schema 的配置示例
 title: 配置示例
 x-i18n:
   generated_at: "2026-02-01T20:26:09Z"
@@ -24,12 +24,12 @@ x-i18n:
 
 ```json5
 {
-  agent: { workspace: "~/.newclaw/workspace" },
+  agent: { workspace: "~/.iflow/workspace" },
   channels: { whatsapp: { allowFrom: ["+15555550123"] } },
 }
 ```
 
-保存到 `~/.newclaw/newclaw.json`，即可从该号码私信机器人。
+保存到 `~/.iflow/iflow.json`，即可从该号码私信机器人。
 
 ### 推荐的入门配置
 
@@ -41,7 +41,7 @@ x-i18n:
     emoji: "🦞",
   },
   agent: {
-    workspace: "~/.newclaw/workspace",
+    workspace: "~/.iflow/workspace",
     model: { primary: "anthropic/claude-sonnet-4-5" },
   },
   channels: {
@@ -96,7 +96,7 @@ x-i18n:
   // 日志
   logging: {
     level: "info",
-    file: "/tmp/newclaw/newclaw.log",
+    file: "/tmp/iflow/iflow.log",
     consoleLevel: "info",
     consoleStyle: "pretty",
     redactSensitive: "tools",
@@ -104,7 +104,7 @@ x-i18n:
 
   // 消息格式
   messages: {
-    messagePrefix: "[newclaw]",
+    messagePrefix: "[iflow]",
     responsePrefix: ">",
     ackReaction: "👀",
     ackReactionScope: "group-mentions",
@@ -113,7 +113,7 @@ x-i18n:
   // 路由 + 队列
   routing: {
     groupChat: {
-      mentionPatterns: ["@newclaw", "newclaw"],
+      mentionPatterns: ["@iflow", "iflow"],
       historyLimit: 50,
     },
     queue: {
@@ -166,7 +166,7 @@ x-i18n:
       discord: { mode: "idle", idleMinutes: 10080 },
     },
     resetTriggers: ["/new", "/reset"],
-    store: "~/.newclaw/agents/default/sessions/sessions.json",
+    store: "~/.iflow/agents/default/sessions/sessions.json",
     typingIntervalSeconds: 5,
     sendPolicy: {
       default: "allow",
@@ -199,7 +199,7 @@ x-i18n:
       dm: { enabled: true, allowFrom: ["steipete"] },
       guilds: {
         "123456789012345678": {
-          slug: "friends-of-newclaw",
+          slug: "friends-of-iflow",
           requireMention: false,
           channels: {
             general: { allow: true },
@@ -219,7 +219,7 @@ x-i18n:
       dm: { enabled: true, allowFrom: ["U123"] },
       slashCommand: {
         enabled: true,
-        name: "newclaw",
+        name: "iflow",
         sessionPrefix: "slack:slash",
         ephemeral: true,
       },
@@ -229,7 +229,7 @@ x-i18n:
   // 智能体运行时
   agents: {
     defaults: {
-      workspace: "~/.newclaw/workspace",
+      workspace: "~/.iflow/workspace",
       userTimezone: "America/Chicago",
       model: {
         primary: "anthropic/claude-sonnet-4-5",
@@ -282,9 +282,9 @@ x-i18n:
       sandbox: {
         mode: "non-main",
         perSession: true,
-        workspaceRoot: "~/.newclaw/sandboxes",
+        workspaceRoot: "~/.iflow/sandboxes",
         docker: {
-          image: "newclaw-sandbox:bookworm-slim",
+          image: "iflow-sandbox:bookworm-slim",
           workdir: "/workspace",
           readOnlyRoot: true,
           tmpfs: ["/tmp", "/var/tmp", "/run"],
@@ -349,7 +349,7 @@ x-i18n:
   // 定时任务
   cron: {
     enabled: true,
-    store: "~/.newclaw/cron/cron.json",
+    store: "~/.iflow/cron/cron.json",
     maxConcurrentRuns: 2,
   },
 
@@ -359,7 +359,7 @@ x-i18n:
     path: "/hooks",
     token: "shared-secret",
     presets: ["gmail"],
-    transformsDir: "~/.newclaw/hooks",
+    transformsDir: "~/.iflow/hooks",
     mappings: [
       {
         id: "gmail-hook",
@@ -379,7 +379,7 @@ x-i18n:
       },
     ],
     gmail: {
-      account: "newclaw@gmail.com",
+      account: "iflow@gmail.com",
       label: "INBOX",
       topic: "projects/<project-id>/topics/gog-gmail-watch",
       subscription: "gog-gmail-watch-push",
@@ -398,7 +398,7 @@ x-i18n:
     mode: "local",
     port: 18789,
     bind: "loopback",
-    controlUi: { enabled: true, basePath: "/newclaw" },
+    controlUi: { enabled: true, basePath: "/iflow" },
     auth: {
       mode: "token",
       token: "gateway-token",
@@ -436,7 +436,7 @@ x-i18n:
 
 ```json5
 {
-  agent: { workspace: "~/.newclaw/workspace" },
+  agent: { workspace: "~/.iflow/workspace" },
   channels: {
     whatsapp: { allowFrom: ["+15555550123"] },
     telegram: {
@@ -474,7 +474,7 @@ x-i18n:
     },
   },
   agent: {
-    workspace: "~/.newclaw/workspace",
+    workspace: "~/.iflow/workspace",
     model: {
       primary: "anthropic/claude-sonnet-4-5",
       fallbacks: ["anthropic/claude-opus-4-5"],
@@ -513,7 +513,7 @@ x-i18n:
     },
   },
   agent: {
-    workspace: "~/.newclaw/workspace",
+    workspace: "~/.iflow/workspace",
     model: {
       primary: "anthropic/claude-opus-4-5",
       fallbacks: ["minimax/MiniMax-M2.1"],
@@ -531,7 +531,7 @@ x-i18n:
     theme: "professional assistant",
   },
   agent: {
-    workspace: "~/work-newclaw",
+    workspace: "~/work-iflow",
     elevated: { enabled: false },
   },
   channels: {
@@ -552,7 +552,7 @@ x-i18n:
 ```json5
 {
   agent: {
-    workspace: "~/.newclaw/workspace",
+    workspace: "~/.iflow/workspace",
     model: { primary: "lmstudio/minimax-m2.1-gs32" },
   },
   models: {

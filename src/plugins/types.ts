@@ -7,7 +7,7 @@ import type { ReplyPayload } from "../auto-reply/types.js";
 import type { ChannelDock } from "../channels/dock.js";
 import type { ChannelPlugin } from "../channels/plugins/types.js";
 import type { createVpsAwareOAuthHandlers } from "../commands/oauth-flow.js";
-import type { NewClawConfig } from "../config/config.js";
+import type { iFlowConfig } from "../config/config.js";
 import type { ModelProviderConfig } from "../config/types.js";
 import type { GatewayRequestHandler } from "../gateway/server-methods/types.js";
 import type { InternalHookHandler } from "../hooks/internal-hooks.js";
@@ -39,7 +39,7 @@ export type PluginConfigValidation =
   | { ok: true; value?: unknown }
   | { ok: false; errors: string[] };
 
-export type NewClawPluginConfigSchema = {
+export type iFlowPluginConfigSchema = {
   safeParse?: (value: unknown) => {
     success: boolean;
     data?: unknown;
@@ -53,8 +53,8 @@ export type NewClawPluginConfigSchema = {
   jsonSchema?: Record<string, unknown>;
 };
 
-export type NewClawPluginToolContext = {
-  config?: NewClawConfig;
+export type iFlowPluginToolContext = {
+  config?: iFlowConfig;
   workspaceDir?: string;
   agentDir?: string;
   agentId?: string;
@@ -64,17 +64,17 @@ export type NewClawPluginToolContext = {
   sandboxed?: boolean;
 };
 
-export type NewClawPluginToolFactory = (
-  ctx: NewClawPluginToolContext,
+export type iFlowPluginToolFactory = (
+  ctx: iFlowPluginToolContext,
 ) => AnyAgentTool | AnyAgentTool[] | null | undefined;
 
-export type NewClawPluginToolOptions = {
+export type iFlowPluginToolOptions = {
   name?: string;
   names?: string[];
   optional?: boolean;
 };
 
-export type NewClawPluginHookOptions = {
+export type iFlowPluginHookOptions = {
   entry?: HookEntry;
   name?: string;
   description?: string;
@@ -85,13 +85,13 @@ export type ProviderAuthKind = "oauth" | "api_key" | "token" | "device_code" | "
 
 export type ProviderAuthResult = {
   profiles: Array<{ profileId: string; credential: AuthProfileCredential }>;
-  configPatch?: Partial<NewClawConfig>;
+  configPatch?: Partial<iFlowConfig>;
   defaultModel?: string;
   notes?: string[];
 };
 
 export type ProviderAuthContext = {
-  config: NewClawConfig;
+  config: iFlowConfig;
   agentDir?: string;
   workspaceDir?: string;
   prompter: WizardPrompter;
@@ -123,7 +123,7 @@ export type ProviderPlugin = {
   refreshOAuth?: (cred: OAuthCredential) => Promise<OAuthCredential>;
 };
 
-export type NewClawPluginGatewayMethod = {
+export type iFlowPluginGatewayMethod = {
   method: string;
   handler: GatewayRequestHandler;
 };
@@ -146,8 +146,8 @@ export type PluginCommandContext = {
   args?: string;
   /** The full normalized command body */
   commandBody: string;
-  /** Current NewClaw configuration */
-  config: NewClawConfig;
+  /** Current iFlow configuration */
+  config: iFlowConfig;
 };
 
 /**
@@ -165,7 +165,7 @@ export type PluginCommandHandler = (
 /**
  * Definition for a plugin-registered command.
  */
-export type NewClawPluginCommandDefinition = {
+export type iFlowPluginCommandDefinition = {
   /** Command name without leading slash (e.g., "tts") */
   name: string;
   /** Description shown in /help and command menus */
@@ -178,90 +178,90 @@ export type NewClawPluginCommandDefinition = {
   handler: PluginCommandHandler;
 };
 
-export type NewClawPluginHttpHandler = (
+export type iFlowPluginHttpHandler = (
   req: IncomingMessage,
   res: ServerResponse,
 ) => Promise<boolean> | boolean;
 
-export type NewClawPluginHttpRouteHandler = (
+export type iFlowPluginHttpRouteHandler = (
   req: IncomingMessage,
   res: ServerResponse,
 ) => Promise<void> | void;
 
-export type NewClawPluginCliContext = {
+export type iFlowPluginCliContext = {
   program: Command;
-  config: NewClawConfig;
+  config: iFlowConfig;
   workspaceDir?: string;
   logger: PluginLogger;
 };
 
-export type NewClawPluginCliRegistrar = (ctx: NewClawPluginCliContext) => void | Promise<void>;
+export type iFlowPluginCliRegistrar = (ctx: iFlowPluginCliContext) => void | Promise<void>;
 
-export type NewClawPluginServiceContext = {
-  config: NewClawConfig;
+export type iFlowPluginServiceContext = {
+  config: iFlowConfig;
   workspaceDir?: string;
   stateDir: string;
   logger: PluginLogger;
 };
 
-export type NewClawPluginService = {
+export type iFlowPluginService = {
   id: string;
-  start: (ctx: NewClawPluginServiceContext) => void | Promise<void>;
-  stop?: (ctx: NewClawPluginServiceContext) => void | Promise<void>;
+  start: (ctx: iFlowPluginServiceContext) => void | Promise<void>;
+  stop?: (ctx: iFlowPluginServiceContext) => void | Promise<void>;
 };
 
-export type NewClawPluginChannelRegistration = {
+export type iFlowPluginChannelRegistration = {
   plugin: ChannelPlugin;
   dock?: ChannelDock;
 };
 
-export type NewClawPluginDefinition = {
+export type iFlowPluginDefinition = {
   id?: string;
   name?: string;
   description?: string;
   version?: string;
   kind?: PluginKind;
-  configSchema?: NewClawPluginConfigSchema;
-  register?: (api: NewClawPluginApi) => void | Promise<void>;
-  activate?: (api: NewClawPluginApi) => void | Promise<void>;
+  configSchema?: iFlowPluginConfigSchema;
+  register?: (api: iFlowPluginApi) => void | Promise<void>;
+  activate?: (api: iFlowPluginApi) => void | Promise<void>;
 };
 
-export type NewClawPluginModule =
-  | NewClawPluginDefinition
-  | ((api: NewClawPluginApi) => void | Promise<void>);
+export type iFlowPluginModule =
+  | iFlowPluginDefinition
+  | ((api: iFlowPluginApi) => void | Promise<void>);
 
-export type NewClawPluginApi = {
+export type iFlowPluginApi = {
   id: string;
   name: string;
   version?: string;
   description?: string;
   source: string;
-  config: NewClawConfig;
+  config: iFlowConfig;
   pluginConfig?: Record<string, unknown>;
   runtime: PluginRuntime;
   logger: PluginLogger;
   registerTool: (
-    tool: AnyAgentTool | NewClawPluginToolFactory,
-    opts?: NewClawPluginToolOptions,
+    tool: AnyAgentTool | iFlowPluginToolFactory,
+    opts?: iFlowPluginToolOptions,
   ) => void;
   registerHook: (
     events: string | string[],
     handler: InternalHookHandler,
-    opts?: NewClawPluginHookOptions,
+    opts?: iFlowPluginHookOptions,
   ) => void;
-  registerHttpHandler: (handler: NewClawPluginHttpHandler) => void;
-  registerHttpRoute: (params: { path: string; handler: NewClawPluginHttpRouteHandler }) => void;
-  registerChannel: (registration: NewClawPluginChannelRegistration | ChannelPlugin) => void;
+  registerHttpHandler: (handler: iFlowPluginHttpHandler) => void;
+  registerHttpRoute: (params: { path: string; handler: iFlowPluginHttpRouteHandler }) => void;
+  registerChannel: (registration: iFlowPluginChannelRegistration | ChannelPlugin) => void;
   registerGatewayMethod: (method: string, handler: GatewayRequestHandler) => void;
-  registerCli: (registrar: NewClawPluginCliRegistrar, opts?: { commands?: string[] }) => void;
-  registerService: (service: NewClawPluginService) => void;
+  registerCli: (registrar: iFlowPluginCliRegistrar, opts?: { commands?: string[] }) => void;
+  registerService: (service: iFlowPluginService) => void;
   registerProvider: (provider: ProviderPlugin) => void;
   /**
    * Register a custom command that bypasses the LLM agent.
    * Plugin commands are processed before built-in commands and before agent invocation.
    * Use this for simple state-toggling or status commands that don't need AI reasoning.
    */
-  registerCommand: (command: NewClawPluginCommandDefinition) => void;
+  registerCommand: (command: iFlowPluginCommandDefinition) => void;
   resolvePath: (input: string) => string;
   /** Register a lifecycle hook handler */
   on: <K extends PluginHookName>(

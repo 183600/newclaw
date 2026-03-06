@@ -15,9 +15,9 @@ import {
   type ChannelDock,
   type ChannelMessageActionAdapter,
   type ChannelPlugin,
-  type NewClawConfig,
-} from "newclaw/plugin-sdk";
-import { GoogleChatConfigSchema } from "newclaw/plugin-sdk";
+  type iFlowConfig,
+} from "iflow/plugin-sdk";
+import { GoogleChatConfigSchema } from "iflow/plugin-sdk";
 import {
   listGoogleChatAccountIds,
   resolveDefaultGoogleChatAccountId,
@@ -347,7 +347,7 @@ export const googlechatPlugin: ChannelPlugin<ResolvedGoogleChatAccount> = {
               ...configPatch,
             },
           },
-        } as NewClawConfig;
+        } as iFlowConfig;
       }
       return {
         ...next,
@@ -366,7 +366,7 @@ export const googlechatPlugin: ChannelPlugin<ResolvedGoogleChatAccount> = {
             },
           },
         },
-      } as NewClawConfig;
+      } as iFlowConfig;
     },
   },
   outbound: {

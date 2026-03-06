@@ -1,4 +1,4 @@
-import type { NewClawConfig } from "./config.js";
+import type { iFlowConfig } from "./config.js";
 import type { MarkdownTableMode } from "./types.base.js";
 import { normalizeChannelId } from "../channels/plugins/index.js";
 import { normalizeAccountId } from "../routing/session-key.js";
@@ -50,7 +50,7 @@ function resolveMarkdownModeFromSection(
 }
 
 export function resolveMarkdownTableMode(params: {
-  cfg?: Partial<NewClawConfig>;
+  cfg?: Partial<iFlowConfig>;
   channel?: string | null;
   accountId?: string | null;
 }): MarkdownTableMode {

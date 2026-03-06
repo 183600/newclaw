@@ -1,4 +1,4 @@
-import type { NewClawApp } from "./app.ts";
+import type { iFlowApp } from "./app.ts";
 import type { GatewayHelloOk } from "./gateway.ts";
 import type { ChatAttachment, ChatQueueItem } from "./ui-types.ts";
 import { parseAgentSessionKey } from "../../../src/sessions/session-key-utils.js";
@@ -65,7 +65,7 @@ export async function handleAbortChat(host: ChatHost) {
     return;
   }
   host.chatMessage = "";
-  await abortChatRun(host as unknown as NewClawApp);
+  await abortChatRun(host as unknown as iFlowApp);
 }
 
 function enqueueChatMessage(
@@ -104,7 +104,7 @@ async function sendChatMessageNow(
   },
 ) {
   resetToolStream(host as unknown as Parameters<typeof resetToolStream>[0]);
-  const runId = await sendChatMessage(host as unknown as NewClawApp, message, opts?.attachments);
+  const runId = await sendChatMessage(host as unknown as iFlowApp, message, opts?.attachments);
   const ok = Boolean(runId);
   if (!ok && opts?.previousDraft != null) {
     host.chatMessage = opts.previousDraft;
@@ -204,8 +204,8 @@ export async function handleSendChat(
 
 export async function refreshChat(host: ChatHost) {
   await Promise.all([
-    loadChatHistory(host as unknown as NewClawApp),
-    loadSessions(host as unknown as NewClawApp, {
+    loadChatHistory(host as unknown as iFlowApp),
+    loadSessions(host as unknown as iFlowApp, {
       activeMinutes: CHAT_SESSIONS_ACTIVE_MINUTES,
     }),
     refreshChatAvatar(host),

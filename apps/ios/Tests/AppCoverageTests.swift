@@ -1,6 +1,6 @@
 import SwiftUI
 import Testing
-@testable import NewClaw
+@testable import iFlow
 
 @Suite struct AppCoverageTests {
     @Test @MainActor func nodeAppModelUpdatesBackgroundedState() {

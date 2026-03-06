@@ -355,7 +355,7 @@ function buildChatCommands(): ChatCommandDefinition[] {
     defineChatCommand({
       key: "restart",
       nativeName: "restart",
-      description: "Restart NewClaw.",
+      description: "Restart iFlow.",
       textAlias: "/restart",
       category: "tools",
     }),

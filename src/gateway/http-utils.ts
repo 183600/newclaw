@@ -24,7 +24,7 @@ export function getBearerToken(req: IncomingMessage): string | undefined {
 
 export function resolveAgentIdFromHeader(req: IncomingMessage): string | undefined {
   const raw =
-    getHeader(req, "x-newclaw-agent-id")?.trim() || getHeader(req, "x-newclaw-agent")?.trim() || "";
+    getHeader(req, "x-iflow-agent-id")?.trim() || getHeader(req, "x-iflow-agent")?.trim() || "";
   if (!raw) {
     return undefined;
   }
@@ -38,7 +38,7 @@ export function resolveAgentIdFromModel(model: string | undefined): string | und
   }
 
   const m =
-    raw.match(/^newclaw[:/](?<agentId>[a-z0-9][a-z0-9_-]{0,63})$/i) ??
+    raw.match(/^iflow[:/](?<agentId>[a-z0-9][a-z0-9_-]{0,63})$/i) ??
     raw.match(/^agent:(?<agentId>[a-z0-9][a-z0-9_-]{0,63})$/i);
   const agentId = m?.groups?.agentId;
   if (!agentId) {
@@ -66,7 +66,7 @@ export function resolveSessionKey(params: {
   user?: string | undefined;
   prefix: string;
 }): string {
-  const explicit = getHeader(params.req, "x-newclaw-session-key")?.trim();
+  const explicit = getHeader(params.req, "x-iflow-session-key")?.trim();
   if (explicit) {
     return explicit;
   }

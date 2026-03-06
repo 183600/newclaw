@@ -1,6 +1,6 @@
 ---
 read_when: Browser control fails on Linux, especially with snap Chromium
-summary: 修复 Linux 上 NewClaw 浏览器控制的 Chrome/Brave/Edge/Chromium CDP 启动问题
+summary: 修复 Linux 上 iFlow 浏览器控制的 Chrome/Brave/Edge/Chromium CDP 启动问题
 title: 浏览器故障排除
 x-i18n:
   generated_at: "2026-02-01T21:39:41Z"
@@ -15,15 +15,15 @@ x-i18n:
 
 ## 问题："Failed to start Chrome CDP on port 18800"
 
-NewClaw 的浏览器控制服务器无法启动 Chrome/Brave/Edge/Chromium，报错如下：
+iFlow 的浏览器控制服务器无法启动 Chrome/Brave/Edge/Chromium，报错如下：
 
 ```
-{"error":"Error: Failed to start Chrome CDP on port 18800 for profile \"newclaw\"."}
+{"error":"Error: Failed to start Chrome CDP on port 18800 for profile \"iflow\"."}
 ```
 
 ### 根本原因
 
-在 Ubuntu（以及许多 Linux 发行版）上，默认的 Chromium 安装是一个 **snap 包**。Snap 的 AppArmor 沙箱限制会干扰 NewClaw 生成和监控浏览器进程的方式。
+在 Ubuntu（以及许多 Linux 发行版）上，默认的 Chromium 安装是一个 **snap 包**。Snap 的 AppArmor 沙箱限制会干扰 iFlow 生成和监控浏览器进程的方式。
 
 `apt install chromium` 命令安装的是一个重定向到 snap 的占位包：
 
@@ -44,7 +44,7 @@ sudo dpkg -i google-chrome-stable_current_amd64.deb
 sudo apt --fix-broken install -y  # 如果有依赖错误
 ```
 
-然后更新你的 NewClaw 配置（`~/.newclaw/newclaw.json`）：
+然后更新你的 iFlow 配置（`~/.iflow/iflow.json`）：
 
 ```json
 {
@@ -59,7 +59,7 @@ sudo apt --fix-broken install -y  # 如果有依赖错误
 
 ### 方案 2：使用 Snap Chromium 的仅附加模式
 
-如果你必须使用 snap Chromium，请配置 NewClaw 附加到手动启动的浏览器：
+如果你必须使用 snap Chromium，请配置 iFlow 附加到手动启动的浏览器：
 
 1. 更新配置：
 
@@ -79,20 +79,20 @@ sudo apt --fix-broken install -y  # 如果有依赖错误
 ```bash
 chromium-browser --headless --no-sandbox --disable-gpu \
   --remote-debugging-port=18800 \
-  --user-data-dir=$HOME/.newclaw/browser/newclaw/user-data \
+  --user-data-dir=$HOME/.iflow/browser/iflow/user-data \
   about:blank &
 ```
 
 3. 可选创建一个 systemd 用户服务来自动启动 Chrome：
 
 ```ini
-# ~/.config/systemd/user/newclaw-browser.service
+# ~/.config/systemd/user/iflow-browser.service
 [Unit]
-Description=NewClaw Browser (Chrome CDP)
+Description=iFlow Browser (Chrome CDP)
 After=network.target
 
 [Service]
-ExecStart=/snap/bin/chromium --headless --no-sandbox --disable-gpu --remote-debugging-port=18800 --user-data-dir=%h/.newclaw/browser/newclaw/user-data about:blank
+ExecStart=/snap/bin/chromium --headless --no-sandbox --disable-gpu --remote-debugging-port=18800 --user-data-dir=%h/.iflow/browser/iflow/user-data about:blank
 Restart=on-failure
 RestartSec=5
 
@@ -100,7 +100,7 @@ RestartSec=5
 WantedBy=default.target
 ```
 
-启用命令：`systemctl --user enable --now newclaw-browser.service`
+启用命令：`systemctl --user enable --now iflow-browser.service`
 
 ### 验证浏览器是否正常工作
 
@@ -130,17 +130,17 @@ curl -s http://127.0.0.1:18791/tabs
 
 ### 问题："Chrome extension relay is running, but no tab is connected"
 
-你正在使用 `chrome` 配置文件（扩展中继）。它需要 NewClaw
+你正在使用 `chrome` 配置文件（扩展中继）。它需要 iFlow
 浏览器扩展附加到一个活动标签页。
 
 修复方案：
 
-1. **使用托管浏览器：** `newclaw browser start --browser-profile newclaw`
-   （或设置 `browser.defaultProfile: "newclaw"`）。
+1. **使用托管浏览器：** `iflow browser start --browser-profile iflow`
+   （或设置 `browser.defaultProfile: "iflow"`）。
 2. **使用扩展中继：** 安装扩展，打开一个标签页，然后点击
-   NewClaw 扩展图标进行附加。
+   iFlow 扩展图标进行附加。
 
 说明：
 
 - `chrome` 配置文件会尽可能使用你的**系统默认 Chromium 浏览器**。
-- 本地 `newclaw` 配置文件会自动分配 `cdpPort`/`cdpUrl`；仅在远程 CDP 时需要手动设置。
+- 本地 `iflow` 配置文件会自动分配 `cdpPort`/`cdpUrl`；仅在远程 CDP 时需要手动设置。

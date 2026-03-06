@@ -2,7 +2,7 @@
 read_when:
   - 你想在保留 CLI 安装的同时清除本地状态
   - 你想预览哪些内容会被移除
-summary: "`newclaw reset`（重置本地状态/配置）的 CLI 参考"
+summary: "`iflow reset`（重置本地状态/配置）的 CLI 参考"
 title: reset
 x-i18n:
   generated_at: "2026-02-01T20:21:22Z"
@@ -13,12 +13,12 @@ x-i18n:
   workflow: 14
 ---
 
-# `newclaw reset`
+# `iflow reset`
 
 重置本地配置/状态（保留 CLI 安装）。
 
 ```bash
-newclaw reset
-newclaw reset --dry-run
-newclaw reset --scope config+creds+sessions --yes --non-interactive
+iflow reset
+iflow reset --dry-run
+iflow reset --scope config+creds+sessions --yes --non-interactive
 ```

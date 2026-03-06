@@ -10,7 +10,7 @@
  * - Registry integration
  */
 
-import type { NewClawConfig } from "newclaw/plugin-sdk";
+import type { iFlowConfig } from "iflow/plugin-sdk";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { sendMessageTwitchInternal } from "./send.js";
 
@@ -57,7 +57,7 @@ describe("send", () => {
         },
       },
     },
-  } as unknown as NewClawConfig;
+  } as unknown as iFlowConfig;
 
   beforeEach(() => {
     vi.clearAllMocks();

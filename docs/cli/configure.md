@@ -1,19 +1,19 @@
 ---
-summary: "CLI reference for `newclaw configure` (interactive configuration prompts)"
+summary: "CLI reference for `iflow configure` (interactive configuration prompts)"
 read_when:
   - You want to tweak credentials, devices, or agent defaults interactively
 title: "configure"
 ---
 
-# `newclaw configure`
+# `iflow configure`
 
 Interactive prompt to set up credentials, devices, and agent defaults.
 
 Note: The **Model** section now includes a multi-select for the
 `agents.defaults.models` allowlist (what shows up in `/model` and the model picker).
 
-Tip: `newclaw config` without a subcommand opens the same wizard. Use
-`newclaw config get|set|unset` for non-interactive edits.
+Tip: `iflow config` without a subcommand opens the same wizard. Use
+`iflow config get|set|unset` for non-interactive edits.
 
 Related:
 
@@ -28,6 +28,6 @@ Notes:
 ## Examples
 
 ```bash
-newclaw configure
-newclaw configure --section models --section channels
+iflow configure
+iflow configure --section models --section channels
 ```

@@ -1,12 +1,12 @@
 ---
-summary: "CLI reference for `newclaw node` (headless node host)"
+summary: "CLI reference for `iflow node` (headless node host)"
 read_when:
   - Running the headless node host
   - Pairing a non-macOS node for system.run
 title: "node"
 ---
 
-# `newclaw node`
+# `iflow node`
 
 Run a **headless node host** that connects to the Gateway WebSocket and exposes
 `system.run` / `system.which` on this machine.
@@ -46,7 +46,7 @@ Disable it on the node if needed:
 ## Run (foreground)
 
 ```bash
-newclaw node run --host <gateway-host> --port 18789
+iflow node run --host <gateway-host> --port 18789
 ```
 
 Options:
@@ -63,7 +63,7 @@ Options:
 Install a headless node host as a user service.
 
 ```bash
-newclaw node install --host <gateway-host> --port 18789
+iflow node install --host <gateway-host> --port 18789
 ```
 
 Options:
@@ -80,13 +80,13 @@ Options:
 Manage the service:
 
 ```bash
-newclaw node status
-newclaw node stop
-newclaw node restart
-newclaw node uninstall
+iflow node status
+iflow node stop
+iflow node restart
+iflow node uninstall
 ```
 
-Use `newclaw node run` for a foreground node host (no service).
+Use `iflow node run` for a foreground node host (no service).
 
 Service commands accept `--json` for machine-readable output.
 
@@ -96,17 +96,17 @@ The first connection creates a pending node pair request on the Gateway.
 Approve it via:
 
 ```bash
-newclaw nodes pending
-newclaw nodes approve <requestId>
+iflow nodes pending
+iflow nodes approve <requestId>
 ```
 
 The node host stores its node id, token, display name, and gateway connection info in
-`~/.newclaw/node.json`.
+`~/.iflow/node.json`.
 
 ## Exec approvals
 
 `system.run` is gated by local exec approvals:
 
-- `~/.newclaw/exec-approvals.json`
+- `~/.iflow/exec-approvals.json`
 - [Exec approvals](/tools/exec-approvals)
-- `newclaw approvals --node <id|name|ip>` (edit from the Gateway)
+- `iflow approvals --node <id|name|ip>` (edit from the Gateway)

@@ -1,16 +1,16 @@
 import type {
   ChannelOnboardingAdapter,
   ChannelOnboardingDmPolicy,
-  NewClawConfig,
+  iFlowConfig,
   DmPolicy,
   WizardPrompter,
-} from "newclaw/plugin-sdk";
+} from "iflow/plugin-sdk";
 import {
   addWildcardAllowFrom,
   DEFAULT_ACCOUNT_ID,
   formatDocsLink,
   promptChannelAccessConfig,
-} from "newclaw/plugin-sdk";
+} from "iflow/plugin-sdk";
 import {
   parseMSTeamsTeamEntry,
   resolveMSTeamsChannelAllowlist,
@@ -20,7 +20,7 @@ import { resolveMSTeamsCredentials } from "./token.js";
 
 const channel = "msteams" as const;
 
-function setMSTeamsDmPolicy(cfg: NewClawConfig, dmPolicy: DmPolicy) {
+function setMSTeamsDmPolicy(cfg: iFlowConfig, dmPolicy: DmPolicy) {
   const allowFrom =
     dmPolicy === "open"
       ? addWildcardAllowFrom(cfg.channels?.msteams?.allowFrom)?.map((entry) => String(entry))
@@ -38,7 +38,7 @@ function setMSTeamsDmPolicy(cfg: NewClawConfig, dmPolicy: DmPolicy) {
   };
 }
 
-function setMSTeamsAllowFrom(cfg: NewClawConfig, allowFrom: string[]): NewClawConfig {
+function setMSTeamsAllowFrom(cfg: iFlowConfig, allowFrom: string[]): iFlowConfig {
   return {
     ...cfg,
     channels: {
@@ -63,9 +63,9 @@ function looksLikeGuid(value: string): boolean {
 }
 
 async function promptMSTeamsAllowFrom(params: {
-  cfg: NewClawConfig;
+  cfg: iFlowConfig;
   prompter: WizardPrompter;
-}): Promise<NewClawConfig> {
+}): Promise<iFlowConfig> {
   const existing = params.cfg.channels?.msteams?.allowFrom ?? [];
   await params.prompter.note(
     [
@@ -141,9 +141,9 @@ async function noteMSTeamsCredentialHelp(prompter: WizardPrompter): Promise<void
 }
 
 function setMSTeamsGroupPolicy(
-  cfg: NewClawConfig,
+  cfg: iFlowConfig,
   groupPolicy: "open" | "allowlist" | "disabled",
-): NewClawConfig {
+): iFlowConfig {
   return {
     ...cfg,
     channels: {
@@ -158,9 +158,9 @@ function setMSTeamsGroupPolicy(
 }
 
 function setMSTeamsTeamsAllowlist(
-  cfg: NewClawConfig,
+  cfg: iFlowConfig,
   entries: Array<{ teamKey: string; channelKey?: string }>,
-): NewClawConfig {
+): iFlowConfig {
   const baseTeams = cfg.channels?.msteams?.teams ?? {};
   const teams: Record<string, { channels?: Record<string, unknown> }> = { ...baseTeams };
   for (const entry of entries) {

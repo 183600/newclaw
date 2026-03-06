@@ -1,4 +1,4 @@
-import type { NewClawConfig } from "../../../config/config.js";
+import type { iFlowConfig } from "../../../config/config.js";
 import type { DmPolicy } from "../../../config/types.js";
 import type { WizardPrompter } from "../../../wizard/prompts.js";
 import type { ChannelOnboardingAdapter, ChannelOnboardingDmPolicy } from "../onboarding-types.js";
@@ -17,7 +17,7 @@ import { addWildcardAllowFrom, promptAccountId } from "./helpers.js";
 
 const channel = "signal" as const;
 
-function setSignalDmPolicy(cfg: NewClawConfig, dmPolicy: DmPolicy) {
+function setSignalDmPolicy(cfg: iFlowConfig, dmPolicy: DmPolicy) {
   const allowFrom =
     dmPolicy === "open" ? addWildcardAllowFrom(cfg.channels?.signal?.allowFrom) : undefined;
   return {
@@ -33,11 +33,7 @@ function setSignalDmPolicy(cfg: NewClawConfig, dmPolicy: DmPolicy) {
   };
 }
 
-function setSignalAllowFrom(
-  cfg: NewClawConfig,
-  accountId: string,
-  allowFrom: string[],
-): NewClawConfig {
+function setSignalAllowFrom(cfg: iFlowConfig, accountId: string, allowFrom: string[]): iFlowConfig {
   if (accountId === DEFAULT_ACCOUNT_ID) {
     return {
       ...cfg,
@@ -80,10 +76,10 @@ function isUuidLike(value: string): boolean {
 }
 
 async function promptSignalAllowFrom(params: {
-  cfg: NewClawConfig;
+  cfg: iFlowConfig;
   prompter: WizardPrompter;
   accountId?: string;
-}): Promise<NewClawConfig> {
+}): Promise<iFlowConfig> {
   const accountId =
     params.accountId && normalizeAccountId(params.accountId)
       ? (normalizeAccountId(params.accountId) ?? DEFAULT_ACCOUNT_ID)
@@ -300,9 +296,9 @@ export const signalOnboardingAdapter: ChannelOnboardingAdapter = {
 
     await prompter.note(
       [
-        'Link device with: signal-cli link -n "NewClaw"',
+        'Link device with: signal-cli link -n "iFlow"',
         "Scan QR in Signal → Linked Devices",
-        `Then run: ${formatCliCommand("newclaw gateway call channels.status --params '{\"probe\":true}'")}`,
+        `Then run: ${formatCliCommand("iflow gateway call channels.status --params '{\"probe\":true}'")}`,
         `Docs: ${formatDocsLink("/signal", "signal")}`,
       ].join("\n"),
       "Signal next steps",

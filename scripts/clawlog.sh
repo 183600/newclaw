@@ -6,7 +6,7 @@
 set -euo pipefail
 
 # Configuration
-SUBSYSTEM="ai.newclaw"
+SUBSYSTEM="ai.iflow"
 DEFAULT_LEVEL="info"
 
 # Colors for output
@@ -48,17 +48,17 @@ SHOW_HELP=false
 # Function to show usage
 show_usage() {
     cat << EOF
-clawlog - NewClaw Logging Utility
+clawlog - iFlow Logging Utility
 
 USAGE:
     clawlog [OPTIONS]
 
 DESCRIPTION:
-    View NewClaw logs with full details (bypasses Apple's privacy redaction).
+    View iFlow logs with full details (bypasses Apple's privacy redaction).
     Requires sudo access configured for /usr/bin/log command.
 
 LOG FLOW ARCHITECTURE:
-    NewClaw logs flow through the macOS unified log (subsystem: ai.newclaw).
+    iFlow logs flow through the macOS unified log (subsystem: ai.iflow).
 
 LOG CATEGORIES (examples):
     • voicewake           - Voice wake detection/test harness

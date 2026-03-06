@@ -12,7 +12,7 @@ function isAbsoluteHttp(url: string): boolean {
 function enhanceBrowserFetchError(url: string, err: unknown, timeoutMs: number): Error {
   const hint = isAbsoluteHttp(url)
     ? "If this is a sandboxed session, ensure the sandbox browser is running and try again."
-    : `Start (or restart) the NewClaw gateway (NewClaw.app menubar, or \`${formatCliCommand("newclaw gateway")}\`) and try again.`;
+    : `Start (or restart) the iFlow gateway (iFlow.app menubar, or \`${formatCliCommand("iflow gateway")}\`) and try again.`;
   const msg = String(err);
   const msgLower = msg.toLowerCase();
   const looksLikeTimeout =
@@ -23,10 +23,10 @@ function enhanceBrowserFetchError(url: string, err: unknown, timeoutMs: number):
     msgLower.includes("aborterror");
   if (looksLikeTimeout) {
     return new Error(
-      `Can't reach the newclaw browser control service (timed out after ${timeoutMs}ms). ${hint}`,
+      `Can't reach the iflow browser control service (timed out after ${timeoutMs}ms). ${hint}`,
     );
   }
-  return new Error(`Can't reach the newclaw browser control service. ${hint} (${msg})`);
+  return new Error(`Can't reach the iflow browser control service. ${hint} (${msg})`);
 }
 
 async function fetchHttpJson<T>(

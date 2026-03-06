@@ -1,5 +1,5 @@
-import type { NewClawPluginApi } from "newclaw/plugin-sdk";
-import { emptyPluginConfigSchema } from "newclaw/plugin-sdk";
+import type { iFlowPluginApi } from "iflow/plugin-sdk";
+import { emptyPluginConfigSchema } from "iflow/plugin-sdk";
 import { whatsappPlugin } from "./src/channel.js";
 import { setWhatsAppRuntime } from "./src/runtime.js";
 
@@ -8,7 +8,7 @@ const plugin = {
   name: "WhatsApp",
   description: "WhatsApp channel plugin",
   configSchema: emptyPluginConfigSchema(),
-  register(api: NewClawPluginApi) {
+  register(api: iFlowPluginApi) {
     setWhatsAppRuntime(api.runtime);
     api.registerChannel({ plugin: whatsappPlugin });
   },

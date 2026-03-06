@@ -1,28 +1,28 @@
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { NewClawApp } from "./app.ts";
+import { iFlowApp } from "./app.ts";
 
 // oxlint-disable-next-line typescript/unbound-method
-const originalConnect = NewClawApp.prototype.connect;
+const originalConnect = iFlowApp.prototype.connect;
 
 function mountApp(pathname: string) {
   window.history.replaceState({}, "", pathname);
-  const app = document.createElement("newclaw-app") as NewClawApp;
+  const app = document.createElement("iflow-app") as iFlowApp;
   document.body.append(app);
   return app;
 }
 
 beforeEach(() => {
-  NewClawApp.prototype.connect = () => {
+  iFlowApp.prototype.connect = () => {
     // no-op: avoid real gateway WS connections in browser tests
   };
-  window.__NEWCLAW_CONTROL_UI_BASE_PATH__ = undefined;
+  window.__IFLOW_CONTROL_UI_BASE_PATH__ = undefined;
   localStorage.clear();
   document.body.innerHTML = "";
 });
 
 afterEach(() => {
-  NewClawApp.prototype.connect = originalConnect;
-  window.__NEWCLAW_CONTROL_UI_BASE_PATH__ = undefined;
+  iFlowApp.prototype.connect = originalConnect;
+  window.__IFLOW_CONTROL_UI_BASE_PATH__ = undefined;
   localStorage.clear();
   document.body.innerHTML = "";
 });

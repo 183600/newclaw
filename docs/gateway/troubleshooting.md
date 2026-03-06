@@ -1,5 +1,5 @@
 ---
-summary: "Quick troubleshooting guide for common NewClaw failures"
+summary: "Quick troubleshooting guide for common iFlow failures"
 read_when:
   - Investigating runtime issues or failures
 title: "Troubleshooting"
@@ -7,7 +7,7 @@ title: "Troubleshooting"
 
 # Troubleshooting 🔧
 
-When NewClaw misbehaves, here's how to fix it.
+When iFlow misbehaves, here's how to fix it.
 
 Start with the FAQ’s [First 60 seconds](/help/faq#first-60-seconds-if-somethings-broken) if you just want a quick triage recipe. This page goes deeper on runtime failures and diagnostics.
 
@@ -17,17 +17,17 @@ Provider-specific shortcuts: [/channels/troubleshooting](/channels/troubleshooti
 
 Quick triage commands (in order):
 
-| Command                           | What it tells you                                                                                      | When to use it                                    |
-| --------------------------------- | ------------------------------------------------------------------------------------------------------ | ------------------------------------------------- |
-| `newclaw status`                  | Local summary: OS + update, gateway reachability/mode, service, agents/sessions, provider config state | First check, quick overview                       |
-| `newclaw status --all`            | Full local diagnosis (read-only, pasteable, safe-ish) incl. log tail                                   | When you need to share a debug report             |
-| `newclaw status --deep`           | Runs gateway health checks (incl. provider probes; requires reachable gateway)                         | When “configured” doesn’t mean “working”          |
-| `newclaw gateway probe`           | Gateway discovery + reachability (local + remote targets)                                              | When you suspect you’re probing the wrong gateway |
-| `newclaw channels status --probe` | Asks the running gateway for channel status (and optionally probes)                                    | When gateway is reachable but channels misbehave  |
-| `newclaw gateway status`          | Supervisor state (launchd/systemd/schtasks), runtime PID/exit, last gateway error                      | When the service “looks loaded” but nothing runs  |
-| `newclaw logs --follow`           | Live logs (best signal for runtime issues)                                                             | When you need the actual failure reason           |
+| Command                         | What it tells you                                                                                      | When to use it                                    |
+| ------------------------------- | ------------------------------------------------------------------------------------------------------ | ------------------------------------------------- |
+| `iflow status`                  | Local summary: OS + update, gateway reachability/mode, service, agents/sessions, provider config state | First check, quick overview                       |
+| `iflow status --all`            | Full local diagnosis (read-only, pasteable, safe-ish) incl. log tail                                   | When you need to share a debug report             |
+| `iflow status --deep`           | Runs gateway health checks (incl. provider probes; requires reachable gateway)                         | When “configured” doesn’t mean “working”          |
+| `iflow gateway probe`           | Gateway discovery + reachability (local + remote targets)                                              | When you suspect you’re probing the wrong gateway |
+| `iflow channels status --probe` | Asks the running gateway for channel status (and optionally probes)                                    | When gateway is reachable but channels misbehave  |
+| `iflow gateway status`          | Supervisor state (launchd/systemd/schtasks), runtime PID/exit, last gateway error                      | When the service “looks loaded” but nothing runs  |
+| `iflow logs --follow`           | Live logs (best signal for runtime issues)                                                             | When you need the actual failure reason           |
 
-**Sharing output:** prefer `newclaw status --all` (it redacts tokens). If you paste `newclaw status`, consider setting `NEWCLAW_SHOW_SECRETS=0` first (token previews).
+**Sharing output:** prefer `iflow status --all` (it redacts tokens). If you paste `iflow status`, consider setting `IFLOW_SHOW_SECRETS=0` first (token previews).
 
 See also: [Health checks](/gateway/health) and [Logging](/logging).
 
@@ -43,14 +43,14 @@ Fix options:
 - Re-run onboarding and choose **Anthropic** for that agent.
 - Or paste a setup-token on the **gateway host**:
   ```bash
-  newclaw models auth setup-token --provider anthropic
+  iflow models auth setup-token --provider anthropic
   ```
 - Or copy `auth-profiles.json` from the main agent dir to the new agent dir.
 
 Verify:
 
 ```bash
-newclaw models status
+iflow models status
 ```
 
 ### OAuth token refresh failed (Anthropic Claude subscription)
@@ -63,15 +63,15 @@ switch to a **Claude Code setup-token** and paste it on the **gateway host**.
 
 ```bash
 # Run on the gateway host (paste the setup-token)
-newclaw models auth setup-token --provider anthropic
-newclaw models status
+iflow models auth setup-token --provider anthropic
+iflow models status
 ```
 
 If you generated the token elsewhere:
 
 ```bash
-newclaw models auth paste-token --provider anthropic
-newclaw models status
+iflow models auth paste-token --provider anthropic
+iflow models status
 ```
 
 More detail: [Anthropic](/providers/anthropic) and [OAuth](/concepts/oauth).
@@ -103,19 +103,19 @@ can appear “loaded” while nothing is running.
 **Check:**
 
 ```bash
-newclaw gateway status
-newclaw doctor
+iflow gateway status
+iflow doctor
 ```
 
 Doctor/service will show runtime state (PID/last exit) and log hints.
 
 **Logs:**
 
-- Preferred: `newclaw logs --follow`
-- File logs (always): `/tmp/newclaw/newclaw-YYYY-MM-DD.log` (or your configured `logging.file`)
-- macOS LaunchAgent (if installed): `$NEWCLAW_STATE_DIR/logs/gateway.log` and `gateway.err.log`
-- Linux systemd (if installed): `journalctl --user -u newclaw-gateway[-<profile>].service -n 200 --no-pager`
-- Windows: `schtasks /Query /TN "NewClaw Gateway (<profile>)" /V /FO LIST`
+- Preferred: `iflow logs --follow`
+- File logs (always): `/tmp/iflow/iflow-YYYY-MM-DD.log` (or your configured `logging.file`)
+- macOS LaunchAgent (if installed): `$IFLOW_STATE_DIR/logs/gateway.log` and `gateway.err.log`
+- Linux systemd (if installed): `journalctl --user -u iflow-gateway[-<profile>].service -n 200 --no-pager`
+- Windows: `schtasks /Query /TN "iFlow Gateway (<profile>)" /V /FO LIST`
 
 **Enable more logging:**
 
@@ -140,25 +140,25 @@ Gateway refuses to start.
 
 - Run the wizard and set the Gateway run mode to **Local**:
   ```bash
-  newclaw configure
+  iflow configure
   ```
 - Or set it directly:
   ```bash
-  newclaw config set gateway.mode local
+  iflow config set gateway.mode local
   ```
 
 **If you meant to run a remote Gateway instead:**
 
 - Set a remote URL and keep `gateway.mode=remote`:
   ```bash
-  newclaw config set gateway.mode remote
-  newclaw config set gateway.remote.url "wss://gateway.example.com"
+  iflow config set gateway.mode remote
+  iflow config set gateway.remote.url "wss://gateway.example.com"
   ```
 
 **Ad-hoc/dev only:** pass `--allow-unconfigured` to start the gateway without
 `gateway.mode=local`.
 
-**No config file yet?** Run `newclaw setup` to create a starter config, then rerun
+**No config file yet?** Run `iflow setup` to create a starter config, then rerun
 the gateway.
 
 ### Service Environment (PATH + runtime)
@@ -170,14 +170,14 @@ The gateway service runs with a **minimal PATH** to avoid shell/manager cruft:
 
 This intentionally excludes version managers (nvm/fnm/volta/asdf) and package
 managers (pnpm/npm) because the service does not load your shell init. Runtime
-variables like `DISPLAY` should live in `~/.newclaw/.env` (loaded early by the
+variables like `DISPLAY` should live in `~/.iflow/.env` (loaded early by the
 gateway).
 Exec runs on `host=gateway` merge your login-shell `PATH` into the exec environment,
 so missing tools usually mean your shell init isn’t exporting them (or set
 `tools.exec.pathPrepend`). See [/tools/exec](/tools/exec).
 
 WhatsApp + Telegram channels require **Node**; Bun is unsupported. If your
-service was installed with Bun or a version-managed Node path, run `newclaw doctor`
+service was installed with Bun or a version-managed Node path, run `iflow doctor`
 to migrate to a system Node install.
 
 ### Skill missing API key in sandbox
@@ -190,7 +190,7 @@ to migrate to a system Node install.
 
 - set `agents.defaults.sandbox.docker.env` (or per-agent `agents.list[].sandbox.docker.env`)
 - or bake the key into your custom sandbox image
-- then run `newclaw sandbox recreate --agent <id>` (or `--all`)
+- then run `iflow sandbox recreate --agent <id>` (or `--all`)
 
 ### Service Running but Port Not Listening
 
@@ -205,31 +205,31 @@ the Gateway likely refused to bind.
 
 **Check:**
 
-- `gateway.mode` must be `local` for `newclaw gateway` and the service.
-- If you set `gateway.mode=remote`, the **CLI defaults** to a remote URL. The service can still be running locally, but your CLI may be probing the wrong place. Use `newclaw gateway status` to see the service’s resolved port + probe target (or pass `--url`).
-- `newclaw gateway status` and `newclaw doctor` surface the **last gateway error** from logs when the service looks running but the port is closed.
+- `gateway.mode` must be `local` for `iflow gateway` and the service.
+- If you set `gateway.mode=remote`, the **CLI defaults** to a remote URL. The service can still be running locally, but your CLI may be probing the wrong place. Use `iflow gateway status` to see the service’s resolved port + probe target (or pass `--url`).
+- `iflow gateway status` and `iflow doctor` surface the **last gateway error** from logs when the service looks running but the port is closed.
 - Non-loopback binds (`lan`/`tailnet`/`custom`, or `auto` when loopback is unavailable) require auth:
-  `gateway.auth.token` (or `NEWCLAW_GATEWAY_TOKEN`).
+  `gateway.auth.token` (or `IFLOW_GATEWAY_TOKEN`).
 - `gateway.remote.token` is for remote CLI calls only; it does **not** enable local auth.
 - `gateway.token` is ignored; use `gateway.auth.token`.
 
-**If `newclaw gateway status` shows a config mismatch**
+**If `iflow gateway status` shows a config mismatch**
 
 - `Config (cli): ...` and `Config (service): ...` should normally match.
 - If they don’t, you’re almost certainly editing one config while the service is running another.
-- Fix: rerun `newclaw gateway install --force` from the same `--profile` / `NEWCLAW_STATE_DIR` you want the service to use.
+- Fix: rerun `iflow gateway install --force` from the same `--profile` / `IFLOW_STATE_DIR` you want the service to use.
 
-**If `newclaw gateway status` reports service config issues**
+**If `iflow gateway status` reports service config issues**
 
 - The supervisor config (launchd/systemd/schtasks) is missing current defaults.
-- Fix: run `newclaw doctor` to update it (or `newclaw gateway install --force` for a full rewrite).
+- Fix: run `iflow doctor` to update it (or `iflow gateway install --force` for a full rewrite).
 
 **If `Last gateway error:` mentions “refusing to bind … without auth”**
 
 - You set `gateway.bind` to a non-loopback mode (`lan`/`tailnet`/`custom`, or `auto` when loopback is unavailable) but didn’t configure auth.
-- Fix: set `gateway.auth.mode` + `gateway.auth.token` (or export `NEWCLAW_GATEWAY_TOKEN`) and restart the service.
+- Fix: set `gateway.auth.mode` + `gateway.auth.token` (or export `IFLOW_GATEWAY_TOKEN`) and restart the service.
 
-**If `newclaw gateway status` says `bind=tailnet` but no tailnet interface was found**
+**If `iflow gateway status` says `bind=tailnet` but no tailnet interface was found**
 
 - The gateway tried to bind to a Tailscale IP (100.64.0.0/10) but none were detected on the host.
 - Fix: bring up Tailscale on that machine (or change `gateway.bind` to `loopback`/`lan`).
@@ -246,7 +246,7 @@ This means something is already listening on the gateway port.
 **Check:**
 
 ```bash
-newclaw gateway status
+iflow gateway status
 ```
 
 It will show the listener(s) and likely causes (gateway already running, SSH tunnel).
@@ -254,7 +254,7 @@ If needed, stop the service or pick a different port.
 
 ### Extra Workspace Folders Detected
 
-If you upgraded from older installs, you might still have `~/newclaw` on disk.
+If you upgraded from older installs, you might still have `~/iflow` on disk.
 Multiple workspace directories can cause confusing auth or state drift because
 only one workspace is active.
 
@@ -263,7 +263,7 @@ only one workspace is active.
 
 ### Main chat running in a sandbox workspace
 
-Symptoms: `pwd` or file tools show `~/.newclaw/sandboxes/...` even though you
+Symptoms: `pwd` or file tools show `~/.iflow/sandboxes/...` even though you
 expected the host workspace.
 
 **Why:** `agents.defaults.sandbox.mode: "non-main"` keys off `session.mainKey` (default `"main"`).
@@ -289,15 +289,15 @@ The agent was interrupted mid-response.
 
 ### "Agent failed before reply: Unknown model: anthropic/claude-haiku-3-5"
 
-NewClaw intentionally rejects **older/insecure models** (especially those more
+iFlow intentionally rejects **older/insecure models** (especially those more
 vulnerable to prompt injection). If you see this error, the model name is no
 longer supported.
 
 **Fix:**
 
 - Pick a **latest** model for the provider and update your config or model alias.
-- If you’re unsure which models are available, run `newclaw models list` or
-  `newclaw models scan` and choose a supported one.
+- If you’re unsure which models are available, run `iflow models list` or
+  `iflow models scan` and choose a supported one.
 - Check gateway logs for the detailed failure reason.
 
 See also: [Models CLI](/cli/models) and [Model providers](/concepts/model-providers).
@@ -307,7 +307,7 @@ See also: [Models CLI](/cli/models) and [Model providers](/concepts/model-provid
 **Check 1:** Is the sender allowlisted?
 
 ```bash
-newclaw status
+iflow status
 ```
 
 Look for `AllowFrom: ...` in the output.
@@ -318,15 +318,15 @@ Look for `AllowFrom: ...` in the output.
 # The message must match mentionPatterns or explicit mentions; defaults live in channel groups/guilds.
 # Multi-agent: `agents.list[].groupChat.mentionPatterns` overrides global patterns.
 grep -n "agents\\|groupChat\\|mentionPatterns\\|channels\\.whatsapp\\.groups\\|channels\\.telegram\\.groups\\|channels\\.imessage\\.groups\\|channels\\.discord\\.guilds" \
-  "${NEWCLAW_CONFIG_PATH:-$HOME/.newclaw/newclaw.json}"
+  "${IFLOW_CONFIG_PATH:-$HOME/.iflow/iflow.json}"
 ```
 
 **Check 3:** Check the logs
 
 ```bash
-newclaw logs --follow
+iflow logs --follow
 # or if you want quick filters:
-tail -f "$(ls -t /tmp/newclaw/newclaw-*.log | head -1)" | grep "blocked\\|skip\\|unauthorized"
+tail -f "$(ls -t /tmp/iflow/iflow-*.log | head -1)" | grep "blocked\\|skip\\|unauthorized"
 ```
 
 ### Pairing Code Not Arriving
@@ -336,7 +336,7 @@ If `dmPolicy` is `pairing`, unknown senders should receive a code and their mess
 **Check 1:** Is a pending request already waiting?
 
 ```bash
-newclaw pairing list <channel>
+iflow pairing list <channel>
 ```
 
 Pending DM pairing requests are capped at **3 per channel** by default. If the list is full, new requests won’t generate a code until one is approved or expires.
@@ -344,7 +344,7 @@ Pending DM pairing requests are capped at **3 per channel** by default. If the l
 **Check 2:** Did the request get created but no reply was sent?
 
 ```bash
-newclaw logs --follow | grep "pairing request"
+iflow logs --follow | grep "pairing request"
 ```
 
 **Check 3:** Confirm `dmPolicy` isn’t `open`/`allowlist` for that channel.
@@ -355,15 +355,15 @@ Known issue: When you send an image with ONLY a mention (no other text), WhatsAp
 
 **Workaround:** Add some text with the mention:
 
-- ❌ `@newclaw` + image
-- ✅ `@newclaw check this` + image
+- ❌ `@iflow` + image
+- ✅ `@iflow check this` + image
 
 ### Session Not Resuming
 
 **Check 1:** Is the session file there?
 
 ```bash
-ls -la ~/.newclaw/agents/<agentId>/sessions/
+ls -la ~/.iflow/agents/<agentId>/sessions/
 ```
 
 **Check 2:** Is the reset window too short?
@@ -400,26 +400,26 @@ Or use the `process` tool to background long commands.
 
 ```bash
 # Check local status (creds, sessions, queued events)
-newclaw status
+iflow status
 # Probe the running gateway + channels (WA connect + Telegram + Discord APIs)
-newclaw status --deep
+iflow status --deep
 
 # View recent connection events
-newclaw logs --limit 200 | grep "connection\\|disconnect\\|logout"
+iflow logs --limit 200 | grep "connection\\|disconnect\\|logout"
 ```
 
 **Fix:** Usually reconnects automatically once the Gateway is running. If you’re stuck, restart the Gateway process (however you supervise it), or run it manually with verbose output:
 
 ```bash
-newclaw gateway --verbose
+iflow gateway --verbose
 ```
 
 If you’re logged out / unlinked:
 
 ```bash
-newclaw channels logout
-trash "${NEWCLAW_STATE_DIR:-$HOME/.newclaw}/credentials" # if logout can't cleanly remove everything
-newclaw channels login --verbose       # re-scan QR
+iflow channels logout
+trash "${IFLOW_STATE_DIR:-$HOME/.iflow}/credentials" # if logout can't cleanly remove everything
+iflow channels login --verbose       # re-scan QR
 ```
 
 ### Media Send Failing
@@ -439,12 +439,12 @@ ls -la /path/to/your/image.jpg
 **Check 3:** Check media logs
 
 ```bash
-grep "media\\|fetch\\|download" "$(ls -t /tmp/newclaw/newclaw-*.log | head -1)" | tail -20
+grep "media\\|fetch\\|download" "$(ls -t /tmp/iflow/iflow-*.log | head -1)" | tail -20
 ```
 
 ### High Memory Usage
 
-NewClaw keeps conversation history in memory.
+iFlow keeps conversation history in memory.
 
 **Fix:** Restart periodically or set session limits:
 
@@ -460,28 +460,28 @@ NewClaw keeps conversation history in memory.
 
 ### “Gateway won’t start — configuration invalid”
 
-NewClaw now refuses to start when the config contains unknown keys, malformed values, or invalid types.
+iFlow now refuses to start when the config contains unknown keys, malformed values, or invalid types.
 This is intentional for safety.
 
 Fix it with Doctor:
 
 ```bash
-newclaw doctor
-newclaw doctor --fix
+iflow doctor
+iflow doctor --fix
 ```
 
 Notes:
 
-- `newclaw doctor` reports every invalid entry.
-- `newclaw doctor --fix` applies migrations/repairs and rewrites the config.
-- Diagnostic commands like `newclaw logs`, `newclaw health`, `newclaw status`, `newclaw gateway status`, and `newclaw gateway probe` still run even if the config is invalid.
+- `iflow doctor` reports every invalid entry.
+- `iflow doctor --fix` applies migrations/repairs and rewrites the config.
+- Diagnostic commands like `iflow logs`, `iflow health`, `iflow status`, `iflow gateway status`, and `iflow gateway probe` still run even if the config is invalid.
 
 ### “All models failed” — what should I check first?
 
 - **Credentials** present for the provider(s) being tried (auth profiles + env vars).
 - **Model routing**: confirm `agents.defaults.model.primary` and fallbacks are models you can access.
-- **Gateway logs** in `/tmp/newclaw/…` for the exact provider error.
-- **Model status**: use `/model status` (chat) or `newclaw models status` (CLI).
+- **Gateway logs** in `/tmp/iflow/…` for the exact provider error.
+- **Model status**: use `/model status` (chat) or `iflow models status` (CLI).
 
 ### I’m running on my personal WhatsApp number — why is self-chat weird?
 
@@ -506,13 +506,13 @@ See [WhatsApp setup](/channels/whatsapp).
 Run the login command again and scan the QR code:
 
 ```bash
-newclaw channels login
+iflow channels login
 ```
 
 ### Build errors on `main` — what’s the standard fix path?
 
 1. `git pull origin main && pnpm install`
-2. `newclaw doctor`
+2. `iflow doctor`
 3. Check GitHub issues or Discord
 4. Temporary workaround: check out an older commit
 
@@ -527,8 +527,8 @@ Typical recovery:
 git status   # ensure you’re in the repo root
 pnpm install
 pnpm build
-newclaw doctor
-newclaw gateway restart
+iflow doctor
+iflow gateway restart
 ```
 
 Why: pnpm is the configured package manager for this repo.
@@ -541,13 +541,13 @@ upgrades in place and rewrites the gateway service to point at the new install.
 Switch **to git install**:
 
 ```bash
-curl -fsSL https://newclaw.ai/install.sh | bash -s -- --install-method git --no-onboard
+curl -fsSL https://iflow.ai/install.sh | bash -s -- --install-method git --no-onboard
 ```
 
 Switch **to npm global**:
 
 ```bash
-curl -fsSL https://newclaw.ai/install.sh | bash
+curl -fsSL https://iflow.ai/install.sh | bash
 ```
 
 Notes:
@@ -555,8 +555,8 @@ Notes:
 - The git flow only rebases if the repo is clean. Commit or stash changes first.
 - After switching, run:
   ```bash
-  newclaw doctor
-  newclaw gateway restart
+  iflow doctor
+  iflow gateway restart
   ```
 
 ### Telegram block streaming isn’t splitting text between tool calls. Why?
@@ -591,20 +591,20 @@ Fix checklist:
 3. Put `requireMention: false` **under** `channels.discord.guilds` (global or per‑channel).
    Top‑level `channels.discord.requireMention` is not a supported key.
 4. Ensure the bot has **Message Content Intent** and channel permissions.
-5. Run `newclaw channels status --probe` for audit hints.
+5. Run `iflow channels status --probe` for audit hints.
 
 Docs: [Discord](/channels/discord), [Channels troubleshooting](/channels/troubleshooting).
 
 ### Cloud Code Assist API error: invalid tool schema (400). What now?
 
 This is almost always a **tool schema compatibility** issue. The Cloud Code Assist
-endpoint accepts a strict subset of JSON Schema. NewClaw scrubs/normalizes tool
+endpoint accepts a strict subset of JSON Schema. iFlow scrubs/normalizes tool
 schemas in current `main`, but the fix is not in the last release yet (as of
 January 13, 2026).
 
 Fix checklist:
 
-1. **Update NewClaw**:
+1. **Update iFlow**:
    - If you can run from source, pull `main` and restart the gateway.
    - Otherwise, wait for the next release that includes the schema scrubber.
 2. Avoid unsupported keywords like `anyOf/oneOf/allOf`, `patternProperties`,
@@ -627,7 +627,7 @@ tccutil reset All bot.molt.mac.debug
 ```
 
 **Fix 2: Force New Bundle ID**
-If resetting doesn't work, change the `BUNDLE_ID` in [`scripts/package-mac-app.sh`](https://github.com/newclaw/newclaw/blob/main/scripts/package-mac-app.sh) (e.g., add a `.test` suffix) and rebuild. This forces macOS to treat it as a new app.
+If resetting doesn't work, change the `BUNDLE_ID` in [`scripts/package-mac-app.sh`](https://github.com/iflow/iflow/blob/main/scripts/package-mac-app.sh) (e.g., add a `.test` suffix) and rebuild. This forces macOS to treat it as a new app.
 
 ### Gateway stuck on "Starting..."
 
@@ -637,9 +637,9 @@ The app connects to a local gateway on port `18789`. If it stays stuck:
 If the gateway is supervised by launchd, killing the PID will just respawn it. Stop the supervisor first:
 
 ```bash
-newclaw gateway status
-newclaw gateway stop
-# Or: launchctl bootout gui/$UID/bot.molt.gateway (replace with bot.molt.<profile>; legacy com.newclaw.* still works)
+iflow gateway status
+iflow gateway stop
+# Or: launchctl bootout gui/$UID/bot.molt.gateway (replace with bot.molt.<profile>; legacy com.iflow.* still works)
 ```
 
 **Fix 2: Port is busy (find the listener)**
@@ -657,11 +657,11 @@ kill -9 <PID> # last resort
 ```
 
 **Fix 3: Check the CLI install**
-Ensure the global `newclaw` CLI is installed and matches the app version:
+Ensure the global `iflow` CLI is installed and matches the app version:
 
 ```bash
-newclaw --version
-npm install -g newclaw@<version>
+iflow --version
+npm install -g iflow@<version>
 ```
 
 ## Debug Mode
@@ -670,43 +670,43 @@ Get verbose logging:
 
 ```bash
 # Turn on trace logging in config:
-#   ${NEWCLAW_CONFIG_PATH:-$HOME/.newclaw/newclaw.json} -> { logging: { level: "trace" } }
+#   ${IFLOW_CONFIG_PATH:-$HOME/.iflow/iflow.json} -> { logging: { level: "trace" } }
 #
 # Then run verbose commands to mirror debug output to stdout:
-newclaw gateway --verbose
-newclaw channels login --verbose
+iflow gateway --verbose
+iflow channels login --verbose
 ```
 
 ## Log Locations
 
-| Log                               | Location                                                                                                                                                                                                                                                                                                               |
-| --------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Gateway file logs (structured)    | `/tmp/newclaw/newclaw-YYYY-MM-DD.log` (or `logging.file`)                                                                                                                                                                                                                                                              |
-| Gateway service logs (supervisor) | macOS: `$NEWCLAW_STATE_DIR/logs/gateway.log` + `gateway.err.log` (default: `~/.newclaw/logs/...`; profiles use `~/.newclaw-<profile>/logs/...`)<br />Linux: `journalctl --user -u newclaw-gateway[-<profile>].service -n 200 --no-pager`<br />Windows: `schtasks /Query /TN "NewClaw Gateway (<profile>)" /V /FO LIST` |
-| Session files                     | `$NEWCLAW_STATE_DIR/agents/<agentId>/sessions/`                                                                                                                                                                                                                                                                        |
-| Media cache                       | `$NEWCLAW_STATE_DIR/media/`                                                                                                                                                                                                                                                                                            |
-| Credentials                       | `$NEWCLAW_STATE_DIR/credentials/`                                                                                                                                                                                                                                                                                      |
+| Log                               | Location                                                                                                                                                                                                                                                                                                     |
+| --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Gateway file logs (structured)    | `/tmp/iflow/iflow-YYYY-MM-DD.log` (or `logging.file`)                                                                                                                                                                                                                                                        |
+| Gateway service logs (supervisor) | macOS: `$IFLOW_STATE_DIR/logs/gateway.log` + `gateway.err.log` (default: `~/.iflow/logs/...`; profiles use `~/.iflow-<profile>/logs/...`)<br />Linux: `journalctl --user -u iflow-gateway[-<profile>].service -n 200 --no-pager`<br />Windows: `schtasks /Query /TN "iFlow Gateway (<profile>)" /V /FO LIST` |
+| Session files                     | `$IFLOW_STATE_DIR/agents/<agentId>/sessions/`                                                                                                                                                                                                                                                                |
+| Media cache                       | `$IFLOW_STATE_DIR/media/`                                                                                                                                                                                                                                                                                    |
+| Credentials                       | `$IFLOW_STATE_DIR/credentials/`                                                                                                                                                                                                                                                                              |
 
 ## Health Check
 
 ```bash
 # Supervisor + probe target + config paths
-newclaw gateway status
+iflow gateway status
 # Include system-level scans (legacy/extra services, port listeners)
-newclaw gateway status --deep
+iflow gateway status --deep
 
 # Is the gateway reachable?
-newclaw health --json
+iflow health --json
 # If it fails, rerun with connection details:
-newclaw health --verbose
+iflow health --verbose
 
 # Is something listening on the default port?
 lsof -nP -iTCP:18789 -sTCP:LISTEN
 
 # Recent activity (RPC log tail)
-newclaw logs --follow
+iflow logs --follow
 # Fallback if RPC is down
-tail -20 /tmp/newclaw/newclaw-*.log
+tail -20 /tmp/iflow/iflow-*.log
 ```
 
 ## Reset Everything
@@ -714,23 +714,23 @@ tail -20 /tmp/newclaw/newclaw-*.log
 Nuclear option:
 
 ```bash
-newclaw gateway stop
+iflow gateway stop
 # If you installed a service and want a clean install:
-# newclaw gateway uninstall
+# iflow gateway uninstall
 
-trash "${NEWCLAW_STATE_DIR:-$HOME/.newclaw}"
-newclaw channels login         # re-pair WhatsApp
-newclaw gateway restart           # or: newclaw gateway
+trash "${IFLOW_STATE_DIR:-$HOME/.iflow}"
+iflow channels login         # re-pair WhatsApp
+iflow gateway restart           # or: iflow gateway
 ```
 
 ⚠️ This loses all sessions and requires re-pairing WhatsApp.
 
 ## Getting Help
 
-1. Check logs first: `/tmp/newclaw/` (default: `newclaw-YYYY-MM-DD.log`, or your configured `logging.file`)
+1. Check logs first: `/tmp/iflow/` (default: `iflow-YYYY-MM-DD.log`, or your configured `logging.file`)
 2. Search existing issues on GitHub
 3. Open a new issue with:
-   - NewClaw version
+   - iFlow version
    - Relevant log snippets
    - Steps to reproduce
    - Your config (redact secrets!)

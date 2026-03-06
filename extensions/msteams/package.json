@@ -1,20 +1,20 @@
 {
-  "name": "@newclaw/msteams",
+  "name": "@iflow/msteams",
   "version": "2026.2.2",
-  "description": "NewClaw Microsoft Teams channel plugin",
+  "description": "iFlow Microsoft Teams channel plugin",
   "type": "module",
   "dependencies": {
     "@microsoft/agents-hosting": "^1.2.3",
     "@microsoft/agents-hosting-express": "^1.2.3",
     "@microsoft/agents-hosting-extensions-teams": "^1.2.3",
     "express": "^5.2.1",
-    "newclaw": "workspace:*",
+    "iflow": "workspace:*",
     "proper-lockfile": "^4.1.2"
   },
   "devDependencies": {
-    "newclaw": "workspace:*"
+    "iflow": "workspace:*"
   },
-  "newclaw": {
+  "iflow": {
     "extensions": [
       "./index.ts"
     ],
@@ -31,7 +31,7 @@
       "order": 60
     },
     "install": {
-      "npmSpec": "@newclaw/msteams",
+      "npmSpec": "@iflow/msteams",
       "localPath": "extensions/msteams",
       "defaultChoice": "npm"
     }

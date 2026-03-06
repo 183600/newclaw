@@ -1,16 +1,16 @@
 import type {
   ChannelOnboardingAdapter,
   ChannelOnboardingDmPolicy,
-  NewClawConfig,
+  iFlowConfig,
   WizardPrompter,
-} from "newclaw/plugin-sdk";
+} from "iflow/plugin-sdk";
 import {
   addWildcardAllowFrom,
   DEFAULT_ACCOUNT_ID,
   normalizeAccountId,
   promptAccountId,
   promptChannelAccessConfig,
-} from "newclaw/plugin-sdk";
+} from "iflow/plugin-sdk";
 import type { ZcaFriend, ZcaGroup } from "./types.js";
 import {
   listZalouserAccountIds,
@@ -23,9 +23,9 @@ import { runZca, runZcaInteractive, checkZcaInstalled, parseJsonOutput } from ".
 const channel = "zalouser" as const;
 
 function setZalouserDmPolicy(
-  cfg: NewClawConfig,
+  cfg: iFlowConfig,
   dmPolicy: "pairing" | "allowlist" | "open" | "disabled",
-): NewClawConfig {
+): iFlowConfig {
   const allowFrom =
     dmPolicy === "open" ? addWildcardAllowFrom(cfg.channels?.zalouser?.allowFrom) : undefined;
   return {
@@ -38,7 +38,7 @@ function setZalouserDmPolicy(
         ...(allowFrom ? { allowFrom } : {}),
       },
     },
-  } as NewClawConfig;
+  } as iFlowConfig;
 }
 
 async function noteZalouserHelp(prompter: WizardPrompter): Promise<void> {
@@ -50,17 +50,17 @@ async function noteZalouserHelp(prompter: WizardPrompter): Promise<void> {
       "1) Install zca-cli",
       "2) You'll scan a QR code with your Zalo app",
       "",
-      "Docs: https://docs.newclaw.ai/channels/zalouser",
+      "Docs: https://docs.iflow.ai/channels/zalouser",
     ].join("\n"),
     "Zalo Personal Setup",
   );
 }
 
 async function promptZalouserAllowFrom(params: {
-  cfg: NewClawConfig;
+  cfg: iFlowConfig;
   prompter: WizardPrompter;
   accountId: string;
-}): Promise<NewClawConfig> {
+}): Promise<iFlowConfig> {
   const { cfg, prompter, accountId } = params;
   const resolved = resolveZalouserAccountSync({ cfg, accountId });
   const existingAllowFrom = resolved.config.allowFrom ?? [];
@@ -138,7 +138,7 @@ async function promptZalouserAllowFrom(params: {
             allowFrom: unique,
           },
         },
-      } as NewClawConfig;
+      } as iFlowConfig;
     }
 
     return {
@@ -159,15 +159,15 @@ async function promptZalouserAllowFrom(params: {
           },
         },
       },
-    } as NewClawConfig;
+    } as iFlowConfig;
   }
 }
 
 function setZalouserGroupPolicy(
-  cfg: NewClawConfig,
+  cfg: iFlowConfig,
   accountId: string,
   groupPolicy: "open" | "allowlist" | "disabled",
-): NewClawConfig {
+): iFlowConfig {
   if (accountId === DEFAULT_ACCOUNT_ID) {
     return {
       ...cfg,
@@ -179,7 +179,7 @@ function setZalouserGroupPolicy(
           groupPolicy,
         },
       },
-    } as NewClawConfig;
+    } as iFlowConfig;
   }
   return {
     ...cfg,
@@ -198,14 +198,14 @@ function setZalouserGroupPolicy(
         },
       },
     },
-  } as NewClawConfig;
+  } as iFlowConfig;
 }
 
 function setZalouserGroupAllowlist(
-  cfg: NewClawConfig,
+  cfg: iFlowConfig,
   accountId: string,
   groupKeys: string[],
-): NewClawConfig {
+): iFlowConfig {
   const groups = Object.fromEntries(groupKeys.map((key) => [key, { allow: true }]));
   if (accountId === DEFAULT_ACCOUNT_ID) {
     return {
@@ -218,7 +218,7 @@ function setZalouserGroupAllowlist(
           groups,
         },
       },
-    } as NewClawConfig;
+    } as iFlowConfig;
   }
   return {
     ...cfg,
@@ -237,11 +237,11 @@ function setZalouserGroupAllowlist(
         },
       },
     },
-  } as NewClawConfig;
+  } as iFlowConfig;
 }
 
 async function resolveZalouserGroups(params: {
-  cfg: NewClawConfig;
+  cfg: iFlowConfig;
   accountId: string;
   entries: string[];
 }): Promise<Array<{ input: string; resolved: boolean; id?: string }>> {
@@ -340,7 +340,7 @@ export const zalouserOnboardingAdapter: ChannelOnboardingAdapter = {
           "The `zca` binary was not found in PATH.",
           "",
           "Install zca-cli, then re-run onboarding:",
-          "Docs: https://docs.newclaw.ai/channels/zalouser",
+          "Docs: https://docs.iflow.ai/channels/zalouser",
         ].join("\n"),
         "Missing Dependency",
       );
@@ -417,7 +417,7 @@ export const zalouserOnboardingAdapter: ChannelOnboardingAdapter = {
             profile: account.profile !== "default" ? account.profile : undefined,
           },
         },
-      } as NewClawConfig;
+      } as iFlowConfig;
     } else {
       next = {
         ...next,
@@ -436,7 +436,7 @@ export const zalouserOnboardingAdapter: ChannelOnboardingAdapter = {
             },
           },
         },
-      } as NewClawConfig;
+      } as iFlowConfig;
     }
 
     if (forceAllowFrom) {

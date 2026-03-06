@@ -5,7 +5,7 @@ import { runCommandWithTimeout } from "../process/exec.js";
 import { formatDocsLink } from "../terminal/links.js";
 import { isRich, theme } from "../terminal/theme.js";
 
-const SEARCH_TOOL = "https://docs.newclaw.ai/mcp.SearchNewClaw";
+const SEARCH_TOOL = "https://docs.iflow.ai/mcp.SearchiFlow";
 const SEARCH_TIMEOUT_MS = 30_000;
 const DEFAULT_SNIPPET_MAX = 220;
 
@@ -160,13 +160,13 @@ async function renderMarkdown(markdown: string, runtime: RuntimeEnv) {
 export async function docsSearchCommand(queryParts: string[], runtime: RuntimeEnv) {
   const query = queryParts.join(" ").trim();
   if (!query) {
-    const docs = formatDocsLink("/", "docs.newclaw.ai");
+    const docs = formatDocsLink("/", "docs.iflow.ai");
     if (isRich()) {
       runtime.log(`${theme.muted("Docs:")} ${docs}`);
-      runtime.log(`${theme.muted("Search:")} ${formatCliCommand('newclaw docs "your query"')}`);
+      runtime.log(`${theme.muted("Search:")} ${formatCliCommand('iflow docs "your query"')}`);
     } else {
-      runtime.log("Docs: https://docs.newclaw.ai/");
-      runtime.log(`Search: ${formatCliCommand('newclaw docs "your query"')}`);
+      runtime.log("Docs: https://docs.iflow.ai/");
+      runtime.log(`Search: ${formatCliCommand('iflow docs "your query"')}`);
     }
     return;
   }

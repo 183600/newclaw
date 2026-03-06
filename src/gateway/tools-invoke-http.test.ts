@@ -10,8 +10,8 @@ installGatewayTestHooks({ scope: "suite" });
 
 beforeEach(() => {
   // Ensure these tests are not affected by host env vars.
-  delete process.env.NEWCLAW_GATEWAY_TOKEN;
-  delete process.env.NEWCLAW_GATEWAY_PASSWORD;
+  delete process.env.IFLOW_GATEWAY_TOKEN;
+  delete process.env.IFLOW_GATEWAY_PASSWORD;
 });
 
 const resolveGatewayToken = (): string => {

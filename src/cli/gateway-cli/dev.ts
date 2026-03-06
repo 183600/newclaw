@@ -32,7 +32,7 @@ async function loadDevTemplate(name: string, fallback: string): Promise<string> 
 
 const resolveDevWorkspaceDir = (env: NodeJS.ProcessEnv = process.env): string => {
   const baseDir = resolveDefaultAgentWorkspaceDir(env, os.homedir);
-  const profile = env.NEWCLAW_PROFILE?.trim().toLowerCase();
+  const profile = env.IFLOW_PROFILE?.trim().toLowerCase();
   if (profile === "dev") {
     return baseDir;
   }
@@ -60,7 +60,7 @@ async function ensureDevWorkspace(dir: string) {
   const [agents, soul, tools, identity, user] = await Promise.all([
     loadDevTemplate(
       "AGENTS.dev.md",
-      `# AGENTS.md - NewClaw Dev Workspace\n\nDefault dev workspace for newclaw gateway --dev.\n`,
+      `# AGENTS.md - iFlow Dev Workspace\n\nDefault dev workspace for iflow gateway --dev.\n`,
     ),
     loadDevTemplate(
       "SOUL.dev.md",

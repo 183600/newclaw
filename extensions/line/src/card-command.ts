@@ -1,4 +1,4 @@
-import type { LineChannelData, NewClawPluginApi, ReplyPayload } from "newclaw/plugin-sdk";
+import type { LineChannelData, iFlowPluginApi, ReplyPayload } from "iflow/plugin-sdk";
 import {
   createActionCard,
   createImageCard,
@@ -7,7 +7,7 @@ import {
   createReceiptCard,
   type CardAction,
   type ListItem,
-} from "newclaw/plugin-sdk";
+} from "iflow/plugin-sdk";
 
 const CARD_USAGE = `Usage: /card <type> "title" "body" [options]
 
@@ -154,7 +154,7 @@ function parseCardArgs(argsStr: string): {
   return result;
 }
 
-export function registerLineCardCommand(api: NewClawPluginApi): void {
+export function registerLineCardCommand(api: iFlowPluginApi): void {
   api.registerCommand({
     name: "card",
     description: "Send a rich card message (LINE).",

@@ -16,8 +16,8 @@ Native Linux companion apps are planned. Contributions are welcome if you want t
 ## Beginner quick path (VPS)
 
 1. Install Node 22+
-2. `npm i -g newclaw@latest`
-3. `newclaw onboard --install-daemon`
+2. `npm i -g iflow@latest`
+3. `iflow onboard --install-daemon`
 4. From your laptop: `ssh -N -L 18789:127.0.0.1:18789 <user>@<host>`
 5. Open `http://127.0.0.1:18789/` and paste your token
 
@@ -39,19 +39,19 @@ Step-by-step VPS guide: [exe.dev](/platforms/exe-dev)
 Use one of these:
 
 ```
-newclaw onboard --install-daemon
+iflow onboard --install-daemon
 ```
 
 Or:
 
 ```
-newclaw gateway install
+iflow gateway install
 ```
 
 Or:
 
 ```
-newclaw configure
+iflow configure
 ```
 
 Select **Gateway service** when prompted.
@@ -59,27 +59,27 @@ Select **Gateway service** when prompted.
 Repair/migrate:
 
 ```
-newclaw doctor
+iflow doctor
 ```
 
 ## System control (systemd user unit)
 
-NewClaw installs a systemd **user** service by default. Use a **system**
+iFlow installs a systemd **user** service by default. Use a **system**
 service for shared or always-on servers. The full unit example and guidance
 live in the [Gateway runbook](/gateway).
 
 Minimal setup:
 
-Create `~/.config/systemd/user/newclaw-gateway[-<profile>].service`:
+Create `~/.config/systemd/user/iflow-gateway[-<profile>].service`:
 
 ```
 [Unit]
-Description=NewClaw Gateway (profile: <profile>, v<version>)
+Description=iFlow Gateway (profile: <profile>, v<version>)
 After=network-online.target
 Wants=network-online.target
 
 [Service]
-ExecStart=/usr/local/bin/newclaw gateway --port 18789
+ExecStart=/usr/local/bin/iflow gateway --port 18789
 Restart=always
 RestartSec=5
 
@@ -90,5 +90,5 @@ WantedBy=default.target
 Enable it:
 
 ```
-systemctl --user enable --now newclaw-gateway[-<profile>].service
+systemctl --user enable --now iflow-gateway[-<profile>].service
 ```

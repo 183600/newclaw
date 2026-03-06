@@ -76,7 +76,7 @@ type ConnectedTarget = {
   targetInfo: TargetInfo;
 };
 
-const RELAY_AUTH_HEADER = "x-newclaw-relay-token";
+const RELAY_AUTH_HEADER = "x-iflow-relay-token";
 
 function headerValue(value: string | string[] | undefined): string | undefined {
   if (!value) {
@@ -293,9 +293,9 @@ export async function ensureChromeExtensionRelayServer(opts: {
       case "Browser.getVersion":
         return {
           protocolVersion: "1.3",
-          product: "Chrome/NewClaw-Extension-Relay",
+          product: "Chrome/iFlow-Extension-Relay",
           revision: "0",
-          userAgent: "NewClaw-Extension-Relay",
+          userAgent: "iFlow-Extension-Relay",
           jsVersion: "V8",
         };
       case "Browser.setDownloadBehavior":
@@ -399,7 +399,7 @@ export async function ensureChromeExtensionRelayServer(opts: {
       (req.method === "GET" || req.method === "PUT")
     ) {
       const payload: Record<string, unknown> = {
-        Browser: "NewClaw/extension-relay",
+        Browser: "iFlow/extension-relay",
         "Protocol-Version": "1.3",
       };
       // Only advertise the WS URL if a real extension is connected.

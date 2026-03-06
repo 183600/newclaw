@@ -2,7 +2,7 @@
 read_when:
   - 你想要索引或搜索语义记忆
   - 你正在调试记忆可用性或索引问题
-summary: "`newclaw memory`（status/index/search）的 CLI 参考"
+summary: "`iflow memory`（status/index/search）的 CLI 参考"
 title: memory
 x-i18n:
   generated_at: "2026-02-01T20:21:11Z"
@@ -13,7 +13,7 @@ x-i18n:
   workflow: 14
 ---
 
-# `newclaw memory`
+# `iflow memory`
 
 管理语义记忆的索引和搜索。
 由活跃的记忆插件提供（默认：`memory-core`；设置 `plugins.slots.memory = "none"` 可禁用）。
@@ -26,15 +26,15 @@ x-i18n:
 ## 示例
 
 ```bash
-newclaw memory status
-newclaw memory status --deep
-newclaw memory status --deep --index
-newclaw memory status --deep --index --verbose
-newclaw memory index
-newclaw memory index --verbose
-newclaw memory search "release checklist"
-newclaw memory status --agent main
-newclaw memory index --agent main --verbose
+iflow memory status
+iflow memory status --deep
+iflow memory status --deep --index
+iflow memory status --deep --index --verbose
+iflow memory index
+iflow memory index --verbose
+iflow memory search "release checklist"
+iflow memory status --agent main
+iflow memory index --agent main --verbose
 ```
 
 ## 选项

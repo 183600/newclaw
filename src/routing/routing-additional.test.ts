@@ -1,11 +1,11 @@
 import { describe, expect, it } from "vitest";
-import type { NewClawConfig } from "../config/config.js";
+import type { iFlowConfig } from "../config/config.js";
 import { resolveAgentRoute } from "./resolve-route.js";
 
 describe("routing additional edge cases", () => {
   describe("resolveAgentRoute edge cases", () => {
     it("handles empty configuration gracefully", () => {
-      const cfg: NewClawConfig = {};
+      const cfg: iFlowConfig = {};
       const route = resolveAgentRoute({
         cfg,
         channel: "",
@@ -19,7 +19,7 @@ describe("routing additional edge cases", () => {
     });
 
     it("handles malformed bindings gracefully", () => {
-      const cfg: NewClawConfig = {
+      const cfg: iFlowConfig = {
         agents: {
           bindings: [
             null as unknown,
@@ -41,7 +41,7 @@ describe("routing additional edge cases", () => {
     });
 
     it("handles whitespace-only inputs", () => {
-      const cfg: NewClawConfig = {};
+      const cfg: iFlowConfig = {};
       const route = resolveAgentRoute({
         cfg,
         channel: "   ",
@@ -54,7 +54,7 @@ describe("routing additional edge cases", () => {
     });
 
     it("handles special characters in IDs", () => {
-      const cfg: NewClawConfig = {
+      const cfg: iFlowConfig = {
         agents: {
           bindings: [
             {
@@ -79,7 +79,7 @@ describe("routing additional edge cases", () => {
     });
 
     it("respects binding priority order", () => {
-      const cfg: NewClawConfig = {
+      const cfg: iFlowConfig = {
         agents: {
           bindings: [
             {
@@ -112,7 +112,7 @@ describe("routing additional edge cases", () => {
     });
 
     it("handles case-insensitive matching", () => {
-      const cfg: NewClawConfig = {
+      const cfg: iFlowConfig = {
         agents: {
           bindings: [
             {
@@ -137,7 +137,7 @@ describe("routing additional edge cases", () => {
     });
 
     it("handles parent peer inheritance correctly", () => {
-      const cfg: NewClawConfig = {
+      const cfg: iFlowConfig = {
         agents: {
           bindings: [
             {
@@ -163,7 +163,7 @@ describe("routing additional edge cases", () => {
     });
 
     it("handles guild and team ID matching", () => {
-      const cfg: NewClawConfig = {
+      const cfg: iFlowConfig = {
         agents: {
           bindings: [
             {
@@ -208,7 +208,7 @@ describe("routing additional edge cases", () => {
     });
 
     it("handles wildcard account matching", () => {
-      const cfg: NewClawConfig = {
+      const cfg: iFlowConfig = {
         agents: {
           bindings: [
             {
@@ -232,7 +232,7 @@ describe("routing additional edge cases", () => {
     });
 
     it("prefers specific account over wildcard", () => {
-      const cfg: NewClawConfig = {
+      const cfg: iFlowConfig = {
         agents: {
           bindings: [
             {
@@ -264,7 +264,7 @@ describe("routing additional edge cases", () => {
     });
 
     it("handles missing agent list gracefully", () => {
-      const cfg: NewClawConfig = {
+      const cfg: iFlowConfig = {
         agents: {
           list: [{ id: "main" }],
           bindings: [
@@ -298,7 +298,7 @@ describe("routing additional edge cases", () => {
       ];
 
       testCases.forEach(({ dmScope, expectedKey }) => {
-        const cfg: NewClawConfig = {
+        const cfg: iFlowConfig = {
           session: { dmScope: dmScope as unknown },
         };
         const route = resolveAgentRoute({
@@ -314,7 +314,7 @@ describe("routing additional edge cases", () => {
 
   describe("routing integration tests", () => {
     it("handles complex multi-channel routing", () => {
-      const cfg: NewClawConfig = {
+      const cfg: iFlowConfig = {
         agents: {
           bindings: [
             {
@@ -373,7 +373,7 @@ describe("routing additional edge cases", () => {
     });
 
     it("handles identity links across channels", () => {
-      const cfg: NewClawConfig = {
+      const cfg: iFlowConfig = {
         session: {
           dmScope: "per-peer",
           identityLinks: {

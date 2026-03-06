@@ -3,7 +3,7 @@ import { Type } from "@sinclair/typebox";
 import { describe, expect, it } from "vitest";
 import { loadConfig } from "../config/config.js";
 import { isTruthyEnvValue } from "../infra/env.js";
-import { resolveNewClawAgentDir } from "./agent-paths.js";
+import { resolveiFlowAgentDir } from "./agent-paths.js";
 import {
   collectAnthropicApiKeys,
   isAnthropicBillingError,
@@ -11,13 +11,13 @@ import {
 } from "./live-auth-keys.js";
 import { isModernModelRef } from "./live-model-filter.js";
 import { getApiKeyForModel, requireApiKey } from "./model-auth.js";
-import { ensureNewClawModelsJson } from "./models-config.js";
+import { ensureiFlowModelsJson } from "./models-config.js";
 import { isRateLimitErrorMessage } from "./pi-embedded-helpers/errors.js";
 import { discoverAuthStorage, discoverModels } from "./pi-model-discovery.js";
 
-const LIVE = isTruthyEnvValue(process.env.LIVE) || isTruthyEnvValue(process.env.NEWCLAW_LIVE_TEST);
-const DIRECT_ENABLED = Boolean(process.env.NEWCLAW_LIVE_MODELS?.trim());
-const REQUIRE_PROFILE_KEYS = isTruthyEnvValue(process.env.NEWCLAW_LIVE_REQUIRE_PROFILE_KEYS);
+const LIVE = isTruthyEnvValue(process.env.LIVE) || isTruthyEnvValue(process.env.IFLOW_LIVE_TEST);
+const DIRECT_ENABLED = Boolean(process.env.IFLOW_LIVE_MODELS?.trim());
+const REQUIRE_PROFILE_KEYS = isTruthyEnvValue(process.env.IFLOW_LIVE_REQUIRE_PROFILE_KEYS);
 
 const describeLive = LIVE ? describe : describe.skip;
 
@@ -179,11 +179,9 @@ describeLive("live models (profile keys)", () => {
     "completes across selected models",
     async () => {
       const cfg = loadConfig();
-      await ensureNewClawModelsJson(cfg);
+      await ensureiFlowModelsJson(cfg);
       if (!DIRECT_ENABLED) {
-        logProgress(
-          "[live-models] skipping (set NEWCLAW_LIVE_MODELS=modern|all|<list>; all=modern)",
-        );
+        logProgress("[live-models] skipping (set IFLOW_LIVE_MODELS=modern|all|<list>; all=modern)");
         return;
       }
       const anthropicKeys = collectAnthropicApiKeys();
@@ -192,18 +190,18 @@ describeLive("live models (profile keys)", () => {
         logProgress(`[live-models] anthropic keys loaded: ${anthropicKeys.length}`);
       }
 
-      const agentDir = resolveNewClawAgentDir();
+      const agentDir = resolveiFlowAgentDir();
       const authStorage = discoverAuthStorage(agentDir);
       const modelRegistry = discoverModels(authStorage, agentDir);
       const models = modelRegistry.getAll();
 
-      const rawModels = process.env.NEWCLAW_LIVE_MODELS?.trim();
+      const rawModels = process.env.IFLOW_LIVE_MODELS?.trim();
       const useModern = rawModels === "modern" || rawModels === "all";
       const useExplicit = Boolean(rawModels) && !useModern;
       const filter = useExplicit ? parseModelFilter(rawModels) : null;
       const allowNotFoundSkip = useModern;
-      const providers = parseProviderFilter(process.env.NEWCLAW_LIVE_PROVIDERS);
-      const perModelTimeoutMs = toInt(process.env.NEWCLAW_LIVE_MODEL_TIMEOUT_MS, 30_000);
+      const providers = parseProviderFilter(process.env.IFLOW_LIVE_PROVIDERS);
+      const perModelTimeoutMs = toInt(process.env.IFLOW_LIVE_MODEL_TIMEOUT_MS, 30_000);
 
       const failures: Array<{ model: string; error: string }> = [];
       const skipped: Array<{ model: string; reason: string }> = [];

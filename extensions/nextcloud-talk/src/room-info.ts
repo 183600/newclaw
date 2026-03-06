@@ -1,4 +1,4 @@
-import type { RuntimeEnv } from "newclaw/plugin-sdk";
+import type { RuntimeEnv } from "iflow/plugin-sdk";
 import { readFileSync } from "node:fs";
 import type { ResolvedNextcloudTalkAccount } from "./accounts.js";
 

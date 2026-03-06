@@ -3,33 +3,33 @@ set -euo pipefail
 
 cd /repo
 
-export NEWCLAW_STATE_DIR="/tmp/newclaw-test"
-export NEWCLAW_CONFIG_PATH="${NEWCLAW_STATE_DIR}/newclaw.json"
+export IFLOW_STATE_DIR="/tmp/iflow-test"
+export IFLOW_CONFIG_PATH="${IFLOW_STATE_DIR}/iflow.json"
 
 echo "==> Build"
 pnpm build
 
 echo "==> Seed state"
-mkdir -p "${NEWCLAW_STATE_DIR}/credentials"
-mkdir -p "${NEWCLAW_STATE_DIR}/agents/main/sessions"
-echo '{}' >"${NEWCLAW_CONFIG_PATH}"
-echo 'creds' >"${NEWCLAW_STATE_DIR}/credentials/marker.txt"
-echo 'session' >"${NEWCLAW_STATE_DIR}/agents/main/sessions/sessions.json"
+mkdir -p "${IFLOW_STATE_DIR}/credentials"
+mkdir -p "${IFLOW_STATE_DIR}/agents/main/sessions"
+echo '{}' >"${IFLOW_CONFIG_PATH}"
+echo 'creds' >"${IFLOW_STATE_DIR}/credentials/marker.txt"
+echo 'session' >"${IFLOW_STATE_DIR}/agents/main/sessions/sessions.json"
 
 echo "==> Reset (config+creds+sessions)"
-pnpm newclaw reset --scope config+creds+sessions --yes --non-interactive
+pnpm iflow reset --scope config+creds+sessions --yes --non-interactive
 
-test ! -f "${NEWCLAW_CONFIG_PATH}"
-test ! -d "${NEWCLAW_STATE_DIR}/credentials"
-test ! -d "${NEWCLAW_STATE_DIR}/agents/main/sessions"
+test ! -f "${IFLOW_CONFIG_PATH}"
+test ! -d "${IFLOW_STATE_DIR}/credentials"
+test ! -d "${IFLOW_STATE_DIR}/agents/main/sessions"
 
 echo "==> Recreate minimal config"
-mkdir -p "${NEWCLAW_STATE_DIR}/credentials"
-echo '{}' >"${NEWCLAW_CONFIG_PATH}"
+mkdir -p "${IFLOW_STATE_DIR}/credentials"
+echo '{}' >"${IFLOW_CONFIG_PATH}"
 
 echo "==> Uninstall (state only)"
-pnpm newclaw uninstall --state --yes --non-interactive
+pnpm iflow uninstall --state --yes --non-interactive
 
-test ! -d "${NEWCLAW_STATE_DIR}"
+test ! -d "${IFLOW_STATE_DIR}"
 
 echo "OK"

@@ -2,11 +2,11 @@ import { createJiti } from "jiti";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import type { NewClawConfig } from "../config/config.js";
+import type { iFlowConfig } from "../config/config.js";
 import type { GatewayRequestHandler } from "../gateway/server-methods/types.js";
 import type {
-  NewClawPluginDefinition,
-  NewClawPluginModule,
+  iFlowPluginDefinition,
+  iFlowPluginModule,
   PluginDiagnostic,
   PluginLogger,
 } from "./types.js";
@@ -19,7 +19,7 @@ import {
   resolveMemorySlotDecision,
   type NormalizedPluginsConfig,
 } from "./config-state.js";
-import { discoverNewClawPlugins } from "./discovery.js";
+import { discoveriFlowPlugins } from "./discovery.js";
 import { initializeGlobalHookRunner } from "./hook-runner-global.js";
 import { loadPluginManifestRegistry } from "./manifest-registry.js";
 import { createPluginRegistry, type PluginRecord, type PluginRegistry } from "./registry.js";
@@ -30,7 +30,7 @@ import { validateJsonSchemaValue } from "./schema-validator.js";
 export type PluginLoadResult = PluginRegistry;
 
 export type PluginLoadOptions = {
-  config?: NewClawConfig;
+  config?: iFlowConfig;
   workspaceDir?: string;
   logger?: PluginLogger;
   coreGatewayHandlers?: Record<string, GatewayRequestHandler>;
@@ -103,8 +103,8 @@ function validatePluginConfig(params: {
 }
 
 function resolvePluginModuleExport(moduleExport: unknown): {
-  definition?: NewClawPluginDefinition;
-  register?: NewClawPluginDefinition["register"];
+  definition?: iFlowPluginDefinition;
+  register?: iFlowPluginDefinition["register"];
 } {
   const resolved =
     moduleExport &&
@@ -114,11 +114,11 @@ function resolvePluginModuleExport(moduleExport: unknown): {
       : moduleExport;
   if (typeof resolved === "function") {
     return {
-      register: resolved as NewClawPluginDefinition["register"],
+      register: resolved as iFlowPluginDefinition["register"],
     };
   }
   if (resolved && typeof resolved === "object") {
-    const def = resolved as NewClawPluginDefinition;
+    const def = resolved as iFlowPluginDefinition;
     const register = def.register ?? def.activate;
     return { definition: def, register };
   }
@@ -166,7 +166,7 @@ function pushDiagnostics(diagnostics: PluginDiagnostic[], append: PluginDiagnost
   diagnostics.push(...append);
 }
 
-export function loadNewClawPlugins(options: PluginLoadOptions = {}): PluginRegistry {
+export function loadiFlowPlugins(options: PluginLoadOptions = {}): PluginRegistry {
   const cfg = options.config ?? {};
   const logger = options.logger ?? defaultLogger();
   const validateOnly = options.mode === "validate";
@@ -194,7 +194,7 @@ export function loadNewClawPlugins(options: PluginLoadOptions = {}): PluginRegis
     coreGatewayHandlers: options.coreGatewayHandlers as Record<string, GatewayRequestHandler>,
   });
 
-  const discovery = discoverNewClawPlugins({
+  const discovery = discoveriFlowPlugins({
     workspaceDir: options.workspaceDir,
     extraPaths: normalized.loadPaths,
   });
@@ -213,7 +213,7 @@ export function loadNewClawPlugins(options: PluginLoadOptions = {}): PluginRegis
     extensions: [".ts", ".tsx", ".mts", ".cts", ".mtsx", ".ctsx", ".js", ".mjs", ".cjs", ".json"],
     ...(pluginSdkAlias
       ? {
-          alias: { "newclaw/plugin-sdk": pluginSdkAlias },
+          alias: { "iflow/plugin-sdk": pluginSdkAlias },
         }
       : {}),
   });
@@ -305,9 +305,9 @@ export function loadNewClawPlugins(options: PluginLoadOptions = {}): PluginRegis
       continue;
     }
 
-    let mod: NewClawPluginModule | null = null;
+    let mod: iFlowPluginModule | null = null;
     try {
-      mod = jiti(candidate.source) as NewClawPluginModule;
+      mod = jiti(candidate.source) as iFlowPluginModule;
     } catch (err) {
       logger.error(`[plugins] ${record.id} failed to load from ${record.source}: ${String(err)}`);
       record.status = "error";

@@ -1,6 +1,6 @@
 import path from "node:path";
 import type { RuntimeEnv } from "../../runtime.js";
-import { resolveNewClawAgentDir } from "../../agents/agent-paths.js";
+import { resolveiFlowAgentDir } from "../../agents/agent-paths.js";
 import {
   resolveAgentDir,
   resolveAgentModelFallbacksOverride,
@@ -74,7 +74,7 @@ export async function modelsStatusCommand(
   }
   const cfg = loadConfig();
   const agentId = resolveKnownAgentId({ cfg, rawAgentId: opts.agent });
-  const agentDir = agentId ? resolveAgentDir(cfg, agentId) : resolveNewClawAgentDir();
+  const agentDir = agentId ? resolveAgentDir(cfg, agentId) : resolveiFlowAgentDir();
   const agentModelPrimary = agentId ? resolveAgentModelPrimary(cfg, agentId) : undefined;
   const agentFallbacksOverride = agentId
     ? resolveAgentModelFallbacksOverride(cfg, agentId)
@@ -542,8 +542,8 @@ export async function modelsStatusCommand(
     for (const provider of missingProvidersInUse) {
       const hint =
         provider === "anthropic"
-          ? `Run \`claude setup-token\`, then \`${formatCliCommand("newclaw models auth setup-token")}\` or \`${formatCliCommand("newclaw configure")}\`.`
-          : `Run \`${formatCliCommand("newclaw configure")}\` or set an API key env var.`;
+          ? `Run \`claude setup-token\`, then \`${formatCliCommand("iflow models auth setup-token")}\` or \`${formatCliCommand("iflow configure")}\`.`
+          : `Run \`${formatCliCommand("iflow configure")}\` or set an API key env var.`;
       runtime.log(`- ${theme.heading(provider)} ${hint}`);
     }
   }

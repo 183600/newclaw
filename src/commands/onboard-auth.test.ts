@@ -24,16 +24,16 @@ import {
 
 const authProfilePathFor = (agentDir: string) => path.join(agentDir, "auth-profiles.json");
 const requireAgentDir = () => {
-  const agentDir = process.env.NEWCLAW_AGENT_DIR;
+  const agentDir = process.env.IFLOW_AGENT_DIR;
   if (!agentDir) {
-    throw new Error("NEWCLAW_AGENT_DIR not set");
+    throw new Error("IFLOW_AGENT_DIR not set");
   }
   return agentDir;
 };
 
 describe("writeOAuthCredentials", () => {
-  const previousStateDir = process.env.NEWCLAW_STATE_DIR;
-  const previousAgentDir = process.env.NEWCLAW_AGENT_DIR;
+  const previousStateDir = process.env.IFLOW_STATE_DIR;
+  const previousAgentDir = process.env.IFLOW_AGENT_DIR;
   const previousPiAgentDir = process.env.PI_CODING_AGENT_DIR;
   let tempStateDir: string | null = null;
 
@@ -43,28 +43,28 @@ describe("writeOAuthCredentials", () => {
       tempStateDir = null;
     }
     if (previousStateDir === undefined) {
-      delete process.env.NEWCLAW_STATE_DIR;
+      delete process.env.IFLOW_STATE_DIR;
     } else {
-      process.env.NEWCLAW_STATE_DIR = previousStateDir;
+      process.env.IFLOW_STATE_DIR = previousStateDir;
     }
     if (previousAgentDir === undefined) {
-      delete process.env.NEWCLAW_AGENT_DIR;
+      delete process.env.IFLOW_AGENT_DIR;
     } else {
-      process.env.NEWCLAW_AGENT_DIR = previousAgentDir;
+      process.env.IFLOW_AGENT_DIR = previousAgentDir;
     }
     if (previousPiAgentDir === undefined) {
       delete process.env.PI_CODING_AGENT_DIR;
     } else {
       process.env.PI_CODING_AGENT_DIR = previousPiAgentDir;
     }
-    delete process.env.NEWCLAW_OAUTH_DIR;
+    delete process.env.IFLOW_OAUTH_DIR;
   });
 
-  it("writes auth-profiles.json under NEWCLAW_AGENT_DIR when set", async () => {
-    tempStateDir = await fs.mkdtemp(path.join(os.tmpdir(), "newclaw-oauth-"));
-    process.env.NEWCLAW_STATE_DIR = tempStateDir;
-    process.env.NEWCLAW_AGENT_DIR = path.join(tempStateDir, "agent");
-    process.env.PI_CODING_AGENT_DIR = process.env.NEWCLAW_AGENT_DIR;
+  it("writes auth-profiles.json under IFLOW_AGENT_DIR when set", async () => {
+    tempStateDir = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-oauth-"));
+    process.env.IFLOW_STATE_DIR = tempStateDir;
+    process.env.IFLOW_AGENT_DIR = path.join(tempStateDir, "agent");
+    process.env.PI_CODING_AGENT_DIR = process.env.IFLOW_AGENT_DIR;
 
     const creds = {
       refresh: "refresh-token",
@@ -92,8 +92,8 @@ describe("writeOAuthCredentials", () => {
 });
 
 describe("setMinimaxApiKey", () => {
-  const previousStateDir = process.env.NEWCLAW_STATE_DIR;
-  const previousAgentDir = process.env.NEWCLAW_AGENT_DIR;
+  const previousStateDir = process.env.IFLOW_STATE_DIR;
+  const previousAgentDir = process.env.IFLOW_AGENT_DIR;
   const previousPiAgentDir = process.env.PI_CODING_AGENT_DIR;
   let tempStateDir: string | null = null;
 
@@ -103,14 +103,14 @@ describe("setMinimaxApiKey", () => {
       tempStateDir = null;
     }
     if (previousStateDir === undefined) {
-      delete process.env.NEWCLAW_STATE_DIR;
+      delete process.env.IFLOW_STATE_DIR;
     } else {
-      process.env.NEWCLAW_STATE_DIR = previousStateDir;
+      process.env.IFLOW_STATE_DIR = previousStateDir;
     }
     if (previousAgentDir === undefined) {
-      delete process.env.NEWCLAW_AGENT_DIR;
+      delete process.env.IFLOW_AGENT_DIR;
     } else {
-      process.env.NEWCLAW_AGENT_DIR = previousAgentDir;
+      process.env.IFLOW_AGENT_DIR = previousAgentDir;
     }
     if (previousPiAgentDir === undefined) {
       delete process.env.PI_CODING_AGENT_DIR;
@@ -119,11 +119,11 @@ describe("setMinimaxApiKey", () => {
     }
   });
 
-  it("writes to NEWCLAW_AGENT_DIR when set", async () => {
-    tempStateDir = await fs.mkdtemp(path.join(os.tmpdir(), "newclaw-minimax-"));
-    process.env.NEWCLAW_STATE_DIR = tempStateDir;
-    process.env.NEWCLAW_AGENT_DIR = path.join(tempStateDir, "custom-agent");
-    process.env.PI_CODING_AGENT_DIR = process.env.NEWCLAW_AGENT_DIR;
+  it("writes to IFLOW_AGENT_DIR when set", async () => {
+    tempStateDir = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-minimax-"));
+    process.env.IFLOW_STATE_DIR = tempStateDir;
+    process.env.IFLOW_AGENT_DIR = path.join(tempStateDir, "custom-agent");
+    process.env.PI_CODING_AGENT_DIR = process.env.IFLOW_AGENT_DIR;
 
     await setMinimaxApiKey("sk-minimax-test");
 

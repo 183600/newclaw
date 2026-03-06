@@ -1,7 +1,7 @@
 ---
-summary: "Use Z.AI (GLM models) with NewClaw"
+summary: "Use Z.AI (GLM models) with iFlow"
 read_when:
-  - You want Z.AI / GLM models in NewClaw
+  - You want Z.AI / GLM models in iFlow
   - You need a simple ZAI_API_KEY setup
 title: "Z.AI"
 ---
@@ -9,15 +9,15 @@ title: "Z.AI"
 # Z.AI
 
 Z.AI is the API platform for **GLM** models. It provides REST APIs for GLM and uses API keys
-for authentication. Create your API key in the Z.AI console. NewClaw uses the `zai` provider
+for authentication. Create your API key in the Z.AI console. iFlow uses the `zai` provider
 with a Z.AI API key.
 
 ## CLI setup
 
 ```bash
-newclaw onboard --auth-choice zai-api-key
+iflow onboard --auth-choice zai-api-key
 # or non-interactive
-newclaw onboard --zai-api-key "$ZAI_API_KEY"
+iflow onboard --zai-api-key "$ZAI_API_KEY"
 ```
 
 ## Config snippet

@@ -8,14 +8,14 @@ title: "Hooks"
 
 # Hooks
 
-Hooks provide an extensible event-driven system for automating actions in response to agent commands and events. Hooks are automatically discovered from directories and can be managed via CLI commands, similar to how skills work in NewClaw.
+Hooks provide an extensible event-driven system for automating actions in response to agent commands and events. Hooks are automatically discovered from directories and can be managed via CLI commands, similar to how skills work in iFlow.
 
 ## Getting Oriented
 
 Hooks are small scripts that run when something happens. There are two kinds:
 
 - **Hooks** (this page): run inside the Gateway when agent events fire, like `/new`, `/reset`, `/stop`, or lifecycle events.
-- **Webhooks**: external HTTP webhooks that let other systems trigger work in NewClaw. See [Webhook Hooks](/automation/webhook) or use `newclaw webhooks` for Gmail helper commands.
+- **Webhooks**: external HTTP webhooks that let other systems trigger work in iFlow. See [Webhook Hooks](/automation/webhook) or use `iflow webhooks` for Gmail helper commands.
 
 Hooks can also be bundled inside plugins; see [Plugins](/plugin#plugin-hooks).
 
@@ -35,54 +35,54 @@ The hooks system allows you to:
 - Save session context to memory when `/new` is issued
 - Log all commands for auditing
 - Trigger custom automations on agent lifecycle events
-- Extend NewClaw's behavior without modifying core code
+- Extend iFlow's behavior without modifying core code
 
 ## Getting Started
 
 ### Bundled Hooks
 
-NewClaw ships with four bundled hooks that are automatically discovered:
+iFlow ships with four bundled hooks that are automatically discovered:
 
-- **💾 session-memory**: Saves session context to your agent workspace (default `~/.newclaw/workspace/memory/`) when you issue `/new`
-- **📝 command-logger**: Logs all command events to `~/.newclaw/logs/commands.log`
+- **💾 session-memory**: Saves session context to your agent workspace (default `~/.iflow/workspace/memory/`) when you issue `/new`
+- **📝 command-logger**: Logs all command events to `~/.iflow/logs/commands.log`
 - **🚀 boot-md**: Runs `BOOT.md` when the gateway starts (requires internal hooks enabled)
 - **😈 soul-evil**: Swaps injected `SOUL.md` content with `SOUL_EVIL.md` during a purge window or by random chance
 
 List available hooks:
 
 ```bash
-newclaw hooks list
+iflow hooks list
 ```
 
 Enable a hook:
 
 ```bash
-newclaw hooks enable session-memory
+iflow hooks enable session-memory
 ```
 
 Check hook status:
 
 ```bash
-newclaw hooks check
+iflow hooks check
 ```
 
 Get detailed information:
 
 ```bash
-newclaw hooks info session-memory
+iflow hooks info session-memory
 ```
 
 ### Onboarding
 
-During onboarding (`newclaw onboard`), you'll be prompted to enable recommended hooks. The wizard automatically discovers eligible hooks and presents them for selection.
+During onboarding (`iflow onboard`), you'll be prompted to enable recommended hooks. The wizard automatically discovers eligible hooks and presents them for selection.
 
 ## Hook Discovery
 
 Hooks are automatically discovered from three directories (in order of precedence):
 
 1. **Workspace hooks**: `<workspace>/hooks/` (per-agent, highest precedence)
-2. **Managed hooks**: `~/.newclaw/hooks/` (user-installed, shared across workspaces)
-3. **Bundled hooks**: `<newclaw>/dist/hooks/bundled/` (shipped with NewClaw)
+2. **Managed hooks**: `~/.iflow/hooks/` (user-installed, shared across workspaces)
+3. **Bundled hooks**: `<iflow>/dist/hooks/bundled/` (shipped with iFlow)
 
 Managed hook directories can be either a **single hook** or a **hook pack** (package directory).
 
@@ -96,11 +96,11 @@ my-hook/
 
 ## Hook Packs (npm/archives)
 
-Hook packs are standard npm packages that export one or more hooks via `newclaw.hooks` in
+Hook packs are standard npm packages that export one or more hooks via `iflow.hooks` in
 `package.json`. Install them with:
 
 ```bash
-newclaw hooks install <path-or-spec>
+iflow hooks install <path-or-spec>
 ```
 
 Example `package.json`:
@@ -109,14 +109,14 @@ Example `package.json`:
 {
   "name": "@acme/my-hooks",
   "version": "0.1.0",
-  "newclaw": {
+  "iflow": {
     "hooks": ["./hooks/my-hook", "./hooks/other-hook"]
   }
 }
 ```
 
 Each entry points to a hook directory containing `HOOK.md` and `handler.ts` (or `index.ts`).
-Hook packs can ship dependencies; they will be installed under `~/.newclaw/hooks/<id>`.
+Hook packs can ship dependencies; they will be installed under `~/.iflow/hooks/<id>`.
 
 ## Hook Structure
 
@@ -128,9 +128,9 @@ The `HOOK.md` file contains metadata in YAML frontmatter plus Markdown documenta
 ---
 name: my-hook
 description: "Short description of what this hook does"
-homepage: https://docs.newclaw.ai/hooks#my-hook
+homepage: https://docs.iflow.ai/hooks#my-hook
 metadata:
-  { "newclaw": { "emoji": "🔗", "events": ["command:new"], "requires": { "bins": ["node"] } } }
+  { "iflow": { "emoji": "🔗", "events": ["command:new"], "requires": { "bins": ["node"] } } }
 ---
 
 # My Hook
@@ -154,7 +154,7 @@ No configuration needed.
 
 ### Metadata Fields
 
-The `metadata.newclaw` object supports:
+The `metadata.iflow` object supports:
 
 - **`emoji`**: Display emoji for CLI (e.g., `"💾"`)
 - **`events`**: Array of events to listen for (e.g., `["command:new", "command:reset"]`)
@@ -214,7 +214,7 @@ Each event includes:
     senderId?: string,
     workspaceDir?: string,
     bootstrapFiles?: WorkspaceBootstrapFile[],
-    cfg?: NewClawConfig
+    cfg?: iFlowConfig
   }
 }
 ```
@@ -242,7 +242,7 @@ Triggered when the gateway starts:
 
 ### Tool Result Hooks (Plugin API)
 
-These hooks are not event-stream listeners; they let plugins synchronously adjust tool results before NewClaw persists them.
+These hooks are not event-stream listeners; they let plugins synchronously adjust tool results before iFlow persists them.
 
 - **`tool_result_persist`**: transform tool results before they are written to the session transcript. Must be synchronous; return the updated tool result payload or `undefined` to keep it as-is. See [Agent Loop](/concepts/agent-loop).
 
@@ -261,13 +261,13 @@ Planned event types:
 ### 1. Choose Location
 
 - **Workspace hooks** (`<workspace>/hooks/`): Per-agent, highest precedence
-- **Managed hooks** (`~/.newclaw/hooks/`): Shared across workspaces
+- **Managed hooks** (`~/.iflow/hooks/`): Shared across workspaces
 
 ### 2. Create Directory Structure
 
 ```bash
-mkdir -p ~/.newclaw/hooks/my-hook
-cd ~/.newclaw/hooks/my-hook
+mkdir -p ~/.iflow/hooks/my-hook
+cd ~/.iflow/hooks/my-hook
 ```
 
 ### 3. Create HOOK.md
@@ -276,7 +276,7 @@ cd ~/.newclaw/hooks/my-hook
 ---
 name: my-hook
 description: "Does something useful"
-metadata: { "newclaw": { "emoji": "🎯", "events": ["command:new"] } }
+metadata: { "iflow": { "emoji": "🎯", "events": ["command:new"] } }
 ---
 
 # My Custom Hook
@@ -305,10 +305,10 @@ export default handler;
 
 ```bash
 # Verify hook is discovered
-newclaw hooks list
+iflow hooks list
 
 # Enable it
-newclaw hooks enable my-hook
+iflow hooks enable my-hook
 
 # Restart your gateway process (menu bar app restart on macOS, or restart your dev process)
 
@@ -402,46 +402,46 @@ The old config format still works for backwards compatibility:
 
 ```bash
 # List all hooks
-newclaw hooks list
+iflow hooks list
 
 # Show only eligible hooks
-newclaw hooks list --eligible
+iflow hooks list --eligible
 
 # Verbose output (show missing requirements)
-newclaw hooks list --verbose
+iflow hooks list --verbose
 
 # JSON output
-newclaw hooks list --json
+iflow hooks list --json
 ```
 
 ### Hook Information
 
 ```bash
 # Show detailed info about a hook
-newclaw hooks info session-memory
+iflow hooks info session-memory
 
 # JSON output
-newclaw hooks info session-memory --json
+iflow hooks info session-memory --json
 ```
 
 ### Check Eligibility
 
 ```bash
 # Show eligibility summary
-newclaw hooks check
+iflow hooks check
 
 # JSON output
-newclaw hooks check --json
+iflow hooks check --json
 ```
 
 ### Enable/Disable
 
 ```bash
 # Enable a hook
-newclaw hooks enable session-memory
+iflow hooks enable session-memory
 
 # Disable a hook
-newclaw hooks disable command-logger
+iflow hooks disable command-logger
 ```
 
 ## Bundled Hooks
@@ -454,7 +454,7 @@ Saves session context to memory when you issue `/new`.
 
 **Requirements**: `workspace.dir` must be configured
 
-**Output**: `<workspace>/memory/YYYY-MM-DD-slug.md` (defaults to `~/.newclaw/workspace`)
+**Output**: `<workspace>/memory/YYYY-MM-DD-slug.md` (defaults to `~/.iflow/workspace`)
 
 **What it does**:
 
@@ -482,7 +482,7 @@ Saves session context to memory when you issue `/new`.
 **Enable**:
 
 ```bash
-newclaw hooks enable session-memory
+iflow hooks enable session-memory
 ```
 
 ### command-logger
@@ -493,7 +493,7 @@ Logs all command events to a centralized audit file.
 
 **Requirements**: None
 
-**Output**: `~/.newclaw/logs/commands.log`
+**Output**: `~/.iflow/logs/commands.log`
 
 **What it does**:
 
@@ -512,19 +512,19 @@ Logs all command events to a centralized audit file.
 
 ```bash
 # View recent commands
-tail -n 20 ~/.newclaw/logs/commands.log
+tail -n 20 ~/.iflow/logs/commands.log
 
 # Pretty-print with jq
-cat ~/.newclaw/logs/commands.log | jq .
+cat ~/.iflow/logs/commands.log | jq .
 
 # Filter by action
-grep '"action":"new"' ~/.newclaw/logs/commands.log | jq .
+grep '"action":"new"' ~/.iflow/logs/commands.log | jq .
 ```
 
 **Enable**:
 
 ```bash
-newclaw hooks enable command-logger
+iflow hooks enable command-logger
 ```
 
 ### soul-evil
@@ -540,7 +540,7 @@ Swaps injected `SOUL.md` content with `SOUL_EVIL.md` during a purge window or by
 **Enable**:
 
 ```bash
-newclaw hooks enable soul-evil
+iflow hooks enable soul-evil
 ```
 
 **Config**:
@@ -581,7 +581,7 @@ Internal hooks must be enabled for this to run.
 **Enable**:
 
 ```bash
-newclaw hooks enable boot-md
+iflow hooks enable boot-md
 ```
 
 ## Best Practices
@@ -638,13 +638,13 @@ const handler: HookHandler = async (event) => {
 Specify exact events in metadata when possible:
 
 ```yaml
-metadata: { "newclaw": { "events": ["command:new"] } } # Specific
+metadata: { "iflow": { "events": ["command:new"] } } # Specific
 ```
 
 Rather than:
 
 ```yaml
-metadata: { "newclaw": { "events": ["command"] } } # General - more overhead
+metadata: { "iflow": { "events": ["command"] } } # General - more overhead
 ```
 
 ## Debugging
@@ -664,7 +664,7 @@ Registered hook: boot-md -> gateway:startup
 List all discovered hooks:
 
 ```bash
-newclaw hooks list --verbose
+iflow hooks list --verbose
 ```
 
 ### Check Registration
@@ -683,7 +683,7 @@ const handler: HookHandler = async (event) => {
 Check why a hook isn't eligible:
 
 ```bash
-newclaw hooks info my-hook
+iflow hooks info my-hook
 ```
 
 Look for missing requirements in the output.
@@ -699,7 +699,7 @@ Monitor gateway logs to see hook execution:
 ./scripts/clawlog.sh -f
 
 # Other platforms
-tail -f ~/.newclaw/gateway.log
+tail -f ~/.iflow/gateway.log
 ```
 
 ### Test Hooks Directly
@@ -775,20 +775,20 @@ Session reset
 1. Check directory structure:
 
    ```bash
-   ls -la ~/.newclaw/hooks/my-hook/
+   ls -la ~/.iflow/hooks/my-hook/
    # Should show: HOOK.md, handler.ts
    ```
 
 2. Verify HOOK.md format:
 
    ```bash
-   cat ~/.newclaw/hooks/my-hook/HOOK.md
+   cat ~/.iflow/hooks/my-hook/HOOK.md
    # Should have YAML frontmatter with name and metadata
    ```
 
 3. List all discovered hooks:
    ```bash
-   newclaw hooks list
+   iflow hooks list
    ```
 
 ### Hook Not Eligible
@@ -796,7 +796,7 @@ Session reset
 Check requirements:
 
 ```bash
-newclaw hooks info my-hook
+iflow hooks info my-hook
 ```
 
 Look for missing:
@@ -811,7 +811,7 @@ Look for missing:
 1. Verify hook is enabled:
 
    ```bash
-   newclaw hooks list
+   iflow hooks list
    # Should show ✓ next to enabled hooks
    ```
 
@@ -858,8 +858,8 @@ node -e "import('./path/to/handler.ts').then(console.log)"
 1. Create hook directory:
 
    ```bash
-   mkdir -p ~/.newclaw/hooks/my-hook
-   mv ./hooks/handlers/my-handler.ts ~/.newclaw/hooks/my-hook/handler.ts
+   mkdir -p ~/.iflow/hooks/my-hook
+   mv ./hooks/handlers/my-handler.ts ~/.iflow/hooks/my-hook/handler.ts
    ```
 
 2. Create HOOK.md:
@@ -868,7 +868,7 @@ node -e "import('./path/to/handler.ts').then(console.log)"
    ---
    name: my-hook
    description: "My custom hook"
-   metadata: { "newclaw": { "emoji": "🎯", "events": ["command:new"] } }
+   metadata: { "iflow": { "emoji": "🎯", "events": ["command:new"] } }
    ---
 
    # My Hook
@@ -893,7 +893,7 @@ node -e "import('./path/to/handler.ts').then(console.log)"
 
 4. Verify and restart your gateway process:
    ```bash
-   newclaw hooks list
+   iflow hooks list
    # Should show: 🎯 my-hook ✓
    ```
 
@@ -908,6 +908,6 @@ node -e "import('./path/to/handler.ts').then(console.log)"
 ## See Also
 
 - [CLI Reference: hooks](/cli/hooks)
-- [Bundled Hooks README](https://github.com/newclaw/newclaw/tree/main/src/hooks/bundled)
+- [Bundled Hooks README](https://github.com/iflow/iflow/tree/main/src/hooks/bundled)
 - [Webhook Hooks](/automation/webhook)
 - [Configuration](/gateway/configuration#hooks)

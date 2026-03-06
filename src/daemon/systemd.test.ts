@@ -20,52 +20,52 @@ describe("systemd runtime parsing", () => {
 });
 
 describe("resolveSystemdUserUnitPath", () => {
-  it("uses default service name when NEWCLAW_PROFILE is default", () => {
-    const env = { HOME: "/home/test", NEWCLAW_PROFILE: "default" };
+  it("uses default service name when IFLOW_PROFILE is default", () => {
+    const env = { HOME: "/home/test", IFLOW_PROFILE: "default" };
     expect(resolveSystemdUserUnitPath(env)).toBe(
-      "/home/test/.config/systemd/user/newclaw-gateway.service",
+      "/home/test/.config/systemd/user/iflow-gateway.service",
     );
   });
 
-  it("uses default service name when NEWCLAW_PROFILE is unset", () => {
+  it("uses default service name when IFLOW_PROFILE is unset", () => {
     const env = { HOME: "/home/test" };
     expect(resolveSystemdUserUnitPath(env)).toBe(
-      "/home/test/.config/systemd/user/newclaw-gateway.service",
+      "/home/test/.config/systemd/user/iflow-gateway.service",
     );
   });
 
-  it("uses profile-specific service name when NEWCLAW_PROFILE is set to a custom value", () => {
-    const env = { HOME: "/home/test", NEWCLAW_PROFILE: "jbphoenix" };
+  it("uses profile-specific service name when IFLOW_PROFILE is set to a custom value", () => {
+    const env = { HOME: "/home/test", IFLOW_PROFILE: "jbphoenix" };
     expect(resolveSystemdUserUnitPath(env)).toBe(
-      "/home/test/.config/systemd/user/newclaw-gateway-jbphoenix.service",
+      "/home/test/.config/systemd/user/iflow-gateway-jbphoenix.service",
     );
   });
 
-  it("prefers NEWCLAW_SYSTEMD_UNIT over NEWCLAW_PROFILE", () => {
+  it("prefers IFLOW_SYSTEMD_UNIT over IFLOW_PROFILE", () => {
     const env = {
       HOME: "/home/test",
-      NEWCLAW_PROFILE: "jbphoenix",
-      NEWCLAW_SYSTEMD_UNIT: "custom-unit",
+      IFLOW_PROFILE: "jbphoenix",
+      IFLOW_SYSTEMD_UNIT: "custom-unit",
     };
     expect(resolveSystemdUserUnitPath(env)).toBe(
       "/home/test/.config/systemd/user/custom-unit.service",
     );
   });
 
-  it("handles NEWCLAW_SYSTEMD_UNIT with .service suffix", () => {
+  it("handles IFLOW_SYSTEMD_UNIT with .service suffix", () => {
     const env = {
       HOME: "/home/test",
-      NEWCLAW_SYSTEMD_UNIT: "custom-unit.service",
+      IFLOW_SYSTEMD_UNIT: "custom-unit.service",
     };
     expect(resolveSystemdUserUnitPath(env)).toBe(
       "/home/test/.config/systemd/user/custom-unit.service",
     );
   });
 
-  it("trims whitespace from NEWCLAW_SYSTEMD_UNIT", () => {
+  it("trims whitespace from IFLOW_SYSTEMD_UNIT", () => {
     const env = {
       HOME: "/home/test",
-      NEWCLAW_SYSTEMD_UNIT: "  custom-unit  ",
+      IFLOW_SYSTEMD_UNIT: "  custom-unit  ",
     };
     expect(resolveSystemdUserUnitPath(env)).toBe(
       "/home/test/.config/systemd/user/custom-unit.service",
@@ -73,23 +73,23 @@ describe("resolveSystemdUserUnitPath", () => {
   });
 
   it("handles case-insensitive 'Default' profile", () => {
-    const env = { HOME: "/home/test", NEWCLAW_PROFILE: "Default" };
+    const env = { HOME: "/home/test", IFLOW_PROFILE: "Default" };
     expect(resolveSystemdUserUnitPath(env)).toBe(
-      "/home/test/.config/systemd/user/newclaw-gateway.service",
+      "/home/test/.config/systemd/user/iflow-gateway.service",
     );
   });
 
   it("handles case-insensitive 'DEFAULT' profile", () => {
-    const env = { HOME: "/home/test", NEWCLAW_PROFILE: "DEFAULT" };
+    const env = { HOME: "/home/test", IFLOW_PROFILE: "DEFAULT" };
     expect(resolveSystemdUserUnitPath(env)).toBe(
-      "/home/test/.config/systemd/user/newclaw-gateway.service",
+      "/home/test/.config/systemd/user/iflow-gateway.service",
     );
   });
 
-  it("trims whitespace from NEWCLAW_PROFILE", () => {
-    const env = { HOME: "/home/test", NEWCLAW_PROFILE: "  myprofile  " };
+  it("trims whitespace from IFLOW_PROFILE", () => {
+    const env = { HOME: "/home/test", IFLOW_PROFILE: "  myprofile  " };
     expect(resolveSystemdUserUnitPath(env)).toBe(
-      "/home/test/.config/systemd/user/newclaw-gateway-myprofile.service",
+      "/home/test/.config/systemd/user/iflow-gateway-myprofile.service",
     );
   });
 });

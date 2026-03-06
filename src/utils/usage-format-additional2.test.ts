@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { NewClawConfig } from "../config/config.js";
+import type { iFlowConfig } from "../config/config.js";
 import {
   formatTokenCount,
   formatUsd,
@@ -86,7 +86,7 @@ describe("usage-format - Additional Tests", () => {
             },
           },
         },
-      } as NewClawConfig;
+      } as iFlowConfig;
 
       const result1 = resolveModelCostConfig({
         provider: "openai",
@@ -124,7 +124,7 @@ describe("usage-format - Additional Tests", () => {
             },
           },
         },
-      } as NewClawConfig;
+      } as iFlowConfig;
 
       const result = resolveModelCostConfig({
         provider: "openai",
@@ -145,7 +145,7 @@ describe("usage-format - Additional Tests", () => {
             },
           },
         },
-      } as NewClawConfig;
+      } as iFlowConfig;
 
       const result = resolveModelCostConfig({
         provider: "openai",

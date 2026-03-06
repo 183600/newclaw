@@ -10,7 +10,7 @@ import { resolveAgentWorkspaceDir, resolveDefaultAgentId } from "../agents/agent
 import { lookupContextTokens } from "../agents/context.js";
 import { DEFAULT_CONTEXT_TOKENS, DEFAULT_MODEL, DEFAULT_PROVIDER } from "../agents/defaults.js";
 import { resolveConfiguredModelRef } from "../agents/model-selection.js";
-import { type NewClawConfig, loadConfig } from "../config/config.js";
+import { type iFlowConfig, loadConfig } from "../config/config.js";
 import { resolveStateDir } from "../config/paths.js";
 import {
   buildGroupDisplayName,
@@ -90,7 +90,7 @@ function isWorkspaceRelativePath(value: string): boolean {
 }
 
 function resolveIdentityAvatarUrl(
-  cfg: NewClawConfig,
+  cfg: iFlowConfig,
   agentId: string,
   avatar: string | undefined,
 ): string | undefined {
@@ -238,7 +238,7 @@ function listExistingAgentIdsFromDisk(): string[] {
   }
 }
 
-function listConfiguredAgentIds(cfg: NewClawConfig): string[] {
+function listConfiguredAgentIds(cfg: iFlowConfig): string[] {
   const agents = cfg.agents?.list ?? [];
   if (agents.length > 0) {
     const ids = new Set<string>();
@@ -270,7 +270,7 @@ function listConfiguredAgentIds(cfg: NewClawConfig): string[] {
   return sorted;
 }
 
-export function listAgentsForGateway(cfg: NewClawConfig): {
+export function listAgentsForGateway(cfg: iFlowConfig): {
   defaultId: string;
   mainKey: string;
   scope: SessionScope;
@@ -338,11 +338,11 @@ function canonicalizeSessionKeyForAgent(agentId: string, key: string): string {
   return `agent:${normalizeAgentId(agentId)}:${key}`;
 }
 
-function resolveDefaultStoreAgentId(cfg: NewClawConfig): string {
+function resolveDefaultStoreAgentId(cfg: iFlowConfig): string {
   return normalizeAgentId(resolveDefaultAgentId(cfg));
 }
 
-export function resolveSessionStoreKey(params: { cfg: NewClawConfig; sessionKey: string }): string {
+export function resolveSessionStoreKey(params: { cfg: iFlowConfig; sessionKey: string }): string {
   const raw = params.sessionKey.trim();
   if (!raw) {
     return raw;
@@ -373,7 +373,7 @@ export function resolveSessionStoreKey(params: { cfg: NewClawConfig; sessionKey:
   return canonicalizeSessionKeyForAgent(agentId, raw);
 }
 
-function resolveSessionStoreAgentId(cfg: NewClawConfig, canonicalKey: string): string {
+function resolveSessionStoreAgentId(cfg: iFlowConfig, canonicalKey: string): string {
   if (canonicalKey === "global" || canonicalKey === "unknown") {
     return resolveDefaultStoreAgentId(cfg);
   }
@@ -398,7 +398,7 @@ function canonicalizeSpawnedByForAgent(agentId: string, spawnedBy?: string): str
   return `agent:${normalizeAgentId(agentId)}:${raw}`;
 }
 
-export function resolveGatewaySessionStoreTarget(params: { cfg: NewClawConfig; key: string }): {
+export function resolveGatewaySessionStoreTarget(params: { cfg: iFlowConfig; key: string }): {
   agentId: string;
   storePath: string;
   canonicalKey: string;
@@ -456,7 +456,7 @@ function mergeSessionEntryIntoCombined(params: {
   }
 }
 
-export function loadCombinedSessionStoreForGateway(cfg: NewClawConfig): {
+export function loadCombinedSessionStoreForGateway(cfg: iFlowConfig): {
   storePath: string;
   store: Record<string, SessionEntry>;
 } {
@@ -499,7 +499,7 @@ export function loadCombinedSessionStoreForGateway(cfg: NewClawConfig): {
   return { storePath, store: combined };
 }
 
-export function getSessionDefaults(cfg: NewClawConfig): GatewaySessionsDefaults {
+export function getSessionDefaults(cfg: iFlowConfig): GatewaySessionsDefaults {
   const resolved = resolveConfiguredModelRef({
     cfg,
     defaultProvider: DEFAULT_PROVIDER,
@@ -517,7 +517,7 @@ export function getSessionDefaults(cfg: NewClawConfig): GatewaySessionsDefaults 
 }
 
 export function resolveSessionModelRef(
-  cfg: NewClawConfig,
+  cfg: iFlowConfig,
   entry?: SessionEntry,
 ): { provider: string; model: string } {
   const resolved = resolveConfiguredModelRef({
@@ -536,7 +536,7 @@ export function resolveSessionModelRef(
 }
 
 export function listSessionsFromStore(params: {
-  cfg: NewClawConfig;
+  cfg: iFlowConfig;
   storePath: string;
   store: Record<string, SessionEntry>;
   opts: import("./protocol/index.js").SessionsListParams;

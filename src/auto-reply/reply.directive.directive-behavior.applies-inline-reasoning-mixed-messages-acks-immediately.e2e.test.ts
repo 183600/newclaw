@@ -27,10 +27,10 @@ async function withTempHome<T>(fn: (home: string) => Promise<T>): Promise<T> {
     },
     {
       env: {
-        NEWCLAW_AGENT_DIR: (home) => path.join(home, ".newclaw", "agent"),
-        PI_CODING_AGENT_DIR: (home) => path.join(home, ".newclaw", "agent"),
+        IFLOW_AGENT_DIR: (home) => path.join(home, ".iflow", "agent"),
+        PI_CODING_AGENT_DIR: (home) => path.join(home, ".iflow", "agent"),
       },
-      prefix: "newclaw-reply-",
+      prefix: "iflow-reply-",
     },
   );
 }
@@ -91,7 +91,7 @@ describe("directive behavior", () => {
           agents: {
             defaults: {
               model: "anthropic/claude-opus-4-5",
-              workspace: path.join(home, "newclaw"),
+              workspace: path.join(home, "iflow"),
             },
           },
           channels: { whatsapp: { allowFrom: ["*"] } },
@@ -136,7 +136,7 @@ describe("directive behavior", () => {
           agents: {
             defaults: {
               model: "anthropic/claude-opus-4-5",
-              workspace: path.join(home, "newclaw"),
+              workspace: path.join(home, "iflow"),
             },
           },
           channels: { whatsapp: { allowFrom: ["*"] } },
@@ -162,7 +162,7 @@ describe("directive behavior", () => {
           agents: {
             defaults: {
               model: "anthropic/claude-opus-4-5",
-              workspace: path.join(home, "newclaw"),
+              workspace: path.join(home, "iflow"),
             },
           },
           channels: { whatsapp: { allowFrom: ["*"] } },
@@ -185,7 +185,7 @@ describe("directive behavior", () => {
           agents: {
             defaults: {
               model: "anthropic/claude-opus-4-5",
-              workspace: path.join(home, "newclaw"),
+              workspace: path.join(home, "iflow"),
             },
           },
           session: { store: path.join(home, "sessions.json") },
@@ -209,7 +209,7 @@ describe("directive behavior", () => {
           agents: {
             defaults: {
               model: "anthropic/claude-opus-4-5",
-              workspace: path.join(home, "newclaw"),
+              workspace: path.join(home, "iflow"),
             },
           },
           session: { store: storePath },
@@ -235,7 +235,7 @@ describe("directive behavior", () => {
           agents: {
             defaults: {
               model: "anthropic/claude-opus-4-5",
-              workspace: path.join(home, "newclaw"),
+              workspace: path.join(home, "iflow"),
               thinkingDefault: "high",
             },
           },
@@ -260,7 +260,7 @@ describe("directive behavior", () => {
           agents: {
             defaults: {
               model: "anthropic/claude-opus-4-5",
-              workspace: path.join(home, "newclaw"),
+              workspace: path.join(home, "iflow"),
             },
           },
           session: { store: path.join(home, "sessions.json") },

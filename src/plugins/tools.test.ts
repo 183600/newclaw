@@ -1,6 +1,6 @@
 import { describe, expect, it, vi, beforeEach } from "vitest";
 import type { AnyAgentTool } from "../agents/tools/common.js";
-import type { NewClawPluginToolContext } from "./types.js";
+import type { iFlowPluginToolContext } from "./types.js";
 import { getPluginToolMeta, resolvePluginTools } from "./tools.js";
 
 // Mock dependencies
@@ -42,9 +42,9 @@ vi.mock("../logging/subsystem.js", () => ({
 
 import { normalizeToolName } from "../agents/tool-policy.js";
 import { createSubsystemLogger } from "../logging/subsystem.js";
-import { loadNewClawPlugins } from "./loader.js";
+import { loadiFlowPlugins } from "./loader.js";
 
-const mockLoadNewClawPlugins = vi.mocked(loadNewClawPlugins);
+const mockLoadiFlowPlugins = vi.mocked(loadiFlowPlugins);
 const mockNormalizeToolName = vi.mocked(normalizeToolName);
 const mockCreateSubsystemLogger = vi.mocked(createSubsystemLogger);
 
@@ -78,7 +78,7 @@ describe("plugins/tools", () => {
     const mockContext = {
       config: {},
       workspaceDir: "/mock/workspace",
-    } as NewClawPluginToolContext;
+    } as iFlowPluginToolContext;
 
     const createMockTool = (name: string): AnyAgentTool => ({ name }) as AnyAgentTool;
 
@@ -91,7 +91,7 @@ describe("plugins/tools", () => {
       const tool1 = createMockTool("tool1");
       const tool2 = createMockTool("tool2");
 
-      mockLoadNewClawPlugins.mockReturnValue(
+      mockLoadiFlowPlugins.mockReturnValue(
         createMockRegistry([
           {
             pluginId: "plugin1",
@@ -119,7 +119,7 @@ describe("plugins/tools", () => {
       const optionalTool = createMockTool("optional-tool");
       const requiredTool = createMockTool("required-tool");
 
-      mockLoadNewClawPlugins.mockReturnValue(
+      mockLoadiFlowPlugins.mockReturnValue(
         createMockRegistry([
           {
             pluginId: "optional-plugin",
@@ -147,7 +147,7 @@ describe("plugins/tools", () => {
     it("excludes optional tools not in allowlist", () => {
       const optionalTool = createMockTool("optional-tool");
 
-      mockLoadNewClawPlugins.mockReturnValue(
+      mockLoadiFlowPlugins.mockReturnValue(
         createMockRegistry([
           {
             pluginId: "optional-plugin",
@@ -167,7 +167,7 @@ describe("plugins/tools", () => {
     });
 
     it("handles plugin factory returning null/undefined", () => {
-      mockLoadNewClawPlugins.mockReturnValue(
+      mockLoadiFlowPlugins.mockReturnValue(
         createMockRegistry([
           {
             pluginId: "null-plugin",
@@ -193,7 +193,7 @@ describe("plugins/tools", () => {
       const mockLogger = { error: vi.fn(), info: vi.fn(), warn: vi.fn(), debug: vi.fn() };
       mockCreateSubsystemLogger.mockReturnValue(mockLogger);
 
-      mockLoadNewClawPlugins.mockReturnValue(
+      mockLoadiFlowPlugins.mockReturnValue(
         createMockRegistry([
           {
             pluginId: "error-plugin",
@@ -221,7 +221,7 @@ describe("plugins/tools", () => {
       const tool1 = createMockTool("conflict-tool");
       const tool2 = createMockTool("conflict-tool");
 
-      mockLoadNewClawPlugins.mockReturnValue(
+      mockLoadiFlowPlugins.mockReturnValue(
         createMockRegistry([
           {
             pluginId: "plugin1",
@@ -250,7 +250,7 @@ describe("plugins/tools", () => {
     it("prevents plugin id conflicts with existing tools", () => {
       const tool = createMockTool("new-tool");
 
-      mockLoadNewClawPlugins.mockReturnValue(
+      mockLoadiFlowPlugins.mockReturnValue(
         createMockRegistry([
           {
             pluginId: "existing-tool", // Same name as existing tool
@@ -277,7 +277,7 @@ describe("plugins/tools", () => {
       const tool1 = createMockTool("tool1");
       const tool2 = createMockTool("tool2");
 
-      mockLoadNewClawPlugins.mockReturnValue(
+      mockLoadiFlowPlugins.mockReturnValue(
         createMockRegistry([
           {
             pluginId: "conflicting-plugin",
@@ -307,7 +307,7 @@ describe("plugins/tools", () => {
       const optionalTool1 = createMockTool("optional-tool-1");
       const optionalTool2 = createMockTool("optional-tool-2");
 
-      mockLoadNewClawPlugins.mockReturnValue(
+      mockLoadiFlowPlugins.mockReturnValue(
         createMockRegistry([
           {
             pluginId: "mixed-plugin",
@@ -331,7 +331,7 @@ describe("plugins/tools", () => {
       const tool = createMockTool("context-tool");
       const mockFactory = vi.fn().mockReturnValue(tool);
 
-      mockLoadNewClawPlugins.mockReturnValue(
+      mockLoadiFlowPlugins.mockReturnValue(
         createMockRegistry([
           {
             pluginId: "context-plugin",
@@ -348,7 +348,7 @@ describe("plugins/tools", () => {
     });
 
     it("handles empty tool registry", () => {
-      mockLoadNewClawPlugins.mockReturnValue(createMockRegistry([]));
+      mockLoadiFlowPlugins.mockReturnValue(createMockRegistry([]));
 
       const result = resolvePluginTools({ context: mockContext });
 

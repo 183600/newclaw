@@ -15,7 +15,7 @@ RUN set -eux; \
     sudo \
   && rm -rf /var/lib/apt/lists/*
 
-COPY run.sh /usr/local/bin/newclaw-install-smoke
-RUN chmod +x /usr/local/bin/newclaw-install-smoke
+COPY run.sh /usr/local/bin/iflow-install-smoke
+RUN chmod +x /usr/local/bin/iflow-install-smoke
 
-ENTRYPOINT ["/usr/local/bin/newclaw-install-smoke"]
+ENTRYPOINT ["/usr/local/bin/iflow-install-smoke"]

@@ -37,7 +37,7 @@ function fallbackHostName() {
     deps
       .hostname()
       .replace(/\.local$/i, "")
-      .trim() || "newclaw"
+      .trim() || "iflow"
   );
 }
 

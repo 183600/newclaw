@@ -1,4 +1,4 @@
-import type { ChannelAccountSnapshot, ChannelStatusIssue } from "newclaw/plugin-sdk";
+import type { ChannelAccountSnapshot, ChannelStatusIssue } from "iflow/plugin-sdk";
 
 type ZaloAccountStatus = {
   accountId?: unknown;

@@ -1,12 +1,12 @@
 {
-  "name": "@newclaw/telegram",
+  "name": "@iflow/telegram",
   "version": "2026.2.2",
-  "description": "NewClaw Telegram channel plugin",
+  "description": "iFlow Telegram channel plugin",
   "type": "module",
   "devDependencies": {
-    "newclaw": "workspace:*"
+    "iflow": "workspace:*"
   },
-  "newclaw": {
+  "iflow": {
     "extensions": [
       "./index.ts"
     ]

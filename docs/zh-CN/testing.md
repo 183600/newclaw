@@ -16,7 +16,7 @@ x-i18n:
 
 # 测试
 
-NewClaw 拥有三个 Vitest 测试套件（单元/集成、端到端、实时）和一小组 Docker 运行器。
+iFlow 拥有三个 Vitest 测试套件（单元/集成、端到端、实时）和一小组 Docker 运行器。
 
 本文档是一份"我们如何测试"指南：
 
@@ -78,7 +78,7 @@ NewClaw 拥有三个 Vitest 测试套件（单元/集成、端到端、实时）
 - 命令：`pnpm test:live`
 - 配置：`vitest.live.config.ts`
 - 文件：`src/**/*.live.test.ts`
-- 默认：通过 `pnpm test:live` **启用**（设置 `NEWCLAW_LIVE_TEST=1`）
+- 默认：通过 `pnpm test:live` **启用**（设置 `IFLOW_LIVE_TEST=1`）
 - 范围：
   - "这个提供商/模型*今天*在真实凭证下是否真正工作？"
   - 捕获提供商格式变更、工具调用异常、认证问题和速率限制行为
@@ -87,7 +87,7 @@ NewClaw 拥有三个 Vitest 测试套件（单元/集成、端到端、实时）
   - 会花费金钱/消耗速率限制
   - 建议运行缩小范围的子集而不是"所有内容"
   - 实时运行会加载 `~/.profile` 以获取缺失的 API 密钥
-  - Anthropic 密钥轮换：设置 `NEWCLAW_LIVE_ANTHROPIC_KEYS="sk-...,sk-..."`（或 `NEWCLAW_LIVE_ANTHROPIC_KEY=sk-...`）或多个 `ANTHROPIC_API_KEY*` 变量；测试会在遇到速率限制时重试
+  - Anthropic 密钥轮换：设置 `IFLOW_LIVE_ANTHROPIC_KEYS="sk-...,sk-..."`（或 `IFLOW_LIVE_ANTHROPIC_KEY=sk-...`）或多个 `ANTHROPIC_API_KEY*` 变量；测试会在遇到速率限制时重试
 
 ## 我应该运行哪个套件？
 
@@ -112,22 +112,22 @@ NewClaw 拥有三个 Vitest 测试套件（单元/集成、端到端、实时）
   - 使用 `getApiKeyForModel` 选择你有凭证的模型
   - 对每个模型运行一个小型补全（以及需要时的定向回归测试）
 - 如何启用：
-  - `pnpm test:live`（或直接调用 Vitest 时设置 `NEWCLAW_LIVE_TEST=1`）
-- 设置 `NEWCLAW_LIVE_MODELS=modern`（或 `all`，modern 的别名）来实际运行此套件；否则会跳过以保持 `pnpm test:live` 聚焦于 Gateway网关冒烟测试
+  - `pnpm test:live`（或直接调用 Vitest 时设置 `IFLOW_LIVE_TEST=1`）
+- 设置 `IFLOW_LIVE_MODELS=modern`（或 `all`，modern 的别名）来实际运行此套件；否则会跳过以保持 `pnpm test:live` 聚焦于 Gateway网关冒烟测试
 - 如何选择模型：
-  - `NEWCLAW_LIVE_MODELS=modern` 运行现代允许列表（Opus/Sonnet/Haiku 4.5、GPT-5.x + Codex、Gemini 3、GLM 4.7、MiniMax M2.1、Grok 4）
-  - `NEWCLAW_LIVE_MODELS=all` 是现代允许列表的别名
-  - 或 `NEWCLAW_LIVE_MODELS="openai/gpt-5.2,anthropic/claude-opus-4-5,..."`（逗号分隔的允许列表）
+  - `IFLOW_LIVE_MODELS=modern` 运行现代允许列表（Opus/Sonnet/Haiku 4.5、GPT-5.x + Codex、Gemini 3、GLM 4.7、MiniMax M2.1、Grok 4）
+  - `IFLOW_LIVE_MODELS=all` 是现代允许列表的别名
+  - 或 `IFLOW_LIVE_MODELS="openai/gpt-5.2,anthropic/claude-opus-4-5,..."`（逗号分隔的允许列表）
 - 如何选择提供商：
-  - `NEWCLAW_LIVE_PROVIDERS="google,google-antigravity,google-gemini-cli"`（逗号分隔的允许列表）
+  - `IFLOW_LIVE_PROVIDERS="google,google-antigravity,google-gemini-cli"`（逗号分隔的允许列表）
 - 密钥来源：
   - 默认：profile 存储和环境变量回退
-  - 设置 `NEWCLAW_LIVE_REQUIRE_PROFILE_KEYS=1` 以强制仅使用 **profile 存储**
+  - 设置 `IFLOW_LIVE_REQUIRE_PROFILE_KEYS=1` 以强制仅使用 **profile 存储**
 - 为何存在：
   - 将"提供商 API 故障/密钥无效"与"Gateway网关智能体管道故障"分离
   - 包含小型、隔离的回归测试（示例：OpenAI Responses/Codex Responses 推理重放 + 工具调用流程）
 
-### 第二层：Gateway网关 + 开发智能体冒烟测试（"@newclaw"实际做什么）
+### 第二层：Gateway网关 + 开发智能体冒烟测试（"@iflow"实际做什么）
 
 - 测试：`src/gateway/gateway-models.profiles.live.test.ts`
 - 目标：
@@ -144,13 +144,13 @@ NewClaw 拥有三个 Vitest 测试套件（单元/集成、端到端、实时）
   - image 探测：测试附加一个生成的 PNG（猫 + 随机代码），期望模型返回 `cat <CODE>`。
   - 实现参考：`src/gateway/gateway-models.profiles.live.test.ts` 和 `src/gateway/live-image-probe.ts`。
 - 如何启用：
-  - `pnpm test:live`（或直接调用 Vitest 时设置 `NEWCLAW_LIVE_TEST=1`）
+  - `pnpm test:live`（或直接调用 Vitest 时设置 `IFLOW_LIVE_TEST=1`）
 - 如何选择模型：
   - 默认：现代允许列表（Opus/Sonnet/Haiku 4.5、GPT-5.x + Codex、Gemini 3、GLM 4.7、MiniMax M2.1、Grok 4）
-  - `NEWCLAW_LIVE_GATEWAY_MODELS=all` 是现代允许列表的别名
-  - 或设置 `NEWCLAW_LIVE_GATEWAY_MODELS="provider/model"`（或逗号分隔列表）来缩小范围
+  - `IFLOW_LIVE_GATEWAY_MODELS=all` 是现代允许列表的别名
+  - 或设置 `IFLOW_LIVE_GATEWAY_MODELS="provider/model"`（或逗号分隔列表）来缩小范围
 - 如何选择提供商（避免"OpenRouter 全部"）：
-  - `NEWCLAW_LIVE_GATEWAY_PROVIDERS="google,google-antigravity,google-gemini-cli,openai,anthropic,zai,minimax"`（逗号分隔的允许列表）
+  - `IFLOW_LIVE_GATEWAY_PROVIDERS="google,google-antigravity,google-gemini-cli,openai,anthropic,zai,minimax"`（逗号分隔的允许列表）
 - 工具 + 图像探测在此实时测试中始终开启：
   - `read` 探测 + `exec+read` 探测（工具压力测试）
   - 当模型声明支持图像输入时运行 image 探测
@@ -164,8 +164,8 @@ NewClaw 拥有三个 Vitest 测试套件（单元/集成、端到端、实时）
 提示：要查看你的机器上可以测试哪些内容（以及确切的 `provider/model` ID），运行：
 
 ```bash
-newclaw models list
-newclaw models list --json
+iflow models list
+iflow models list --json
 ```
 
 ## 实时测试：Anthropic setup-token 冒烟测试
@@ -173,19 +173,19 @@ newclaw models list --json
 - 测试：`src/agents/anthropic.setup-token.live.test.ts`
 - 目标：验证 Claude Code CLI setup-token（或粘贴的 setup-token profile）能否完成 Anthropic 提示。
 - 启用：
-  - `pnpm test:live`（或直接调用 Vitest 时设置 `NEWCLAW_LIVE_TEST=1`）
-  - `NEWCLAW_LIVE_SETUP_TOKEN=1`
+  - `pnpm test:live`（或直接调用 Vitest 时设置 `IFLOW_LIVE_TEST=1`）
+  - `IFLOW_LIVE_SETUP_TOKEN=1`
 - 令牌来源（选一个）：
-  - Profile：`NEWCLAW_LIVE_SETUP_TOKEN_PROFILE=anthropic:setup-token-test`
-  - 原始令牌：`NEWCLAW_LIVE_SETUP_TOKEN_VALUE=sk-ant-oat01-...`
+  - Profile：`IFLOW_LIVE_SETUP_TOKEN_PROFILE=anthropic:setup-token-test`
+  - 原始令牌：`IFLOW_LIVE_SETUP_TOKEN_VALUE=sk-ant-oat01-...`
 - 模型覆盖（可选）：
-  - `NEWCLAW_LIVE_SETUP_TOKEN_MODEL=anthropic/claude-opus-4-5`
+  - `IFLOW_LIVE_SETUP_TOKEN_MODEL=anthropic/claude-opus-4-5`
 
 设置示例：
 
 ```bash
-newclaw models auth paste-token --provider anthropic --profile-id anthropic:setup-token-test
-NEWCLAW_LIVE_SETUP_TOKEN=1 NEWCLAW_LIVE_SETUP_TOKEN_PROFILE=anthropic:setup-token-test pnpm test:live src/agents/anthropic.setup-token.live.test.ts
+iflow models auth paste-token --provider anthropic --profile-id anthropic:setup-token-test
+IFLOW_LIVE_SETUP_TOKEN=1 IFLOW_LIVE_SETUP_TOKEN_PROFILE=anthropic:setup-token-test pnpm test:live src/agents/anthropic.setup-token.live.test.ts
 ```
 
 ## 实时测试：CLI 后端冒烟测试（Claude Code CLI 或其他本地 CLI）
@@ -193,29 +193,29 @@ NEWCLAW_LIVE_SETUP_TOKEN=1 NEWCLAW_LIVE_SETUP_TOKEN_PROFILE=anthropic:setup-toke
 - 测试：`src/gateway/gateway-cli-backend.live.test.ts`
 - 目标：使用本地 CLI 后端验证 Gateway网关 + 智能体管道，不影响你的默认配置。
 - 启用：
-  - `pnpm test:live`（或直接调用 Vitest 时设置 `NEWCLAW_LIVE_TEST=1`）
-  - `NEWCLAW_LIVE_CLI_BACKEND=1`
+  - `pnpm test:live`（或直接调用 Vitest 时设置 `IFLOW_LIVE_TEST=1`）
+  - `IFLOW_LIVE_CLI_BACKEND=1`
 - 默认值：
   - 模型：`claude-cli/claude-sonnet-4-5`
   - 命令：`claude`
   - 参数：`["-p","--output-format","json","--dangerously-skip-permissions"]`
 - 覆盖（可选）：
-  - `NEWCLAW_LIVE_CLI_BACKEND_MODEL="claude-cli/claude-opus-4-5"`
-  - `NEWCLAW_LIVE_CLI_BACKEND_MODEL="codex-cli/gpt-5.2-codex"`
-  - `NEWCLAW_LIVE_CLI_BACKEND_COMMAND="/full/path/to/claude"`
-  - `NEWCLAW_LIVE_CLI_BACKEND_ARGS='["-p","--output-format","json","--permission-mode","bypassPermissions"]'`
-  - `NEWCLAW_LIVE_CLI_BACKEND_CLEAR_ENV='["ANTHROPIC_API_KEY","ANTHROPIC_API_KEY_OLD"]'`
-  - `NEWCLAW_LIVE_CLI_BACKEND_IMAGE_PROBE=1` 发送真实图像附件（路径注入到提示中）。
-  - `NEWCLAW_LIVE_CLI_BACKEND_IMAGE_ARG="--image"` 将图像文件路径作为 CLI 参数传递而非提示注入。
-  - `NEWCLAW_LIVE_CLI_BACKEND_IMAGE_MODE="repeat"`（或 `"list"`）控制设置 `IMAGE_ARG` 时图像参数的传递方式。
-  - `NEWCLAW_LIVE_CLI_BACKEND_RESUME_PROBE=1` 发送第二轮并验证恢复流程。
-- `NEWCLAW_LIVE_CLI_BACKEND_DISABLE_MCP_CONFIG=0` 保持 Claude Code CLI MCP 配置启用（默认使用临时空文件禁用 MCP 配置）。
+  - `IFLOW_LIVE_CLI_BACKEND_MODEL="claude-cli/claude-opus-4-5"`
+  - `IFLOW_LIVE_CLI_BACKEND_MODEL="codex-cli/gpt-5.2-codex"`
+  - `IFLOW_LIVE_CLI_BACKEND_COMMAND="/full/path/to/claude"`
+  - `IFLOW_LIVE_CLI_BACKEND_ARGS='["-p","--output-format","json","--permission-mode","bypassPermissions"]'`
+  - `IFLOW_LIVE_CLI_BACKEND_CLEAR_ENV='["ANTHROPIC_API_KEY","ANTHROPIC_API_KEY_OLD"]'`
+  - `IFLOW_LIVE_CLI_BACKEND_IMAGE_PROBE=1` 发送真实图像附件（路径注入到提示中）。
+  - `IFLOW_LIVE_CLI_BACKEND_IMAGE_ARG="--image"` 将图像文件路径作为 CLI 参数传递而非提示注入。
+  - `IFLOW_LIVE_CLI_BACKEND_IMAGE_MODE="repeat"`（或 `"list"`）控制设置 `IMAGE_ARG` 时图像参数的传递方式。
+  - `IFLOW_LIVE_CLI_BACKEND_RESUME_PROBE=1` 发送第二轮并验证恢复流程。
+- `IFLOW_LIVE_CLI_BACKEND_DISABLE_MCP_CONFIG=0` 保持 Claude Code CLI MCP 配置启用（默认使用临时空文件禁用 MCP 配置）。
 
 示例：
 
 ```bash
-NEWCLAW_LIVE_CLI_BACKEND=1 \
-  NEWCLAW_LIVE_CLI_BACKEND_MODEL="claude-cli/claude-sonnet-4-5" \
+IFLOW_LIVE_CLI_BACKEND=1 \
+  IFLOW_LIVE_CLI_BACKEND_MODEL="claude-cli/claude-sonnet-4-5" \
   pnpm test:live src/gateway/gateway-cli-backend.live.test.ts
 ```
 
@@ -224,17 +224,17 @@ NEWCLAW_LIVE_CLI_BACKEND=1 \
 缩小范围的、明确的允许列表最快且最不容易出问题：
 
 - 单个模型，直接测试（无 Gateway网关）：
-  - `NEWCLAW_LIVE_MODELS="openai/gpt-5.2" pnpm test:live src/agents/models.profiles.live.test.ts`
+  - `IFLOW_LIVE_MODELS="openai/gpt-5.2" pnpm test:live src/agents/models.profiles.live.test.ts`
 
 - 单个模型，Gateway网关冒烟测试：
-  - `NEWCLAW_LIVE_GATEWAY_MODELS="openai/gpt-5.2" pnpm test:live src/gateway/gateway-models.profiles.live.test.ts`
+  - `IFLOW_LIVE_GATEWAY_MODELS="openai/gpt-5.2" pnpm test:live src/gateway/gateway-models.profiles.live.test.ts`
 
 - 跨多个提供商的工具调用：
-  - `NEWCLAW_LIVE_GATEWAY_MODELS="openai/gpt-5.2,anthropic/claude-opus-4-5,google/gemini-3-flash-preview,zai/glm-4.7,minimax/minimax-m2.1" pnpm test:live src/gateway/gateway-models.profiles.live.test.ts`
+  - `IFLOW_LIVE_GATEWAY_MODELS="openai/gpt-5.2,anthropic/claude-opus-4-5,google/gemini-3-flash-preview,zai/glm-4.7,minimax/minimax-m2.1" pnpm test:live src/gateway/gateway-models.profiles.live.test.ts`
 
 - Google 专项（Gemini API 密钥 + Antigravity）：
-  - Gemini（API 密钥）：`NEWCLAW_LIVE_GATEWAY_MODELS="google/gemini-3-flash-preview" pnpm test:live src/gateway/gateway-models.profiles.live.test.ts`
-  - Antigravity（OAuth）：`NEWCLAW_LIVE_GATEWAY_MODELS="google-antigravity/claude-opus-4-5-thinking,google-antigravity/gemini-3-pro-high" pnpm test:live src/gateway/gateway-models.profiles.live.test.ts`
+  - Gemini（API 密钥）：`IFLOW_LIVE_GATEWAY_MODELS="google/gemini-3-flash-preview" pnpm test:live src/gateway/gateway-models.profiles.live.test.ts`
+  - Antigravity（OAuth）：`IFLOW_LIVE_GATEWAY_MODELS="google-antigravity/claude-opus-4-5-thinking,google-antigravity/gemini-3-pro-high" pnpm test:live src/gateway/gateway-models.profiles.live.test.ts`
 
 注意：
 
@@ -242,8 +242,8 @@ NEWCLAW_LIVE_CLI_BACKEND=1 \
 - `google-antigravity/...` 使用 Antigravity OAuth 桥接（Cloud Code Assist 风格的智能体端点）。
 - `google-gemini-cli/...` 使用你机器上的本地 Gemini CLI（独立的认证 + 工具调用特性）。
 - Gemini API 与 Gemini CLI：
-  - API：NewClaw 通过 HTTP 调用 Google 的托管 Gemini API（API 密钥/profile 认证）；这是大多数用户所说的"Gemini"。
-  - CLI：NewClaw 调用本地 `gemini` 二进制文件；它有自己的认证，行为可能不同（流式传输/工具支持/版本差异）。
+  - API：iFlow 通过 HTTP 调用 Google 的托管 Gemini API（API 密钥/profile 认证）；这是大多数用户所说的"Gemini"。
+  - CLI：iFlow 调用本地 `gemini` 二进制文件；它有自己的认证，行为可能不同（流式传输/工具支持/版本差异）。
 
 ## 实时测试：模型矩阵（我们覆盖的内容）
 
@@ -262,7 +262,7 @@ NEWCLAW_LIVE_CLI_BACKEND=1 \
 - MiniMax：`minimax/minimax-m2.1`
 
 运行带工具 + 图像的 Gateway网关冒烟测试：
-`NEWCLAW_LIVE_GATEWAY_MODELS="openai/gpt-5.2,openai-codex/gpt-5.2,anthropic/claude-opus-4-5,google/gemini-3-pro-preview,google/gemini-3-flash-preview,google-antigravity/claude-opus-4-5-thinking,google-antigravity/gemini-3-flash,zai/glm-4.7,minimax/minimax-m2.1" pnpm test:live src/gateway/gateway-models.profiles.live.test.ts`
+`IFLOW_LIVE_GATEWAY_MODELS="openai/gpt-5.2,openai-codex/gpt-5.2,anthropic/claude-opus-4-5,google/gemini-3-pro-preview,google/gemini-3-flash-preview,google-antigravity/claude-opus-4-5-thinking,google-antigravity/gemini-3-flash,zai/glm-4.7,minimax/minimax-m2.1" pnpm test:live src/gateway/gateway-models.profiles.live.test.ts`
 
 ### 基线：工具调用（Read + 可选 Exec）
 
@@ -283,13 +283,13 @@ NEWCLAW_LIVE_CLI_BACKEND=1 \
 
 ### 视觉：图像发送（附件 → 多模态消息）
 
-在 `NEWCLAW_LIVE_GATEWAY_MODELS` 中至少包含一个支持图像的模型（Claude/Gemini/OpenAI 视觉能力变体等）以测试图像探测。
+在 `IFLOW_LIVE_GATEWAY_MODELS` 中至少包含一个支持图像的模型（Claude/Gemini/OpenAI 视觉能力变体等）以测试图像探测。
 
 ### 聚合器/替代网关
 
 如果你启用了密钥，我们还支持通过以下方式测试：
 
-- OpenRouter：`openrouter/...`（数百个模型；使用 `newclaw models scan` 查找支持工具+图像的候选模型）
+- OpenRouter：`openrouter/...`（数百个模型；使用 `iflow models scan` 查找支持工具+图像的候选模型）
 - OpenCode Zen：`opencode/...`（通过 `OPENCODE_API_KEY` / `OPENCODE_ZEN_API_KEY` 认证）
 
 如果你有凭证/配置，可以在实时矩阵中包含更多提供商：
@@ -304,10 +304,10 @@ NEWCLAW_LIVE_CLI_BACKEND=1 \
 实时测试以与 CLI 相同的方式发现凭证。实际影响：
 
 - 如果 CLI 能工作，实时测试应该能找到相同的密钥。
-- 如果实时测试提示"无凭证"，按照调试 `newclaw models list`/模型选择的方式来调试。
+- 如果实时测试提示"无凭证"，按照调试 `iflow models list`/模型选择的方式来调试。
 
-- Profile 存储：`~/.newclaw/credentials/`（首选；测试中"profile 密钥"的含义）
-- 配置：`~/.newclaw/newclaw.json`（或 `NEWCLAW_CONFIG_PATH`）
+- Profile 存储：`~/.iflow/credentials/`（首选；测试中"profile 密钥"的含义）
+- 配置：`~/.iflow/iflow.json`（或 `IFLOW_CONFIG_PATH`）
 
 如果你想依赖环境变量密钥（例如在 `~/.profile` 中导出的），在 `source ~/.profile` 之后运行本地测试，或使用下面的 Docker 运行器（它们可以将 `~/.profile` 挂载到容器中）。
 
@@ -328,11 +328,11 @@ NEWCLAW_LIVE_CLI_BACKEND=1 \
 
 常用环境变量：
 
-- `NEWCLAW_CONFIG_DIR=...`（默认：`~/.newclaw`）挂载到 `/home/node/.newclaw`
-- `NEWCLAW_WORKSPACE_DIR=...`（默认：`~/.newclaw/workspace`）挂载到 `/home/node/.newclaw/workspace`
-- `NEWCLAW_PROFILE_FILE=...`（默认：`~/.profile`）挂载到 `/home/node/.profile` 并在运行测试前加载
-- `NEWCLAW_LIVE_GATEWAY_MODELS=...` / `NEWCLAW_LIVE_MODELS=...` 缩小运行范围
-- `NEWCLAW_LIVE_REQUIRE_PROFILE_KEYS=1` 确保凭证来自 profile 存储（而非环境变量）
+- `IFLOW_CONFIG_DIR=...`（默认：`~/.iflow`）挂载到 `/home/node/.iflow`
+- `IFLOW_WORKSPACE_DIR=...`（默认：`~/.iflow/workspace`）挂载到 `/home/node/.iflow/workspace`
+- `IFLOW_PROFILE_FILE=...`（默认：`~/.profile`）挂载到 `/home/node/.profile` 并在运行测试前加载
+- `IFLOW_LIVE_GATEWAY_MODELS=...` / `IFLOW_LIVE_MODELS=...` 缩小运行范围
+- `IFLOW_LIVE_REQUIRE_PROFILE_KEYS=1` 确保凭证来自 profile 存储（而非环境变量）
 
 ## 文档完整性检查
 

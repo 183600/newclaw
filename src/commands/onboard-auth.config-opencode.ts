@@ -1,7 +1,7 @@
-import type { NewClawConfig } from "../config/config.js";
+import type { iFlowConfig } from "../config/config.js";
 import { OPENCODE_ZEN_DEFAULT_MODEL_REF } from "../agents/opencode-zen-models.js";
 
-export function applyOpencodeZenProviderConfig(cfg: NewClawConfig): NewClawConfig {
+export function applyOpencodeZenProviderConfig(cfg: iFlowConfig): iFlowConfig {
   // Use the built-in opencode provider from pi-ai; only seed the allowlist alias.
   const models = { ...cfg.agents?.defaults?.models };
   models[OPENCODE_ZEN_DEFAULT_MODEL_REF] = {
@@ -21,7 +21,7 @@ export function applyOpencodeZenProviderConfig(cfg: NewClawConfig): NewClawConfi
   };
 }
 
-export function applyOpencodeZenConfig(cfg: NewClawConfig): NewClawConfig {
+export function applyOpencodeZenConfig(cfg: iFlowConfig): iFlowConfig {
   const next = applyOpencodeZenProviderConfig(cfg);
   return {
     ...next,

@@ -3,7 +3,7 @@ import type {
   DmConfig,
   DmPolicy,
   GroupPolicy,
-} from "newclaw/plugin-sdk";
+} from "iflow/plugin-sdk";
 
 export type NextcloudTalkRoomConfig = {
   requireMention?: boolean;

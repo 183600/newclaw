@@ -1,6 +1,6 @@
 import Foundation
 import Testing
-@testable import NewClaw
+@testable import iFlow
 
 @Suite struct KeychainStoreTests {
     @Test func saveLoadUpdateDeleteRoundTrip() {

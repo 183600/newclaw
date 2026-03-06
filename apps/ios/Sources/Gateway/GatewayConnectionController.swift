@@ -1,4 +1,4 @@
-import NewClawKit
+import iFlowKit
 import Darwin
 import Foundation
 import Network
@@ -283,7 +283,7 @@ final class GatewayConnectionController {
             caps: self.currentCaps(),
             commands: self.currentCommands(),
             permissions: [:],
-            clientId: "newclaw-ios",
+            clientId: "iflow-ios",
             clientMode: "node",
             clientDisplayName: displayName)
     }
@@ -304,51 +304,51 @@ final class GatewayConnectionController {
     }
 
     private func currentCaps() -> [String] {
-        var caps = [NewClawCapability.canvas.rawValue, NewClawCapability.screen.rawValue]
+        var caps = [iFlowCapability.canvas.rawValue, iFlowCapability.screen.rawValue]
 
         // Default-on: if the key doesn't exist yet, treat it as enabled.
         let cameraEnabled =
             UserDefaults.standard.object(forKey: "camera.enabled") == nil
                 ? true
                 : UserDefaults.standard.bool(forKey: "camera.enabled")
-        if cameraEnabled { caps.append(NewClawCapability.camera.rawValue) }
+        if cameraEnabled { caps.append(iFlowCapability.camera.rawValue) }
 
         let voiceWakeEnabled = UserDefaults.standard.bool(forKey: VoiceWakePreferences.enabledKey)
-        if voiceWakeEnabled { caps.append(NewClawCapability.voiceWake.rawValue) }
+        if voiceWakeEnabled { caps.append(iFlowCapability.voiceWake.rawValue) }
 
         let locationModeRaw = UserDefaults.standard.string(forKey: "location.enabledMode") ?? "off"
-        let locationMode = NewClawLocationMode(rawValue: locationModeRaw) ?? .off
-        if locationMode != .off { caps.append(NewClawCapability.location.rawValue) }
+        let locationMode = iFlowLocationMode(rawValue: locationModeRaw) ?? .off
+        if locationMode != .off { caps.append(iFlowCapability.location.rawValue) }
 
         return caps
     }
 
     private func currentCommands() -> [String] {
         var commands: [String] = [
-            NewClawCanvasCommand.present.rawValue,
-            NewClawCanvasCommand.hide.rawValue,
-            NewClawCanvasCommand.navigate.rawValue,
-            NewClawCanvasCommand.evalJS.rawValue,
-            NewClawCanvasCommand.snapshot.rawValue,
-            NewClawCanvasA2UICommand.push.rawValue,
-            NewClawCanvasA2UICommand.pushJSONL.rawValue,
-            NewClawCanvasA2UICommand.reset.rawValue,
-            NewClawScreenCommand.record.rawValue,
-            NewClawSystemCommand.notify.rawValue,
-            NewClawSystemCommand.which.rawValue,
-            NewClawSystemCommand.run.rawValue,
-            NewClawSystemCommand.execApprovalsGet.rawValue,
-            NewClawSystemCommand.execApprovalsSet.rawValue,
+            iFlowCanvasCommand.present.rawValue,
+            iFlowCanvasCommand.hide.rawValue,
+            iFlowCanvasCommand.navigate.rawValue,
+            iFlowCanvasCommand.evalJS.rawValue,
+            iFlowCanvasCommand.snapshot.rawValue,
+            iFlowCanvasA2UICommand.push.rawValue,
+            iFlowCanvasA2UICommand.pushJSONL.rawValue,
+            iFlowCanvasA2UICommand.reset.rawValue,
+            iFlowScreenCommand.record.rawValue,
+            iFlowSystemCommand.notify.rawValue,
+            iFlowSystemCommand.which.rawValue,
+            iFlowSystemCommand.run.rawValue,
+            iFlowSystemCommand.execApprovalsGet.rawValue,
+            iFlowSystemCommand.execApprovalsSet.rawValue,
         ]
 
         let caps = Set(self.currentCaps())
-        if caps.contains(NewClawCapability.camera.rawValue) {
-            commands.append(NewClawCameraCommand.list.rawValue)
-            commands.append(NewClawCameraCommand.snap.rawValue)
-            commands.append(NewClawCameraCommand.clip.rawValue)
+        if caps.contains(iFlowCapability.camera.rawValue) {
+            commands.append(iFlowCameraCommand.list.rawValue)
+            commands.append(iFlowCameraCommand.snap.rawValue)
+            commands.append(iFlowCameraCommand.clip.rawValue)
         }
-        if caps.contains(NewClawCapability.location.rawValue) {
-            commands.append(NewClawLocationCommand.get.rawValue)
+        if caps.contains(iFlowCapability.location.rawValue) {
+            commands.append(iFlowLocationCommand.get.rawValue)
         }
 
         return commands

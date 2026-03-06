@@ -1,9 +1,9 @@
 ---
 read_when:
-  - 你希望在 GCP 上全天候运行 NewClaw
+  - 你希望在 GCP 上全天候运行 iFlow
   - 你希望在自己的虚拟机上运行生产级、始终在线的 Gateway网关
   - 你希望完全掌控持久化、二进制文件和重启行为
-summary: 在 GCP Compute Engine 虚拟机上全天候运行 NewClaw Gateway网关（Docker），并实现持久化状态存储
+summary: 在 GCP Compute Engine 虚拟机上全天候运行 iFlow Gateway网关（Docker），并实现持久化状态存储
 title: GCP
 x-i18n:
   generated_at: "2026-02-01T21:33:10Z"
@@ -14,13 +14,13 @@ x-i18n:
   workflow: 15
 ---
 
-# 在 GCP Compute Engine 上运行 NewClaw（Docker，生产环境 VPS 指南）
+# 在 GCP Compute Engine 上运行 iFlow（Docker，生产环境 VPS 指南）
 
 ## 目标
 
-使用 Docker 在 GCP Compute Engine 虚拟机上运行持久化的 NewClaw Gateway网关，实现持久状态存储、内置二进制文件和安全的重启行为。
+使用 Docker 在 GCP Compute Engine 虚拟机上运行持久化的 iFlow Gateway网关，实现持久状态存储、内置二进制文件和安全的重启行为。
 
-如果你想"以每月约 $5-12 的成本全天候运行 NewClaw"，这是在 Google Cloud 上的可靠方案。
+如果你想"以每月约 $5-12 的成本全天候运行 iFlow"，这是在 Google Cloud 上的可靠方案。
 价格因机器类型和区域而异；选择适合你工作负载的最小虚拟机，如果遇到 OOM 再进行扩容。
 
 ## 我们要做什么（简单说明）？
@@ -28,8 +28,8 @@ x-i18n:
 - 创建 GCP 项目并启用计费
 - 创建 Compute Engine 虚拟机
 - 安装 Docker（隔离的应用运行时）
-- 在 Docker 中启动 NewClaw Gateway网关
-- 将 `~/.newclaw` + `~/.newclaw/workspace` 持久化到宿主机（重启/重建后数据不丢失）
+- 在 Docker 中启动 iFlow Gateway网关
+- 将 `~/.iflow` + `~/.iflow/workspace` 持久化到宿主机（重启/重建后数据不丢失）
 - 通过 SSH 隧道从笔记本电脑访问控制界面
 
 Gateway网关可通过以下方式访问：
@@ -49,7 +49,7 @@ Ubuntu 同样适用；请相应地映射软件包。
 2. 创建 Compute Engine 虚拟机（e2-small，Debian 12，20GB）
 3. SSH 连接到虚拟机
 4. 安装 Docker
-5. 克隆 NewClaw 仓库
+5. 克隆 iFlow 仓库
 6. 创建持久化宿主机目录
 7. 配置 `.env` 和 `docker-compose.yml`
 8. 内置所需二进制文件，构建并启动
@@ -96,8 +96,8 @@ gcloud auth login
 **CLI：**
 
 ```bash
-gcloud projects create my-newclaw-project --name="NewClaw Gateway网关"
-gcloud config set project my-newclaw-project
+gcloud projects create my-iflow-project --name="iFlow Gateway网关"
+gcloud config set project my-iflow-project
 ```
 
 在 https://console.cloud.google.com/billing 启用计费（Compute Engine 必需）。
@@ -129,7 +129,7 @@ gcloud services enable compute.googleapis.com
 **CLI：**
 
 ```bash
-gcloud compute instances create newclaw-gateway \
+gcloud compute instances create iflow-gateway \
   --zone=us-central1-a \
   --machine-type=e2-small \
   --boot-disk-size=20GB \
@@ -140,7 +140,7 @@ gcloud compute instances create newclaw-gateway \
 **Console：**
 
 1. 前往 Compute Engine > VM instances > Create instance
-2. 名称：`newclaw-gateway`
+2. 名称：`iflow-gateway`
 3. 区域：`us-central1`，可用区：`us-central1-a`
 4. 机器类型：`e2-small`
 5. 启动磁盘：Debian 12，20GB
@@ -153,7 +153,7 @@ gcloud compute instances create newclaw-gateway \
 **CLI：**
 
 ```bash
-gcloud compute ssh newclaw-gateway --zone=us-central1-a
+gcloud compute ssh iflow-gateway --zone=us-central1-a
 ```
 
 **Console：**
@@ -182,7 +182,7 @@ exit
 然后重新 SSH 连接：
 
 ```bash
-gcloud compute ssh newclaw-gateway --zone=us-central1-a
+gcloud compute ssh iflow-gateway --zone=us-central1-a
 ```
 
 验证：
@@ -194,11 +194,11 @@ docker compose version
 
 ---
 
-## 6）克隆 NewClaw 仓库
+## 6）克隆 iFlow 仓库
 
 ```bash
-git clone https://github.com/newclaw/newclaw.git
-cd newclaw
+git clone https://github.com/iflow/iflow.git
+cd iflow
 ```
 
 本指南假设你将构建自定义镜像以确保二进制文件的持久化。
@@ -211,8 +211,8 @@ Docker 容器是临时性的。
 所有长期状态必须存储在宿主机上。
 
 ```bash
-mkdir -p ~/.newclaw
-mkdir -p ~/.newclaw/workspace
+mkdir -p ~/.iflow
+mkdir -p ~/.iflow/workspace
 ```
 
 ---
@@ -222,16 +222,16 @@ mkdir -p ~/.newclaw/workspace
 在仓库根目录创建 `.env`。
 
 ```bash
-NEWCLAW_IMAGE=newclaw:latest
-NEWCLAW_GATEWAY_TOKEN=change-me-now
-NEWCLAW_GATEWAY_BIND=lan
-NEWCLAW_GATEWAY_PORT=18789
+IFLOW_IMAGE=iflow:latest
+IFLOW_GATEWAY_TOKEN=change-me-now
+IFLOW_GATEWAY_BIND=lan
+IFLOW_GATEWAY_PORT=18789
 
-NEWCLAW_CONFIG_DIR=/home/$USER/.newclaw
-NEWCLAW_WORKSPACE_DIR=/home/$USER/.newclaw/workspace
+IFLOW_CONFIG_DIR=/home/$USER/.iflow
+IFLOW_WORKSPACE_DIR=/home/$USER/.iflow/workspace
 
 GOG_KEYRING_PASSWORD=change-me-now
-XDG_CONFIG_HOME=/home/node/.newclaw
+XDG_CONFIG_HOME=/home/node/.iflow
 ```
 
 生成强密钥：
@@ -250,8 +250,8 @@ openssl rand -hex 32
 
 ```yaml
 services:
-  newclaw-gateway:
-    image: ${NEWCLAW_IMAGE}
+  iflow-gateway:
+    image: ${IFLOW_IMAGE}
     build: .
     restart: unless-stopped
     env_file:
@@ -260,19 +260,19 @@ services:
       - HOME=/home/node
       - NODE_ENV=production
       - TERM=xterm-256color
-      - NEWCLAW_GATEWAY_BIND=${NEWCLAW_GATEWAY_BIND}
-      - NEWCLAW_GATEWAY_PORT=${NEWCLAW_GATEWAY_PORT}
-      - NEWCLAW_GATEWAY_TOKEN=${NEWCLAW_GATEWAY_TOKEN}
+      - IFLOW_GATEWAY_BIND=${IFLOW_GATEWAY_BIND}
+      - IFLOW_GATEWAY_PORT=${IFLOW_GATEWAY_PORT}
+      - IFLOW_GATEWAY_TOKEN=${IFLOW_GATEWAY_TOKEN}
       - GOG_KEYRING_PASSWORD=${GOG_KEYRING_PASSWORD}
       - XDG_CONFIG_HOME=${XDG_CONFIG_HOME}
       - PATH=/home/linuxbrew/.linuxbrew/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
     volumes:
-      - ${NEWCLAW_CONFIG_DIR}:/home/node/.newclaw
-      - ${NEWCLAW_WORKSPACE_DIR}:/home/node/.newclaw/workspace
+      - ${IFLOW_CONFIG_DIR}:/home/node/.iflow
+      - ${IFLOW_WORKSPACE_DIR}:/home/node/.iflow/workspace
     ports:
       # 推荐：在虚拟机上保持 Gateway网关仅监听 local loopback；通过 SSH 隧道访问。
       # 如需公开暴露，移除 `127.0.0.1:` 前缀并相应配置防火墙。
-      - "127.0.0.1:${NEWCLAW_GATEWAY_PORT}:18789"
+      - "127.0.0.1:${IFLOW_GATEWAY_PORT}:18789"
 
       # 可选：仅当你对此虚拟机运行 iOS/Android 节点并需要 Canvas 主机时使用。
       # 如果公开暴露此端口，请阅读 /gateway/security 并相应配置防火墙。
@@ -283,9 +283,9 @@ services:
         "dist/index.js",
         "gateway",
         "--bind",
-        "${NEWCLAW_GATEWAY_BIND}",
+        "${IFLOW_GATEWAY_BIND}",
         "--port",
-        "${NEWCLAW_GATEWAY_PORT}",
+        "${IFLOW_GATEWAY_PORT}",
       ]
 ```
 
@@ -358,15 +358,15 @@ CMD ["node","dist/index.js"]
 
 ```bash
 docker compose build
-docker compose up -d newclaw-gateway
+docker compose up -d iflow-gateway
 ```
 
 验证二进制文件：
 
 ```bash
-docker compose exec newclaw-gateway which gog
-docker compose exec newclaw-gateway which goplaces
-docker compose exec newclaw-gateway which wacli
+docker compose exec iflow-gateway which gog
+docker compose exec iflow-gateway which goplaces
+docker compose exec iflow-gateway which wacli
 ```
 
 预期输出：
@@ -382,7 +382,7 @@ docker compose exec newclaw-gateway which wacli
 ## 12）验证 Gateway网关
 
 ```bash
-docker compose logs -f newclaw-gateway
+docker compose logs -f iflow-gateway
 ```
 
 成功标志：
@@ -398,7 +398,7 @@ docker compose logs -f newclaw-gateway
 创建 SSH 隧道以转发 Gateway网关端口：
 
 ```bash
-gcloud compute ssh newclaw-gateway --zone=us-central1-a -- -L 18789:127.0.0.1:18789
+gcloud compute ssh iflow-gateway --zone=us-central1-a -- -L 18789:127.0.0.1:18789
 ```
 
 在浏览器中打开：
@@ -411,30 +411,30 @@ gcloud compute ssh newclaw-gateway --zone=us-central1-a -- -L 18789:127.0.0.1:18
 
 ## 持久化存储位置（数据来源）
 
-NewClaw 在 Docker 中运行，但 Docker 并非数据来源。
+iFlow 在 Docker 中运行，但 Docker 并非数据来源。
 所有长期状态必须在重启、重建和重启动后仍然存在。
 
-| 组件            | 位置                             | 持久化机制      | 备注                        |
-| --------------- | -------------------------------- | --------------- | --------------------------- |
-| Gateway网关配置 | `/home/node/.newclaw/`           | 宿主机卷挂载    | 包含 `newclaw.json`、令牌   |
-| 模型认证配置    | `/home/node/.newclaw/`           | 宿主机卷挂载    | OAuth 令牌、API 密钥        |
-| Skills配置      | `/home/node/.newclaw/skills/`    | 宿主机卷挂载    | Skills 级别状态             |
-| 智能体工作区    | `/home/node/.newclaw/workspace/` | 宿主机卷挂载    | 代码和智能体产物            |
-| WhatsApp 会话   | `/home/node/.newclaw/`           | 宿主机卷挂载    | 保留二维码登录              |
-| Gmail 密钥环    | `/home/node/.newclaw/`           | 宿主机卷 + 密码 | 需要 `GOG_KEYRING_PASSWORD` |
-| 外部二进制文件  | `/usr/local/bin/`                | Docker 镜像     | 必须在构建时内置            |
-| Node 运行时     | 容器文件系统                     | Docker 镜像     | 每次镜像构建时重建          |
-| 操作系统软件包  | 容器文件系统                     | Docker 镜像     | 请勿在运行时安装            |
-| Docker 容器     | 临时性                           | 可重启          | 可安全销毁                  |
+| 组件            | 位置                           | 持久化机制      | 备注                        |
+| --------------- | ------------------------------ | --------------- | --------------------------- |
+| Gateway网关配置 | `/home/node/.iflow/`           | 宿主机卷挂载    | 包含 `iflow.json`、令牌     |
+| 模型认证配置    | `/home/node/.iflow/`           | 宿主机卷挂载    | OAuth 令牌、API 密钥        |
+| Skills配置      | `/home/node/.iflow/skills/`    | 宿主机卷挂载    | Skills 级别状态             |
+| 智能体工作区    | `/home/node/.iflow/workspace/` | 宿主机卷挂载    | 代码和智能体产物            |
+| WhatsApp 会话   | `/home/node/.iflow/`           | 宿主机卷挂载    | 保留二维码登录              |
+| Gmail 密钥环    | `/home/node/.iflow/`           | 宿主机卷 + 密码 | 需要 `GOG_KEYRING_PASSWORD` |
+| 外部二进制文件  | `/usr/local/bin/`              | Docker 镜像     | 必须在构建时内置            |
+| Node 运行时     | 容器文件系统                   | Docker 镜像     | 每次镜像构建时重建          |
+| 操作系统软件包  | 容器文件系统                   | Docker 镜像     | 请勿在运行时安装            |
+| Docker 容器     | 临时性                         | 可重启          | 可安全销毁                  |
 
 ---
 
 ## 更新
 
-在虚拟机上更新 NewClaw：
+在虚拟机上更新 iFlow：
 
 ```bash
-cd ~/newclaw
+cd ~/iflow
 git pull
 docker compose build
 docker compose up -d
@@ -464,15 +464,15 @@ gcloud compute os-login describe-profile
 
 ```bash
 # 先停止虚拟机
-gcloud compute instances stop newclaw-gateway --zone=us-central1-a
+gcloud compute instances stop iflow-gateway --zone=us-central1-a
 
 # 更改机器类型
-gcloud compute instances set-machine-type newclaw-gateway \
+gcloud compute instances set-machine-type iflow-gateway \
   --zone=us-central1-a \
   --machine-type=e2-small
 
 # 启动虚拟机
-gcloud compute instances start newclaw-gateway --zone=us-central1-a
+gcloud compute instances start iflow-gateway --zone=us-central1-a
 ```
 
 ---
@@ -486,14 +486,14 @@ gcloud compute instances start newclaw-gateway --zone=us-central1-a
 1. 创建服务账户：
 
    ```bash
-   gcloud iam service-accounts create newclaw-deploy \
-     --display-name="NewClaw Deployment"
+   gcloud iam service-accounts create iflow-deploy \
+     --display-name="iFlow Deployment"
    ```
 
 2. 授予 Compute Instance Admin 角色（或更精细的自定义角色）：
    ```bash
-   gcloud projects add-iam-policy-binding my-newclaw-project \
-     --member="serviceAccount:newclaw-deploy@my-newclaw-project.iam.gserviceaccount.com" \
+   gcloud projects add-iam-policy-binding my-iflow-project \
+     --member="serviceAccount:iflow-deploy@my-iflow-project.iam.gserviceaccount.com" \
      --role="roles/compute.instanceAdmin.v1"
    ```
 

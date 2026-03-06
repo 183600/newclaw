@@ -48,7 +48,7 @@ const rmDirWithRetries = async (dir: string): Promise<void> => {
 beforeEach(async () => {
   resetInboundDedupe();
   previousHome = process.env.HOME;
-  tempHome = await fs.mkdtemp(path.join(os.tmpdir(), "newclaw-web-home-"));
+  tempHome = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-web-home-"));
   process.env.HOME = tempHome;
 });
 
@@ -63,7 +63,7 @@ afterEach(async () => {
 const makeSessionStore = async (
   entries: Record<string, unknown> = {},
 ): Promise<{ storePath: string; cleanup: () => Promise<void> }> => {
-  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "newclaw-session-"));
+  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-session-"));
   const storePath = path.join(dir, "sessions.json");
   await fs.writeFile(storePath, JSON.stringify(entries));
   const cleanup = async () => {
@@ -126,7 +126,7 @@ describe("web auto-reply", () => {
 
     setLoadConfigMock(() => ({
       messages: {
-        groupChat: { mentionPatterns: ["@newclaw"] },
+        groupChat: { mentionPatterns: ["@iflow"] },
       },
       session: { store: storePath },
     }));
@@ -209,7 +209,7 @@ describe("web auto-reply", () => {
       },
       messages: {
         groupChat: {
-          mentionPatterns: ["\\bnewclaw\\b"],
+          mentionPatterns: ["\\biflow\\b"],
         },
       },
     }));
@@ -248,9 +248,9 @@ describe("web auto-reply", () => {
 
     expect(resolver).not.toHaveBeenCalled();
 
-    // Text-based mentionPatterns still work (user can type "newclaw" explicitly).
+    // Text-based mentionPatterns still work (user can type "iflow" explicitly).
     await capturedOnMessage?.({
-      body: "newclaw ping",
+      body: "iflow ping",
       from: "123@g.us",
       conversationId: "123@g.us",
       chatId: "123@g.us",
@@ -272,7 +272,7 @@ describe("web auto-reply", () => {
   });
   it("emits heartbeat logs with connection metadata", async () => {
     vi.useFakeTimers();
-    const logPath = `/tmp/newclaw-heartbeat-${crypto.randomUUID()}.log`;
+    const logPath = `/tmp/iflow-heartbeat-${crypto.randomUUID()}.log`;
     setLoggerOverride({ level: "trace", file: logPath });
 
     const runtime = {
@@ -313,7 +313,7 @@ describe("web auto-reply", () => {
     expect(content).toMatch(/messagesHandled/);
   });
   it("logs outbound replies to file", async () => {
-    const logPath = `/tmp/newclaw-log-test-${crypto.randomUUID()}.log`;
+    const logPath = `/tmp/iflow-log-test-${crypto.randomUUID()}.log`;
     setLoggerOverride({ level: "trace", file: logPath });
 
     let capturedOnMessage:

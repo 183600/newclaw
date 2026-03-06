@@ -2,12 +2,12 @@
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
-IMAGE_NAME="newclaw-gateway-network-e2e"
+IMAGE_NAME="iflow-gateway-network-e2e"
 
 PORT="18789"
 TOKEN="e2e-$(date +%s)-$$"
-NET_NAME="newclaw-net-e2e-$$"
-GW_NAME="newclaw-gateway-e2e-$$"
+NET_NAME="iflow-net-e2e-$$"
+GW_NAME="iflow-gateway-e2e-$$"
 
 cleanup() {
   docker rm -f "$GW_NAME" >/dev/null 2>&1 || true
@@ -25,11 +25,11 @@ echo "Starting gateway container..."
 	docker run --rm -d \
 	  --name "$GW_NAME" \
 	  --network "$NET_NAME" \
-	  -e "NEWCLAW_GATEWAY_TOKEN=$TOKEN" \
-	  -e "NEWCLAW_SKIP_CHANNELS=1" \
-	  -e "NEWCLAW_SKIP_GMAIL_WATCHER=1" \
-	  -e "NEWCLAW_SKIP_CRON=1" \
-	  -e "NEWCLAW_SKIP_CANVAS_HOST=1" \
+	  -e "IFLOW_GATEWAY_TOKEN=$TOKEN" \
+	  -e "IFLOW_SKIP_CHANNELS=1" \
+	  -e "IFLOW_SKIP_GMAIL_WATCHER=1" \
+	  -e "IFLOW_SKIP_CRON=1" \
+	  -e "IFLOW_SKIP_CANVAS_HOST=1" \
 	  "$IMAGE_NAME" \
   bash -lc "node dist/index.js gateway --port $PORT --bind lan --allow-unconfigured > /tmp/gateway-net-e2e.log 2>&1"
 

@@ -1,15 +1,15 @@
 ---
-summary: "CLI reference for `newclaw docs` (search the live docs index)"
+summary: "CLI reference for `iflow docs` (search the live docs index)"
 read_when:
-  - You want to search the live NewClaw docs from the terminal
+  - You want to search the live iFlow docs from the terminal
 title: "docs"
 ---
 
-# `newclaw docs`
+# `iflow docs`
 
 Search the live docs index.
 
 ```bash
-newclaw docs browser extension
-newclaw docs sandbox allowHostControl
+iflow docs browser extension
+iflow docs sandbox allowHostControl
 ```

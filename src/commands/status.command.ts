@@ -377,7 +377,7 @@ export async function statusCommand(
     },
   ];
 
-  runtime.log(theme.heading("NewClaw status"));
+  runtime.log(theme.heading("iFlow status"));
   runtime.log("");
   runtime.log(theme.heading("Overview"));
   runtime.log(
@@ -434,8 +434,8 @@ export async function statusCommand(
       runtime.log(theme.muted(`… +${sorted.length - shown.length} more`));
     }
   }
-  runtime.log(theme.muted(`Full report: ${formatCliCommand("newclaw security audit")}`));
-  runtime.log(theme.muted(`Deep probe: ${formatCliCommand("newclaw security audit --deep")}`));
+  runtime.log(theme.muted(`Full report: ${formatCliCommand("iflow security audit")}`));
+  runtime.log(theme.muted(`Deep probe: ${formatCliCommand("iflow security audit --deep")}`));
 
   runtime.log("");
   runtime.log(theme.heading("Channels"));
@@ -599,8 +599,8 @@ export async function statusCommand(
   }
 
   runtime.log("");
-  runtime.log("FAQ: https://docs.newclaw.ai/faq");
-  runtime.log("Troubleshooting: https://docs.newclaw.ai/troubleshooting");
+  runtime.log("FAQ: https://docs.iflow.ai/faq");
+  runtime.log("Troubleshooting: https://docs.iflow.ai/troubleshooting");
   runtime.log("");
   const updateHint = formatUpdateAvailableHint(update);
   if (updateHint) {
@@ -608,11 +608,11 @@ export async function statusCommand(
     runtime.log("");
   }
   runtime.log("Next steps:");
-  runtime.log(`  Need to share?      ${formatCliCommand("newclaw status --all")}`);
-  runtime.log(`  Need to debug live? ${formatCliCommand("newclaw logs --follow")}`);
+  runtime.log(`  Need to share?      ${formatCliCommand("iflow status --all")}`);
+  runtime.log(`  Need to debug live? ${formatCliCommand("iflow logs --follow")}`);
   if (gatewayReachable) {
-    runtime.log(`  Need to test channels? ${formatCliCommand("newclaw status --deep")}`);
+    runtime.log(`  Need to test channels? ${formatCliCommand("iflow status --deep")}`);
   } else {
-    runtime.log(`  Fix reachability first: ${formatCliCommand("newclaw gateway probe")}`);
+    runtime.log(`  Fix reachability first: ${formatCliCommand("iflow gateway probe")}`);
   }
 }

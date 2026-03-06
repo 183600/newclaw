@@ -1,9 +1,9 @@
-import type { NewClawConfig } from "./types.js";
+import type { iFlowConfig } from "./types.js";
 import { applyLegacyMigrations } from "./legacy.js";
 import { validateConfigObjectWithPlugins } from "./validation.js";
 
 export function migrateLegacyConfig(raw: unknown): {
-  config: NewClawConfig | null;
+  config: iFlowConfig | null;
   changes: string[];
 } {
   const { next, changes } = applyLegacyMigrations(raw);

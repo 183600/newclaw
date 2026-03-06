@@ -1,15 +1,15 @@
 ---
 name: session-memory
 description: "Save session context to memory when /new command is issued"
-homepage: https://docs.newclaw.ai/hooks#session-memory
+homepage: https://docs.iflow.ai/hooks#session-memory
 metadata:
   {
-    "newclaw":
+    "iflow":
       {
         "emoji": "💾",
         "events": ["command:new"],
         "requires": { "config": ["workspace.dir"] },
-        "install": [{ "id": "bundled", "kind": "bundled", "label": "Bundled with NewClaw" }],
+        "install": [{ "id": "bundled", "kind": "bundled", "label": "Bundled with iFlow" }],
       },
   }
 ---
@@ -82,7 +82,7 @@ Example configuration:
 
 The hook automatically:
 
-- Uses your workspace directory (`~/.newclaw/workspace` by default)
+- Uses your workspace directory (`~/.iflow/workspace` by default)
 - Uses your configured LLM for slug generation
 - Falls back to timestamp slugs if LLM is unavailable
 
@@ -91,7 +91,7 @@ The hook automatically:
 To disable this hook:
 
 ```bash
-newclaw hooks disable session-memory
+iflow hooks disable session-memory
 ```
 
 Or remove it from your config:

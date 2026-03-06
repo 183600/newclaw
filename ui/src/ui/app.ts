@@ -82,7 +82,7 @@ import { type ChatAttachment, type ChatQueueItem, type CronFormState } from "./u
 
 declare global {
   interface Window {
-    __NEWCLAW_CONTROL_UI_BASE_PATH__?: string;
+    __IFLOW_CONTROL_UI_BASE_PATH__?: string;
   }
 }
 
@@ -101,8 +101,8 @@ function resolveOnboardingMode(): boolean {
   return normalized === "1" || normalized === "true" || normalized === "yes" || normalized === "on";
 }
 
-@customElement("newclaw-app")
-export class NewClawApp extends LitElement {
+@customElement("iflow-app")
+export class iFlowApp extends LitElement {
   @state() settings: UiSettings = loadSettings();
   @state() password = "";
   @state() tab: Tab = "chat";

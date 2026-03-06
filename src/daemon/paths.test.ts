@@ -5,31 +5,31 @@ import { resolveGatewayStateDir } from "./paths.js";
 describe("resolveGatewayStateDir", () => {
   it("uses the default state dir when no overrides are set", () => {
     const env = { HOME: "/Users/test" };
-    expect(resolveGatewayStateDir(env)).toBe(path.join("/Users/test", ".newclaw"));
+    expect(resolveGatewayStateDir(env)).toBe(path.join("/Users/test", ".iflow"));
   });
 
   it("appends the profile suffix when set", () => {
-    const env = { HOME: "/Users/test", NEWCLAW_PROFILE: "rescue" };
-    expect(resolveGatewayStateDir(env)).toBe(path.join("/Users/test", ".newclaw-rescue"));
+    const env = { HOME: "/Users/test", IFLOW_PROFILE: "rescue" };
+    expect(resolveGatewayStateDir(env)).toBe(path.join("/Users/test", ".iflow-rescue"));
   });
 
   it("treats default profiles as the base state dir", () => {
-    const env = { HOME: "/Users/test", NEWCLAW_PROFILE: "Default" };
-    expect(resolveGatewayStateDir(env)).toBe(path.join("/Users/test", ".newclaw"));
+    const env = { HOME: "/Users/test", IFLOW_PROFILE: "Default" };
+    expect(resolveGatewayStateDir(env)).toBe(path.join("/Users/test", ".iflow"));
   });
 
-  it("uses NEWCLAW_STATE_DIR when provided", () => {
-    const env = { HOME: "/Users/test", NEWCLAW_STATE_DIR: "/var/lib/newclaw" };
-    expect(resolveGatewayStateDir(env)).toBe(path.resolve("/var/lib/newclaw"));
+  it("uses IFLOW_STATE_DIR when provided", () => {
+    const env = { HOME: "/Users/test", IFLOW_STATE_DIR: "/var/lib/iflow" };
+    expect(resolveGatewayStateDir(env)).toBe(path.resolve("/var/lib/iflow"));
   });
 
-  it("expands ~ in NEWCLAW_STATE_DIR", () => {
-    const env = { HOME: "/Users/test", NEWCLAW_STATE_DIR: "~/newclaw-state" };
-    expect(resolveGatewayStateDir(env)).toBe(path.resolve("/Users/test/newclaw-state"));
+  it("expands ~ in IFLOW_STATE_DIR", () => {
+    const env = { HOME: "/Users/test", IFLOW_STATE_DIR: "~/iflow-state" };
+    expect(resolveGatewayStateDir(env)).toBe(path.resolve("/Users/test/iflow-state"));
   });
 
   it("preserves Windows absolute paths without HOME", () => {
-    const env = { NEWCLAW_STATE_DIR: "C:\\State\\newclaw" };
-    expect(resolveGatewayStateDir(env)).toBe("C:\\State\\newclaw");
+    const env = { IFLOW_STATE_DIR: "C:\\State\\iflow" };
+    expect(resolveGatewayStateDir(env)).toBe("C:\\State\\iflow");
   });
 });

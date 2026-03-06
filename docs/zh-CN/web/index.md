@@ -18,7 +18,7 @@ x-i18n:
 Gateway网关在与 Gateway网关 WebSocket 相同的端口上提供一个小型**浏览器控制 UI**（Vite + Lit）：
 
 - 默认：`http://<host>:18789/`
-- 可选前缀：设置 `gateway.controlUi.basePath`（例如 `/newclaw`）
+- 可选前缀：设置 `gateway.controlUi.basePath`（例如 `/iflow`）
 
 功能详情请参阅[控制 UI](/web/control-ui)。
 本页重点介绍绑定模式、安全和面向 Web 的界面。
@@ -36,7 +36,7 @@ Gateway网关在与 Gateway网关 WebSocket 相同的端口上提供一个小型
 ```json5
 {
   gateway: {
-    controlUi: { enabled: true, basePath: "/newclaw" }, // basePath 可选
+    controlUi: { enabled: true, basePath: "/iflow" }, // basePath 可选
   },
 }
 ```
@@ -59,7 +59,7 @@ Gateway网关在与 Gateway网关 WebSocket 相同的端口上提供一个小型
 然后启动 Gateway网关：
 
 ```bash
-newclaw gateway
+iflow gateway
 ```
 
 打开：
@@ -81,7 +81,7 @@ newclaw gateway
 然后启动 Gateway网关（非 local loopback 绑定需要令牌）：
 
 ```bash
-newclaw gateway
+iflow gateway
 ```
 
 打开：
@@ -95,7 +95,7 @@ newclaw gateway
   gateway: {
     bind: "loopback",
     tailscale: { mode: "funnel" },
-    auth: { mode: "password" }, // 或 NEWCLAW_GATEWAY_PASSWORD
+    auth: { mode: "password" }, // 或 IFLOW_GATEWAY_PASSWORD
   },
 }
 ```

@@ -1,4 +1,4 @@
-import type { NewClawConfig } from "../config/types.js";
+import type { iFlowConfig } from "../config/types.js";
 
 export type CommandScope = "text" | "native" | "both";
 
@@ -14,7 +14,7 @@ export type CommandCategory =
 export type CommandArgType = "string" | "number" | "boolean";
 
 export type CommandArgChoiceContext = {
-  cfg?: NewClawConfig;
+  cfg?: iFlowConfig;
   provider?: string;
   model?: string;
   command: ChatCommandDefinition;
@@ -80,7 +80,7 @@ export type CommandDetection = {
 };
 
 export type ShouldHandleTextCommandsParams = {
-  cfg: NewClawConfig;
+  cfg: iFlowConfig;
   surface: string;
   commandSource?: "text" | "native";
 };

@@ -8,17 +8,17 @@ plugins {
 }
 
 android {
-  namespace = "ai.newclaw.android"
+  namespace = "ai.iflow.android"
   compileSdk = 36
 
   sourceSets {
     getByName("main") {
-      assets.srcDir(file("../../shared/NewClawKit/Sources/NewClawKit/Resources"))
+      assets.srcDir(file("../../shared/iFlowKit/Sources/iFlowKit/Resources"))
     }
   }
 
   defaultConfig {
-    applicationId = "ai.newclaw.android"
+    applicationId = "ai.iflow.android"
     minSdk = 31
     targetSdk = 36
     versionCode = 202602020
@@ -65,7 +65,7 @@ androidComponents {
         val versionName = output.versionName.orNull ?: "0"
         val buildType = variant.buildType
 
-        val outputFileName = "newclaw-${versionName}-${buildType}.apk"
+        val outputFileName = "iflow-${versionName}-${buildType}.apk"
         output.outputFileName = outputFileName
       }
   }

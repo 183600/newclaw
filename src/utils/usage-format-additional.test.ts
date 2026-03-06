@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { NewClawConfig } from "../config/config.js";
+import type { iFlowConfig } from "../config/config.js";
 import {
   estimateUsageCost,
   formatTokenCount,
@@ -85,7 +85,7 @@ describe("resolveModelCostConfig - Additional Tests", () => {
           },
         },
       },
-    } as NewClawConfig;
+    } as iFlowConfig;
     expect(resolveModelCostConfig({ provider: "openai", model: "gpt-4", config })).toBeUndefined();
     expect(resolveModelCostConfig({ provider: "OpenAI", model: "gpt-4", config })).toEqual(
       costConfig,
@@ -102,7 +102,7 @@ describe("resolveModelCostConfig - Additional Tests", () => {
           },
         },
       },
-    } as NewClawConfig;
+    } as iFlowConfig;
     expect(resolveModelCostConfig({ provider: "openai", model: "gpt-4-turbo", config })).toEqual(
       costConfig,
     );
@@ -117,7 +117,7 @@ describe("resolveModelCostConfig - Additional Tests", () => {
           },
         },
       },
-    } as NewClawConfig;
+    } as iFlowConfig;
     expect(resolveModelCostConfig({ provider: "openai", model: "gpt-4", config })).toBeUndefined();
   });
 
@@ -128,14 +128,14 @@ describe("resolveModelCostConfig - Additional Tests", () => {
           openai: {},
         },
       },
-    } as NewClawConfig;
+    } as iFlowConfig;
     expect(resolveModelCostConfig({ provider: "openai", model: "gpt-4", config })).toBeUndefined();
   });
 
   it("handles missing providers section", () => {
     const config = {
       models: {},
-    } as NewClawConfig;
+    } as iFlowConfig;
     expect(resolveModelCostConfig({ provider: "openai", model: "gpt-4", config })).toBeUndefined();
   });
 });

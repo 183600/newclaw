@@ -1,9 +1,9 @@
 import crypto from "node:crypto";
-import type { NewClawConfig } from "../../config/config.js";
+import type { iFlowConfig } from "../../config/config.js";
 import { loadSessionStore, resolveStorePath, type SessionEntry } from "../../config/sessions.js";
 
 export function resolveCronSession(params: {
-  cfg: NewClawConfig;
+  cfg: iFlowConfig;
   sessionKey: string;
   nowMs: number;
   agentId: string;

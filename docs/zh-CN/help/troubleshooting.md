@@ -20,22 +20,22 @@ x-i18n:
 按顺序运行以下命令：
 
 ```bash
-newclaw status
-newclaw status --all
-newclaw gateway probe
-newclaw logs --follow
-newclaw doctor
+iflow status
+iflow status --all
+iflow gateway probe
+iflow logs --follow
+iflow doctor
 ```
 
 如果 Gateway网关可达，进行深度探测：
 
 ```bash
-newclaw status --deep
+iflow status --deep
 ```
 
 ## 常见"出问题了"场景
 
-### `newclaw: command not found`
+### `iflow: command not found`
 
 几乎总是 Node/npm PATH 问题。从这里开始：
 
@@ -46,16 +46,16 @@ newclaw status --deep
 以详细模式重新运行安装程序，查看完整的跟踪信息和 npm 输出：
 
 ```bash
-curl -fsSL https://newclaw.ai/install.sh | bash -s -- --verbose
+curl -fsSL https://iflow.ai/install.sh | bash -s -- --verbose
 ```
 
 对于 beta 安装：
 
 ```bash
-curl -fsSL https://newclaw.ai/install.sh | bash -s -- --beta --verbose
+curl -fsSL https://iflow.ai/install.sh | bash -s -- --beta --verbose
 ```
 
-你也可以设置 `NEWCLAW_VERBOSE=1` 来代替该标志。
+你也可以设置 `IFLOW_VERBOSE=1` 来代替该标志。
 
 ### Gateway网关 "unauthorized"、无法连接或持续重连
 
@@ -67,10 +67,10 @@ curl -fsSL https://newclaw.ai/install.sh | bash -s -- --beta --verbose
 - [Gateway网关故障排除](/gateway/troubleshooting)
 - [控制 UI](/web/control-ui#insecure-http)
 
-### `docs.newclaw.ai` 显示 SSL 错误（Comcast/Xfinity）
+### `docs.iflow.ai` 显示 SSL 错误（Comcast/Xfinity）
 
-某些 Comcast/Xfinity 连接通过 Xfinity Advanced Security 屏蔽 `docs.newclaw.ai`。
-禁用 Advanced Security 或将 `docs.newclaw.ai` 添加到允许列表，然后重试。
+某些 Comcast/Xfinity 连接通过 Xfinity Advanced Security 屏蔽 `docs.iflow.ai`。
+禁用 Advanced Security 或将 `docs.iflow.ai` 添加到允许列表，然后重试。
 
 - Xfinity Advanced Security 帮助：https://www.xfinity.com/support/articles/using-xfinity-xfi-advanced-security
 - 快速排查：尝试使用手机热点或 VPN 确认是否为 ISP 级别的过滤
@@ -89,7 +89,7 @@ curl -fsSL https://newclaw.ai/install.sh | bash -s -- --beta --verbose
 
 这通常意味着 `agents.defaults.models` 被配置为允许列表。当其非空时，只有那些提供商/模型键可以被选择。
 
-- 检查允许列表：`newclaw config get agents.defaults.models`
+- 检查允许列表：`iflow config get agents.defaults.models`
 - 添加你需要的模型（或清空允许列表），然后重试 `/model`
 - 使用 `/models` 浏览允许的提供商/模型
 
@@ -98,7 +98,7 @@ curl -fsSL https://newclaw.ai/install.sh | bash -s -- --beta --verbose
 粘贴安全报告：
 
 ```bash
-newclaw status --all
+iflow status --all
 ```
 
-如果可以，请附上 `newclaw logs --follow` 中相关的日志尾部内容。
+如果可以，请附上 `iflow logs --follow` 中相关的日志尾部内容。

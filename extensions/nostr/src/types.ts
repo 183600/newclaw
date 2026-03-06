@@ -1,4 +1,4 @@
-import type { NewClawConfig } from "newclaw/plugin-sdk";
+import type { iFlowConfig } from "iflow/plugin-sdk";
 import type { NostrProfile } from "./config-schema.js";
 import { getPublicKeyFromPrivate } from "./nostr-bus.js";
 import { DEFAULT_RELAYS } from "./nostr-bus.js";
@@ -30,7 +30,7 @@ const DEFAULT_ACCOUNT_ID = "default";
 /**
  * List all configured Nostr account IDs
  */
-export function listNostrAccountIds(cfg: NewClawConfig): string[] {
+export function listNostrAccountIds(cfg: iFlowConfig): string[] {
   const nostrCfg = (cfg.channels as Record<string, unknown> | undefined)?.nostr as
     | NostrAccountConfig
     | undefined;
@@ -46,7 +46,7 @@ export function listNostrAccountIds(cfg: NewClawConfig): string[] {
 /**
  * Get the default account ID
  */
-export function resolveDefaultNostrAccountId(cfg: NewClawConfig): string {
+export function resolveDefaultNostrAccountId(cfg: iFlowConfig): string {
   const ids = listNostrAccountIds(cfg);
   if (ids.includes(DEFAULT_ACCOUNT_ID)) {
     return DEFAULT_ACCOUNT_ID;
@@ -58,7 +58,7 @@ export function resolveDefaultNostrAccountId(cfg: NewClawConfig): string {
  * Resolve a Nostr account from config
  */
 export function resolveNostrAccount(opts: {
-  cfg: NewClawConfig;
+  cfg: iFlowConfig;
   accountId?: string | null;
 }): ResolvedNostrAccount {
   const accountId = opts.accountId ?? DEFAULT_ACCOUNT_ID;

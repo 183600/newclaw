@@ -11,29 +11,29 @@ Manage Docker-based sandbox containers for isolated agent execution.
 
 ## Overview
 
-NewClaw can run agents in isolated Docker containers for security. The `sandbox` commands help you manage these containers, especially after updates or configuration changes.
+iFlow can run agents in isolated Docker containers for security. The `sandbox` commands help you manage these containers, especially after updates or configuration changes.
 
 ## Commands
 
-### `newclaw sandbox explain`
+### `iflow sandbox explain`
 
 Inspect the **effective** sandbox mode/scope/workspace access, sandbox tool policy, and elevated gates (with fix-it config key paths).
 
 ```bash
-newclaw sandbox explain
-newclaw sandbox explain --session agent:main:main
-newclaw sandbox explain --agent work
-newclaw sandbox explain --json
+iflow sandbox explain
+iflow sandbox explain --session agent:main:main
+iflow sandbox explain --agent work
+iflow sandbox explain --json
 ```
 
-### `newclaw sandbox list`
+### `iflow sandbox list`
 
 List all sandbox containers with their status and configuration.
 
 ```bash
-newclaw sandbox list
-newclaw sandbox list --browser  # List only browser containers
-newclaw sandbox list --json     # JSON output
+iflow sandbox list
+iflow sandbox list --browser  # List only browser containers
+iflow sandbox list --json     # JSON output
 ```
 
 **Output includes:**
@@ -44,16 +44,16 @@ newclaw sandbox list --json     # JSON output
 - Idle time (time since last use)
 - Associated session/agent
 
-### `newclaw sandbox recreate`
+### `iflow sandbox recreate`
 
 Remove sandbox containers to force recreation with updated images/config.
 
 ```bash
-newclaw sandbox recreate --all                # Recreate all containers
-newclaw sandbox recreate --session main       # Specific session
-newclaw sandbox recreate --agent mybot        # Specific agent
-newclaw sandbox recreate --browser            # Only browser containers
-newclaw sandbox recreate --all --force        # Skip confirmation
+iflow sandbox recreate --all                # Recreate all containers
+iflow sandbox recreate --session main       # Specific session
+iflow sandbox recreate --agent mybot        # Specific agent
+iflow sandbox recreate --browser            # Only browser containers
+iflow sandbox recreate --all --force        # Skip confirmation
 ```
 
 **Options:**
@@ -72,14 +72,14 @@ newclaw sandbox recreate --all --force        # Skip confirmation
 
 ```bash
 # Pull new image
-docker pull newclaw-sandbox:latest
-docker tag newclaw-sandbox:latest newclaw-sandbox:bookworm-slim
+docker pull iflow-sandbox:latest
+docker tag iflow-sandbox:latest iflow-sandbox:bookworm-slim
 
 # Update config to use new image
 # Edit config: agents.defaults.sandbox.docker.image (or agents.list[].sandbox.docker.image)
 
 # Recreate containers
-newclaw sandbox recreate --all
+iflow sandbox recreate --all
 ```
 
 ### After changing sandbox configuration
@@ -88,22 +88,22 @@ newclaw sandbox recreate --all
 # Edit config: agents.defaults.sandbox.* (or agents.list[].sandbox.*)
 
 # Recreate to apply new config
-newclaw sandbox recreate --all
+iflow sandbox recreate --all
 ```
 
 ### After changing setupCommand
 
 ```bash
-newclaw sandbox recreate --all
+iflow sandbox recreate --all
 # or just one agent:
-newclaw sandbox recreate --agent family
+iflow sandbox recreate --agent family
 ```
 
 ### For a specific agent only
 
 ```bash
 # Update only one agent's containers
-newclaw sandbox recreate --agent alfred
+iflow sandbox recreate --agent alfred
 ```
 
 ## Why is this needed?
@@ -114,14 +114,14 @@ newclaw sandbox recreate --agent alfred
 - Containers are only pruned after 24h of inactivity
 - Regularly-used agents keep old containers running indefinitely
 
-**Solution:** Use `newclaw sandbox recreate` to force removal of old containers. They'll be recreated automatically with current settings when next needed.
+**Solution:** Use `iflow sandbox recreate` to force removal of old containers. They'll be recreated automatically with current settings when next needed.
 
-Tip: prefer `newclaw sandbox recreate` over manual `docker rm`. It uses the
+Tip: prefer `iflow sandbox recreate` over manual `docker rm`. It uses the
 Gateway’s container naming and avoids mismatches when scope/session keys change.
 
 ## Configuration
 
-Sandbox settings live in `~/.newclaw/newclaw.json` under `agents.defaults.sandbox` (per-agent overrides go in `agents.list[].sandbox`):
+Sandbox settings live in `~/.iflow/iflow.json` under `agents.defaults.sandbox` (per-agent overrides go in `agents.list[].sandbox`):
 
 ```jsonc
 {
@@ -131,8 +131,8 @@ Sandbox settings live in `~/.newclaw/newclaw.json` under `agents.defaults.sandbo
         "mode": "all", // off, non-main, all
         "scope": "agent", // session, agent, shared
         "docker": {
-          "image": "newclaw-sandbox:bookworm-slim",
-          "containerPrefix": "newclaw-sbx-",
+          "image": "iflow-sandbox:bookworm-slim",
+          "containerPrefix": "iflow-sbx-",
           // ... more Docker options
         },
         "prune": {

@@ -1,6 +1,6 @@
 import os from "node:os";
 import path from "node:path";
-import type { NewClawConfig } from "../config/config.js";
+import type { iFlowConfig } from "../config/config.js";
 import { resolveStateDir } from "../config/paths.js";
 import {
   DEFAULT_AGENT_ID,
@@ -12,7 +12,7 @@ import { DEFAULT_AGENT_WORKSPACE_DIR } from "./workspace.js";
 
 export { resolveAgentIdFromSessionKey } from "../routing/session-key.js";
 
-type AgentEntry = NonNullable<NonNullable<NewClawConfig["agents"]>["list"]>[number];
+type AgentEntry = NonNullable<NonNullable<iFlowConfig["agents"]>["list"]>[number];
 
 type ResolvedAgentConfig = {
   name?: string;
@@ -32,7 +32,7 @@ type ResolvedAgentConfig = {
 
 let defaultAgentWarned = false;
 
-function listAgents(cfg: NewClawConfig): AgentEntry[] {
+function listAgents(cfg: iFlowConfig): AgentEntry[] {
   const list = cfg.agents?.list;
   if (!Array.isArray(list)) {
     return [];
@@ -40,7 +40,7 @@ function listAgents(cfg: NewClawConfig): AgentEntry[] {
   return list.filter((entry): entry is AgentEntry => Boolean(entry && typeof entry === "object"));
 }
 
-export function listAgentIds(cfg: NewClawConfig): string[] {
+export function listAgentIds(cfg: iFlowConfig): string[] {
   const agents = listAgents(cfg);
   if (agents.length === 0) {
     return [DEFAULT_AGENT_ID];
@@ -58,7 +58,7 @@ export function listAgentIds(cfg: NewClawConfig): string[] {
   return ids.length > 0 ? ids : [DEFAULT_AGENT_ID];
 }
 
-export function resolveDefaultAgentId(cfg: NewClawConfig): string {
+export function resolveDefaultAgentId(cfg: iFlowConfig): string {
   const agents = listAgents(cfg);
   if (agents.length === 0) {
     return DEFAULT_AGENT_ID;
@@ -72,7 +72,7 @@ export function resolveDefaultAgentId(cfg: NewClawConfig): string {
   return normalizeAgentId(chosen || DEFAULT_AGENT_ID);
 }
 
-export function resolveSessionAgentIds(params: { sessionKey?: string; config?: NewClawConfig }): {
+export function resolveSessionAgentIds(params: { sessionKey?: string; config?: iFlowConfig }): {
   defaultAgentId: string;
   sessionAgentId: string;
 } {
@@ -86,18 +86,18 @@ export function resolveSessionAgentIds(params: { sessionKey?: string; config?: N
 
 export function resolveSessionAgentId(params: {
   sessionKey?: string;
-  config?: NewClawConfig;
+  config?: iFlowConfig;
 }): string {
   return resolveSessionAgentIds(params).sessionAgentId;
 }
 
-function resolveAgentEntry(cfg: NewClawConfig, agentId: string): AgentEntry | undefined {
+function resolveAgentEntry(cfg: iFlowConfig, agentId: string): AgentEntry | undefined {
   const id = normalizeAgentId(agentId);
   return listAgents(cfg).find((entry) => normalizeAgentId(entry.id) === id);
 }
 
 export function resolveAgentConfig(
-  cfg: NewClawConfig,
+  cfg: iFlowConfig,
   agentId: string,
 ): ResolvedAgentConfig | undefined {
   const id = normalizeAgentId(agentId);
@@ -130,10 +130,7 @@ export function resolveAgentConfig(
   };
 }
 
-export function resolveAgentSkillsFilter(
-  cfg: NewClawConfig,
-  agentId: string,
-): string[] | undefined {
+export function resolveAgentSkillsFilter(cfg: iFlowConfig, agentId: string): string[] | undefined {
   const raw = resolveAgentConfig(cfg, agentId)?.skills;
   if (!raw) {
     return undefined;
@@ -145,7 +142,7 @@ export function resolveAgentSkillsFilter(
   return normalized.length > 0 ? normalized : [];
 }
 
-export function resolveAgentModelPrimary(cfg: NewClawConfig, agentId: string): string | undefined {
+export function resolveAgentModelPrimary(cfg: iFlowConfig, agentId: string): string | undefined {
   const raw = resolveAgentConfig(cfg, agentId)?.model;
   if (!raw) {
     return undefined;
@@ -158,7 +155,7 @@ export function resolveAgentModelPrimary(cfg: NewClawConfig, agentId: string): s
 }
 
 export function resolveAgentModelFallbacksOverride(
-  cfg: NewClawConfig,
+  cfg: iFlowConfig,
   agentId: string,
 ): string[] | undefined {
   const raw = resolveAgentConfig(cfg, agentId)?.model;
@@ -172,7 +169,7 @@ export function resolveAgentModelFallbacksOverride(
   return Array.isArray(raw.fallbacks) ? raw.fallbacks : undefined;
 }
 
-export function resolveAgentWorkspaceDir(cfg: NewClawConfig, agentId: string) {
+export function resolveAgentWorkspaceDir(cfg: iFlowConfig, agentId: string) {
   const id = normalizeAgentId(agentId);
   const configured = resolveAgentConfig(cfg, id)?.workspace?.trim();
   if (configured) {
@@ -186,10 +183,10 @@ export function resolveAgentWorkspaceDir(cfg: NewClawConfig, agentId: string) {
     }
     return DEFAULT_AGENT_WORKSPACE_DIR;
   }
-  return path.join(os.homedir(), ".newclaw", `workspace-${id}`);
+  return path.join(os.homedir(), ".iflow", `workspace-${id}`);
 }
 
-export function resolveAgentDir(cfg: NewClawConfig, agentId: string) {
+export function resolveAgentDir(cfg: iFlowConfig, agentId: string) {
   const id = normalizeAgentId(agentId);
   const configured = resolveAgentConfig(cfg, id)?.agentDir?.trim();
   if (configured) {

@@ -2,7 +2,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { CliDeps } from "../cli/deps.js";
-import type { NewClawConfig } from "../config/config.js";
+import type { iFlowConfig } from "../config/config.js";
 import type { CronJob } from "./types.js";
 import { withTempHome as withTempHomeBase } from "../../test/helpers/temp-home.js";
 
@@ -20,11 +20,11 @@ import { runEmbeddedPiAgent } from "../agents/pi-embedded.js";
 import { runCronIsolatedAgentTurn } from "./isolated-agent.js";
 
 async function withTempHome<T>(fn: (home: string) => Promise<T>): Promise<T> {
-  return withTempHomeBase(fn, { prefix: "newclaw-cron-" });
+  return withTempHomeBase(fn, { prefix: "iflow-cron-" });
 }
 
 async function writeSessionStore(home: string) {
-  const dir = path.join(home, ".newclaw", "sessions");
+  const dir = path.join(home, ".iflow", "sessions");
   await fs.mkdir(dir, { recursive: true });
   const storePath = path.join(dir, "sessions.json");
   await fs.writeFile(
@@ -55,17 +55,17 @@ async function readSessionEntry(storePath: string, key: string) {
 function makeCfg(
   home: string,
   storePath: string,
-  overrides: Partial<NewClawConfig> = {},
-): NewClawConfig {
-  const base: NewClawConfig = {
+  overrides: Partial<iFlowConfig> = {},
+): iFlowConfig {
+  const base: iFlowConfig = {
     agents: {
       defaults: {
         model: "anthropic/claude-opus-4-5",
-        workspace: path.join(home, "newclaw"),
+        workspace: path.join(home, "iflow"),
       },
     },
     session: { store: storePath, mainKey: "main" },
-  } as NewClawConfig;
+  } as iFlowConfig;
   return { ...base, ...overrides };
 }
 
@@ -180,7 +180,7 @@ describe("runCronIsolatedAgentTurn", () => {
 
       const cfg = makeCfg(
         home,
-        path.join(home, ".newclaw", "agents", "{agentId}", "sessions", "sessions.json"),
+        path.join(home, ".iflow", "agents", "{agentId}", "sessions", "sessions.json"),
         {
           agents: {
             defaults: { workspace: path.join(home, "default-workspace") },

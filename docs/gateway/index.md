@@ -12,22 +12,22 @@ Last updated: 2025-12-09
 ## What it is
 
 - The always-on process that owns the single Baileys/Telegram connection and the control/event plane.
-- Replaces the legacy `gateway` command. CLI entry point: `newclaw gateway`.
+- Replaces the legacy `gateway` command. CLI entry point: `iflow gateway`.
 - Runs until stopped; exits non-zero on fatal errors so the supervisor restarts it.
 
 ## How to run (local)
 
 ```bash
-newclaw gateway --port 18789
+iflow gateway --port 18789
 # for full debug/trace logs in stdio:
-newclaw gateway --port 18789 --verbose
+iflow gateway --port 18789 --verbose
 # if the port is busy, terminate listeners then start:
-newclaw gateway --force
+iflow gateway --force
 # dev loop (auto-reload on TS changes):
 pnpm gateway:watch
 ```
 
-- Config hot reload watches `~/.newclaw/newclaw.json` (or `NEWCLAW_CONFIG_PATH`).
+- Config hot reload watches `~/.iflow/iflow.json` (or `IFLOW_CONFIG_PATH`).
   - Default mode: `gateway.reload.mode="hybrid"` (hot-apply safe changes, restart on critical).
   - Hot reload uses in-process restart via **SIGUSR1** when needed.
   - Disable with `gateway.reload.mode="off"`.
@@ -36,15 +36,15 @@ pnpm gateway:watch
   - OpenAI Chat Completions (HTTP): [`/v1/chat/completions`](/gateway/openai-http-api).
   - OpenResponses (HTTP): [`/v1/responses`](/gateway/openresponses-http-api).
   - Tools Invoke (HTTP): [`/tools/invoke`](/gateway/tools-invoke-http-api).
-- Starts a Canvas file server by default on `canvasHost.port` (default `18793`), serving `http://<gateway-host>:18793/__newclaw__/canvas/` from `~/.newclaw/workspace/canvas`. Disable with `canvasHost.enabled=false` or `NEWCLAW_SKIP_CANVAS_HOST=1`.
+- Starts a Canvas file server by default on `canvasHost.port` (default `18793`), serving `http://<gateway-host>:18793/__iflow__/canvas/` from `~/.iflow/workspace/canvas`. Disable with `canvasHost.enabled=false` or `IFLOW_SKIP_CANVAS_HOST=1`.
 - Logs to stdout; use launchd/systemd to keep it alive and rotate logs.
 - Pass `--verbose` to mirror debug logging (handshakes, req/res, events) from the log file into stdio when troubleshooting.
 - `--force` uses `lsof` to find listeners on the chosen port, sends SIGTERM, logs what it killed, then starts the gateway (fails fast if `lsof` is missing).
 - If you run under a supervisor (launchd/systemd/mac app child-process mode), a stop/restart typically sends **SIGTERM**; older builds may surface this as `pnpm` `ELIFECYCLE` exit code **143** (SIGTERM), which is a normal shutdown, not a crash.
 - **SIGUSR1** triggers an in-process restart when authorized (gateway tool/config apply/update, or enable `commands.restart` for manual restarts).
-- Gateway auth is required by default: set `gateway.auth.token` (or `NEWCLAW_GATEWAY_TOKEN`) or `gateway.auth.password`. Clients must send `connect.params.auth.token/password` unless using Tailscale Serve identity.
+- Gateway auth is required by default: set `gateway.auth.token` (or `IFLOW_GATEWAY_TOKEN`) or `gateway.auth.password`. Clients must send `connect.params.auth.token/password` unless using Tailscale Serve identity.
 - The wizard now generates a token by default, even on loopback.
-- Port precedence: `--port` > `NEWCLAW_GATEWAY_PORT` > `gateway.port` > default `18789`.
+- Port precedence: `--port` > `IFLOW_GATEWAY_PORT` > `gateway.port` > default `18789`.
 
 ## Remote access
 
@@ -63,15 +63,15 @@ Supported if you isolate state + config and use unique ports. Full guide: [Multi
 
 Service names are profile-aware:
 
-- macOS: `bot.molt.<profile>` (legacy `com.newclaw.*` may still exist)
-- Linux: `newclaw-gateway-<profile>.service`
-- Windows: `NewClaw Gateway (<profile>)`
+- macOS: `bot.molt.<profile>` (legacy `com.iflow.*` may still exist)
+- Linux: `iflow-gateway-<profile>.service`
+- Windows: `iFlow Gateway (<profile>)`
 
 Install metadata is embedded in the service config:
 
-- `NEWCLAW_SERVICE_MARKER=newclaw`
-- `NEWCLAW_SERVICE_KIND=gateway`
-- `NEWCLAW_SERVICE_VERSION=<version>`
+- `IFLOW_SERVICE_MARKER=iflow`
+- `IFLOW_SERVICE_KIND=gateway`
+- `IFLOW_SERVICE_VERSION=<version>`
 
 Rescue-Bot Pattern: keep a second Gateway isolated with its own profile, state dir, workspace, and base port spacing. Full guide: [Rescue-bot guide](/gateway/multiple-gateways#rescue-bot-guide).
 
@@ -80,49 +80,49 @@ Rescue-Bot Pattern: keep a second Gateway isolated with its own profile, state d
 Fast path: run a fully-isolated dev instance (config/state/workspace) without touching your primary setup.
 
 ```bash
-newclaw --dev setup
-newclaw --dev gateway --allow-unconfigured
+iflow --dev setup
+iflow --dev gateway --allow-unconfigured
 # then target the dev instance:
-newclaw --dev status
-newclaw --dev health
+iflow --dev status
+iflow --dev health
 ```
 
 Defaults (can be overridden via env/flags/config):
 
-- `NEWCLAW_STATE_DIR=~/.newclaw-dev`
-- `NEWCLAW_CONFIG_PATH=~/.newclaw-dev/newclaw.json`
-- `NEWCLAW_GATEWAY_PORT=19001` (Gateway WS + HTTP)
+- `IFLOW_STATE_DIR=~/.iflow-dev`
+- `IFLOW_CONFIG_PATH=~/.iflow-dev/iflow.json`
+- `IFLOW_GATEWAY_PORT=19001` (Gateway WS + HTTP)
 - browser control service port = `19003` (derived: `gateway.port+2`, loopback only)
 - `canvasHost.port=19005` (derived: `gateway.port+4`)
-- `agents.defaults.workspace` default becomes `~/.newclaw/workspace-dev` when you run `setup`/`onboard` under `--dev`.
+- `agents.defaults.workspace` default becomes `~/.iflow/workspace-dev` when you run `setup`/`onboard` under `--dev`.
 
 Derived ports (rules of thumb):
 
-- Base port = `gateway.port` (or `NEWCLAW_GATEWAY_PORT` / `--port`)
+- Base port = `gateway.port` (or `IFLOW_GATEWAY_PORT` / `--port`)
 - browser control service port = base + 2 (loopback only)
-- `canvasHost.port = base + 4` (or `NEWCLAW_CANVAS_HOST_PORT` / config override)
+- `canvasHost.port = base + 4` (or `IFLOW_CANVAS_HOST_PORT` / config override)
 - Browser profile CDP ports auto-allocate from `browser.controlPort + 9 .. + 108` (persisted per profile).
 
 Checklist per instance:
 
 - unique `gateway.port`
-- unique `NEWCLAW_CONFIG_PATH`
-- unique `NEWCLAW_STATE_DIR`
+- unique `IFLOW_CONFIG_PATH`
+- unique `IFLOW_STATE_DIR`
 - unique `agents.defaults.workspace`
 - separate WhatsApp numbers (if using WA)
 
 Service install per profile:
 
 ```bash
-newclaw --profile main gateway install
-newclaw --profile rescue gateway install
+iflow --profile main gateway install
+iflow --profile rescue gateway install
 ```
 
 Example:
 
 ```bash
-NEWCLAW_CONFIG_PATH=~/.newclaw/a.json NEWCLAW_STATE_DIR=~/.newclaw-a newclaw gateway --port 19001
-NEWCLAW_CONFIG_PATH=~/.newclaw/b.json NEWCLAW_STATE_DIR=~/.newclaw-b newclaw gateway --port 19002
+IFLOW_CONFIG_PATH=~/.iflow/a.json IFLOW_STATE_DIR=~/.iflow-a iflow gateway --port 19001
+IFLOW_CONFIG_PATH=~/.iflow/b.json IFLOW_STATE_DIR=~/.iflow-b iflow gateway --port 19002
 ```
 
 ## Protocol (operator view)
@@ -138,7 +138,7 @@ NEWCLAW_CONFIG_PATH=~/.newclaw/b.json NEWCLAW_STATE_DIR=~/.newclaw-b newclaw gat
 
 ## Methods (initial set)
 
-- `health` — full health snapshot (same shape as `newclaw health --json`).
+- `health` — full health snapshot (same shape as `iflow health --json`).
 - `status` — short summary.
 - `system-presence` — current presence list.
 - `system-event` — post a presence/system note (structured).
@@ -198,26 +198,26 @@ See also: [Presence](/concepts/presence) for how presence is produced/deduped an
 ## Supervision (macOS example)
 
 - Use launchd to keep the service alive:
-  - Program: path to `newclaw`
+  - Program: path to `iflow`
   - Arguments: `gateway`
   - KeepAlive: true
   - StandardOut/Err: file paths or `syslog`
 - On failure, launchd restarts; fatal misconfig should keep exiting so the operator notices.
 - LaunchAgents are per-user and require a logged-in session; for headless setups use a custom LaunchDaemon (not shipped).
-  - `newclaw gateway install` writes `~/Library/LaunchAgents/bot.molt.gateway.plist`
-    (or `bot.molt.<profile>.plist`; legacy `com.newclaw.*` is cleaned up).
-  - `newclaw doctor` audits the LaunchAgent config and can update it to current defaults.
+  - `iflow gateway install` writes `~/Library/LaunchAgents/bot.molt.gateway.plist`
+    (or `bot.molt.<profile>.plist`; legacy `com.iflow.*` is cleaned up).
+  - `iflow doctor` audits the LaunchAgent config and can update it to current defaults.
 
 ## Gateway service management (CLI)
 
 Use the Gateway CLI for install/start/stop/restart/status:
 
 ```bash
-newclaw gateway status
-newclaw gateway install
-newclaw gateway stop
-newclaw gateway restart
-newclaw logs --follow
+iflow gateway status
+iflow gateway install
+iflow gateway stop
+iflow gateway restart
+iflow logs --follow
 ```
 
 Notes:
@@ -230,43 +230,43 @@ Notes:
 - `gateway status` prints config path + probe target to avoid “localhost vs LAN bind” confusion and profile mismatches.
 - `gateway status` includes the last gateway error line when the service looks running but the port is closed.
 - `logs` tails the Gateway file log via RPC (no manual `tail`/`grep` needed).
-- If other gateway-like services are detected, the CLI warns unless they are NewClaw profile services.
+- If other gateway-like services are detected, the CLI warns unless they are iFlow profile services.
   We still recommend **one gateway per machine** for most setups; use isolated profiles/ports for redundancy or a rescue bot. See [Multiple gateways](/gateway/multiple-gateways).
-  - Cleanup: `newclaw gateway uninstall` (current service) and `newclaw doctor` (legacy migrations).
-- `gateway install` is a no-op when already installed; use `newclaw gateway install --force` to reinstall (profile/env/path changes).
+  - Cleanup: `iflow gateway uninstall` (current service) and `iflow doctor` (legacy migrations).
+- `gateway install` is a no-op when already installed; use `iflow gateway install --force` to reinstall (profile/env/path changes).
 
 Bundled mac app:
 
-- NewClaw.app can bundle a Node-based gateway relay and install a per-user LaunchAgent labeled
-  `bot.molt.gateway` (or `bot.molt.<profile>`; legacy `com.newclaw.*` labels still unload cleanly).
-- To stop it cleanly, use `newclaw gateway stop` (or `launchctl bootout gui/$UID/bot.molt.gateway`).
-- To restart, use `newclaw gateway restart` (or `launchctl kickstart -k gui/$UID/bot.molt.gateway`).
-  - `launchctl` only works if the LaunchAgent is installed; otherwise use `newclaw gateway install` first.
+- iFlow.app can bundle a Node-based gateway relay and install a per-user LaunchAgent labeled
+  `bot.molt.gateway` (or `bot.molt.<profile>`; legacy `com.iflow.*` labels still unload cleanly).
+- To stop it cleanly, use `iflow gateway stop` (or `launchctl bootout gui/$UID/bot.molt.gateway`).
+- To restart, use `iflow gateway restart` (or `launchctl kickstart -k gui/$UID/bot.molt.gateway`).
+  - `launchctl` only works if the LaunchAgent is installed; otherwise use `iflow gateway install` first.
   - Replace the label with `bot.molt.<profile>` when running a named profile.
 
 ## Supervision (systemd user unit)
 
-NewClaw installs a **systemd user service** by default on Linux/WSL2. We
+iFlow installs a **systemd user service** by default on Linux/WSL2. We
 recommend user services for single-user machines (simpler env, per-user config).
 Use a **system service** for multi-user or always-on servers (no lingering
 required, shared supervision).
 
-`newclaw gateway install` writes the user unit. `newclaw doctor` audits the
+`iflow gateway install` writes the user unit. `iflow doctor` audits the
 unit and can update it to match the current recommended defaults.
 
-Create `~/.config/systemd/user/newclaw-gateway[-<profile>].service`:
+Create `~/.config/systemd/user/iflow-gateway[-<profile>].service`:
 
 ```
 [Unit]
-Description=NewClaw Gateway (profile: <profile>, v<version>)
+Description=iFlow Gateway (profile: <profile>, v<version>)
 After=network-online.target
 Wants=network-online.target
 
 [Service]
-ExecStart=/usr/local/bin/newclaw gateway --port 18789
+ExecStart=/usr/local/bin/iflow gateway --port 18789
 Restart=always
 RestartSec=5
-Environment=NEWCLAW_GATEWAY_TOKEN=
+Environment=IFLOW_GATEWAY_TOKEN=
 WorkingDirectory=/home/youruser
 
 [Install]
@@ -283,17 +283,17 @@ Onboarding runs this on Linux/WSL2 (may prompt for sudo; writes `/var/lib/system
 Then enable the service:
 
 ```
-systemctl --user enable --now newclaw-gateway[-<profile>].service
+systemctl --user enable --now iflow-gateway[-<profile>].service
 ```
 
 **Alternative (system service)** - for always-on or multi-user servers, you can
 install a systemd **system** unit instead of a user unit (no lingering needed).
-Create `/etc/systemd/system/newclaw-gateway[-<profile>].service` (copy the unit above,
+Create `/etc/systemd/system/iflow-gateway[-<profile>].service` (copy the unit above,
 switch `WantedBy=multi-user.target`, set `User=` + `WorkingDirectory=`), then:
 
 ```
 sudo systemctl daemon-reload
-sudo systemctl enable --now newclaw-gateway[-<profile>].service
+sudo systemctl enable --now iflow-gateway[-<profile>].service
 ```
 
 ## Windows (WSL2)
@@ -315,14 +315,14 @@ Windows installs should use **WSL2** and follow the Linux systemd section above.
 
 ## CLI helpers
 
-- `newclaw gateway health|status` — request health/status over the Gateway WS.
-- `newclaw message send --target <num> --message "hi" [--media ...]` — send via Gateway (idempotent for WhatsApp).
-- `newclaw agent --message "hi" --to <num>` — run an agent turn (waits for final by default).
-- `newclaw gateway call <method> --params '{"k":"v"}'` — raw method invoker for debugging.
-- `newclaw gateway stop|restart` — stop/restart the supervised gateway service (launchd/systemd).
+- `iflow gateway health|status` — request health/status over the Gateway WS.
+- `iflow message send --target <num> --message "hi" [--media ...]` — send via Gateway (idempotent for WhatsApp).
+- `iflow agent --message "hi" --to <num>` — run an agent turn (waits for final by default).
+- `iflow gateway call <method> --params '{"k":"v"}'` — raw method invoker for debugging.
+- `iflow gateway stop|restart` — stop/restart the supervised gateway service (launchd/systemd).
 - Gateway helper subcommands assume a running gateway on `--url`; they no longer auto-spawn one.
 
 ## Migration guidance
 
-- Retire uses of `newclaw gateway` and the legacy TCP control port.
+- Retire uses of `iflow gateway` and the legacy TCP control port.
 - Update clients to speak the WS protocol with mandatory connect and structured presence.

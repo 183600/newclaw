@@ -76,9 +76,9 @@ async function main() {
     process.exit(1);
   }
 
-  const baseDir = await fs.mkdtemp(path.join(os.tmpdir(), "newclaw-zai-fallback-"));
+  const baseDir = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-zai-fallback-"));
   const stateDir = path.join(baseDir, "state");
-  const configPath = path.join(baseDir, "newclaw.json");
+  const configPath = path.join(baseDir, "iflow.json");
   await fs.mkdir(stateDir, { recursive: true });
 
   const config = {
@@ -98,14 +98,14 @@ async function main() {
   await fs.writeFile(configPath, JSON.stringify(config, null, 2), "utf8");
 
   const sessionId =
-    process.env.NEWCLAW_ZAI_FALLBACK_SESSION_ID ??
+    process.env.IFLOW_ZAI_FALLBACK_SESSION_ID ??
     process.env.CLAWDBOT_ZAI_FALLBACK_SESSION_ID ??
     randomUUID();
 
   const baseEnv: NodeJS.ProcessEnv = {
     ...process.env,
-    NEWCLAW_CONFIG_PATH: configPath,
-    NEWCLAW_STATE_DIR: stateDir,
+    IFLOW_CONFIG_PATH: configPath,
+    IFLOW_STATE_DIR: stateDir,
     CLAWDBOT_CONFIG_PATH: configPath,
     CLAWDBOT_STATE_DIR: stateDir,
     ZAI_API_KEY: zaiKey,
@@ -130,7 +130,7 @@ async function main() {
     "Then use the read tool to display the file contents. Reply with just the file contents.";
   const run1 = await runCommand(
     "run1",
-    ["newclaw", "agent", "--local", "--session-id", sessionId, "--message", toolPrompt],
+    ["iflow", "agent", "--local", "--session-id", sessionId, "--message", toolPrompt],
     envValidAnthropic,
   );
   if (run1.code !== 0) {
@@ -148,7 +148,7 @@ async function main() {
     "What is the content of zai-fallback-tool.txt? Reply with just the contents.";
   const run2 = await runCommand(
     "run2",
-    ["newclaw", "agent", "--local", "--session-id", sessionId, "--message", followupPrompt],
+    ["iflow", "agent", "--local", "--session-id", sessionId, "--message", followupPrompt],
     envInvalidAnthropic,
   );
 

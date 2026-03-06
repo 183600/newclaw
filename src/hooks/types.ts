@@ -7,7 +7,7 @@ export type HookInstallSpec = {
   bins?: string[];
 };
 
-export type NewClawHookMetadata = {
+export type iFlowHookMetadata = {
   always?: boolean;
   hookKey?: string;
   emoji?: string;
@@ -35,7 +35,7 @@ export type ParsedHookFrontmatter = Record<string, string>;
 export type Hook = {
   name: string;
   description: string;
-  source: "newclaw-bundled" | "newclaw-managed" | "newclaw-workspace" | "newclaw-plugin";
+  source: "iflow-bundled" | "iflow-managed" | "iflow-workspace" | "iflow-plugin";
   pluginId?: string;
   filePath: string; // Path to HOOK.md
   baseDir: string; // Directory containing hook
@@ -47,7 +47,7 @@ export type HookSource = Hook["source"];
 export type HookEntry = {
   hook: Hook;
   frontmatter: ParsedHookFrontmatter;
-  metadata?: NewClawHookMetadata;
+  metadata?: iFlowHookMetadata;
   invocation?: HookInvocationPolicy;
 };
 

@@ -1,16 +1,16 @@
-import type { NewClawConfig } from "../config/config.js";
+import type { iFlowConfig } from "../config/config.js";
 import type { WizardPrompter } from "../wizard/prompts.js";
 
 export async function applyDefaultModelChoice(params: {
-  config: NewClawConfig;
+  config: iFlowConfig;
   setDefaultModel: boolean;
   defaultModel: string;
-  applyDefaultConfig: (config: NewClawConfig) => NewClawConfig;
-  applyProviderConfig: (config: NewClawConfig) => NewClawConfig;
+  applyDefaultConfig: (config: iFlowConfig) => iFlowConfig;
+  applyProviderConfig: (config: iFlowConfig) => iFlowConfig;
   noteDefault?: string;
   noteAgentModel: (model: string) => Promise<void>;
   prompter: WizardPrompter;
-}): Promise<{ config: NewClawConfig; agentModelOverride?: string }> {
+}): Promise<{ config: iFlowConfig; agentModelOverride?: string }> {
   if (params.setDefaultModel) {
     const next = params.applyDefaultConfig(params.config);
     if (params.noteDefault) {

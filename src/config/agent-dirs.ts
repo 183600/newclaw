@@ -1,6 +1,6 @@
 import os from "node:os";
 import path from "node:path";
-import type { NewClawConfig } from "./types.js";
+import type { iFlowConfig } from "./types.js";
 import { DEFAULT_AGENT_ID, normalizeAgentId } from "../routing/session-key.js";
 import { resolveUserPath } from "../utils.js";
 import { resolveStateDir } from "./paths.js";
@@ -28,7 +28,7 @@ function canonicalizeAgentDir(agentDir: string): string {
   return resolved;
 }
 
-function collectReferencedAgentIds(cfg: NewClawConfig): string[] {
+function collectReferencedAgentIds(cfg: iFlowConfig): string[] {
   const ids = new Set<string>();
 
   const agents = Array.isArray(cfg.agents?.list) ? cfg.agents?.list : [];
@@ -56,7 +56,7 @@ function collectReferencedAgentIds(cfg: NewClawConfig): string[] {
 }
 
 function resolveEffectiveAgentDir(
-  cfg: NewClawConfig,
+  cfg: iFlowConfig,
   agentId: string,
   deps?: { env?: NodeJS.ProcessEnv; homedir?: () => string },
 ): string {
@@ -73,7 +73,7 @@ function resolveEffectiveAgentDir(
 }
 
 export function findDuplicateAgentDirs(
-  cfg: NewClawConfig,
+  cfg: iFlowConfig,
   deps?: { env?: NodeJS.ProcessEnv; homedir?: () => string },
 ): DuplicateAgentDir[] {
   const byDir = new Map<string, { agentDir: string; agentIds: string[] }>();

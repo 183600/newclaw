@@ -79,22 +79,22 @@ describe("gateway SIGTERM", () => {
   });
 
   it("exits 0 on SIGTERM", { timeout: 180_000 }, async () => {
-    const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "newclaw-gateway-test-"));
+    const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "iflow-gateway-test-"));
     const out: string[] = [];
     const err: string[] = [];
 
     const nodeBin = process.execPath;
     const env = {
       ...process.env,
-      NEWCLAW_NO_RESPAWN: "1",
-      NEWCLAW_STATE_DIR: stateDir,
-      NEWCLAW_SKIP_CHANNELS: "1",
-      NEWCLAW_SKIP_GMAIL_WATCHER: "1",
-      NEWCLAW_SKIP_CRON: "1",
-      NEWCLAW_SKIP_BROWSER_CONTROL_SERVER: "1",
-      NEWCLAW_SKIP_CANVAS_HOST: "1",
+      IFLOW_NO_RESPAWN: "1",
+      IFLOW_STATE_DIR: stateDir,
+      IFLOW_SKIP_CHANNELS: "1",
+      IFLOW_SKIP_GMAIL_WATCHER: "1",
+      IFLOW_SKIP_CRON: "1",
+      IFLOW_SKIP_BROWSER_CONTROL_SERVER: "1",
+      IFLOW_SKIP_CANVAS_HOST: "1",
     };
-    const bootstrapPath = path.join(stateDir, "newclaw-entry-bootstrap.mjs");
+    const bootstrapPath = path.join(stateDir, "iflow-entry-bootstrap.mjs");
     const runLoopPath = path.resolve("src/cli/gateway-cli/run-loop.ts");
     const runtimePath = path.resolve("src/runtime.ts");
     fs.writeFileSync(

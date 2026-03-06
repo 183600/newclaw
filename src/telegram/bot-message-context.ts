@@ -1,5 +1,5 @@
 import type { Bot } from "grammy";
-import type { NewClawConfig } from "../config/config.js";
+import type { iFlowConfig } from "../config/config.js";
 import type { DmPolicy, TelegramGroupConfig, TelegramTopicConfig } from "../config/types.js";
 import type { TelegramContext } from "./bot/types.js";
 import { resolveAckReaction } from "../agents/identity.js";
@@ -95,7 +95,7 @@ type BuildTelegramMessageContextParams = {
   storeAllowFrom: string[];
   options?: TelegramMessageContextOptions;
   bot: Bot;
-  cfg: NewClawConfig;
+  cfg: iFlowConfig;
   account: { accountId: string };
   historyLimit: number;
   groupHistories: Map<string, HistoryEntry[]>;
@@ -110,7 +110,7 @@ type BuildTelegramMessageContextParams = {
 };
 
 async function resolveStickerVisionSupport(params: {
-  cfg: NewClawConfig;
+  cfg: iFlowConfig;
   agentId?: string;
 }): Promise<boolean> {
   try {
@@ -281,14 +281,14 @@ export const buildTelegramMessageContext = async ({
                   bot.api.sendMessage(
                     chatId,
                     [
-                      "NewClaw: access not configured.",
+                      "iFlow: access not configured.",
                       "",
                       `Your Telegram user id: ${telegramUserId}`,
                       "",
                       `Pairing code: ${code}`,
                       "",
                       "Ask the bot owner to approve with:",
-                      formatCliCommand("newclaw pairing approve telegram <code>"),
+                      formatCliCommand("iflow pairing approve telegram <code>"),
                     ].join("\n"),
                   ),
               });

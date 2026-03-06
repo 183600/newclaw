@@ -1,11 +1,11 @@
 import type { ZodIssue } from "zod";
 import fs from "node:fs/promises";
 import path from "node:path";
-import type { NewClawConfig } from "../config/config.js";
+import type { iFlowConfig } from "../config/config.js";
 import type { DoctorOptions } from "./doctor-prompter.js";
 import { formatCliCommand } from "../cli/command-format.js";
 import {
-  NewClawSchema,
+  iFlowSchema,
   CONFIG_PATH,
   migrateLegacyConfig,
   readConfigFileSnapshot,
@@ -73,11 +73,11 @@ function resolvePathTarget(root: unknown, path: Array<string | number>): unknown
   return current;
 }
 
-function stripUnknownConfigKeys(config: NewClawConfig): {
-  config: NewClawConfig;
+function stripUnknownConfigKeys(config: iFlowConfig): {
+  config: iFlowConfig;
   removed: string[];
 } {
-  const parsed = NewClawSchema.safeParse(config);
+  const parsed = iFlowSchema.safeParse(config);
   if (parsed.success) {
     return { config, removed: [] };
   }
@@ -109,7 +109,7 @@ function stripUnknownConfigKeys(config: NewClawConfig): {
   return { config: next, removed };
 }
 
-function noteOpencodeProviderOverrides(cfg: NewClawConfig) {
+function noteOpencodeProviderOverrides(cfg: iFlowConfig) {
   const providers = cfg.models?.providers;
   if (!providers) {
     return;
@@ -153,8 +153,8 @@ async function maybeMigrateLegacyConfig(): Promise<string[]> {
     return changes;
   }
 
-  const targetDir = path.join(home, ".newclaw");
-  const targetPath = path.join(targetDir, "newclaw.json");
+  const targetDir = path.join(home, ".iflow");
+  const targetPath = path.join(targetDir, "iflow.json");
   try {
     await fs.access(targetPath);
     return changes;
@@ -213,7 +213,7 @@ export async function loadAndMaybeMigrateDoctorConfig(params: {
 
   let snapshot = await readConfigFileSnapshot();
   const baseCfg = snapshot.config ?? {};
-  let cfg: NewClawConfig = baseCfg;
+  let cfg: iFlowConfig = baseCfg;
   let candidate = structuredClone(baseCfg);
   let pendingChanges = false;
   let shouldWriteConfig = false;
@@ -246,9 +246,7 @@ export async function loadAndMaybeMigrateDoctorConfig(params: {
         cfg = migrated;
       }
     } else {
-      fixHints.push(
-        `Run "${formatCliCommand("newclaw doctor --fix")}" to apply legacy migrations.`,
-      );
+      fixHints.push(`Run "${formatCliCommand("iflow doctor --fix")}" to apply legacy migrations.`);
     }
   }
 
@@ -260,7 +258,7 @@ export async function loadAndMaybeMigrateDoctorConfig(params: {
     if (shouldRepair) {
       cfg = normalized.config;
     } else {
-      fixHints.push(`Run "${formatCliCommand("newclaw doctor --fix")}" to apply these changes.`);
+      fixHints.push(`Run "${formatCliCommand("iflow doctor --fix")}" to apply these changes.`);
     }
   }
 
@@ -272,7 +270,7 @@ export async function loadAndMaybeMigrateDoctorConfig(params: {
     if (shouldRepair) {
       cfg = autoEnable.config;
     } else {
-      fixHints.push(`Run "${formatCliCommand("newclaw doctor --fix")}" to apply these changes.`);
+      fixHints.push(`Run "${formatCliCommand("iflow doctor --fix")}" to apply these changes.`);
     }
   }
 
@@ -286,7 +284,7 @@ export async function loadAndMaybeMigrateDoctorConfig(params: {
       note(lines, "Doctor changes");
     } else {
       note(lines, "Unknown config keys");
-      fixHints.push('Run "newclaw doctor --fix" to remove these keys.');
+      fixHints.push('Run "iflow doctor --fix" to remove these keys.');
     }
   }
 

@@ -15,12 +15,12 @@ describe("canvas host", () => {
     const out = injectCanvasLiveReload("<html><body>Hello</body></html>");
     expect(out).toContain(CANVAS_WS_PATH);
     expect(out).toContain("location.reload");
-    expect(out).toContain("newclawCanvasA2UIAction");
-    expect(out).toContain("newclawSendUserAction");
+    expect(out).toContain("iflowCanvasA2UIAction");
+    expect(out).toContain("iflowSendUserAction");
   });
 
   it("creates a default index.html when missing", async () => {
-    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "newclaw-canvas-"));
+    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-canvas-"));
 
     const server = await startCanvasHost({
       runtime: defaultRuntime,
@@ -35,7 +35,7 @@ describe("canvas host", () => {
       const html = await res.text();
       expect(res.status).toBe(200);
       expect(html).toContain("Interactive test page");
-      expect(html).toContain("newclawSendUserAction");
+      expect(html).toContain("iflowSendUserAction");
       expect(html).toContain(CANVAS_WS_PATH);
     } finally {
       await server.close();
@@ -44,7 +44,7 @@ describe("canvas host", () => {
   });
 
   it("skips live reload injection when disabled", async () => {
-    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "newclaw-canvas-"));
+    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-canvas-"));
     await fs.writeFile(path.join(dir, "index.html"), "<html><body>no-reload</body></html>", "utf8");
 
     const server = await startCanvasHost({
@@ -72,7 +72,7 @@ describe("canvas host", () => {
   });
 
   it("serves canvas content from the mounted base path", async () => {
-    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "newclaw-canvas-"));
+    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-canvas-"));
     await fs.writeFile(path.join(dir, "index.html"), "<html><body>v1</body></html>", "utf8");
 
     const handler = await createCanvasHostHandler({
@@ -121,7 +121,7 @@ describe("canvas host", () => {
   });
 
   it("reuses a handler without closing it twice", async () => {
-    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "newclaw-canvas-"));
+    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-canvas-"));
     await fs.writeFile(path.join(dir, "index.html"), "<html><body>v1</body></html>", "utf8");
 
     const handler = await createCanvasHostHandler({
@@ -154,7 +154,7 @@ describe("canvas host", () => {
   });
 
   it("serves HTML with injection and broadcasts reload on file changes", async () => {
-    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "newclaw-canvas-"));
+    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-canvas-"));
     const index = path.join(dir, "index.html");
     await fs.writeFile(index, "<html><body>v1</body></html>", "utf8");
 
@@ -205,7 +205,7 @@ describe("canvas host", () => {
   }, 20_000);
 
   it("serves the gateway-hosted A2UI scaffold", async () => {
-    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "newclaw-canvas-"));
+    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-canvas-"));
     const a2uiRoot = path.resolve(process.cwd(), "src/canvas-host/a2ui");
     const bundlePath = path.join(a2uiRoot, "a2ui.bundle.js");
     let createdBundle = false;
@@ -213,7 +213,7 @@ describe("canvas host", () => {
     try {
       await fs.stat(bundlePath);
     } catch {
-      await fs.writeFile(bundlePath, "window.newclawA2UI = {};", "utf8");
+      await fs.writeFile(bundlePath, "window.iflowA2UI = {};", "utf8");
       createdBundle = true;
     }
 
@@ -226,18 +226,18 @@ describe("canvas host", () => {
     });
 
     try {
-      const res = await fetch(`http://127.0.0.1:${server.port}/__newclaw__/a2ui/`);
+      const res = await fetch(`http://127.0.0.1:${server.port}/__iflow__/a2ui/`);
       const html = await res.text();
       expect(res.status).toBe(200);
-      expect(html).toContain("newclaw-a2ui-host");
-      expect(html).toContain("newclawCanvasA2UIAction");
+      expect(html).toContain("iflow-a2ui-host");
+      expect(html).toContain("iflowCanvasA2UIAction");
 
       const bundleRes = await fetch(
-        `http://127.0.0.1:${server.port}/__newclaw__/a2ui/a2ui.bundle.js`,
+        `http://127.0.0.1:${server.port}/__iflow__/a2ui/a2ui.bundle.js`,
       );
       const js = await bundleRes.text();
       expect(bundleRes.status).toBe(200);
-      expect(js).toContain("newclawA2UI");
+      expect(js).toContain("iflowA2UI");
     } finally {
       await server.close();
       if (createdBundle) {

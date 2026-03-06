@@ -1,4 +1,4 @@
-import type { NewClawConfig } from "newclaw/plugin-sdk";
+import type { iFlowConfig } from "iflow/plugin-sdk";
 import type WebSocket from "ws";
 import { Buffer } from "node:buffer";
 
@@ -128,9 +128,9 @@ function normalizeAgentId(value: string | undefined | null): string {
   );
 }
 
-type AgentEntry = NonNullable<NonNullable<NewClawConfig["agents"]>["list"]>[number];
+type AgentEntry = NonNullable<NonNullable<iFlowConfig["agents"]>["list"]>[number];
 
-function listAgents(cfg: NewClawConfig): AgentEntry[] {
+function listAgents(cfg: iFlowConfig): AgentEntry[] {
   const list = cfg.agents?.list;
   if (!Array.isArray(list)) {
     return [];
@@ -138,12 +138,12 @@ function listAgents(cfg: NewClawConfig): AgentEntry[] {
   return list.filter((entry): entry is AgentEntry => Boolean(entry && typeof entry === "object"));
 }
 
-function resolveAgentEntry(cfg: NewClawConfig, agentId: string): AgentEntry | undefined {
+function resolveAgentEntry(cfg: iFlowConfig, agentId: string): AgentEntry | undefined {
   const id = normalizeAgentId(agentId);
   return listAgents(cfg).find((entry) => normalizeAgentId(entry.id) === id);
 }
 
-export function resolveIdentityName(cfg: NewClawConfig, agentId: string): string | undefined {
+export function resolveIdentityName(cfg: iFlowConfig, agentId: string): string | undefined {
   const entry = resolveAgentEntry(cfg, agentId);
   return entry?.identity?.name?.trim() || undefined;
 }

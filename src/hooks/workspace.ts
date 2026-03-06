@@ -1,6 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
-import type { NewClawConfig } from "../config/config.js";
+import type { iFlowConfig } from "../config/config.js";
 import type {
   Hook,
   HookEligibilityContext,
@@ -15,7 +15,7 @@ import { resolveBundledHooksDir } from "./bundled-dir.js";
 import { shouldIncludeHook } from "./config.js";
 import {
   parseFrontmatter,
-  resolveNewClawMetadata,
+  resolveiFlowMetadata,
   resolveHookInvocationPolicy,
 } from "./frontmatter.js";
 
@@ -25,7 +25,7 @@ type HookPackageManifest = {
 
 function filterHookEntries(
   entries: HookEntry[],
-  config?: NewClawConfig,
+  config?: iFlowConfig,
   eligibility?: HookEligibilityContext,
 ): HookEntry[] {
   return entries.filter((entry) => shouldIncludeHook({ entry, config, eligibility }));
@@ -182,7 +182,7 @@ export function loadHookEntriesFromDir(params: {
         pluginId: params.pluginId,
       },
       frontmatter,
-      metadata: resolveNewClawMetadata(frontmatter),
+      metadata: resolveiFlowMetadata(frontmatter),
       invocation: resolveHookInvocationPolicy(frontmatter),
     };
     return entry;
@@ -192,7 +192,7 @@ export function loadHookEntriesFromDir(params: {
 function loadHookEntries(
   workspaceDir: string,
   opts?: {
-    config?: NewClawConfig;
+    config?: iFlowConfig;
     managedHooksDir?: string;
     bundledHooksDir?: string;
   },
@@ -208,23 +208,23 @@ function loadHookEntries(
   const bundledHooks = bundledHooksDir
     ? loadHooksFromDir({
         dir: bundledHooksDir,
-        source: "newclaw-bundled",
+        source: "iflow-bundled",
       })
     : [];
   const extraHooks = extraDirs.flatMap((dir) => {
     const resolved = resolveUserPath(dir);
     return loadHooksFromDir({
       dir: resolved,
-      source: "newclaw-workspace", // Extra dirs treated as workspace
+      source: "iflow-workspace", // Extra dirs treated as workspace
     });
   });
   const managedHooks = loadHooksFromDir({
     dir: managedHooksDir,
-    source: "newclaw-managed",
+    source: "iflow-managed",
   });
   const workspaceHooks = loadHooksFromDir({
     dir: workspaceHooksDir,
-    source: "newclaw-workspace",
+    source: "iflow-workspace",
   });
 
   const merged = new Map<string, Hook>();
@@ -253,7 +253,7 @@ function loadHookEntries(
     return {
       hook,
       frontmatter,
-      metadata: resolveNewClawMetadata(frontmatter),
+      metadata: resolveiFlowMetadata(frontmatter),
       invocation: resolveHookInvocationPolicy(frontmatter),
     };
   });
@@ -262,7 +262,7 @@ function loadHookEntries(
 export function buildWorkspaceHookSnapshot(
   workspaceDir: string,
   opts?: {
-    config?: NewClawConfig;
+    config?: iFlowConfig;
     managedHooksDir?: string;
     bundledHooksDir?: string;
     entries?: HookEntry[];
@@ -286,7 +286,7 @@ export function buildWorkspaceHookSnapshot(
 export function loadWorkspaceHookEntries(
   workspaceDir: string,
   opts?: {
-    config?: NewClawConfig;
+    config?: iFlowConfig;
     managedHooksDir?: string;
     bundledHooksDir?: string;
   },

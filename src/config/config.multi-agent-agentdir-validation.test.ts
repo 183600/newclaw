@@ -8,7 +8,7 @@ describe("multi-agent agentDir validation", () => {
   it("rejects shared agents.list agentDir", async () => {
     vi.resetModules();
     const { validateConfigObject } = await import("./config.js");
-    const shared = path.join(tmpdir(), "newclaw-shared-agentdir");
+    const shared = path.join(tmpdir(), "iflow-shared-agentdir");
     const res = validateConfigObject({
       agents: {
         list: [
@@ -26,16 +26,16 @@ describe("multi-agent agentDir validation", () => {
 
   it("throws on shared agentDir during loadConfig()", async () => {
     await withTempHome(async (home) => {
-      const configDir = path.join(home, ".newclaw");
+      const configDir = path.join(home, ".iflow");
       await fs.mkdir(configDir, { recursive: true });
       await fs.writeFile(
-        path.join(configDir, "newclaw.json"),
+        path.join(configDir, "iflow.json"),
         JSON.stringify(
           {
             agents: {
               list: [
-                { id: "a", agentDir: "~/.newclaw/agents/shared/agent" },
-                { id: "b", agentDir: "~/.newclaw/agents/shared/agent" },
+                { id: "a", agentDir: "~/.iflow/agents/shared/agent" },
+                { id: "b", agentDir: "~/.iflow/agents/shared/agent" },
               ],
             },
             bindings: [{ agentId: "a", match: { channel: "telegram" } }],

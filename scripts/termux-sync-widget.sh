@@ -1,13 +1,13 @@
 #!/data/data/com.termux/files/usr/bin/bash
-# NewClaw OAuth Sync Widget
-# Syncs Claude Code tokens to NewClaw on l36 server
+# iFlow OAuth Sync Widget
+# Syncs Claude Code tokens to iFlow on l36 server
 # Place in ~/.shortcuts/ on phone for Termux:Widget
 
-termux-toast "Syncing NewClaw auth..."
+termux-toast "Syncing iFlow auth..."
 
 # Run sync on l36 server
-SERVER="${NEWCLAW_SERVER:-${CLAWDBOT_SERVER:-l36}}"
-RESULT=$(ssh "$SERVER" '/home/admin/newclaw/scripts/sync-claude-code-auth.sh' 2>&1)
+SERVER="${IFLOW_SERVER:-${CLAWDBOT_SERVER:-l36}}"
+RESULT=$(ssh "$SERVER" '/home/admin/iflow/scripts/sync-claude-code-auth.sh' 2>&1)
 EXIT_CODE=$?
 
 if [ $EXIT_CODE -eq 0 ]; then
@@ -15,10 +15,10 @@ if [ $EXIT_CODE -eq 0 ]; then
     EXPIRY=$(echo "$RESULT" | grep "Token expires:" | cut -d: -f2-)
 
     termux-vibrate -d 100
-    termux-toast "NewClaw synced! Expires:${EXPIRY}"
+    termux-toast "iFlow synced! Expires:${EXPIRY}"
 
-    # Optional: restart newclaw service
-    ssh "$SERVER" 'systemctl --user restart newclaw' 2>/dev/null
+    # Optional: restart iflow service
+    ssh "$SERVER" 'systemctl --user restart iflow' 2>/dev/null
 else
     termux-vibrate -d 300
     termux-toast "Sync failed: ${RESULT}"

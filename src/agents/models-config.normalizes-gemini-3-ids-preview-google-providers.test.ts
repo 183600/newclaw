@@ -1,14 +1,14 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { NewClawConfig } from "../config/config.js";
+import type { iFlowConfig } from "../config/config.js";
 import { withTempHome as withTempHomeBase } from "../../test/helpers/temp-home.js";
 
 async function withTempHome<T>(fn: (home: string) => Promise<T>): Promise<T> {
-  return withTempHomeBase(fn, { prefix: "newclaw-models-" });
+  return withTempHomeBase(fn, { prefix: "iflow-models-" });
 }
 
-const _MODELS_CONFIG: NewClawConfig = {
+const _MODELS_CONFIG: iFlowConfig = {
   models: {
     providers: {
       "custom-proxy": {
@@ -46,10 +46,10 @@ describe("models-config", () => {
   it("normalizes gemini 3 ids to preview for google providers", async () => {
     await withTempHome(async () => {
       vi.resetModules();
-      const { ensureNewClawModelsJson } = await import("./models-config.js");
-      const { resolveNewClawAgentDir } = await import("./agent-paths.js");
+      const { ensureiFlowModelsJson } = await import("./models-config.js");
+      const { resolveiFlowAgentDir } = await import("./agent-paths.js");
 
-      const cfg: NewClawConfig = {
+      const cfg: iFlowConfig = {
         models: {
           providers: {
             google: {
@@ -83,9 +83,9 @@ describe("models-config", () => {
         },
       };
 
-      await ensureNewClawModelsJson(cfg);
+      await ensureiFlowModelsJson(cfg);
 
-      const modelPath = path.join(resolveNewClawAgentDir(), "models.json");
+      const modelPath = path.join(resolveiFlowAgentDir(), "models.json");
       const raw = await fs.readFile(modelPath, "utf8");
       const parsed = JSON.parse(raw) as {
         providers: Record<string, { models: Array<{ id: string }> }>;

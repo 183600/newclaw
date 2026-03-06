@@ -1,12 +1,12 @@
-# Contributing to NewClaw
+# Contributing to iFlow
 
 Welcome to the lobster tank! 🦞
 
 ## Quick Links
 
-- **GitHub:** https://github.com/newclaw/newclaw
+- **GitHub:** https://github.com/iflow/iflow
 - **Discord:** https://discord.gg/qkhbAGHRBT
-- **X/Twitter:** [@steipete](https://x.com/steipete) / [@newclaw](https://x.com/newclaw)
+- **X/Twitter:** [@steipete](https://x.com/steipete) / [@iflow](https://x.com/iflow)
 
 ## Maintainers
 
@@ -25,12 +25,12 @@ Welcome to the lobster tank! 🦞
 ## How to Contribute
 
 1. **Bugs & small fixes** → Open a PR!
-2. **New features / architecture** → Start a [GitHub Discussion](https://github.com/newclaw/newclaw/discussions) or ask in Discord first
+2. **New features / architecture** → Start a [GitHub Discussion](https://github.com/iflow/iflow/discussions) or ask in Discord first
 3. **Questions** → Discord #setup-help
 
 ## Before You PR
 
-- Test locally with your NewClaw instance
+- Test locally with your iFlow instance
 - Run tests: `pnpm build && pnpm check && pnpm test`
 - Keep PRs focused (one thing per PR)
 - Describe what & why
@@ -57,4 +57,4 @@ We are currently prioritizing:
 - **Skills**: Expanding the library of bundled skills and improving the Skill Creation developer experience.
 - **Performance**: Optimizing token usage and compaction logic.
 
-Check the [GitHub Issues](https://github.com/newclaw/newclaw/issues) for "good first issue" labels!
+Check the [GitHub Issues](https://github.com/iflow/iflow/issues) for "good first issue" labels!

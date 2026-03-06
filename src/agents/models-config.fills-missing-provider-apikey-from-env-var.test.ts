@@ -1,14 +1,14 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { NewClawConfig } from "../config/config.js";
+import type { iFlowConfig } from "../config/config.js";
 import { withTempHome as withTempHomeBase } from "../../test/helpers/temp-home.js";
 
 async function withTempHome<T>(fn: (home: string) => Promise<T>): Promise<T> {
-  return withTempHomeBase(fn, { prefix: "newclaw-models-" });
+  return withTempHomeBase(fn, { prefix: "iflow-models-" });
 }
 
-const MODELS_CONFIG: NewClawConfig = {
+const MODELS_CONFIG: iFlowConfig = {
   models: {
     providers: {
       "custom-proxy": {
@@ -49,10 +49,10 @@ describe("models-config", () => {
       const prevKey = process.env.MINIMAX_API_KEY;
       process.env.MINIMAX_API_KEY = "sk-minimax-test";
       try {
-        const { ensureNewClawModelsJson } = await import("./models-config.js");
-        const { resolveNewClawAgentDir } = await import("./agent-paths.js");
+        const { ensureiFlowModelsJson } = await import("./models-config.js");
+        const { resolveiFlowAgentDir } = await import("./agent-paths.js");
 
-        const cfg: NewClawConfig = {
+        const cfg: iFlowConfig = {
           models: {
             providers: {
               minimax: {
@@ -74,9 +74,9 @@ describe("models-config", () => {
           },
         };
 
-        await ensureNewClawModelsJson(cfg);
+        await ensureiFlowModelsJson(cfg);
 
-        const modelPath = path.join(resolveNewClawAgentDir(), "models.json");
+        const modelPath = path.join(resolveiFlowAgentDir(), "models.json");
         const raw = await fs.readFile(modelPath, "utf8");
         const parsed = JSON.parse(raw) as {
           providers: Record<string, { apiKey?: string; models?: Array<{ id: string }> }>;
@@ -96,10 +96,10 @@ describe("models-config", () => {
   it("merges providers by default", async () => {
     await withTempHome(async () => {
       vi.resetModules();
-      const { ensureNewClawModelsJson } = await import("./models-config.js");
-      const { resolveNewClawAgentDir } = await import("./agent-paths.js");
+      const { ensureiFlowModelsJson } = await import("./models-config.js");
+      const { resolveiFlowAgentDir } = await import("./agent-paths.js");
 
-      const agentDir = resolveNewClawAgentDir();
+      const agentDir = resolveiFlowAgentDir();
       await fs.mkdir(agentDir, { recursive: true });
       await fs.writeFile(
         path.join(agentDir, "models.json"),
@@ -131,7 +131,7 @@ describe("models-config", () => {
         "utf8",
       );
 
-      await ensureNewClawModelsJson(MODELS_CONFIG);
+      await ensureiFlowModelsJson(MODELS_CONFIG);
 
       const raw = await fs.readFile(path.join(agentDir, "models.json"), "utf8");
       const parsed = JSON.parse(raw) as {

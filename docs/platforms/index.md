@@ -8,7 +8,7 @@ title: "Platforms"
 
 # Platforms
 
-NewClaw core is written in TypeScript. **Node is the recommended runtime**.
+iFlow core is written in TypeScript. **Node is the recommended runtime**.
 Bun is not recommended for the Gateway (WhatsApp/Telegram bugs).
 
 Companion apps exist for macOS (menu bar app) and mobile nodes (iOS/Android). Windows and
@@ -36,18 +36,18 @@ Native companion apps for Windows are also planned; the Gateway is recommended v
 - Install guide: [Getting Started](/start/getting-started)
 - Gateway runbook: [Gateway](/gateway)
 - Gateway configuration: [Configuration](/gateway/configuration)
-- Service status: `newclaw gateway status`
+- Service status: `iflow gateway status`
 
 ## Gateway service install (CLI)
 
 Use one of these (all supported):
 
-- Wizard (recommended): `newclaw onboard --install-daemon`
-- Direct: `newclaw gateway install`
-- Configure flow: `newclaw configure` → select **Gateway service**
-- Repair/migrate: `newclaw doctor` (offers to install or fix the service)
+- Wizard (recommended): `iflow onboard --install-daemon`
+- Direct: `iflow gateway install`
+- Configure flow: `iflow configure` → select **Gateway service**
+- Repair/migrate: `iflow doctor` (offers to install or fix the service)
 
 The service target depends on OS:
 
-- macOS: LaunchAgent (`bot.molt.gateway` or `bot.molt.<profile>`; legacy `com.newclaw.*`)
-- Linux/WSL2: systemd user service (`newclaw-gateway[-<profile>].service`)
+- macOS: LaunchAgent (`bot.molt.gateway` or `bot.molt.<profile>`; legacy `com.iflow.*`)
+- Linux/WSL2: systemd user service (`iflow-gateway[-<profile>].service`)

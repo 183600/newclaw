@@ -34,6 +34,6 @@ describe("channel registry", () => {
     );
     expect(line).not.toContain("Docs:");
     expect(line).toContain("/channels/telegram");
-    expect(line).toContain("https://newclaw.ai");
+    expect(line).toContain("https://iflow.ai");
   });
 });

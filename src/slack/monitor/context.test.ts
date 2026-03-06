@@ -1,11 +1,11 @@
 import type { App } from "@slack/bolt";
 import { describe, expect, it } from "vitest";
-import type { NewClawConfig } from "../../config/config.js";
+import type { iFlowConfig } from "../../config/config.js";
 import type { RuntimeEnv } from "../../runtime.js";
 import { createSlackMonitorContext, normalizeSlackChannelType } from "./context.js";
 
 const baseParams = () => ({
-  cfg: {} as NewClawConfig,
+  cfg: {} as iFlowConfig,
   accountId: "default",
   botToken: "token",
   app: { client: {} } as App,
@@ -29,7 +29,7 @@ const baseParams = () => ({
   replyToMode: "off" as const,
   slashCommand: {
     enabled: false,
-    name: "newclaw",
+    name: "iflow",
     sessionPrefix: "slack:slash",
     ephemeral: true,
   },

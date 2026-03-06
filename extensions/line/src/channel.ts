@@ -5,11 +5,11 @@ import {
   processLineMessage,
   type ChannelPlugin,
   type ChannelStatusIssue,
-  type NewClawConfig,
+  type iFlowConfig,
   type LineConfig,
   type LineChannelData,
   type ResolvedLineAccount,
-} from "newclaw/plugin-sdk";
+} from "iflow/plugin-sdk";
 import { getLineRuntime } from "./runtime.js";
 
 // LINE channel metadata
@@ -42,7 +42,7 @@ export const linePlugin: ChannelPlugin<ResolvedLineAccount> = {
       if (!account.channelAccessToken) {
         throw new Error("LINE channel access token not configured");
       }
-      await line.pushMessageLine(id, "NewClaw: your access has been approved.", {
+      await line.pushMessageLine(id, "iFlow: your access has been approved.", {
         channelAccessToken: account.channelAccessToken,
       });
     },
@@ -154,7 +154,7 @@ export const linePlugin: ChannelPlugin<ResolvedLineAccount> = {
         allowFrom: account.config.allowFrom ?? [],
         policyPath: `${basePath}dmPolicy`,
         allowFromPath: basePath,
-        approveHint: "newclaw pairing approve line <code>",
+        approveHint: "iflow pairing approve line <code>",
         normalizeEntry: (raw) => raw.replace(/^line:(?:user:)?/i, ""),
       };
     },
@@ -646,7 +646,7 @@ export const linePlugin: ChannelPlugin<ResolvedLineAccount> = {
     },
     logoutAccount: async ({ accountId, cfg }) => {
       const envToken = process.env.LINE_CHANNEL_ACCESS_TOKEN?.trim() ?? "";
-      const nextCfg = { ...cfg } as NewClawConfig;
+      const nextCfg = { ...cfg } as iFlowConfig;
       const lineConfig = (cfg.channels?.line ?? {}) as LineConfig;
       const nextLine = { ...lineConfig };
       let cleared = false;

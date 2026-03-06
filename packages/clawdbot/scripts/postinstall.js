@@ -1,1 +1,1 @@
-console.warn("clawdbot renamed -> newclaw");
+console.warn("clawdbot renamed -> iflow");

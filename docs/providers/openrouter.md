@@ -1,8 +1,8 @@
 ---
-summary: "Use OpenRouter's unified API to access many models in NewClaw"
+summary: "Use OpenRouter's unified API to access many models in iFlow"
 read_when:
   - You want a single API key for many LLMs
-  - You want to run models via OpenRouter in NewClaw
+  - You want to run models via OpenRouter in iFlow
 title: "OpenRouter"
 ---
 
@@ -14,7 +14,7 @@ endpoint and API key. It is OpenAI-compatible, so most OpenAI SDKs work by switc
 ## CLI setup
 
 ```bash
-newclaw onboard --auth-choice apiKey --token-provider openrouter --token "$OPENROUTER_API_KEY"
+iflow onboard --auth-choice apiKey --token-provider openrouter --token "$OPENROUTER_API_KEY"
 ```
 
 ## Config snippet

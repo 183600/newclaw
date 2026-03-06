@@ -1,5 +1,5 @@
 import { createRequire } from "node:module";
-import type { NewClawConfig } from "../config/config.js";
+import type { iFlowConfig } from "../config/config.js";
 
 const requireConfig = createRequire(import.meta.url);
 
@@ -106,10 +106,10 @@ function redactText(text: string, patterns: RegExp[]): string {
 }
 
 function resolveConfigRedaction(): RedactOptions {
-  let cfg: NewClawConfig["logging"] | undefined;
+  let cfg: iFlowConfig["logging"] | undefined;
   try {
     const loaded = requireConfig("../config/config.js") as {
-      loadConfig?: () => NewClawConfig;
+      loadConfig?: () => iFlowConfig;
     };
     cfg = loaded.loadConfig?.().logging;
   } catch {

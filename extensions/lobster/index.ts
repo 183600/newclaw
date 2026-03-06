@@ -1,7 +1,7 @@
-import type { NewClawPluginApi } from "../../src/plugins/types.js";
+import type { iFlowPluginApi } from "../../src/plugins/types.js";
 import { createLobsterTool } from "./src/lobster-tool.js";
 
-export default function register(api: NewClawPluginApi) {
+export default function register(api: iFlowPluginApi) {
   api.registerTool(
     (ctx) => {
       if (ctx.sandboxed) {

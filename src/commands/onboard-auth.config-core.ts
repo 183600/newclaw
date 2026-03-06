@@ -1,4 +1,4 @@
-import type { NewClawConfig } from "../config/config.js";
+import type { iFlowConfig } from "../config/config.js";
 import { buildXiaomiProvider, XIAOMI_DEFAULT_MODEL_ID } from "../agents/models-config.providers.js";
 import {
   buildSyntheticModelDefinition,
@@ -26,7 +26,7 @@ import {
   MOONSHOT_DEFAULT_MODEL_REF,
 } from "./onboard-auth.models.js";
 
-export function applyZaiConfig(cfg: NewClawConfig): NewClawConfig {
+export function applyZaiConfig(cfg: iFlowConfig): iFlowConfig {
   const models = { ...cfg.agents?.defaults?.models };
   models[ZAI_DEFAULT_MODEL_REF] = {
     ...models[ZAI_DEFAULT_MODEL_REF],
@@ -54,7 +54,7 @@ export function applyZaiConfig(cfg: NewClawConfig): NewClawConfig {
   };
 }
 
-export function applyOpenrouterProviderConfig(cfg: NewClawConfig): NewClawConfig {
+export function applyOpenrouterProviderConfig(cfg: iFlowConfig): iFlowConfig {
   const models = { ...cfg.agents?.defaults?.models };
   models[OPENROUTER_DEFAULT_MODEL_REF] = {
     ...models[OPENROUTER_DEFAULT_MODEL_REF],
@@ -73,7 +73,7 @@ export function applyOpenrouterProviderConfig(cfg: NewClawConfig): NewClawConfig
   };
 }
 
-export function applyVercelAiGatewayProviderConfig(cfg: NewClawConfig): NewClawConfig {
+export function applyVercelAiGatewayProviderConfig(cfg: iFlowConfig): iFlowConfig {
   const models = { ...cfg.agents?.defaults?.models };
   models[VERCEL_AI_GATEWAY_DEFAULT_MODEL_REF] = {
     ...models[VERCEL_AI_GATEWAY_DEFAULT_MODEL_REF],
@@ -92,7 +92,7 @@ export function applyVercelAiGatewayProviderConfig(cfg: NewClawConfig): NewClawC
   };
 }
 
-export function applyVercelAiGatewayConfig(cfg: NewClawConfig): NewClawConfig {
+export function applyVercelAiGatewayConfig(cfg: iFlowConfig): iFlowConfig {
   const next = applyVercelAiGatewayProviderConfig(cfg);
   const existingModel = next.agents?.defaults?.model;
   return {
@@ -114,7 +114,7 @@ export function applyVercelAiGatewayConfig(cfg: NewClawConfig): NewClawConfig {
   };
 }
 
-export function applyOpenrouterConfig(cfg: NewClawConfig): NewClawConfig {
+export function applyOpenrouterConfig(cfg: iFlowConfig): iFlowConfig {
   const next = applyOpenrouterProviderConfig(cfg);
   const existingModel = next.agents?.defaults?.model;
   return {
@@ -136,7 +136,7 @@ export function applyOpenrouterConfig(cfg: NewClawConfig): NewClawConfig {
   };
 }
 
-export function applyMoonshotProviderConfig(cfg: NewClawConfig): NewClawConfig {
+export function applyMoonshotProviderConfig(cfg: iFlowConfig): iFlowConfig {
   const models = { ...cfg.agents?.defaults?.models };
   models[MOONSHOT_DEFAULT_MODEL_REF] = {
     ...models[MOONSHOT_DEFAULT_MODEL_REF],
@@ -179,7 +179,7 @@ export function applyMoonshotProviderConfig(cfg: NewClawConfig): NewClawConfig {
   };
 }
 
-export function applyMoonshotConfig(cfg: NewClawConfig): NewClawConfig {
+export function applyMoonshotConfig(cfg: iFlowConfig): iFlowConfig {
   const next = applyMoonshotProviderConfig(cfg);
   const existingModel = next.agents?.defaults?.model;
   return {
@@ -201,7 +201,7 @@ export function applyMoonshotConfig(cfg: NewClawConfig): NewClawConfig {
   };
 }
 
-export function applyKimiCodeProviderConfig(cfg: NewClawConfig): NewClawConfig {
+export function applyKimiCodeProviderConfig(cfg: iFlowConfig): iFlowConfig {
   const models = { ...cfg.agents?.defaults?.models };
   models[KIMI_CODING_MODEL_REF] = {
     ...models[KIMI_CODING_MODEL_REF],
@@ -220,7 +220,7 @@ export function applyKimiCodeProviderConfig(cfg: NewClawConfig): NewClawConfig {
   };
 }
 
-export function applyKimiCodeConfig(cfg: NewClawConfig): NewClawConfig {
+export function applyKimiCodeConfig(cfg: iFlowConfig): iFlowConfig {
   const next = applyKimiCodeProviderConfig(cfg);
   const existingModel = next.agents?.defaults?.model;
   return {
@@ -242,7 +242,7 @@ export function applyKimiCodeConfig(cfg: NewClawConfig): NewClawConfig {
   };
 }
 
-export function applySyntheticProviderConfig(cfg: NewClawConfig): NewClawConfig {
+export function applySyntheticProviderConfig(cfg: iFlowConfig): iFlowConfig {
   const models = { ...cfg.agents?.defaults?.models };
   models[SYNTHETIC_DEFAULT_MODEL_REF] = {
     ...models[SYNTHETIC_DEFAULT_MODEL_REF],
@@ -289,7 +289,7 @@ export function applySyntheticProviderConfig(cfg: NewClawConfig): NewClawConfig 
   };
 }
 
-export function applySyntheticConfig(cfg: NewClawConfig): NewClawConfig {
+export function applySyntheticConfig(cfg: iFlowConfig): iFlowConfig {
   const next = applySyntheticProviderConfig(cfg);
   const existingModel = next.agents?.defaults?.model;
   return {
@@ -311,7 +311,7 @@ export function applySyntheticConfig(cfg: NewClawConfig): NewClawConfig {
   };
 }
 
-export function applyXiaomiProviderConfig(cfg: NewClawConfig): NewClawConfig {
+export function applyXiaomiProviderConfig(cfg: iFlowConfig): iFlowConfig {
   const models = { ...cfg.agents?.defaults?.models };
   models[XIAOMI_DEFAULT_MODEL_REF] = {
     ...models[XIAOMI_DEFAULT_MODEL_REF],
@@ -360,7 +360,7 @@ export function applyXiaomiProviderConfig(cfg: NewClawConfig): NewClawConfig {
   };
 }
 
-export function applyXiaomiConfig(cfg: NewClawConfig): NewClawConfig {
+export function applyXiaomiConfig(cfg: iFlowConfig): iFlowConfig {
   const next = applyXiaomiProviderConfig(cfg);
   const existingModel = next.agents?.defaults?.model;
   return {
@@ -386,7 +386,7 @@ export function applyXiaomiConfig(cfg: NewClawConfig): NewClawConfig {
  * Apply Venice provider configuration without changing the default model.
  * Registers Venice models and sets up the provider, but preserves existing model selection.
  */
-export function applyVeniceProviderConfig(cfg: NewClawConfig): NewClawConfig {
+export function applyVeniceProviderConfig(cfg: iFlowConfig): iFlowConfig {
   const models = { ...cfg.agents?.defaults?.models };
   models[VENICE_DEFAULT_MODEL_REF] = {
     ...models[VENICE_DEFAULT_MODEL_REF],
@@ -435,7 +435,7 @@ export function applyVeniceProviderConfig(cfg: NewClawConfig): NewClawConfig {
  * Apply Venice provider configuration AND set Venice as the default model.
  * Use this when Venice is the primary provider choice during onboarding.
  */
-export function applyVeniceConfig(cfg: NewClawConfig): NewClawConfig {
+export function applyVeniceConfig(cfg: iFlowConfig): iFlowConfig {
   const next = applyVeniceProviderConfig(cfg);
   const existingModel = next.agents?.defaults?.model;
   return {
@@ -458,7 +458,7 @@ export function applyVeniceConfig(cfg: NewClawConfig): NewClawConfig {
 }
 
 export function applyAuthProfileConfig(
-  cfg: NewClawConfig,
+  cfg: iFlowConfig,
   params: {
     profileId: string;
     provider: string;
@@ -466,7 +466,7 @@ export function applyAuthProfileConfig(
     email?: string;
     preferProfileFirst?: boolean;
   },
-): NewClawConfig {
+): iFlowConfig {
   const profiles = {
     ...cfg.auth?.profiles,
     [params.profileId]: {

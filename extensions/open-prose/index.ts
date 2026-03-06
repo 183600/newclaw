@@ -1,5 +1,5 @@
-import type { NewClawPluginApi } from "../../src/plugins/types.js";
+import type { iFlowPluginApi } from "../../src/plugins/types.js";
 
-export default function register(_api: NewClawPluginApi) {
+export default function register(_api: iFlowPluginApi) {
   // OpenProse is delivered via plugin-shipped skills.
 }

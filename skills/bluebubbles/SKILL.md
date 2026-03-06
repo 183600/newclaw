@@ -1,6 +1,6 @@
 ---
 name: bluebubbles
-description: Build or update the BlueBubbles external channel plugin for NewClaw (extension package, REST send/probe, webhook inbound).
+description: Build or update the BlueBubbles external channel plugin for iFlow (extension package, REST send/probe, webhook inbound).
 ---
 
 # BlueBubbles plugin
@@ -31,7 +31,7 @@ Use this skill when working on the BlueBubbles channel plugin.
 - BlueBubbles posts JSON to the gateway HTTP server.
 - Normalize sender/chat IDs defensively (payloads vary by version).
 - Skip messages marked as from self.
-- Route into core reply pipeline via the plugin runtime (`api.runtime`) and `newclaw/plugin-sdk` helpers.
+- Route into core reply pipeline via the plugin runtime (`api.runtime`) and `iflow/plugin-sdk` helpers.
 - For attachments/stickers, use `<media:...>` placeholders when text is empty and attach media paths via `MediaUrl(s)` in the inbound context.
 
 ## Config (core)

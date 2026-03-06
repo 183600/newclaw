@@ -1,6 +1,6 @@
 import { formatTerminalLink } from "../utils.js";
 
-export const DOCS_ROOT = "https://docs.newclaw.ai";
+export const DOCS_ROOT = "https://docs.iflow.ai";
 
 export function formatDocsLink(
   path: string,

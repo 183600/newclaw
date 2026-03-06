@@ -1,12 +1,12 @@
-import type { NewClawConfig, WizardPrompter } from "newclaw/plugin-sdk";
-import { DEFAULT_ACCOUNT_ID, normalizeAccountId } from "newclaw/plugin-sdk";
+import type { iFlowConfig, WizardPrompter } from "iflow/plugin-sdk";
+import { DEFAULT_ACCOUNT_ID, normalizeAccountId } from "iflow/plugin-sdk";
 
 type PromptAccountIdParams = {
-  cfg: NewClawConfig;
+  cfg: iFlowConfig;
   prompter: WizardPrompter;
   label: string;
   currentId?: string;
-  listAccountIds: (cfg: NewClawConfig) => string[];
+  listAccountIds: (cfg: iFlowConfig) => string[];
   defaultAccountId: string;
 };
 

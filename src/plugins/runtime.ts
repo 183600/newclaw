@@ -16,7 +16,7 @@ const createEmptyRegistry = (): PluginRegistry => ({
   diagnostics: [],
 });
 
-const REGISTRY_STATE = Symbol.for("newclaw.pluginRegistryState");
+const REGISTRY_STATE = Symbol.for("iflow.pluginRegistryState");
 
 type RegistryState = {
   registry: PluginRegistry | null;

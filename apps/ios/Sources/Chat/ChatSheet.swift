@@ -1,16 +1,16 @@
-import NewClawChatUI
-import NewClawKit
+import iFlowChatUI
+import iFlowKit
 import SwiftUI
 
 struct ChatSheet: View {
     @Environment(\.dismiss) private var dismiss
-    @State private var viewModel: NewClawChatViewModel
+    @State private var viewModel: iFlowChatViewModel
     private let userAccent: Color?
 
     init(gateway: GatewayNodeSession, sessionKey: String, userAccent: Color? = nil) {
         let transport = IOSGatewayChatTransport(gateway: gateway)
         self._viewModel = State(
-            initialValue: NewClawChatViewModel(
+            initialValue: iFlowChatViewModel(
                 sessionKey: sessionKey,
                 transport: transport))
         self.userAccent = userAccent
@@ -18,7 +18,7 @@ struct ChatSheet: View {
 
     var body: some View {
         NavigationStack {
-            NewClawChatView(
+            iFlowChatView(
                 viewModel: self.viewModel,
                 showsSessionSwitcher: true,
                 userAccent: self.userAccent)

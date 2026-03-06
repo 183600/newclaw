@@ -1,9 +1,9 @@
 import {
   logInboundDrop,
   resolveControlCommandGate,
-  type NewClawConfig,
+  type iFlowConfig,
   type RuntimeEnv,
-} from "newclaw/plugin-sdk";
+} from "iflow/plugin-sdk";
 import type { ResolvedNextcloudTalkAccount } from "./accounts.js";
 import type { CoreConfig, NextcloudTalkInboundMessage } from "./types.js";
 import {
@@ -114,7 +114,7 @@ export async function handleNextcloudTalkInbound(params: {
   const effectiveGroupAllowFrom = [...baseGroupAllowFrom, ...storeAllowList].filter(Boolean);
 
   const allowTextCommands = core.channel.commands.shouldHandleTextCommands({
-    cfg: config as NewClawConfig,
+    cfg: config as iFlowConfig,
     surface: CHANNEL_ID,
   });
   const useAccessGroups = config.commands?.useAccessGroups !== false;
@@ -123,7 +123,7 @@ export async function handleNextcloudTalkInbound(params: {
     senderId,
     senderName,
   }).allowed;
-  const hasControlCommand = core.channel.text.hasControlCommand(rawBody, config as NewClawConfig);
+  const hasControlCommand = core.channel.text.hasControlCommand(rawBody, config as iFlowConfig);
   const commandGate = resolveControlCommandGate({
     useAccessGroups,
     authorizers: [
@@ -202,7 +202,7 @@ export async function handleNextcloudTalkInbound(params: {
     return;
   }
 
-  const mentionRegexes = core.channel.mentions.buildMentionRegexes(config as NewClawConfig);
+  const mentionRegexes = core.channel.mentions.buildMentionRegexes(config as iFlowConfig);
   const wasMentioned = mentionRegexes.length
     ? core.channel.mentions.matchesMentionPatterns(rawBody, mentionRegexes)
     : false;
@@ -226,7 +226,7 @@ export async function handleNextcloudTalkInbound(params: {
   }
 
   const route = core.channel.routing.resolveAgentRoute({
-    cfg: config as NewClawConfig,
+    cfg: config as iFlowConfig,
     channel: CHANNEL_ID,
     accountId: account.accountId,
     peer: {
@@ -239,7 +239,7 @@ export async function handleNextcloudTalkInbound(params: {
   const storePath = core.channel.session.resolveStorePath(config.session?.store, {
     agentId: route.agentId,
   });
-  const envelopeOptions = core.channel.reply.resolveEnvelopeFormatOptions(config as NewClawConfig);
+  const envelopeOptions = core.channel.reply.resolveEnvelopeFormatOptions(config as iFlowConfig);
   const previousTimestamp = core.channel.session.readSessionUpdatedAt({
     storePath,
     sessionKey: route.sessionKey,
@@ -290,7 +290,7 @@ export async function handleNextcloudTalkInbound(params: {
 
   await core.channel.reply.dispatchReplyWithBufferedBlockDispatcher({
     ctx: ctxPayload,
-    cfg: config as NewClawConfig,
+    cfg: config as iFlowConfig,
     dispatcherOptions: {
       deliver: async (payload) => {
         await deliverNextcloudTalkReply({

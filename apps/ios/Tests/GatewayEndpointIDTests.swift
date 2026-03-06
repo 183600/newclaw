@@ -1,17 +1,17 @@
-import NewClawKit
+import iFlowKit
 import Network
 import Testing
-@testable import NewClaw
+@testable import iFlow
 
 @Suite struct GatewayEndpointIDTests {
     @Test func stableIDForServiceDecodesAndNormalizesName() {
         let endpoint = NWEndpoint.service(
-            name: "NewClaw\\032Gateway   \\032  Node\n",
-            type: "_newclaw-gw._tcp",
+            name: "iFlow\\032Gateway   \\032  Node\n",
+            type: "_iflow-gw._tcp",
             domain: "local.",
             interface: nil)
 
-        #expect(GatewayEndpointID.stableID(endpoint) == "_newclaw-gw._tcp|local.|NewClaw Gateway Node")
+        #expect(GatewayEndpointID.stableID(endpoint) == "_iflow-gw._tcp|local.|iFlow Gateway Node")
     }
 
     @Test func stableIDForNonServiceUsesEndpointDescription() {
@@ -21,8 +21,8 @@ import Testing
 
     @Test func prettyDescriptionDecodesBonjourEscapes() {
         let endpoint = NWEndpoint.service(
-            name: "NewClaw\\032Gateway",
-            type: "_newclaw-gw._tcp",
+            name: "iFlow\\032Gateway",
+            type: "_iflow-gw._tcp",
             domain: "local.",
             interface: nil)
 

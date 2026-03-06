@@ -1,4 +1,4 @@
-import { emptyPluginConfigSchema } from "newclaw/plugin-sdk";
+import { emptyPluginConfigSchema } from "iflow/plugin-sdk";
 import { createHash, randomBytes } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { createServer } from "node:http";
@@ -30,7 +30,7 @@ const RESPONSE_PAGE = `<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>NewClaw Antigravity OAuth</title>
+    <title>iFlow Antigravity OAuth</title>
   </head>
   <body>
     <main>

@@ -1,8 +1,8 @@
 ---
 read_when:
-  - 安装 NewClaw
+  - 安装 iFlow
   - 你想从 GitHub 安装
-summary: 安装 NewClaw（推荐安装器、全局安装或从源码安装）
+summary: 安装 iFlow（推荐安装器、全局安装或从源码安装）
 title: 安装
 x-i18n:
   generated_at: "2026-02-01T21:07:34Z"
@@ -20,19 +20,19 @@ x-i18n:
 ## 快速安装（推荐）
 
 ```bash
-curl -fsSL https://newclaw.ai/install.sh | bash
+curl -fsSL https://iflow.ai/install.sh | bash
 ```
 
 Windows (PowerShell)：
 
 ```powershell
-iwr -useb https://newclaw.ai/install.ps1 | iex
+iwr -useb https://iflow.ai/install.ps1 | iex
 ```
 
 下一步（如果你跳过了新手引导）：
 
 ```bash
-newclaw onboard --install-daemon
+iflow onboard --install-daemon
 ```
 
 ## 系统要求
@@ -45,16 +45,16 @@ newclaw onboard --install-daemon
 
 ### 1) 安装器脚本（推荐）
 
-通过 npm 全局安装 `newclaw` 并运行新手引导。
+通过 npm 全局安装 `iflow` 并运行新手引导。
 
 ```bash
-curl -fsSL https://newclaw.ai/install.sh | bash
+curl -fsSL https://iflow.ai/install.sh | bash
 ```
 
 安装器参数：
 
 ```bash
-curl -fsSL https://newclaw.ai/install.sh | bash -s -- --help
+curl -fsSL https://iflow.ai/install.sh | bash -s -- --help
 ```
 
 详情：[安装器内部机制](/install/installer)。
@@ -62,7 +62,7 @@ curl -fsSL https://newclaw.ai/install.sh | bash -s -- --help
 非交互式（跳过新手引导）：
 
 ```bash
-curl -fsSL https://newclaw.ai/install.sh | bash -s -- --no-onboard
+curl -fsSL https://iflow.ai/install.sh | bash -s -- --no-onboard
 ```
 
 ### 2) 全局安装（手动）
@@ -70,13 +70,13 @@ curl -fsSL https://newclaw.ai/install.sh | bash -s -- --no-onboard
 如果你已安装 Node：
 
 ```bash
-npm install -g newclaw@latest
+npm install -g iflow@latest
 ```
 
 如果你已全局安装 libvips（macOS 上常通过 Homebrew 安装）且 `sharp` 安装失败，请强制使用预编译二进制文件：
 
 ```bash
-SHARP_IGNORE_GLOBAL_LIBVIPS=1 npm install -g newclaw@latest
+SHARP_IGNORE_GLOBAL_LIBVIPS=1 npm install -g iflow@latest
 ```
 
 如果你看到 `sharp: Please add node-gyp to your dependencies`，可以安装构建工具（macOS：Xcode CLT + `npm install -g node-gyp`），或使用上述 `SHARP_IGNORE_GLOBAL_LIBVIPS=1` 变通方法跳过原生构建。
@@ -84,9 +84,9 @@ SHARP_IGNORE_GLOBAL_LIBVIPS=1 npm install -g newclaw@latest
 或使用 pnpm：
 
 ```bash
-pnpm add -g newclaw@latest
-pnpm approve-builds -g                # 批准 newclaw、node-llama-cpp、sharp 等
-pnpm add -g newclaw@latest           # 重新运行以执行 postinstall 脚本
+pnpm add -g iflow@latest
+pnpm approve-builds -g                # 批准 iflow、node-llama-cpp、sharp 等
+pnpm add -g iflow@latest           # 重新运行以执行 postinstall 脚本
 ```
 
 pnpm 要求显式批准带有构建脚本的软件包。首次安装显示"Ignored build scripts"警告后，运行 `pnpm approve-builds -g` 并选择列出的软件包，然后重新运行安装以执行 postinstall 脚本。
@@ -94,21 +94,21 @@ pnpm 要求显式批准带有构建脚本的软件包。首次安装显示"Ignor
 然后：
 
 ```bash
-newclaw onboard --install-daemon
+iflow onboard --install-daemon
 ```
 
 ### 3) 从源码安装（贡献者/开发用途）
 
 ```bash
-git clone https://github.com/newclaw/newclaw.git
-cd newclaw
+git clone https://github.com/iflow/iflow.git
+cd iflow
 pnpm install
 pnpm ui:build # 首次运行时自动安装 UI 依赖
 pnpm build
-newclaw onboard --install-daemon
+iflow onboard --install-daemon
 ```
 
-提示：如果尚未全局安装，可通过 `pnpm newclaw ...` 运行仓库命令。
+提示：如果尚未全局安装，可通过 `pnpm iflow ...` 运行仓库命令。
 
 ### 4) 其他安装选项
 
@@ -119,32 +119,32 @@ newclaw onboard --install-daemon
 
 ## 安装后
 
-- 运行新手引导：`newclaw onboard --install-daemon`
-- 快速检查：`newclaw doctor`
-- 检查 Gateway网关健康状态：`newclaw status` + `newclaw health`
-- 打开仪表盘：`newclaw dashboard`
+- 运行新手引导：`iflow onboard --install-daemon`
+- 快速检查：`iflow doctor`
+- 检查 Gateway网关健康状态：`iflow status` + `iflow health`
+- 打开仪表盘：`iflow dashboard`
 
 ## 安装方式：npm vs git（安装器）
 
 安装器支持两种方式：
 
-- `npm`（默认）：`npm install -g newclaw@latest`
+- `npm`（默认）：`npm install -g iflow@latest`
 - `git`：从 GitHub 克隆/构建并从源码检出运行
 
 ### CLI 参数
 
 ```bash
 # 显式使用 npm
-curl -fsSL https://newclaw.ai/install.sh | bash -s -- --install-method npm
+curl -fsSL https://iflow.ai/install.sh | bash -s -- --install-method npm
 
 # 从 GitHub 安装（源码检出）
-curl -fsSL https://newclaw.ai/install.sh | bash -s -- --install-method git
+curl -fsSL https://iflow.ai/install.sh | bash -s -- --install-method git
 ```
 
 常用参数：
 
 - `--install-method npm|git`
-- `--git-dir <path>`（默认：`~/newclaw`）
+- `--git-dir <path>`（默认：`~/iflow`）
 - `--no-git-update`（使用已有检出时跳过 `git pull`）
 - `--no-prompt`（禁用提示；CI/自动化中必需）
 - `--dry-run`（打印将要执行的操作；不做任何更改）
@@ -154,15 +154,15 @@ curl -fsSL https://newclaw.ai/install.sh | bash -s -- --install-method git
 
 等效的环境变量（适用于自动化）：
 
-- `NEWCLAW_INSTALL_METHOD=git|npm`
-- `NEWCLAW_GIT_DIR=...`
-- `NEWCLAW_GIT_UPDATE=0|1`
-- `NEWCLAW_NO_PROMPT=1`
-- `NEWCLAW_DRY_RUN=1`
-- `NEWCLAW_NO_ONBOARD=1`
+- `IFLOW_INSTALL_METHOD=git|npm`
+- `IFLOW_GIT_DIR=...`
+- `IFLOW_GIT_UPDATE=0|1`
+- `IFLOW_NO_PROMPT=1`
+- `IFLOW_DRY_RUN=1`
+- `IFLOW_NO_ONBOARD=1`
 - `SHARP_IGNORE_GLOBAL_LIBVIPS=0|1`（默认：`1`；避免 `sharp` 使用系统 libvips 编译）
 
-## 故障排除：找不到 `newclaw`（PATH 问题）
+## 故障排除：找不到 `iflow`（PATH 问题）
 
 快速诊断：
 
@@ -173,7 +173,7 @@ npm prefix -g
 echo "$PATH"
 ```
 
-如果 `$(npm prefix -g)/bin`（macOS/Linux）或 `$(npm prefix -g)`（Windows）**不在** `echo "$PATH"` 的输出中，说明你的 shell 无法找到全局 npm 二进制文件（包括 `newclaw`）。
+如果 `$(npm prefix -g)/bin`（macOS/Linux）或 `$(npm prefix -g)`（Windows）**不在** `echo "$PATH"` 的输出中，说明你的 shell 无法找到全局 npm 二进制文件（包括 `iflow`）。
 
 修复：将其添加到 shell 启动文件（zsh：`~/.zshrc`，bash：`~/.bashrc`）：
 

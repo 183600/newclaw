@@ -1,4 +1,4 @@
-import type { NewClawConfig } from "../../config/config.js";
+import type { iFlowConfig } from "../../config/config.js";
 import type { MsgContext } from "../templating.js";
 import { resolveAgentConfig } from "../../agents/agent-scope.js";
 import { getChannelDock } from "../../channels/dock.js";
@@ -38,7 +38,7 @@ function normalizeMentionPatterns(patterns: string[]): string[] {
   return patterns.map(normalizeMentionPattern);
 }
 
-function resolveMentionPatterns(cfg: NewClawConfig | undefined, agentId?: string): string[] {
+function resolveMentionPatterns(cfg: iFlowConfig | undefined, agentId?: string): string[] {
   if (!cfg) {
     return [];
   }
@@ -55,7 +55,7 @@ function resolveMentionPatterns(cfg: NewClawConfig | undefined, agentId?: string
   return derived.length > 0 ? derived : [];
 }
 
-export function buildMentionRegexes(cfg: NewClawConfig | undefined, agentId?: string): RegExp[] {
+export function buildMentionRegexes(cfg: iFlowConfig | undefined, agentId?: string): RegExp[] {
   const patterns = normalizeMentionPatterns(resolveMentionPatterns(cfg, agentId));
   return patterns
     .map((pattern) => {
@@ -125,7 +125,7 @@ export function stripStructuralPrefixes(text: string): string {
 export function stripMentions(
   text: string,
   ctx: MsgContext,
-  cfg: NewClawConfig | undefined,
+  cfg: iFlowConfig | undefined,
   agentId?: string,
 ): string {
   let result = text;

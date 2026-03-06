@@ -1,15 +1,15 @@
 ---
 name: boot-md
 description: "Run BOOT.md on gateway startup"
-homepage: https://docs.newclaw.ai/hooks#boot-md
+homepage: https://docs.iflow.ai/hooks#boot-md
 metadata:
   {
-    "newclaw":
+    "iflow":
       {
         "emoji": "🚀",
         "events": ["gateway:startup"],
         "requires": { "config": ["workspace.dir"] },
-        "install": [{ "id": "bundled", "kind": "bundled", "label": "Bundled with NewClaw" }],
+        "install": [{ "id": "bundled", "kind": "bundled", "label": "Bundled with iFlow" }],
       },
   }
 ---

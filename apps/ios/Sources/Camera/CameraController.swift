@@ -1,5 +1,5 @@
 import AVFoundation
-import NewClawKit
+import iFlowKit
 import Foundation
 
 actor CameraController {
@@ -36,7 +36,7 @@ actor CameraController {
         }
     }
 
-    func snap(params: NewClawCameraSnapParams) async throws -> (
+    func snap(params: iFlowCameraSnapParams) async throws -> (
         format: String,
         base64: String,
         width: Int,
@@ -109,7 +109,7 @@ actor CameraController {
             height: res.heightPx)
     }
 
-    func clip(params: NewClawCameraClipParams) async throws -> (
+    func clip(params: iFlowCameraClipParams) async throws -> (
         format: String,
         base64: String,
         durationMs: Int,
@@ -161,9 +161,9 @@ actor CameraController {
         await Self.warmUpCaptureSession()
 
         let movURL = FileManager().temporaryDirectory
-            .appendingPathComponent("newclaw-camera-\(UUID().uuidString).mov")
+            .appendingPathComponent("iflow-camera-\(UUID().uuidString).mov")
         let mp4URL = FileManager().temporaryDirectory
-            .appendingPathComponent("newclaw-camera-\(UUID().uuidString).mp4")
+            .appendingPathComponent("iflow-camera-\(UUID().uuidString).mp4")
 
         defer {
             try? FileManager().removeItem(at: movURL)
@@ -221,7 +221,7 @@ actor CameraController {
     }
 
     private nonisolated static func pickCamera(
-        facing: NewClawCameraFacing,
+        facing: iFlowCameraFacing,
         deviceId: String?) -> AVCaptureDevice?
     {
         if let deviceId, !deviceId.isEmpty {

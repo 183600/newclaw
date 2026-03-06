@@ -1,7 +1,7 @@
 ---
 read_when:
   - 你正在使用配对模式的私信功能，需要批准发送者
-summary: "`newclaw pairing`（批准/列出配对请求）的 CLI 参考"
+summary: "`iflow pairing`（批准/列出配对请求）的 CLI 参考"
 title: pairing
 x-i18n:
   generated_at: "2026-02-01T20:21:19Z"
@@ -12,7 +12,7 @@ x-i18n:
   workflow: 14
 ---
 
-# `newclaw pairing`
+# `iflow pairing`
 
 批准或检查私信配对请求（适用于支持配对的渠道）。
 
@@ -23,6 +23,6 @@ x-i18n:
 ## 命令
 
 ```bash
-newclaw pairing list whatsapp
-newclaw pairing approve whatsapp <code> --notify
+iflow pairing list whatsapp
+iflow pairing approve whatsapp <code> --notify
 ```

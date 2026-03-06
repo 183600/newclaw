@@ -1,5 +1,5 @@
 import type { ChannelId } from "../channels/plugins/types.js";
-import type { NewClawConfig, GatewayBindMode } from "../config/config.js";
+import type { iFlowConfig, GatewayBindMode } from "../config/config.js";
 import { resolveChannelDefaultAccountId } from "../channels/plugins/helpers.js";
 import { listChannelPlugins } from "../channels/plugins/index.js";
 import { formatCliCommand } from "../cli/command-format.js";
@@ -8,9 +8,9 @@ import { isLoopbackHost, resolveGatewayBindHost } from "../gateway/net.js";
 import { readChannelAllowFromStore } from "../pairing/pairing-store.js";
 import { note } from "../terminal/note.js";
 
-export async function noteSecurityWarnings(cfg: NewClawConfig) {
+export async function noteSecurityWarnings(cfg: iFlowConfig) {
   const warnings: string[] = [];
-  const auditHint = `- Run: ${formatCliCommand("newclaw security audit --deep")}`;
+  const auditHint = `- Run: ${formatCliCommand("iflow security audit --deep")}`;
 
   // ===========================================
   // GATEWAY NETWORK EXPOSURE CHECK
@@ -48,19 +48,19 @@ export async function noteSecurityWarnings(cfg: NewClawConfig) {
       const authFixLines =
         resolvedAuth.mode === "password"
           ? [
-              `  Fix: ${formatCliCommand("newclaw configure")} to set a password`,
-              `  Or switch to token: ${formatCliCommand("newclaw config set gateway.auth.mode token")}`,
+              `  Fix: ${formatCliCommand("iflow configure")} to set a password`,
+              `  Or switch to token: ${formatCliCommand("iflow config set gateway.auth.mode token")}`,
             ]
           : [
-              `  Fix: ${formatCliCommand("newclaw doctor --fix")} to generate a token`,
+              `  Fix: ${formatCliCommand("iflow doctor --fix")} to generate a token`,
               `  Or set token directly: ${formatCliCommand(
-                "newclaw config set gateway.auth.mode token",
+                "iflow config set gateway.auth.mode token",
               )}`,
             ];
       warnings.push(
         `- CRITICAL: Gateway bound to ${bindDescriptor} without authentication.`,
         `  Anyone on your network (or internet if port-forwarded) can fully control your agent.`,
-        `  Fix: ${formatCliCommand("newclaw config set gateway.bind loopback")}`,
+        `  Fix: ${formatCliCommand("iflow config set gateway.bind loopback")}`,
         ...authFixLines,
       );
     } else {

@@ -1,4 +1,4 @@
-import type { ChannelDirectoryEntry } from "newclaw/plugin-sdk";
+import type { ChannelDirectoryEntry } from "iflow/plugin-sdk";
 import { describe, expect, it, vi, beforeEach } from "vitest";
 import { listMatrixDirectoryPeersLive } from "./directory-live.js";
 import { resolveMatrixTargets } from "./resolve-targets.js";

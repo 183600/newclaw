@@ -1,4 +1,4 @@
-import type { ChannelDirectoryEntry } from "newclaw/plugin-sdk";
+import type { ChannelDirectoryEntry } from "iflow/plugin-sdk";
 import { GRAPH_ROOT } from "./attachments/shared.js";
 import { loadMSTeamsSdkWithAuth } from "./sdk.js";
 import { resolveMSTeamsCredentials } from "./token.js";

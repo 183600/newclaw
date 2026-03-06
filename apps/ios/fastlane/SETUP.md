@@ -1,4 +1,4 @@
-# fastlane setup (NewClaw iOS)
+# fastlane setup (iFlow iOS)
 
 Install:
 

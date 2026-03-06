@@ -9,17 +9,17 @@ import {
 
 const ROOT_DIR = path.parse(process.cwd()).root;
 const CONFIG_DIR = path.join(ROOT_DIR, "config");
-const ETC_NEWCLAW_DIR = path.join(ROOT_DIR, "etc", "newclaw");
+const ETC_IFLOW_DIR = path.join(ROOT_DIR, "etc", "iflow");
 const SHARED_DIR = path.join(ROOT_DIR, "shared");
 
-const DEFAULT_BASE_PATH = path.join(CONFIG_DIR, "newclaw.json");
+const DEFAULT_BASE_PATH = path.join(CONFIG_DIR, "iflow.json");
 
 function configPath(...parts: string[]) {
   return path.join(CONFIG_DIR, ...parts);
 }
 
-function etcNewClawPath(...parts: string[]) {
-  return path.join(ETC_NEWCLAW_DIR, ...parts);
+function etciFlowPath(...parts: string[]) {
+  return path.join(ETC_IFLOW_DIR, ...parts);
 }
 
 function sharedPath(...parts: string[]) {
@@ -68,7 +68,7 @@ describe("resolveConfigIncludes", () => {
   });
 
   it("resolves absolute path $include", () => {
-    const absolute = etcNewClawPath("agents.json");
+    const absolute = etciFlowPath("agents.json");
     const files = { [absolute]: { list: [{ id: "main" }] } };
     const obj = { agents: { $include: absolute } };
     expect(resolve(obj, files)).toEqual({
@@ -281,7 +281,7 @@ describe("resolveConfigIncludes", () => {
   it("resolves parent directory references", () => {
     const files = { [sharedPath("common.json")]: { shared: true } };
     const obj = { $include: "../../shared/common.json" };
-    expect(resolve(obj, files, configPath("sub", "newclaw.json"))).toEqual({
+    expect(resolve(obj, files, configPath("sub", "iflow.json"))).toEqual({
       shared: true,
     });
   });

@@ -27,7 +27,7 @@ describe("memory embedding batches", () => {
   beforeEach(async () => {
     embedBatch.mockClear();
     embedQuery.mockClear();
-    workspaceDir = await fs.mkdtemp(path.join(os.tmpdir(), "newclaw-mem-"));
+    workspaceDir = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-mem-"));
     indexPath = path.join(workspaceDir, "index.sqlite");
     await fs.mkdir(path.join(workspaceDir, "memory"));
   });

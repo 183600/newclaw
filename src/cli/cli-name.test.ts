@@ -14,20 +14,20 @@ describe("resolveCliName", () => {
     expect(resolveCliName(["node", "unknown-cli"])).toBe(DEFAULT_CLI_NAME);
   });
 
-  it("should return newclaw when argv[1] is newclaw", () => {
-    expect(resolveCliName(["node", "newclaw"])).toBe("newclaw");
+  it("should return iflow when argv[1] is iflow", () => {
+    expect(resolveCliName(["node", "iflow"])).toBe("iflow");
   });
 
   it("should handle basename with path", () => {
-    expect(resolveCliName(["node", "/usr/bin/newclaw"])).toBe("newclaw");
+    expect(resolveCliName(["node", "/usr/bin/iflow"])).toBe("iflow");
   });
 
   it("should handle relative path", () => {
-    expect(resolveCliName(["node", "./newclaw"])).toBe("newclaw");
+    expect(resolveCliName(["node", "./iflow"])).toBe("iflow");
   });
 
   it("should trim whitespace", () => {
-    expect(resolveCliName(["node", "  newclaw  "])).toBe("newclaw");
+    expect(resolveCliName(["node", "  iflow  "])).toBe("iflow");
   });
 });
 
@@ -45,57 +45,57 @@ describe("replaceCliName", () => {
     expect(replaceCliName(command)).toBe(command);
   });
 
-  it("should replace newclaw with custom CLI name", () => {
-    const command = "newclaw --help";
+  it("should replace iflow with custom CLI name", () => {
+    const command = "iflow --help";
     const result = replaceCliName(command, "myclaw");
     expect(result).toBe("myclaw --help");
   });
 
-  it("should replace newclaw with default CLI name when no custom name provided", () => {
-    const command = "newclaw --help";
+  it("should replace iflow with default CLI name when no custom name provided", () => {
+    const command = "iflow --help";
     const result = replaceCliName(command);
     expect(result).toBe(`${DEFAULT_CLI_NAME} --help`);
   });
 
   it("should preserve runner prefix", () => {
-    const command = "pnpm newclaw --help";
+    const command = "pnpm iflow --help";
     const result = replaceCliName(command, "myclaw");
     expect(result).toBe("pnpm myclaw --help");
   });
 
   it("should handle npm runner", () => {
-    const command = "npm newclaw --help";
+    const command = "npm iflow --help";
     const result = replaceCliName(command, "myclaw");
     expect(result).toBe("npm myclaw --help");
   });
 
   it("should handle bunx runner", () => {
-    const command = "bunx newclaw --help";
+    const command = "bunx iflow --help";
     const result = replaceCliName(command, "myclaw");
     expect(result).toBe("bunx myclaw --help");
   });
 
   it("should handle npx runner", () => {
-    const command = "npx newclaw --help";
+    const command = "npx iflow --help";
     const result = replaceCliName(command, "myclaw");
     expect(result).toBe("npx myclaw --help");
   });
 
   it("should handle multiple spaces in runner", () => {
-    const command = "pnpm  newclaw --help";
+    const command = "pnpm  iflow --help";
     const result = replaceCliName(command, "myclaw");
     expect(result).toBe("pnpm  myclaw --help");
   });
 
   it("should handle word boundary correctly", () => {
-    const command = "notnewclaw --help";
+    const command = "notiflow --help";
     const result = replaceCliName(command, "myclaw");
-    expect(result).toBe("notnewclaw --help");
+    expect(result).toBe("notiflow --help");
   });
 
-  it("should not replace newclaw in the middle of command", () => {
-    const command = "run newclaw --help";
+  it("should not replace iflow in the middle of command", () => {
+    const command = "run iflow --help";
     const result = replaceCliName(command, "myclaw");
-    expect(result).toBe("run newclaw --help");
+    expect(result).toBe("run iflow --help");
   });
 });

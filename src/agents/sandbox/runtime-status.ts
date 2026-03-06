@@ -1,4 +1,4 @@
-import type { NewClawConfig } from "../../config/config.js";
+import type { iFlowConfig } from "../../config/config.js";
 import type { SandboxConfig, SandboxToolPolicyResolved } from "./types.js";
 import { formatCliCommand } from "../../cli/command-format.js";
 import { canonicalizeMainSessionAlias, resolveAgentMainSessionKey } from "../../config/sessions.js";
@@ -17,7 +17,7 @@ function shouldSandboxSession(cfg: SandboxConfig, sessionKey: string, mainSessio
   return sessionKey.trim() !== mainSessionKey.trim();
 }
 
-function resolveMainSessionKeyForSandbox(params: { cfg?: NewClawConfig; agentId: string }): string {
+function resolveMainSessionKeyForSandbox(params: { cfg?: iFlowConfig; agentId: string }): string {
   if (params.cfg?.session?.scope === "global") {
     return "global";
   }
@@ -28,7 +28,7 @@ function resolveMainSessionKeyForSandbox(params: { cfg?: NewClawConfig; agentId:
 }
 
 function resolveComparableSessionKeyForSandbox(params: {
-  cfg?: NewClawConfig;
+  cfg?: iFlowConfig;
   agentId: string;
   sessionKey: string;
 }): string {
@@ -39,7 +39,7 @@ function resolveComparableSessionKeyForSandbox(params: {
   });
 }
 
-export function resolveSandboxRuntimeStatus(params: { cfg?: NewClawConfig; sessionKey?: string }): {
+export function resolveSandboxRuntimeStatus(params: { cfg?: iFlowConfig; sessionKey?: string }): {
   agentId: string;
   sessionKey: string;
   mainSessionKey: string;
@@ -73,7 +73,7 @@ export function resolveSandboxRuntimeStatus(params: { cfg?: NewClawConfig; sessi
 }
 
 export function formatSandboxToolPolicyBlockedMessage(params: {
-  cfg?: NewClawConfig;
+  cfg?: iFlowConfig;
   sessionKey?: string;
   toolName: string;
 }): string | undefined {
@@ -124,9 +124,7 @@ export function formatSandboxToolPolicyBlockedMessage(params: {
   if (runtime.mode === "non-main") {
     lines.push(`- Use main session key (direct): ${runtime.mainSessionKey}`);
   }
-  lines.push(
-    `- See: ${formatCliCommand(`newclaw sandbox explain --session ${runtime.sessionKey}`)}`,
-  );
+  lines.push(`- See: ${formatCliCommand(`iflow sandbox explain --session ${runtime.sessionKey}`)}`);
 
   return lines.join("\n");
 }

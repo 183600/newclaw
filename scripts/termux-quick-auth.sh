@@ -5,9 +5,9 @@
 # One-tap: shows status toast
 # If expired: directly opens auth URL
 
-SERVER="${NEWCLAW_SERVER:-${CLAWDBOT_SERVER:-l36}}"
+SERVER="${IFLOW_SERVER:-${CLAWDBOT_SERVER:-l36}}"
 
-STATUS=$(ssh -o ConnectTimeout=5 "$SERVER" '$HOME/newclaw/scripts/claude-auth-status.sh simple' 2>&1)
+STATUS=$(ssh -o ConnectTimeout=5 "$SERVER" '$HOME/iflow/scripts/claude-auth-status.sh simple' 2>&1)
 
 case "$STATUS" in
     OK)
@@ -22,7 +22,7 @@ case "$STATUS" in
         termux-toast "Auth expired - opening console..."
         termux-open-url "https://console.anthropic.com/settings/api-keys"
         sleep 2
-        termux-notification -t "NewClaw Re-Auth" -c "After getting key, run: ssh $SERVER '~/newclaw/scripts/mobile-reauth.sh'" --id newclaw-auth
+        termux-notification -t "iFlow Re-Auth" -c "After getting key, run: ssh $SERVER '~/iflow/scripts/mobile-reauth.sh'" --id iflow-auth
         ;;
     *)
         termux-toast "Connection error"

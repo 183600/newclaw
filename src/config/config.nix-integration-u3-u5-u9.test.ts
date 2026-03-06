@@ -5,29 +5,29 @@ import { withEnvOverride, withTempHome } from "./test-helpers.js";
 
 describe("Nix integration (U3, U5, U9)", () => {
   describe("U3: isNixMode env var detection", () => {
-    it("isNixMode is false when NEWCLAW_NIX_MODE is not set", async () => {
-      await withEnvOverride({ NEWCLAW_NIX_MODE: undefined }, async () => {
+    it("isNixMode is false when IFLOW_NIX_MODE is not set", async () => {
+      await withEnvOverride({ IFLOW_NIX_MODE: undefined }, async () => {
         const { isNixMode } = await import("./config.js");
         expect(isNixMode).toBe(false);
       });
     });
 
-    it("isNixMode is false when NEWCLAW_NIX_MODE is empty", async () => {
-      await withEnvOverride({ NEWCLAW_NIX_MODE: "" }, async () => {
+    it("isNixMode is false when IFLOW_NIX_MODE is empty", async () => {
+      await withEnvOverride({ IFLOW_NIX_MODE: "" }, async () => {
         const { isNixMode } = await import("./config.js");
         expect(isNixMode).toBe(false);
       });
     });
 
-    it("isNixMode is false when NEWCLAW_NIX_MODE is not '1'", async () => {
-      await withEnvOverride({ NEWCLAW_NIX_MODE: "true" }, async () => {
+    it("isNixMode is false when IFLOW_NIX_MODE is not '1'", async () => {
+      await withEnvOverride({ IFLOW_NIX_MODE: "true" }, async () => {
         const { isNixMode } = await import("./config.js");
         expect(isNixMode).toBe(false);
       });
     });
 
-    it("isNixMode is true when NEWCLAW_NIX_MODE=1", async () => {
-      await withEnvOverride({ NEWCLAW_NIX_MODE: "1" }, async () => {
+    it("isNixMode is true when IFLOW_NIX_MODE=1", async () => {
+      await withEnvOverride({ IFLOW_NIX_MODE: "1" }, async () => {
         const { isNixMode } = await import("./config.js");
         expect(isNixMode).toBe(true);
       });
@@ -35,42 +35,42 @@ describe("Nix integration (U3, U5, U9)", () => {
   });
 
   describe("U5: CONFIG_PATH and STATE_DIR env var overrides", () => {
-    it("STATE_DIR defaults to ~/.newclaw when env not set", async () => {
-      await withEnvOverride({ NEWCLAW_STATE_DIR: undefined }, async () => {
+    it("STATE_DIR defaults to ~/.iflow when env not set", async () => {
+      await withEnvOverride({ IFLOW_STATE_DIR: undefined }, async () => {
         const { STATE_DIR } = await import("./config.js");
-        expect(STATE_DIR).toMatch(/\.newclaw$/);
+        expect(STATE_DIR).toMatch(/\.iflow$/);
       });
     });
 
-    it("STATE_DIR respects NEWCLAW_STATE_DIR override", async () => {
-      await withEnvOverride({ NEWCLAW_STATE_DIR: "/custom/state/dir" }, async () => {
+    it("STATE_DIR respects IFLOW_STATE_DIR override", async () => {
+      await withEnvOverride({ IFLOW_STATE_DIR: "/custom/state/dir" }, async () => {
         const { STATE_DIR } = await import("./config.js");
         expect(STATE_DIR).toBe(path.resolve("/custom/state/dir"));
       });
     });
 
-    it("CONFIG_PATH defaults to ~/.newclaw/newclaw.json when env not set", async () => {
+    it("CONFIG_PATH defaults to ~/.iflow/iflow.json when env not set", async () => {
       await withEnvOverride(
-        { NEWCLAW_CONFIG_PATH: undefined, NEWCLAW_STATE_DIR: undefined },
+        { IFLOW_CONFIG_PATH: undefined, IFLOW_STATE_DIR: undefined },
         async () => {
           const { CONFIG_PATH } = await import("./config.js");
-          expect(CONFIG_PATH).toMatch(/\.newclaw[\\/]newclaw\.json$/);
+          expect(CONFIG_PATH).toMatch(/\.iflow[\\/]iflow\.json$/);
         },
       );
     });
 
-    it("CONFIG_PATH respects NEWCLAW_CONFIG_PATH override", async () => {
-      await withEnvOverride({ NEWCLAW_CONFIG_PATH: "/nix/store/abc/newclaw.json" }, async () => {
+    it("CONFIG_PATH respects IFLOW_CONFIG_PATH override", async () => {
+      await withEnvOverride({ IFLOW_CONFIG_PATH: "/nix/store/abc/iflow.json" }, async () => {
         const { CONFIG_PATH } = await import("./config.js");
-        expect(CONFIG_PATH).toBe(path.resolve("/nix/store/abc/newclaw.json"));
+        expect(CONFIG_PATH).toBe(path.resolve("/nix/store/abc/iflow.json"));
       });
     });
 
-    it("CONFIG_PATH expands ~ in NEWCLAW_CONFIG_PATH override", async () => {
+    it("CONFIG_PATH expands ~ in IFLOW_CONFIG_PATH override", async () => {
       await withTempHome(async (home) => {
-        await withEnvOverride({ NEWCLAW_CONFIG_PATH: "~/.newclaw/custom.json" }, async () => {
+        await withEnvOverride({ IFLOW_CONFIG_PATH: "~/.iflow/custom.json" }, async () => {
           const { CONFIG_PATH } = await import("./config.js");
-          expect(CONFIG_PATH).toBe(path.join(home, ".newclaw", "custom.json"));
+          expect(CONFIG_PATH).toBe(path.join(home, ".iflow", "custom.json"));
         });
       });
     });
@@ -78,12 +78,12 @@ describe("Nix integration (U3, U5, U9)", () => {
     it("CONFIG_PATH uses STATE_DIR when only state dir is overridden", async () => {
       await withEnvOverride(
         {
-          NEWCLAW_CONFIG_PATH: undefined,
-          NEWCLAW_STATE_DIR: "/custom/state",
+          IFLOW_CONFIG_PATH: undefined,
+          IFLOW_STATE_DIR: "/custom/state",
         },
         async () => {
           const { CONFIG_PATH } = await import("./config.js");
-          expect(CONFIG_PATH).toBe(path.join(path.resolve("/custom/state"), "newclaw.json"));
+          expect(CONFIG_PATH).toBe(path.join(path.resolve("/custom/state"), "iflow.json"));
         },
       );
     });
@@ -92,7 +92,7 @@ describe("Nix integration (U3, U5, U9)", () => {
   describe("U5b: tilde expansion for config paths", () => {
     it("expands ~ in common path-ish config fields", async () => {
       await withTempHome(async (home) => {
-        const configDir = path.join(home, ".newclaw");
+        const configDir = path.join(home, ".iflow");
         await fs.mkdir(configDir, { recursive: true });
         const pluginDir = path.join(home, "plugins", "demo-plugin");
         await fs.mkdir(pluginDir, { recursive: true });
@@ -102,7 +102,7 @@ describe("Nix integration (U3, U5, U9)", () => {
           "utf-8",
         );
         await fs.writeFile(
-          path.join(pluginDir, "newclaw.plugin.json"),
+          path.join(pluginDir, "iflow.plugin.json"),
           JSON.stringify(
             {
               id: "demo-plugin",
@@ -114,7 +114,7 @@ describe("Nix integration (U3, U5, U9)", () => {
           "utf-8",
         );
         await fs.writeFile(
-          path.join(configDir, "newclaw.json"),
+          path.join(configDir, "iflow.json"),
           JSON.stringify(
             {
               plugins: {
@@ -128,7 +128,7 @@ describe("Nix integration (U3, U5, U9)", () => {
                   {
                     id: "main",
                     workspace: "~/ws-agent",
-                    agentDir: "~/.newclaw/agents/main",
+                    agentDir: "~/.iflow/agents/main",
                     sandbox: { workspaceRoot: "~/sandbox-root" },
                   },
                 ],
@@ -137,7 +137,7 @@ describe("Nix integration (U3, U5, U9)", () => {
                 whatsapp: {
                   accounts: {
                     personal: {
-                      authDir: "~/.newclaw/credentials/wa-personal",
+                      authDir: "~/.iflow/credentials/wa-personal",
                     },
                   },
                 },
@@ -156,10 +156,10 @@ describe("Nix integration (U3, U5, U9)", () => {
         expect(cfg.plugins?.load?.paths?.[0]).toBe(path.join(home, "plugins", "demo-plugin"));
         expect(cfg.agents?.defaults?.workspace).toBe(path.join(home, "ws-default"));
         expect(cfg.agents?.list?.[0]?.workspace).toBe(path.join(home, "ws-agent"));
-        expect(cfg.agents?.list?.[0]?.agentDir).toBe(path.join(home, ".newclaw", "agents", "main"));
+        expect(cfg.agents?.list?.[0]?.agentDir).toBe(path.join(home, ".iflow", "agents", "main"));
         expect(cfg.agents?.list?.[0]?.sandbox?.workspaceRoot).toBe(path.join(home, "sandbox-root"));
         expect(cfg.channels?.whatsapp?.accounts?.personal?.authDir).toBe(
-          path.join(home, ".newclaw", "credentials", "wa-personal"),
+          path.join(home, ".iflow", "credentials", "wa-personal"),
         );
       });
     });
@@ -167,21 +167,21 @@ describe("Nix integration (U3, U5, U9)", () => {
 
   describe("U6: gateway port resolution", () => {
     it("uses default when env and config are unset", async () => {
-      await withEnvOverride({ NEWCLAW_GATEWAY_PORT: undefined }, async () => {
+      await withEnvOverride({ IFLOW_GATEWAY_PORT: undefined }, async () => {
         const { DEFAULT_GATEWAY_PORT, resolveGatewayPort } = await import("./config.js");
         expect(resolveGatewayPort({})).toBe(DEFAULT_GATEWAY_PORT);
       });
     });
 
-    it("prefers NEWCLAW_GATEWAY_PORT over config", async () => {
-      await withEnvOverride({ NEWCLAW_GATEWAY_PORT: "19001" }, async () => {
+    it("prefers IFLOW_GATEWAY_PORT over config", async () => {
+      await withEnvOverride({ IFLOW_GATEWAY_PORT: "19001" }, async () => {
         const { resolveGatewayPort } = await import("./config.js");
         expect(resolveGatewayPort({ gateway: { port: 19002 } })).toBe(19001);
       });
     });
 
     it("falls back to config when env is invalid", async () => {
-      await withEnvOverride({ NEWCLAW_GATEWAY_PORT: "nope" }, async () => {
+      await withEnvOverride({ IFLOW_GATEWAY_PORT: "nope" }, async () => {
         const { resolveGatewayPort } = await import("./config.js");
         expect(resolveGatewayPort({ gateway: { port: 19003 } })).toBe(19003);
       });
@@ -191,10 +191,10 @@ describe("Nix integration (U3, U5, U9)", () => {
   describe("U9: telegram.tokenFile schema validation", () => {
     it("accepts config with only botToken", async () => {
       await withTempHome(async (home) => {
-        const configDir = path.join(home, ".newclaw");
+        const configDir = path.join(home, ".iflow");
         await fs.mkdir(configDir, { recursive: true });
         await fs.writeFile(
-          path.join(configDir, "newclaw.json"),
+          path.join(configDir, "iflow.json"),
           JSON.stringify({
             channels: { telegram: { botToken: "123:ABC" } },
           }),
@@ -211,10 +211,10 @@ describe("Nix integration (U3, U5, U9)", () => {
 
     it("accepts config with only tokenFile", async () => {
       await withTempHome(async (home) => {
-        const configDir = path.join(home, ".newclaw");
+        const configDir = path.join(home, ".iflow");
         await fs.mkdir(configDir, { recursive: true });
         await fs.writeFile(
-          path.join(configDir, "newclaw.json"),
+          path.join(configDir, "iflow.json"),
           JSON.stringify({
             channels: { telegram: { tokenFile: "/run/agenix/telegram-token" } },
           }),
@@ -231,10 +231,10 @@ describe("Nix integration (U3, U5, U9)", () => {
 
     it("accepts config with both botToken and tokenFile", async () => {
       await withTempHome(async (home) => {
-        const configDir = path.join(home, ".newclaw");
+        const configDir = path.join(home, ".iflow");
         await fs.mkdir(configDir, { recursive: true });
         await fs.writeFile(
-          path.join(configDir, "newclaw.json"),
+          path.join(configDir, "iflow.json"),
           JSON.stringify({
             channels: {
               telegram: {

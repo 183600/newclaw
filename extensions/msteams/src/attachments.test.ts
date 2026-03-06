@@ -1,4 +1,4 @@
-import type { PluginRuntime } from "newclaw/plugin-sdk";
+import type { PluginRuntime } from "iflow/plugin-sdk";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { setMSTeamsRuntime } from "./runtime.js";
 

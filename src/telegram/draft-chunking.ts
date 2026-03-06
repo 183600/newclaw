@@ -1,4 +1,4 @@
-import type { NewClawConfig } from "../config/config.js";
+import type { iFlowConfig } from "../config/config.js";
 import { resolveTextChunkLimit } from "../auto-reply/chunk.js";
 import { getChannelDock } from "../channels/dock.js";
 import { normalizeAccountId } from "../routing/session-key.js";
@@ -7,7 +7,7 @@ const DEFAULT_TELEGRAM_DRAFT_STREAM_MIN = 200;
 const DEFAULT_TELEGRAM_DRAFT_STREAM_MAX = 800;
 
 export function resolveTelegramDraftStreamingChunking(
-  cfg: NewClawConfig | undefined,
+  cfg: iFlowConfig | undefined,
   accountId?: string | null,
 ): {
   minChars: number;

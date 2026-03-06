@@ -1,4 +1,4 @@
-# Qwen OAuth (NewClaw plugin)
+# Qwen OAuth (iFlow plugin)
 
 OAuth provider plugin for **Qwen** (free-tier OAuth).
 
@@ -7,7 +7,7 @@ OAuth provider plugin for **Qwen** (free-tier OAuth).
 Bundled plugins are disabled by default. Enable this one:
 
 ```bash
-newclaw plugins enable qwen-portal-auth
+iflow plugins enable qwen-portal-auth
 ```
 
 Restart the Gateway after enabling.
@@ -15,7 +15,7 @@ Restart the Gateway after enabling.
 ## Authenticate
 
 ```bash
-newclaw models auth login --provider qwen-portal --set-default
+iflow models auth login --provider qwen-portal --set-default
 ```
 
 ## Notes

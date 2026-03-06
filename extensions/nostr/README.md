@@ -1,10 +1,10 @@
-# @newclaw/nostr
+# @iflow/nostr
 
-Nostr DM channel plugin for NewClaw using NIP-04 encrypted direct messages.
+Nostr DM channel plugin for iFlow using NIP-04 encrypted direct messages.
 
 ## Overview
 
-This extension adds Nostr as a messaging channel to NewClaw. It enables your bot to:
+This extension adds Nostr as a messaging channel to iFlow. It enables your bot to:
 
 - Receive encrypted DMs from Nostr users
 - Send encrypted responses back
@@ -13,7 +13,7 @@ This extension adds Nostr as a messaging channel to NewClaw. It enables your bot
 ## Installation
 
 ```bash
-newclaw plugins install @newclaw/nostr
+iflow plugins install @iflow/nostr
 ```
 
 ## Quick Setup
@@ -90,7 +90,7 @@ newclaw plugins install @newclaw/nostr
 # Using strfry
 docker run -p 7777:7777 ghcr.io/hoytech/strfry
 
-# Configure newclaw to use local relay
+# Configure iflow to use local relay
 "relays": ["ws://localhost:7777"]
 ```
 

@@ -26,11 +26,11 @@ const formatLine = (label: string, value: string) => {
 };
 
 function resolveLaunchAgentLabel(args?: { env?: Record<string, string | undefined> }): string {
-  const envLabel = args?.env?.NEWCLAW_LAUNCHD_LABEL?.trim();
+  const envLabel = args?.env?.IFLOW_LAUNCHD_LABEL?.trim();
   if (envLabel) {
     return envLabel;
   }
-  return resolveGatewayLaunchAgentLabel(args?.env?.NEWCLAW_PROFILE);
+  return resolveGatewayLaunchAgentLabel(args?.env?.IFLOW_PROFILE);
 }
 
 function resolveLaunchAgentPlistPathForLabel(
@@ -53,7 +53,7 @@ export function resolveGatewayLogPaths(env: Record<string, string | undefined>):
 } {
   const stateDir = resolveGatewayStateDir(env);
   const logDir = path.join(stateDir, "logs");
-  const prefix = env.NEWCLAW_LOG_PREFIX?.trim() || "gateway";
+  const prefix = env.IFLOW_LOG_PREFIX?.trim() || "gateway";
   return {
     logDir,
     stdoutPath: path.join(logDir, `${prefix}.log`),
@@ -261,7 +261,7 @@ export async function findLegacyLaunchAgents(
 ): Promise<LegacyLaunchAgent[]> {
   const domain = resolveGuiDomain();
   const results: LegacyLaunchAgent[] = [];
-  for (const label of resolveLegacyGatewayLaunchAgentLabels(env.NEWCLAW_PROFILE)) {
+  for (const label of resolveLegacyGatewayLaunchAgentLabels(env.IFLOW_PROFILE)) {
     const plistPath = resolveLaunchAgentPlistPathForLabel(env, label);
     const res = await execLaunchctl(["print", `${domain}/${label}`]);
     const loaded = res.code === 0;
@@ -399,7 +399,7 @@ export async function installLaunchAgent({
 
   const domain = resolveGuiDomain();
   const label = resolveLaunchAgentLabel({ env });
-  for (const legacyLabel of resolveLegacyGatewayLaunchAgentLabels(env.NEWCLAW_PROFILE)) {
+  for (const legacyLabel of resolveLegacyGatewayLaunchAgentLabels(env.IFLOW_PROFILE)) {
     const legacyPlistPath = resolveLaunchAgentPlistPathForLabel(env, legacyLabel);
     await execLaunchctl(["bootout", domain, legacyPlistPath]);
     await execLaunchctl(["unload", legacyPlistPath]);
@@ -416,8 +416,8 @@ export async function installLaunchAgent({
   const serviceDescription =
     description ??
     formatGatewayServiceDescription({
-      profile: env.NEWCLAW_PROFILE,
-      version: environment?.NEWCLAW_SERVICE_VERSION ?? env.NEWCLAW_SERVICE_VERSION,
+      profile: env.IFLOW_PROFILE,
+      version: environment?.IFLOW_SERVICE_VERSION ?? env.IFLOW_SERVICE_VERSION,
     });
   const plist = buildLaunchAgentPlist({
     label,

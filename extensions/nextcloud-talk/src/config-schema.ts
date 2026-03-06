@@ -6,7 +6,7 @@ import {
   MarkdownConfigSchema,
   ToolPolicySchema,
   requireOpenAllowFrom,
-} from "newclaw/plugin-sdk";
+} from "iflow/plugin-sdk";
 import { z } from "zod";
 
 export const NextcloudTalkRoomSchema = z

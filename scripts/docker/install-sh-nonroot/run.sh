@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-INSTALL_URL="${NEWCLAW_INSTALL_URL:-https://newclaw.bot/install.sh}"
-DEFAULT_PACKAGE="newclaw"
-PACKAGE_NAME="${NEWCLAW_INSTALL_PACKAGE:-$DEFAULT_PACKAGE}"
+INSTALL_URL="${IFLOW_INSTALL_URL:-https://iflow.bot/install.sh}"
+DEFAULT_PACKAGE="iflow"
+PACKAGE_NAME="${IFLOW_INSTALL_PACKAGE:-$DEFAULT_PACKAGE}"
 
 echo "==> Pre-flight: ensure git absent"
 if command -v git >/dev/null; then
@@ -20,7 +20,7 @@ export PATH="$HOME/.npm-global/bin:$PATH"
 echo "==> Verify git installed"
 command -v git >/dev/null
 
-EXPECTED_VERSION="${NEWCLAW_INSTALL_EXPECT_VERSION:-}"
+EXPECTED_VERSION="${IFLOW_INSTALL_EXPECT_VERSION:-}"
 if [[ -n "$EXPECTED_VERSION" ]]; then
   LATEST_VERSION="$EXPECTED_VERSION"
 else

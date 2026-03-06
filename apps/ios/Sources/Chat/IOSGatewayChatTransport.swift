@@ -1,9 +1,9 @@
-import NewClawChatUI
-import NewClawKit
-import NewClawProtocol
+import iFlowChatUI
+import iFlowKit
+import iFlowProtocol
 import Foundation
 
-struct IOSGatewayChatTransport: NewClawChatTransport, Sendable {
+struct IOSGatewayChatTransport: iFlowChatTransport, Sendable {
     private let gateway: GatewayNodeSession
 
     init(gateway: GatewayNodeSession) {
@@ -20,7 +20,7 @@ struct IOSGatewayChatTransport: NewClawChatTransport, Sendable {
         _ = try await self.gateway.request(method: "chat.abort", paramsJSON: json, timeoutSeconds: 10)
     }
 
-    func listSessions(limit: Int?) async throws -> NewClawChatSessionsListResponse {
+    func listSessions(limit: Int?) async throws -> iFlowChatSessionsListResponse {
         struct Params: Codable {
             var includeGlobal: Bool
             var includeUnknown: Bool
@@ -29,7 +29,7 @@ struct IOSGatewayChatTransport: NewClawChatTransport, Sendable {
         let data = try JSONEncoder().encode(Params(includeGlobal: true, includeUnknown: false, limit: limit))
         let json = String(data: data, encoding: .utf8)
         let res = try await self.gateway.request(method: "sessions.list", paramsJSON: json, timeoutSeconds: 15)
-        return try JSONDecoder().decode(NewClawChatSessionsListResponse.self, from: res)
+        return try JSONDecoder().decode(iFlowChatSessionsListResponse.self, from: res)
     }
 
     func setActiveSessionKey(_ sessionKey: String) async throws {
@@ -39,12 +39,12 @@ struct IOSGatewayChatTransport: NewClawChatTransport, Sendable {
         await self.gateway.sendEvent(event: "chat.subscribe", payloadJSON: json)
     }
 
-    func requestHistory(sessionKey: String) async throws -> NewClawChatHistoryPayload {
+    func requestHistory(sessionKey: String) async throws -> iFlowChatHistoryPayload {
         struct Params: Codable { var sessionKey: String }
         let data = try JSONEncoder().encode(Params(sessionKey: sessionKey))
         let json = String(data: data, encoding: .utf8)
         let res = try await self.gateway.request(method: "chat.history", paramsJSON: json, timeoutSeconds: 15)
-        return try JSONDecoder().decode(NewClawChatHistoryPayload.self, from: res)
+        return try JSONDecoder().decode(iFlowChatHistoryPayload.self, from: res)
     }
 
     func sendMessage(
@@ -52,13 +52,13 @@ struct IOSGatewayChatTransport: NewClawChatTransport, Sendable {
         message: String,
         thinking: String,
         idempotencyKey: String,
-        attachments: [NewClawChatAttachmentPayload]) async throws -> NewClawChatSendResponse
+        attachments: [iFlowChatAttachmentPayload]) async throws -> iFlowChatSendResponse
     {
         struct Params: Codable {
             var sessionKey: String
             var message: String
             var thinking: String
-            var attachments: [NewClawChatAttachmentPayload]?
+            var attachments: [iFlowChatAttachmentPayload]?
             var timeoutMs: Int
             var idempotencyKey: String
         }
@@ -73,16 +73,16 @@ struct IOSGatewayChatTransport: NewClawChatTransport, Sendable {
         let data = try JSONEncoder().encode(params)
         let json = String(data: data, encoding: .utf8)
         let res = try await self.gateway.request(method: "chat.send", paramsJSON: json, timeoutSeconds: 35)
-        return try JSONDecoder().decode(NewClawChatSendResponse.self, from: res)
+        return try JSONDecoder().decode(iFlowChatSendResponse.self, from: res)
     }
 
     func requestHealth(timeoutMs: Int) async throws -> Bool {
         let seconds = max(1, Int(ceil(Double(timeoutMs) / 1000.0)))
         let res = try await self.gateway.request(method: "health", paramsJSON: nil, timeoutSeconds: seconds)
-        return (try? JSONDecoder().decode(NewClawGatewayHealthOK.self, from: res))?.ok ?? true
+        return (try? JSONDecoder().decode(iFlowGatewayHealthOK.self, from: res))?.ok ?? true
     }
 
-    func events() -> AsyncStream<NewClawChatTransportEvent> {
+    func events() -> AsyncStream<iFlowChatTransportEvent> {
         AsyncStream { continuation in
             let task = Task {
                 let stream = await self.gateway.subscribeServerEvents()
@@ -97,13 +97,13 @@ struct IOSGatewayChatTransport: NewClawChatTransport, Sendable {
                         guard let payload = evt.payload else { break }
                         let ok = (try? GatewayPayloadDecoding.decode(
                             payload,
-                            as: NewClawGatewayHealthOK.self))?.ok ?? true
+                            as: iFlowGatewayHealthOK.self))?.ok ?? true
                         continuation.yield(.health(ok: ok))
                     case "chat":
                         guard let payload = evt.payload else { break }
                         if let chatPayload = try? GatewayPayloadDecoding.decode(
                             payload,
-                            as: NewClawChatEventPayload.self)
+                            as: iFlowChatEventPayload.self)
                         {
                             continuation.yield(.chat(chatPayload))
                         }
@@ -111,7 +111,7 @@ struct IOSGatewayChatTransport: NewClawChatTransport, Sendable {
                         guard let payload = evt.payload else { break }
                         if let agentPayload = try? GatewayPayloadDecoding.decode(
                             payload,
-                            as: NewClawAgentEventPayload.self)
+                            as: iFlowAgentEventPayload.self)
                         {
                             continuation.yield(.agent(agentPayload))
                         }

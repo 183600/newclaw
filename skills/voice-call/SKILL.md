@@ -1,9 +1,9 @@
 ---
 name: voice-call
-description: Start voice calls via the NewClaw voice-call plugin.
+description: Start voice calls via the iFlow voice-call plugin.
 metadata:
   {
-    "newclaw":
+    "iflow":
       {
         "emoji": "📞",
         "skillKey": "voice-call",
@@ -19,8 +19,8 @@ Use the voice-call plugin to start or inspect calls (Twilio, Telnyx, Plivo, or m
 ## CLI
 
 ```bash
-newclaw voicecall call --to "+15555550123" --message "Hello from NewClaw"
-newclaw voicecall status --call-id <id>
+iflow voicecall call --to "+15555550123" --message "Hello from iFlow"
+iflow voicecall status --call-id <id>
 ```
 
 ## Tool

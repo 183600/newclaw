@@ -23,7 +23,7 @@ WORKDIR /home/app
 ENV NPM_CONFIG_FUND=false
 ENV NPM_CONFIG_AUDIT=false
 
-COPY run.sh /usr/local/bin/newclaw-install-nonroot
-RUN sudo chmod +x /usr/local/bin/newclaw-install-nonroot
+COPY run.sh /usr/local/bin/iflow-install-nonroot
+RUN sudo chmod +x /usr/local/bin/iflow-install-nonroot
 
-ENTRYPOINT ["/usr/local/bin/newclaw-install-nonroot"]
+ENTRYPOINT ["/usr/local/bin/iflow-install-nonroot"]

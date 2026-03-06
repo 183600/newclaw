@@ -1,13 +1,13 @@
 // Default service labels (canonical + legacy compatibility)
-export const GATEWAY_LAUNCH_AGENT_LABEL = "ai.newclaw.gateway";
-export const GATEWAY_SYSTEMD_SERVICE_NAME = "newclaw-gateway";
-export const GATEWAY_WINDOWS_TASK_NAME = "NewClaw Gateway";
-export const GATEWAY_SERVICE_MARKER = "newclaw";
+export const GATEWAY_LAUNCH_AGENT_LABEL = "ai.iflow.gateway";
+export const GATEWAY_SYSTEMD_SERVICE_NAME = "iflow-gateway";
+export const GATEWAY_WINDOWS_TASK_NAME = "iFlow Gateway";
+export const GATEWAY_SERVICE_MARKER = "iflow";
 export const GATEWAY_SERVICE_KIND = "gateway";
-export const NODE_LAUNCH_AGENT_LABEL = "ai.newclaw.node";
-export const NODE_SYSTEMD_SERVICE_NAME = "newclaw-node";
-export const NODE_WINDOWS_TASK_NAME = "NewClaw Node";
-export const NODE_SERVICE_MARKER = "newclaw";
+export const NODE_LAUNCH_AGENT_LABEL = "ai.iflow.node";
+export const NODE_SYSTEMD_SERVICE_NAME = "iflow-node";
+export const NODE_WINDOWS_TASK_NAME = "iFlow Node";
+export const NODE_SERVICE_MARKER = "iflow";
 export const NODE_SERVICE_KIND = "node";
 export const NODE_WINDOWS_TASK_SCRIPT_NAME = "node.cmd";
 export const LEGACY_GATEWAY_LAUNCH_AGENT_LABELS: string[] = [];
@@ -32,7 +32,7 @@ export function resolveGatewayLaunchAgentLabel(profile?: string): string {
   if (!normalized) {
     return GATEWAY_LAUNCH_AGENT_LABEL;
   }
-  return `ai.newclaw.${normalized}`;
+  return `ai.iflow.${normalized}`;
 }
 
 export function resolveLegacyGatewayLaunchAgentLabels(profile?: string): string[] {
@@ -45,7 +45,7 @@ export function resolveGatewaySystemdServiceName(profile?: string): string {
   if (!suffix) {
     return GATEWAY_SYSTEMD_SERVICE_NAME;
   }
-  return `newclaw-gateway${suffix}`;
+  return `iflow-gateway${suffix}`;
 }
 
 export function resolveGatewayWindowsTaskName(profile?: string): string {
@@ -53,7 +53,7 @@ export function resolveGatewayWindowsTaskName(profile?: string): string {
   if (!normalized) {
     return GATEWAY_WINDOWS_TASK_NAME;
   }
-  return `NewClaw Gateway (${normalized})`;
+  return `iFlow Gateway (${normalized})`;
 }
 
 export function formatGatewayServiceDescription(params?: {
@@ -70,9 +70,9 @@ export function formatGatewayServiceDescription(params?: {
     parts.push(`v${version}`);
   }
   if (parts.length === 0) {
-    return "NewClaw Gateway";
+    return "iFlow Gateway";
   }
-  return `NewClaw Gateway (${parts.join(", ")})`;
+  return `iFlow Gateway (${parts.join(", ")})`;
 }
 
 export function resolveNodeLaunchAgentLabel(): string {
@@ -90,7 +90,7 @@ export function resolveNodeWindowsTaskName(): string {
 export function formatNodeServiceDescription(params?: { version?: string }): string {
   const version = params?.version?.trim();
   if (!version) {
-    return "NewClaw Node Host";
+    return "iFlow Node Host";
   }
-  return `NewClaw Node Host (v${version})`;
+  return `iFlow Node Host (v${version})`;
 }

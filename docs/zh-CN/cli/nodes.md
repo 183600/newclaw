@@ -2,7 +2,7 @@
 read_when:
   - 正在管理配对节点（摄像头、屏幕、画布）
   - 需要批准请求或调用节点命令
-summary: 管理配对节点（列表/状态/批准/调用，摄像头/画布/屏幕）的 `newclaw nodes` CLI 参考
+summary: 管理配对节点（列表/状态/批准/调用，摄像头/画布/屏幕）的 `iflow nodes` CLI 参考
 title: nodes
 x-i18n:
   generated_at: "2026-02-01T20:21:19Z"
@@ -13,7 +13,7 @@ x-i18n:
   workflow: 14
 ---
 
-# `newclaw nodes`
+# `iflow nodes`
 
 管理配对节点（设备）并调用节点功能。
 
@@ -30,14 +30,14 @@ x-i18n:
 ## 常用命令
 
 ```bash
-newclaw nodes list
-newclaw nodes list --connected
-newclaw nodes list --last-connected 24h
-newclaw nodes pending
-newclaw nodes approve <requestId>
-newclaw nodes status
-newclaw nodes status --connected
-newclaw nodes status --last-connected 24h
+iflow nodes list
+iflow nodes list --connected
+iflow nodes list --last-connected 24h
+iflow nodes pending
+iflow nodes approve <requestId>
+iflow nodes status
+iflow nodes status --connected
+iflow nodes status --last-connected 24h
 ```
 
 `nodes list` 输出待处理/已配对的表格。已配对的行包含最近一次连接的时间间隔（Last Connect）。
@@ -46,10 +46,10 @@ newclaw nodes status --last-connected 24h
 ## 调用 / 运行
 
 ```bash
-newclaw nodes invoke --node <id|name|ip> --command <command> --params <json>
-newclaw nodes run --node <id|name|ip> <command...>
-newclaw nodes run --raw "git status"
-newclaw nodes run --agent main --node <id|name|ip> --raw "git status"
+iflow nodes invoke --node <id|name|ip> --command <command> --params <json>
+iflow nodes run --node <id|name|ip> <command...>
+iflow nodes run --raw "git status"
+iflow nodes run --agent main --node <id|name|ip> --raw "git status"
 ```
 
 调用标志：

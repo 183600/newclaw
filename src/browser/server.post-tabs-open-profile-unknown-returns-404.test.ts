@@ -93,9 +93,9 @@ vi.mock("../config/config.js", async (importOriginal) => {
         color: "#FF4500",
         attachOnly: cfgAttachOnly,
         headless: true,
-        defaultProfile: "newclaw",
+        defaultProfile: "iflow",
         profiles: {
-          newclaw: { cdpPort: testPort + 1, color: "#FF4500" },
+          iflow: { cdpPort: testPort + 1, color: "#FF4500" },
         },
       },
     }),
@@ -107,20 +107,20 @@ const launchCalls = vi.hoisted(() => [] as Array<{ port: number }>);
 vi.mock("./chrome.js", () => ({
   isChromeCdpReady: vi.fn(async () => reachable),
   isChromeReachable: vi.fn(async () => reachable),
-  launchNewClawChrome: vi.fn(async (_resolved: unknown, profile: { cdpPort: number }) => {
+  launchiFlowChrome: vi.fn(async (_resolved: unknown, profile: { cdpPort: number }) => {
     launchCalls.push({ port: profile.cdpPort });
     reachable = true;
     return {
       pid: 123,
       exe: { kind: "chrome", path: "/fake/chrome" },
-      userDataDir: "/tmp/newclaw",
+      userDataDir: "/tmp/iflow",
       cdpPort: profile.cdpPort,
       startedAt: Date.now(),
       proc,
     };
   }),
-  resolveNewClawUserDataDir: vi.fn(() => "/tmp/newclaw"),
-  stopNewClawChrome: vi.fn(async () => {
+  resolveiFlowUserDataDir: vi.fn(() => "/tmp/iflow"),
+  stopiFlowChrome: vi.fn(async () => {
     reachable = false;
   }),
 }));
@@ -206,8 +206,8 @@ describe("browser control server", () => {
 
     testPort = await getFreePort();
     _cdpBaseUrl = `http://127.0.0.1:${testPort + 1}`;
-    prevGatewayPort = process.env.NEWCLAW_GATEWAY_PORT;
-    process.env.NEWCLAW_GATEWAY_PORT = String(testPort - 2);
+    prevGatewayPort = process.env.IFLOW_GATEWAY_PORT;
+    process.env.IFLOW_GATEWAY_PORT = String(testPort - 2);
 
     // Minimal CDP JSON endpoints used by the server.
     let putNewCalls = 0;
@@ -266,9 +266,9 @@ describe("browser control server", () => {
     vi.unstubAllGlobals();
     vi.restoreAllMocks();
     if (prevGatewayPort === undefined) {
-      delete process.env.NEWCLAW_GATEWAY_PORT;
+      delete process.env.IFLOW_GATEWAY_PORT;
     } else {
-      process.env.NEWCLAW_GATEWAY_PORT = prevGatewayPort;
+      process.env.IFLOW_GATEWAY_PORT = prevGatewayPort;
     }
     const { stopBrowserControlServer } = await import("./server.js");
     await stopBrowserControlServer();
@@ -304,11 +304,11 @@ describe("profile CRUD endpoints", () => {
 
     testPort = await getFreePort();
     _cdpBaseUrl = `http://127.0.0.1:${testPort + 1}`;
-    prevGatewayPort = process.env.NEWCLAW_GATEWAY_PORT;
-    process.env.NEWCLAW_GATEWAY_PORT = String(testPort - 2);
+    prevGatewayPort = process.env.IFLOW_GATEWAY_PORT;
+    process.env.IFLOW_GATEWAY_PORT = String(testPort - 2);
 
-    prevGatewayPort = process.env.NEWCLAW_GATEWAY_PORT;
-    process.env.NEWCLAW_GATEWAY_PORT = String(testPort - 2);
+    prevGatewayPort = process.env.IFLOW_GATEWAY_PORT;
+    process.env.IFLOW_GATEWAY_PORT = String(testPort - 2);
 
     vi.stubGlobal(
       "fetch",
@@ -326,9 +326,9 @@ describe("profile CRUD endpoints", () => {
     vi.unstubAllGlobals();
     vi.restoreAllMocks();
     if (prevGatewayPort === undefined) {
-      delete process.env.NEWCLAW_GATEWAY_PORT;
+      delete process.env.IFLOW_GATEWAY_PORT;
     } else {
-      process.env.NEWCLAW_GATEWAY_PORT = prevGatewayPort;
+      process.env.IFLOW_GATEWAY_PORT = prevGatewayPort;
     }
     const { stopBrowserControlServer } = await import("./server.js");
     await stopBrowserControlServer();
@@ -369,11 +369,11 @@ describe("profile CRUD endpoints", () => {
     await startBrowserControlServerFromConfig();
     const base = `http://127.0.0.1:${testPort}`;
 
-    // "newclaw" already exists as the default profile
+    // "iflow" already exists as the default profile
     const result = await realFetch(`${base}/profiles/create`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name: "newclaw" }),
+      body: JSON.stringify({ name: "iflow" }),
     });
     expect(result.status).toBe(409);
     const body = (await result.json()) as { error: string };
@@ -434,8 +434,8 @@ describe("profile CRUD endpoints", () => {
     await startBrowserControlServerFromConfig();
     const base = `http://127.0.0.1:${testPort}`;
 
-    // newclaw is the default profile
-    const result = await realFetch(`${base}/profiles/newclaw`, {
+    // iflow is the default profile
+    const result = await realFetch(`${base}/profiles/iflow`, {
       method: "DELETE",
     });
     expect(result.status).toBe(400);

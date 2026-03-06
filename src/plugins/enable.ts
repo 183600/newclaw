@@ -1,12 +1,12 @@
-import type { NewClawConfig } from "../config/config.js";
+import type { iFlowConfig } from "../config/config.js";
 
 export type PluginEnableResult = {
-  config: NewClawConfig;
+  config: iFlowConfig;
   enabled: boolean;
   reason?: string;
 };
 
-function ensureAllowlisted(cfg: NewClawConfig, pluginId: string): NewClawConfig {
+function ensureAllowlisted(cfg: iFlowConfig, pluginId: string): iFlowConfig {
   const allow = cfg.plugins?.allow;
   if (!Array.isArray(allow) || allow.includes(pluginId)) {
     return cfg;
@@ -20,7 +20,7 @@ function ensureAllowlisted(cfg: NewClawConfig, pluginId: string): NewClawConfig 
   };
 }
 
-export function enablePluginInConfig(cfg: NewClawConfig, pluginId: string): PluginEnableResult {
+export function enablePluginInConfig(cfg: iFlowConfig, pluginId: string): PluginEnableResult {
   if (cfg.plugins?.enabled === false) {
     return { config: cfg, enabled: false, reason: "plugins disabled" };
   }
@@ -35,7 +35,7 @@ export function enablePluginInConfig(cfg: NewClawConfig, pluginId: string): Plug
       enabled: true,
     },
   };
-  let next: NewClawConfig = {
+  let next: iFlowConfig = {
     ...cfg,
     plugins: {
       ...cfg.plugins,

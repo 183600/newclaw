@@ -10,7 +10,7 @@ title: "Development Channels"
 
 Last updated: 2026-01-21
 
-NewClaw ships three update channels:
+iFlow ships three update channels:
 
 - **stable**: npm dist-tag `latest`.
 - **beta**: npm dist-tag `beta` (builds under test).
@@ -24,9 +24,9 @@ without changing the version number — dist-tags are the source of truth for np
 Git checkout:
 
 ```bash
-newclaw update --channel stable
-newclaw update --channel beta
-newclaw update --channel dev
+iflow update --channel stable
+iflow update --channel beta
+iflow update --channel dev
 ```
 
 - `stable`/`beta` check out the latest matching tag (often the same tag).
@@ -35,17 +35,17 @@ newclaw update --channel dev
 npm/pnpm global install:
 
 ```bash
-newclaw update --channel stable
-newclaw update --channel beta
-newclaw update --channel dev
+iflow update --channel stable
+iflow update --channel beta
+iflow update --channel dev
 ```
 
 This updates via the corresponding npm dist-tag (`latest`, `beta`, `dev`).
 
-When you **explicitly** switch channels with `--channel`, NewClaw also aligns
+When you **explicitly** switch channels with `--channel`, iFlow also aligns
 the install method:
 
-- `dev` ensures a git checkout (default `~/newclaw`, override with `NEWCLAW_GIT_DIR`),
+- `dev` ensures a git checkout (default `~/iflow`, override with `IFLOW_GIT_DIR`),
   updates it, and installs the global CLI from that checkout.
 - `stable`/`beta` installs from npm using the matching dist-tag.
 
@@ -53,7 +53,7 @@ Tip: if you want stable + dev in parallel, keep two clones and point your gatewa
 
 ## Plugins and channels
 
-When you switch channels with `newclaw update`, NewClaw also syncs plugin sources:
+When you switch channels with `iflow update`, iFlow also syncs plugin sources:
 
 - `dev` prefers bundled plugins from the git checkout.
 - `stable` and `beta` restore npm-installed plugin packages.

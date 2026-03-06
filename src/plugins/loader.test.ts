@@ -3,16 +3,16 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
-import { loadNewClawPlugins } from "./loader.js";
+import { loadiFlowPlugins } from "./loader.js";
 
 type TempPlugin = { dir: string; file: string; id: string };
 
 const tempDirs: string[] = [];
-const prevBundledDir = process.env.NEWCLAW_BUNDLED_PLUGINS_DIR;
+const prevBundledDir = process.env.IFLOW_BUNDLED_PLUGINS_DIR;
 const EMPTY_PLUGIN_SCHEMA = { type: "object", additionalProperties: false, properties: {} };
 
 function makeTempDir() {
-  const dir = path.join(os.tmpdir(), `newclaw-plugin-${randomUUID()}`);
+  const dir = path.join(os.tmpdir(), `iflow-plugin-${randomUUID()}`);
   fs.mkdirSync(dir, { recursive: true });
   tempDirs.push(dir);
   return dir;
@@ -36,11 +36,7 @@ function writePlugin(params: {
   if (params.kind) {
     manifest.kind = params.kind;
   }
-  fs.writeFileSync(
-    path.join(dir, "newclaw.plugin.json"),
-    JSON.stringify(manifest, null, 2),
-    "utf-8",
-  );
+  fs.writeFileSync(path.join(dir, "iflow.plugin.json"), JSON.stringify(manifest, null, 2), "utf-8");
   return { dir, file, id: params.id };
 }
 
@@ -53,13 +49,13 @@ afterEach(() => {
     }
   }
   if (prevBundledDir === undefined) {
-    delete process.env.NEWCLAW_BUNDLED_PLUGINS_DIR;
+    delete process.env.IFLOW_BUNDLED_PLUGINS_DIR;
   } else {
-    process.env.NEWCLAW_BUNDLED_PLUGINS_DIR = prevBundledDir;
+    process.env.IFLOW_BUNDLED_PLUGINS_DIR = prevBundledDir;
   }
 });
 
-describe("loadNewClawPlugins", () => {
+describe("loadiFlowPlugins", () => {
   it("disables bundled plugins by default", () => {
     const bundledDir = makeTempDir();
     writePlugin({
@@ -68,9 +64,9 @@ describe("loadNewClawPlugins", () => {
       dir: bundledDir,
       filename: "bundled.ts",
     });
-    process.env.NEWCLAW_BUNDLED_PLUGINS_DIR = bundledDir;
+    process.env.IFLOW_BUNDLED_PLUGINS_DIR = bundledDir;
 
-    const registry = loadNewClawPlugins({
+    const registry = loadiFlowPlugins({
       cache: false,
       config: {
         plugins: {
@@ -82,7 +78,7 @@ describe("loadNewClawPlugins", () => {
     const bundled = registry.plugins.find((entry) => entry.id === "bundled");
     expect(bundled?.status).toBe("disabled");
 
-    const enabledRegistry = loadNewClawPlugins({
+    const enabledRegistry = loadiFlowPlugins({
       cache: false,
       config: {
         plugins: {
@@ -125,9 +121,9 @@ describe("loadNewClawPlugins", () => {
       dir: bundledDir,
       filename: "telegram.ts",
     });
-    process.env.NEWCLAW_BUNDLED_PLUGINS_DIR = bundledDir;
+    process.env.IFLOW_BUNDLED_PLUGINS_DIR = bundledDir;
 
-    const registry = loadNewClawPlugins({
+    const registry = loadiFlowPlugins({
       cache: false,
       config: {
         plugins: {
@@ -153,9 +149,9 @@ describe("loadNewClawPlugins", () => {
       filename: "memory-core.ts",
       kind: "memory",
     });
-    process.env.NEWCLAW_BUNDLED_PLUGINS_DIR = bundledDir;
+    process.env.IFLOW_BUNDLED_PLUGINS_DIR = bundledDir;
 
-    const registry = loadNewClawPlugins({
+    const registry = loadiFlowPlugins({
       cache: false,
       config: {
         plugins: {
@@ -178,10 +174,10 @@ describe("loadNewClawPlugins", () => {
     fs.writeFileSync(
       path.join(pluginDir, "package.json"),
       JSON.stringify({
-        name: "@newclaw/memory-core",
+        name: "@iflow/memory-core",
         version: "1.2.3",
         description: "Memory plugin package",
-        newclaw: { extensions: ["./index.ts"] },
+        iflow: { extensions: ["./index.ts"] },
       }),
       "utf-8",
     );
@@ -193,9 +189,9 @@ describe("loadNewClawPlugins", () => {
       kind: "memory",
     });
 
-    process.env.NEWCLAW_BUNDLED_PLUGINS_DIR = bundledDir;
+    process.env.IFLOW_BUNDLED_PLUGINS_DIR = bundledDir;
 
-    const registry = loadNewClawPlugins({
+    const registry = loadiFlowPlugins({
       cache: false,
       config: {
         plugins: {
@@ -213,13 +209,13 @@ describe("loadNewClawPlugins", () => {
     expect(memory?.version).toBe("1.2.3");
   });
   it("loads plugins from config paths", () => {
-    process.env.NEWCLAW_BUNDLED_PLUGINS_DIR = "/nonexistent/bundled/plugins";
+    process.env.IFLOW_BUNDLED_PLUGINS_DIR = "/nonexistent/bundled/plugins";
     const plugin = writePlugin({
       id: "allowed",
       body: `export default { id: "allowed", register(api) { api.registerGatewayMethod("allowed.ping", ({ respond }) => respond(true, { ok: true })); } };`,
     });
 
-    const registry = loadNewClawPlugins({
+    const registry = loadiFlowPlugins({
       cache: false,
       workspaceDir: plugin.dir,
       config: {
@@ -236,13 +232,13 @@ describe("loadNewClawPlugins", () => {
   });
 
   it("denylist disables plugins even if allowed", () => {
-    process.env.NEWCLAW_BUNDLED_PLUGINS_DIR = "/nonexistent/bundled/plugins";
+    process.env.IFLOW_BUNDLED_PLUGINS_DIR = "/nonexistent/bundled/plugins";
     const plugin = writePlugin({
       id: "blocked",
       body: `export default { id: "blocked", register() {} };`,
     });
 
-    const registry = loadNewClawPlugins({
+    const registry = loadiFlowPlugins({
       cache: false,
       workspaceDir: plugin.dir,
       config: {
@@ -259,13 +255,13 @@ describe("loadNewClawPlugins", () => {
   });
 
   it("fails fast on invalid plugin config", () => {
-    process.env.NEWCLAW_BUNDLED_PLUGINS_DIR = "/nonexistent/bundled/plugins";
+    process.env.IFLOW_BUNDLED_PLUGINS_DIR = "/nonexistent/bundled/plugins";
     const plugin = writePlugin({
       id: "configurable",
       body: `export default { id: "configurable", register() {} };`,
     });
 
-    const registry = loadNewClawPlugins({
+    const registry = loadiFlowPlugins({
       cache: false,
       workspaceDir: plugin.dir,
       config: {
@@ -286,7 +282,7 @@ describe("loadNewClawPlugins", () => {
   });
 
   it("registers channel plugins", () => {
-    process.env.NEWCLAW_BUNDLED_PLUGINS_DIR = "/nonexistent/bundled/plugins";
+    process.env.IFLOW_BUNDLED_PLUGINS_DIR = "/nonexistent/bundled/plugins";
     const plugin = writePlugin({
       id: "channel-demo",
       body: `export default { id: "channel-demo", register(api) {
@@ -311,7 +307,7 @@ describe("loadNewClawPlugins", () => {
 } };`,
     });
 
-    const registry = loadNewClawPlugins({
+    const registry = loadiFlowPlugins({
       cache: false,
       workspaceDir: plugin.dir,
       config: {
@@ -327,7 +323,7 @@ describe("loadNewClawPlugins", () => {
   });
 
   it("registers http handlers", () => {
-    process.env.NEWCLAW_BUNDLED_PLUGINS_DIR = "/nonexistent/bundled/plugins";
+    process.env.IFLOW_BUNDLED_PLUGINS_DIR = "/nonexistent/bundled/plugins";
     const plugin = writePlugin({
       id: "http-demo",
       body: `export default { id: "http-demo", register(api) {
@@ -335,7 +331,7 @@ describe("loadNewClawPlugins", () => {
 } };`,
     });
 
-    const registry = loadNewClawPlugins({
+    const registry = loadiFlowPlugins({
       cache: false,
       workspaceDir: plugin.dir,
       config: {
@@ -353,7 +349,7 @@ describe("loadNewClawPlugins", () => {
   });
 
   it("registers http routes", () => {
-    process.env.NEWCLAW_BUNDLED_PLUGINS_DIR = "/nonexistent/bundled/plugins";
+    process.env.IFLOW_BUNDLED_PLUGINS_DIR = "/nonexistent/bundled/plugins";
     const plugin = writePlugin({
       id: "http-route-demo",
       body: `export default { id: "http-route-demo", register(api) {
@@ -361,7 +357,7 @@ describe("loadNewClawPlugins", () => {
 } };`,
     });
 
-    const registry = loadNewClawPlugins({
+    const registry = loadiFlowPlugins({
       cache: false,
       workspaceDir: plugin.dir,
       config: {
@@ -380,13 +376,13 @@ describe("loadNewClawPlugins", () => {
   });
 
   it("respects explicit disable in config", () => {
-    process.env.NEWCLAW_BUNDLED_PLUGINS_DIR = "/nonexistent/bundled/plugins";
+    process.env.IFLOW_BUNDLED_PLUGINS_DIR = "/nonexistent/bundled/plugins";
     const plugin = writePlugin({
       id: "config-disable",
       body: `export default { id: "config-disable", register() {} };`,
     });
 
-    const registry = loadNewClawPlugins({
+    const registry = loadiFlowPlugins({
       cache: false,
       config: {
         plugins: {
@@ -403,7 +399,7 @@ describe("loadNewClawPlugins", () => {
   });
 
   it("enforces memory slot selection", () => {
-    process.env.NEWCLAW_BUNDLED_PLUGINS_DIR = "/nonexistent/bundled/plugins";
+    process.env.IFLOW_BUNDLED_PLUGINS_DIR = "/nonexistent/bundled/plugins";
     const memoryA = writePlugin({
       id: "memory-a",
       body: `export default { id: "memory-a", kind: "memory", register() {} };`,
@@ -413,7 +409,7 @@ describe("loadNewClawPlugins", () => {
       body: `export default { id: "memory-b", kind: "memory", register() {} };`,
     });
 
-    const registry = loadNewClawPlugins({
+    const registry = loadiFlowPlugins({
       cache: false,
       config: {
         plugins: {
@@ -430,13 +426,13 @@ describe("loadNewClawPlugins", () => {
   });
 
   it("disables memory plugins when slot is none", () => {
-    process.env.NEWCLAW_BUNDLED_PLUGINS_DIR = "/nonexistent/bundled/plugins";
+    process.env.IFLOW_BUNDLED_PLUGINS_DIR = "/nonexistent/bundled/plugins";
     const memory = writePlugin({
       id: "memory-off",
       body: `export default { id: "memory-off", kind: "memory", register() {} };`,
     });
 
-    const registry = loadNewClawPlugins({
+    const registry = loadiFlowPlugins({
       cache: false,
       config: {
         plugins: {
@@ -458,14 +454,14 @@ describe("loadNewClawPlugins", () => {
       dir: bundledDir,
       filename: "shadow.js",
     });
-    process.env.NEWCLAW_BUNDLED_PLUGINS_DIR = bundledDir;
+    process.env.IFLOW_BUNDLED_PLUGINS_DIR = bundledDir;
 
     const override = writePlugin({
       id: "shadow",
       body: `export default { id: "shadow", register() {} };`,
     });
 
-    const registry = loadNewClawPlugins({
+    const registry = loadiFlowPlugins({
       cache: false,
       config: {
         plugins: {

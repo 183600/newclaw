@@ -1,4 +1,4 @@
-import type { NewClawConfig } from "./config.js";
+import type { iFlowConfig } from "./config.js";
 import type { WhatsAppConfig } from "./types.js";
 
 export type MergeSectionOptions<T> = {
@@ -24,10 +24,10 @@ export function mergeConfigSection<T extends Record<string, unknown>>(
 }
 
 export function mergeWhatsAppConfig(
-  cfg: NewClawConfig,
+  cfg: iFlowConfig,
   patch: Partial<WhatsAppConfig>,
   options?: MergeSectionOptions<WhatsAppConfig>,
-): NewClawConfig {
+): iFlowConfig {
   return {
     ...cfg,
     channels: {

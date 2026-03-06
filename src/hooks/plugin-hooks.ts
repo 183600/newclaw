@@ -1,6 +1,6 @@
 import path from "node:path";
 import { pathToFileURL } from "node:url";
-import type { NewClawPluginApi } from "../plugins/types.js";
+import type { iFlowPluginApi } from "../plugins/types.js";
 import type { InternalHookHandler } from "./internal-hooks.js";
 import type { HookEntry } from "./types.js";
 import { shouldIncludeHook } from "./config.js";
@@ -13,19 +13,19 @@ export type PluginHookLoadResult = {
   errors: string[];
 };
 
-function resolveHookDir(api: NewClawPluginApi, dir: string): string {
+function resolveHookDir(api: iFlowPluginApi, dir: string): string {
   if (path.isAbsolute(dir)) {
     return dir;
   }
   return path.resolve(path.dirname(api.source), dir);
 }
 
-function normalizePluginHookEntry(api: NewClawPluginApi, entry: HookEntry): HookEntry {
+function normalizePluginHookEntry(api: iFlowPluginApi, entry: HookEntry): HookEntry {
   return {
     ...entry,
     hook: {
       ...entry.hook,
-      source: "newclaw-plugin",
+      source: "iflow-plugin",
       pluginId: api.id,
     },
     metadata: {
@@ -38,7 +38,7 @@ function normalizePluginHookEntry(api: NewClawPluginApi, entry: HookEntry): Hook
 
 async function loadHookHandler(
   entry: HookEntry,
-  api: NewClawPluginApi,
+  api: iFlowPluginApi,
 ): Promise<InternalHookHandler | null> {
   try {
     const url = pathToFileURL(entry.hook.handlerPath).href;
@@ -58,13 +58,13 @@ async function loadHookHandler(
 }
 
 export async function registerPluginHooksFromDir(
-  api: NewClawPluginApi,
+  api: iFlowPluginApi,
   dir: string,
 ): Promise<PluginHookLoadResult> {
   const resolvedDir = resolveHookDir(api, dir);
   const hooks = loadHookEntriesFromDir({
     dir: resolvedDir,
-    source: "newclaw-plugin",
+    source: "iflow-plugin",
     pluginId: api.id,
   });
 

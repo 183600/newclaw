@@ -7,30 +7,30 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 const tempDirs: string[] = [];
 
 function makeTempDir() {
-  const dir = path.join(os.tmpdir(), `newclaw-plugins-${randomUUID()}`);
+  const dir = path.join(os.tmpdir(), `iflow-plugins-${randomUUID()}`);
   fs.mkdirSync(dir, { recursive: true });
   tempDirs.push(dir);
   return dir;
 }
 
 async function withStateDir<T>(stateDir: string, fn: () => Promise<T>) {
-  const prev = process.env.NEWCLAW_STATE_DIR;
-  const prevBundled = process.env.NEWCLAW_BUNDLED_PLUGINS_DIR;
-  process.env.NEWCLAW_STATE_DIR = stateDir;
-  process.env.NEWCLAW_BUNDLED_PLUGINS_DIR = "/nonexistent/bundled/plugins";
+  const prev = process.env.IFLOW_STATE_DIR;
+  const prevBundled = process.env.IFLOW_BUNDLED_PLUGINS_DIR;
+  process.env.IFLOW_STATE_DIR = stateDir;
+  process.env.IFLOW_BUNDLED_PLUGINS_DIR = "/nonexistent/bundled/plugins";
   vi.resetModules();
   try {
     return await fn();
   } finally {
     if (prev === undefined) {
-      delete process.env.NEWCLAW_STATE_DIR;
+      delete process.env.IFLOW_STATE_DIR;
     } else {
-      process.env.NEWCLAW_STATE_DIR = prev;
+      process.env.IFLOW_STATE_DIR = prev;
     }
     if (prevBundled === undefined) {
-      delete process.env.NEWCLAW_BUNDLED_PLUGINS_DIR;
+      delete process.env.IFLOW_BUNDLED_PLUGINS_DIR;
     } else {
-      process.env.NEWCLAW_BUNDLED_PLUGINS_DIR = prevBundled;
+      process.env.IFLOW_BUNDLED_PLUGINS_DIR = prevBundled;
     }
     vi.resetModules();
   }
@@ -46,7 +46,7 @@ afterEach(() => {
   }
 });
 
-describe("discoverNewClawPlugins", () => {
+describe("discoveriFlowPlugins", () => {
   it("discovers global and workspace extensions", async () => {
     const stateDir = makeTempDir();
     const workspaceDir = path.join(stateDir, "workspace");
@@ -55,13 +55,13 @@ describe("discoverNewClawPlugins", () => {
     fs.mkdirSync(globalExt, { recursive: true });
     fs.writeFileSync(path.join(globalExt, "alpha.ts"), "export default function () {}", "utf-8");
 
-    const workspaceExt = path.join(workspaceDir, ".newclaw", "extensions");
+    const workspaceExt = path.join(workspaceDir, ".iflow", "extensions");
     fs.mkdirSync(workspaceExt, { recursive: true });
     fs.writeFileSync(path.join(workspaceExt, "beta.ts"), "export default function () {}", "utf-8");
 
     const { candidates } = await withStateDir(stateDir, async () => {
-      const { discoverNewClawPlugins } = await import("./discovery.js");
-      return discoverNewClawPlugins({ workspaceDir });
+      const { discoveriFlowPlugins } = await import("./discovery.js");
+      return discoveriFlowPlugins({ workspaceDir });
     });
 
     const ids = candidates.map((c) => c.idHint);
@@ -78,7 +78,7 @@ describe("discoverNewClawPlugins", () => {
       path.join(globalExt, "package.json"),
       JSON.stringify({
         name: "pack",
-        newclaw: { extensions: ["./src/one.ts", "./src/two.ts"] },
+        iflow: { extensions: ["./src/one.ts", "./src/two.ts"] },
       }),
       "utf-8",
     );
@@ -94,8 +94,8 @@ describe("discoverNewClawPlugins", () => {
     );
 
     const { candidates } = await withStateDir(stateDir, async () => {
-      const { discoverNewClawPlugins } = await import("./discovery.js");
-      return discoverNewClawPlugins({});
+      const { discoveriFlowPlugins } = await import("./discovery.js");
+      return discoveriFlowPlugins({});
     });
 
     const ids = candidates.map((c) => c.idHint);
@@ -111,8 +111,8 @@ describe("discoverNewClawPlugins", () => {
     fs.writeFileSync(
       path.join(globalExt, "package.json"),
       JSON.stringify({
-        name: "@newclaw/voice-call",
-        newclaw: { extensions: ["./src/index.ts"] },
+        name: "@iflow/voice-call",
+        iflow: { extensions: ["./src/index.ts"] },
       }),
       "utf-8",
     );
@@ -123,8 +123,8 @@ describe("discoverNewClawPlugins", () => {
     );
 
     const { candidates } = await withStateDir(stateDir, async () => {
-      const { discoverNewClawPlugins } = await import("./discovery.js");
-      return discoverNewClawPlugins({});
+      const { discoveriFlowPlugins } = await import("./discovery.js");
+      return discoveriFlowPlugins({});
     });
 
     const ids = candidates.map((c) => c.idHint);
@@ -139,16 +139,16 @@ describe("discoverNewClawPlugins", () => {
     fs.writeFileSync(
       path.join(packDir, "package.json"),
       JSON.stringify({
-        name: "@newclaw/demo-plugin-dir",
-        newclaw: { extensions: ["./index.js"] },
+        name: "@iflow/demo-plugin-dir",
+        iflow: { extensions: ["./index.js"] },
       }),
       "utf-8",
     );
     fs.writeFileSync(path.join(packDir, "index.js"), "module.exports = {}", "utf-8");
 
     const { candidates } = await withStateDir(stateDir, async () => {
-      const { discoverNewClawPlugins } = await import("./discovery.js");
-      return discoverNewClawPlugins({ extraPaths: [packDir] });
+      const { discoveriFlowPlugins } = await import("./discovery.js");
+      return discoveriFlowPlugins({ extraPaths: [packDir] });
     });
 
     const ids = candidates.map((c) => c.idHint);

@@ -1,15 +1,15 @@
 import type { Api, Model } from "@mariozechner/pi-ai";
 import type { AuthProfileStore } from "../../agents/auth-profiles.js";
-import type { NewClawConfig } from "../../config/config.js";
+import type { iFlowConfig } from "../../config/config.js";
 import type { ModelRow } from "./list.types.js";
-import { resolveNewClawAgentDir } from "../../agents/agent-paths.js";
+import { resolveiFlowAgentDir } from "../../agents/agent-paths.js";
 import { listProfilesForProvider } from "../../agents/auth-profiles.js";
 import {
   getCustomProviderApiKey,
   resolveAwsSdkEnvVarName,
   resolveEnvApiKey,
 } from "../../agents/model-auth.js";
-import { ensureNewClawModelsJson } from "../../agents/models-config.js";
+import { ensureiFlowModelsJson } from "../../agents/models-config.js";
 import { discoverAuthStorage, discoverModels } from "../../agents/pi-model-discovery.js";
 import { modelKey } from "./shared.js";
 
@@ -29,7 +29,7 @@ const isLocalBaseUrl = (baseUrl: string) => {
   }
 };
 
-const hasAuthForProvider = (provider: string, cfg: NewClawConfig, authStore: AuthProfileStore) => {
+const hasAuthForProvider = (provider: string, cfg: iFlowConfig, authStore: AuthProfileStore) => {
   if (listProfilesForProvider(authStore, provider).length > 0) {
     return true;
   }
@@ -45,9 +45,9 @@ const hasAuthForProvider = (provider: string, cfg: NewClawConfig, authStore: Aut
   return false;
 };
 
-export async function loadModelRegistry(cfg: NewClawConfig) {
-  await ensureNewClawModelsJson(cfg);
-  const agentDir = resolveNewClawAgentDir();
+export async function loadModelRegistry(cfg: iFlowConfig) {
+  await ensureiFlowModelsJson(cfg);
+  const agentDir = resolveiFlowAgentDir();
   const authStorage = discoverAuthStorage(agentDir);
   const registry = discoverModels(authStorage, agentDir);
   const models = registry.getAll();
@@ -62,7 +62,7 @@ export function toModelRow(params: {
   tags: string[];
   aliases?: string[];
   availableKeys?: Set<string>;
-  cfg?: NewClawConfig;
+  cfg?: iFlowConfig;
   authStore?: AuthProfileStore;
 }): ModelRow {
   const { model, key, tags, aliases = [], availableKeys, cfg, authStore } = params;

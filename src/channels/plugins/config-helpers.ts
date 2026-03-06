@@ -1,4 +1,4 @@
-import type { NewClawConfig } from "../../config/config.js";
+import type { iFlowConfig } from "../../config/config.js";
 import { DEFAULT_ACCOUNT_ID } from "../../routing/session-key.js";
 
 type ChannelSection = {
@@ -7,12 +7,12 @@ type ChannelSection = {
 };
 
 export function setAccountEnabledInConfigSection(params: {
-  cfg: NewClawConfig;
+  cfg: iFlowConfig;
   sectionKey: string;
   accountId: string;
   enabled: boolean;
   allowTopLevel?: boolean;
-}): NewClawConfig {
+}): iFlowConfig {
   const accountKey = params.accountId || DEFAULT_ACCOUNT_ID;
   const channels = params.cfg.channels as Record<string, unknown> | undefined;
   const base = channels?.[params.sectionKey] as ChannelSection | undefined;
@@ -27,7 +27,7 @@ export function setAccountEnabledInConfigSection(params: {
           enabled: params.enabled,
         },
       },
-    } as NewClawConfig;
+    } as iFlowConfig;
   }
 
   const baseAccounts = base?.accounts ?? {};
@@ -47,15 +47,15 @@ export function setAccountEnabledInConfigSection(params: {
         },
       },
     },
-  } as NewClawConfig;
+  } as iFlowConfig;
 }
 
 export function deleteAccountFromConfigSection(params: {
-  cfg: NewClawConfig;
+  cfg: iFlowConfig;
   sectionKey: string;
   accountId: string;
   clearBaseFields?: string[];
-}): NewClawConfig {
+}): iFlowConfig {
   const accountKey = params.accountId || DEFAULT_ACCOUNT_ID;
   const channels = params.cfg.channels as Record<string, unknown> | undefined;
   const base = channels?.[params.sectionKey] as ChannelSection | undefined;
@@ -78,7 +78,7 @@ export function deleteAccountFromConfigSection(params: {
           accounts: Object.keys(accounts).length ? accounts : undefined,
         },
       },
-    } as NewClawConfig;
+    } as iFlowConfig;
   }
 
   if (baseAccounts && Object.keys(baseAccounts).length > 0) {
@@ -98,14 +98,14 @@ export function deleteAccountFromConfigSection(params: {
           accounts: Object.keys(baseAccounts).length ? baseAccounts : undefined,
         },
       },
-    } as NewClawConfig;
+    } as iFlowConfig;
   }
 
   const nextChannels = { ...params.cfg.channels } as Record<string, unknown>;
   delete nextChannels[params.sectionKey];
-  const nextCfg = { ...params.cfg } as NewClawConfig;
+  const nextCfg = { ...params.cfg } as iFlowConfig;
   if (Object.keys(nextChannels).length > 0) {
-    nextCfg.channels = nextChannels as NewClawConfig["channels"];
+    nextCfg.channels = nextChannels as iFlowConfig["channels"];
   } else {
     delete nextCfg.channels;
   }

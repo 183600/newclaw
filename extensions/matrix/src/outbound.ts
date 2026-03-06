@@ -1,4 +1,4 @@
-import type { ChannelOutboundAdapter } from "newclaw/plugin-sdk";
+import type { ChannelOutboundAdapter } from "iflow/plugin-sdk";
 import { sendMessageMatrix, sendPollMatrix } from "./matrix/send.js";
 import { getMatrixRuntime } from "./runtime.js";
 

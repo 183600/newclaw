@@ -132,11 +132,11 @@ export function buildSandboxCreateArgs(params: {
 }) {
   const createdAtMs = params.createdAtMs ?? Date.now();
   const args = ["create", "--name", params.name];
-  args.push("--label", "newclaw.sandbox=1");
-  args.push("--label", `newclaw.sessionKey=${params.scopeKey}`);
-  args.push("--label", `newclaw.createdAtMs=${createdAtMs}`);
+  args.push("--label", "iflow.sandbox=1");
+  args.push("--label", `iflow.sessionKey=${params.scopeKey}`);
+  args.push("--label", `iflow.createdAtMs=${createdAtMs}`);
   if (params.configHash) {
-    args.push("--label", `newclaw.configHash=${params.configHash}`);
+    args.push("--label", `iflow.configHash=${params.configHash}`);
   }
   for (const [key, value] of Object.entries(params.labels ?? {})) {
     if (key && value) {
@@ -259,18 +259,18 @@ async function readContainerConfigHash(containerName: string): Promise<string | 
     }
     return raw;
   };
-  return await readLabel("newclaw.configHash");
+  return await readLabel("iflow.configHash");
 }
 
 function formatSandboxRecreateHint(params: { scope: SandboxConfig["scope"]; sessionKey: string }) {
   if (params.scope === "session") {
-    return formatCliCommand(`newclaw sandbox recreate --session ${params.sessionKey}`);
+    return formatCliCommand(`iflow sandbox recreate --session ${params.sessionKey}`);
   }
   if (params.scope === "agent") {
     const agentId = resolveSandboxAgentId(params.sessionKey) ?? "main";
-    return formatCliCommand(`newclaw sandbox recreate --agent ${agentId}`);
+    return formatCliCommand(`iflow sandbox recreate --agent ${agentId}`);
   }
-  return formatCliCommand("newclaw sandbox recreate --all");
+  return formatCliCommand("iflow sandbox recreate --all");
 }
 
 export async function ensureSandboxContainer(params: {

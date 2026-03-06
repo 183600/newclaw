@@ -30,9 +30,9 @@ const NOW = Date.now();
 
 function createContainer(overrides: Partial<SandboxContainerInfo> = {}): SandboxContainerInfo {
   return {
-    containerName: "newclaw-sandbox-test",
+    containerName: "iflow-sandbox-test",
     sessionKey: "test-session",
-    image: "newclaw/sandbox:latest",
+    image: "iflow/sandbox:latest",
     imageMatch: true,
     running: true,
     createdAtMs: NOW - 3600000,
@@ -43,9 +43,9 @@ function createContainer(overrides: Partial<SandboxContainerInfo> = {}): Sandbox
 
 function createBrowser(overrides: Partial<SandboxBrowserInfo> = {}): SandboxBrowserInfo {
   return {
-    containerName: "newclaw-browser-test",
+    containerName: "iflow-browser-test",
     sessionKey: "test-session",
-    image: "newclaw/browser:latest",
+    image: "iflow/browser:latest",
     imageMatch: true,
     running: true,
     createdAtMs: NOW - 3600000,

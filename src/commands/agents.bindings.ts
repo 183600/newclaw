@@ -1,5 +1,5 @@
 import type { ChannelId } from "../channels/plugins/types.js";
-import type { NewClawConfig } from "../config/config.js";
+import type { iFlowConfig } from "../config/config.js";
 import type { AgentBinding } from "../config/types.js";
 import type { ChannelChoice } from "./onboard-types.js";
 import { resolveChannelDefaultAccountId } from "../channels/plugins/helpers.js";
@@ -37,10 +37,10 @@ export function describeBinding(binding: AgentBinding) {
 }
 
 export function applyAgentBindings(
-  cfg: NewClawConfig,
+  cfg: iFlowConfig,
   bindings: AgentBinding[],
 ): {
-  config: NewClawConfig;
+  config: iFlowConfig;
   added: AgentBinding[];
   skipped: AgentBinding[];
   conflicts: Array<{ binding: AgentBinding; existingAgentId: string }>;
@@ -89,7 +89,7 @@ export function applyAgentBindings(
   };
 }
 
-function resolveDefaultAccountId(cfg: NewClawConfig, provider: ChannelId): string {
+function resolveDefaultAccountId(cfg: iFlowConfig, provider: ChannelId): string {
   const plugin = getChannelPlugin(provider);
   if (!plugin) {
     return DEFAULT_ACCOUNT_ID;
@@ -100,7 +100,7 @@ function resolveDefaultAccountId(cfg: NewClawConfig, provider: ChannelId): strin
 export function buildChannelBindings(params: {
   agentId: string;
   selection: ChannelChoice[];
-  config: NewClawConfig;
+  config: iFlowConfig;
   accountIds?: Partial<Record<ChannelChoice, string>>;
 }): AgentBinding[] {
   const bindings: AgentBinding[] = [];
@@ -124,7 +124,7 @@ export function buildChannelBindings(params: {
 export function parseBindingSpecs(params: {
   agentId: string;
   specs?: string[];
-  config: NewClawConfig;
+  config: iFlowConfig;
 }): { bindings: AgentBinding[]; errors: string[] } {
   const bindings: AgentBinding[] = [];
   const errors: string[] = [];

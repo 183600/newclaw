@@ -1,9 +1,9 @@
-import type { NewClawConfig } from "../config/config.js";
+import type { iFlowConfig } from "../config/config.js";
 import type { HookInstallRecord } from "../config/types.hooks.js";
 
 export type HookInstallUpdate = HookInstallRecord & { hookId: string };
 
-export function recordHookInstall(cfg: NewClawConfig, update: HookInstallUpdate): NewClawConfig {
+export function recordHookInstall(cfg: iFlowConfig, update: HookInstallUpdate): iFlowConfig {
   const { hookId, ...record } = update;
   const installs = {
     ...cfg.hooks?.internal?.installs,

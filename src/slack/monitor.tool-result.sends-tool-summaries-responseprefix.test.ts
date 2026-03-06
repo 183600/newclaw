@@ -365,7 +365,7 @@ describe("monitorSlackProvider tool results", () => {
     slackTestState.config = {
       messages: {
         responsePrefix: "PFX",
-        groupChat: { mentionPatterns: ["\\bnewclaw\\b"] },
+        groupChat: { mentionPatterns: ["\\biflow\\b"] },
       },
       channels: {
         slack: {
@@ -393,7 +393,7 @@ describe("monitorSlackProvider tool results", () => {
       event: {
         type: "message",
         user: "U1",
-        text: "newclaw: hello",
+        text: "iflow: hello",
         ts: "123",
         channel: "C1",
         channel_type: "channel",
@@ -412,7 +412,7 @@ describe("monitorSlackProvider tool results", () => {
     slackTestState.config = {
       messages: {
         responsePrefix: "PFX",
-        groupChat: { mentionPatterns: ["\\bnewclaw\\b"] },
+        groupChat: { mentionPatterns: ["\\biflow\\b"] },
       },
       channels: {
         slack: {
@@ -440,7 +440,7 @@ describe("monitorSlackProvider tool results", () => {
       event: {
         type: "message",
         user: "U1",
-        text: "newclaw: hello <@U2>",
+        text: "iflow: hello <@U2>",
         ts: "123",
         channel: "C1",
         channel_type: "channel",

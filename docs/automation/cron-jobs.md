@@ -20,7 +20,7 @@ cron is the mechanism.
 ## TL;DR
 
 - Cron runs **inside the Gateway** (not inside the model).
-- Jobs persist under `~/.newclaw/cron/` so restarts don’t lose schedules.
+- Jobs persist under `~/.iflow/cron/` so restarts don’t lose schedules.
 - Two execution styles:
   - **Main session**: enqueue a system event, then run on the next heartbeat.
   - **Isolated**: run a dedicated agent turn in `cron:<jobId>`, optionally deliver output.
@@ -31,7 +31,7 @@ cron is the mechanism.
 Create a one-shot reminder, verify it exists, and run it immediately:
 
 ```bash
-newclaw cron add \
+iflow cron add \
   --name "Reminder" \
   --at "2026-02-01T16:00:00Z" \
   --session main \
@@ -39,15 +39,15 @@ newclaw cron add \
   --wake now \
   --delete-after-run
 
-newclaw cron list
-newclaw cron run <job-id> --force
-newclaw cron runs --id <job-id>
+iflow cron list
+iflow cron run <job-id> --force
+iflow cron runs --id <job-id>
 ```
 
 Schedule a recurring isolated job with delivery:
 
 ```bash
-newclaw cron add \
+iflow cron add \
   --name "Morning brief" \
   --cron "0 7 * * *" \
   --tz "America/Los_Angeles" \
@@ -64,9 +64,9 @@ For the canonical JSON shapes and examples, see [JSON schema for tool calls](/au
 
 ## Where cron jobs are stored
 
-Cron jobs are persisted on the Gateway host at `~/.newclaw/cron/jobs.json` by default.
+Cron jobs are persisted on the Gateway host at `~/.iflow/cron/jobs.json` by default.
 The Gateway loads the file into memory and writes it back on changes, so manual edits
-are only safe when the Gateway is stopped. Prefer `newclaw cron add/edit` or the cron
+are only safe when the Gateway is stopped. Prefer `iflow cron add/edit` or the cron
 tool call API for changes.
 
 ## Beginner-friendly overview
@@ -295,8 +295,8 @@ Notes:
 
 ## Storage & history
 
-- Job store: `~/.newclaw/cron/jobs.json` (Gateway-managed JSON).
-- Run history: `~/.newclaw/cron/runs/<jobId>.jsonl` (JSONL, auto-pruned).
+- Job store: `~/.iflow/cron/jobs.json` (Gateway-managed JSON).
+- Run history: `~/.iflow/cron/runs/<jobId>.jsonl` (JSONL, auto-pruned).
 - Override store path: `cron.store` in config.
 
 ## Configuration
@@ -305,7 +305,7 @@ Notes:
 {
   cron: {
     enabled: true, // default true
-    store: "~/.newclaw/cron/jobs.json",
+    store: "~/.iflow/cron/jobs.json",
     maxConcurrentRuns: 1, // default 1
   },
 }
@@ -314,14 +314,14 @@ Notes:
 Disable cron entirely:
 
 - `cron.enabled: false` (config)
-- `NEWCLAW_SKIP_CRON=1` (env)
+- `IFLOW_SKIP_CRON=1` (env)
 
 ## CLI quickstart
 
 One-shot reminder (UTC ISO, auto-delete after success):
 
 ```bash
-newclaw cron add \
+iflow cron add \
   --name "Send reminder" \
   --at "2026-01-12T18:00:00Z" \
   --session main \
@@ -333,7 +333,7 @@ newclaw cron add \
 One-shot reminder (main session, wake immediately):
 
 ```bash
-newclaw cron add \
+iflow cron add \
   --name "Calendar check" \
   --at "20m" \
   --session main \
@@ -344,7 +344,7 @@ newclaw cron add \
 Recurring isolated job (deliver to WhatsApp):
 
 ```bash
-newclaw cron add \
+iflow cron add \
   --name "Morning status" \
   --cron "0 7 * * *" \
   --tz "America/Los_Angeles" \
@@ -358,7 +358,7 @@ newclaw cron add \
 Recurring isolated job (deliver to a Telegram topic):
 
 ```bash
-newclaw cron add \
+iflow cron add \
   --name "Nightly summary (topic)" \
   --cron "0 22 * * *" \
   --tz "America/Los_Angeles" \
@@ -372,7 +372,7 @@ newclaw cron add \
 Isolated job with model and thinking override:
 
 ```bash
-newclaw cron add \
+iflow cron add \
   --name "Deep analysis" \
   --cron "0 6 * * 1" \
   --tz "America/Los_Angeles" \
@@ -389,23 +389,23 @@ Agent selection (multi-agent setups):
 
 ```bash
 # Pin a job to agent "ops" (falls back to default if that agent is missing)
-newclaw cron add --name "Ops sweep" --cron "0 6 * * *" --session isolated --message "Check ops queue" --agent ops
+iflow cron add --name "Ops sweep" --cron "0 6 * * *" --session isolated --message "Check ops queue" --agent ops
 
 # Switch or clear the agent on an existing job
-newclaw cron edit <jobId> --agent ops
-newclaw cron edit <jobId> --clear-agent
+iflow cron edit <jobId> --agent ops
+iflow cron edit <jobId> --clear-agent
 ```
 
 Manual run (debug):
 
 ```bash
-newclaw cron run <jobId> --force
+iflow cron run <jobId> --force
 ```
 
 Edit an existing job (patch fields):
 
 ```bash
-newclaw cron edit <jobId> \
+iflow cron edit <jobId> \
   --message "Updated prompt" \
   --model "opus" \
   --thinking low
@@ -414,26 +414,26 @@ newclaw cron edit <jobId> \
 Run history:
 
 ```bash
-newclaw cron runs --id <jobId> --limit 50
+iflow cron runs --id <jobId> --limit 50
 ```
 
 Immediate system event without creating a job:
 
 ```bash
-newclaw system event --mode now --text "Next heartbeat: check battery."
+iflow system event --mode now --text "Next heartbeat: check battery."
 ```
 
 ## Gateway API surface
 
 - `cron.list`, `cron.status`, `cron.add`, `cron.update`, `cron.remove`
 - `cron.run` (force or due), `cron.runs`
-  For immediate system events without a job, use [`newclaw system event`](/cli/system).
+  For immediate system events without a job, use [`iflow system event`](/cli/system).
 
 ## Troubleshooting
 
 ### “Nothing runs”
 
-- Check cron is enabled: `cron.enabled` and `NEWCLAW_SKIP_CRON`.
+- Check cron is enabled: `cron.enabled` and `IFLOW_SKIP_CRON`.
 - Check the Gateway is running continuously (cron runs inside the Gateway process).
 - For `cron` schedules: confirm timezone (`--tz`) vs the host timezone.
 

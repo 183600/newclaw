@@ -4,7 +4,7 @@ import {
   GroupPolicySchema,
   MarkdownConfigSchema,
   requireOpenAllowFrom,
-} from "newclaw/plugin-sdk";
+} from "iflow/plugin-sdk";
 import { z } from "zod";
 
 const MattermostAccountSchemaBase = z

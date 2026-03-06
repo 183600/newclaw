@@ -20,9 +20,9 @@ RUN apt-get update \
     xvfb \
   && rm -rf /var/lib/apt/lists/*
 
-COPY scripts/sandbox-browser-entrypoint.sh /usr/local/bin/newclaw-sandbox-browser
-RUN chmod +x /usr/local/bin/newclaw-sandbox-browser
+COPY scripts/sandbox-browser-entrypoint.sh /usr/local/bin/iflow-sandbox-browser
+RUN chmod +x /usr/local/bin/iflow-sandbox-browser
 
 EXPOSE 9222 5900 6080
 
-CMD ["newclaw-sandbox-browser"]
+CMD ["iflow-sandbox-browser"]

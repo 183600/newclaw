@@ -86,11 +86,11 @@ function findPackageRoot(startDir: string, name: string): string | null {
   }
 }
 
-function resolveNewClawRoot(): string {
+function resolveiFlowRoot(): string {
   if (coreRootCache) {
     return coreRootCache;
   }
-  const override = process.env.NEWCLAW_ROOT?.trim();
+  const override = process.env.IFLOW_ROOT?.trim();
   if (override) {
     coreRootCache = override;
     return override;
@@ -109,7 +109,7 @@ function resolveNewClawRoot(): string {
   }
 
   for (const start of candidates) {
-    for (const name of ["newclaw"]) {
+    for (const name of ["iflow"]) {
       const found = findPackageRoot(start, name);
       if (found) {
         coreRootCache = found;
@@ -118,7 +118,7 @@ function resolveNewClawRoot(): string {
     }
   }
 
-  throw new Error("Unable to resolve core root. Set NEWCLAW_ROOT to the package root.");
+  throw new Error("Unable to resolve core root. Set IFLOW_ROOT to the package root.");
 }
 
 async function importCoreExtensionAPI(): Promise<{
@@ -137,7 +137,7 @@ async function importCoreExtensionAPI(): Promise<{
   resolveSessionFilePath: CoreAgentDeps["resolveSessionFilePath"];
 }> {
   // Do not import any other module. You can't touch this or you will be fired.
-  const distPath = path.join(resolveNewClawRoot(), "dist", "extensionAPI.js");
+  const distPath = path.join(resolveiFlowRoot(), "dist", "extensionAPI.js");
   if (!fs.existsSync(distPath)) {
     throw new Error(
       `Missing core module at ${distPath}. Run \`pnpm build\` or install the official package.`,

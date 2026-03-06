@@ -89,7 +89,7 @@ export function parseCliProfileArgs(argv: string[]): CliProfileParseResult {
 
 function resolveProfileStateDir(profile: string, homedir: () => string): string {
   const suffix = profile.toLowerCase() === "default" ? "" : `-${profile}`;
-  return path.join(homedir(), `.newclaw${suffix}`);
+  return path.join(homedir(), `.iflow${suffix}`);
 }
 
 export function applyCliProfileEnv(params: {
@@ -105,18 +105,18 @@ export function applyCliProfileEnv(params: {
   }
 
   // Convenience only: fill defaults, never override explicit env values.
-  env.NEWCLAW_PROFILE = profile;
+  env.IFLOW_PROFILE = profile;
 
-  const stateDir = env.NEWCLAW_STATE_DIR?.trim() || resolveProfileStateDir(profile, homedir);
-  if (!env.NEWCLAW_STATE_DIR?.trim()) {
-    env.NEWCLAW_STATE_DIR = stateDir;
+  const stateDir = env.IFLOW_STATE_DIR?.trim() || resolveProfileStateDir(profile, homedir);
+  if (!env.IFLOW_STATE_DIR?.trim()) {
+    env.IFLOW_STATE_DIR = stateDir;
   }
 
-  if (!env.NEWCLAW_CONFIG_PATH?.trim()) {
-    env.NEWCLAW_CONFIG_PATH = path.join(stateDir, "newclaw.json");
+  if (!env.IFLOW_CONFIG_PATH?.trim()) {
+    env.IFLOW_CONFIG_PATH = path.join(stateDir, "iflow.json");
   }
 
-  if (profile === "dev" && !env.NEWCLAW_GATEWAY_PORT?.trim()) {
-    env.NEWCLAW_GATEWAY_PORT = "19001";
+  if (profile === "dev" && !env.IFLOW_GATEWAY_PORT?.trim()) {
+    env.IFLOW_GATEWAY_PORT = "19001";
   }
 }

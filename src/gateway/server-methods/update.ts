@@ -1,5 +1,5 @@
 import type { GatewayRequestHandlers } from "./types.js";
-import { resolveNewClawPackageRoot } from "../../infra/newclaw-root.js";
+import { resolveiFlowPackageRoot } from "../../infra/iflow-root.js";
 import {
   formatDoctorNonInteractiveHint,
   type RestartSentinelPayload,
@@ -49,7 +49,7 @@ export const updateHandlers: GatewayRequestHandlers = {
     let result: Awaited<ReturnType<typeof runGatewayUpdate>>;
     try {
       const root =
-        (await resolveNewClawPackageRoot({
+        (await resolveiFlowPackageRoot({
           moduleUrl: import.meta.url,
           argv1: process.argv[1],
           cwd: process.cwd(),

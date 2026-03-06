@@ -1,7 +1,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
-import { type NewClawConfig, loadConfig } from "../config/config.js";
-import { resolveNewClawAgentDir } from "./agent-paths.js";
+import { type iFlowConfig, loadConfig } from "../config/config.js";
+import { resolveiFlowAgentDir } from "./agent-paths.js";
 import {
   normalizeProviders,
   type ProviderConfig,
@@ -10,7 +10,7 @@ import {
   resolveImplicitProviders,
 } from "./models-config.providers.js";
 
-type ModelsConfig = NonNullable<NewClawConfig["models"]>;
+type ModelsConfig = NonNullable<iFlowConfig["models"]>;
 
 const DEFAULT_MODE: NonNullable<ModelsConfig["mode"]> = "merge";
 
@@ -81,12 +81,12 @@ async function readJson(pathname: string): Promise<unknown> {
   }
 }
 
-export async function ensureNewClawModelsJson(
-  config?: NewClawConfig,
+export async function ensureiFlowModelsJson(
+  config?: iFlowConfig,
   agentDirOverride?: string,
 ): Promise<{ agentDir: string; wrote: boolean }> {
   const cfg = config ?? loadConfig();
-  const agentDir = agentDirOverride?.trim() ? agentDirOverride.trim() : resolveNewClawAgentDir();
+  const agentDir = agentDirOverride?.trim() ? agentDirOverride.trim() : resolveiFlowAgentDir();
 
   const explicitProviders = cfg.models?.providers ?? {};
   const implicitProviders = await resolveImplicitProviders({ agentDir });

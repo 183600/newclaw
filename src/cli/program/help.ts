@@ -8,21 +8,21 @@ import { replaceCliName, resolveCliName } from "../cli-name.js";
 const CLI_NAME = resolveCliName();
 
 const EXAMPLES = [
-  ["newclaw channels login --verbose", "Link personal WhatsApp Web and show QR + connection logs."],
+  ["iflow channels login --verbose", "Link personal WhatsApp Web and show QR + connection logs."],
   [
-    'newclaw message send --target +15555550123 --message "Hi" --json',
+    'iflow message send --target +15555550123 --message "Hi" --json',
     "Send via your web session and print JSON result.",
   ],
-  ["newclaw gateway --port 18789", "Run the WebSocket Gateway locally."],
-  ["newclaw --dev gateway", "Run a dev Gateway (isolated state/config) on ws://127.0.0.1:19001."],
-  ["newclaw gateway --force", "Kill anything bound to the default gateway port, then start it."],
-  ["newclaw gateway ...", "Gateway control via WebSocket."],
+  ["iflow gateway --port 18789", "Run the WebSocket Gateway locally."],
+  ["iflow --dev gateway", "Run a dev Gateway (isolated state/config) on ws://127.0.0.1:19001."],
+  ["iflow gateway --force", "Kill anything bound to the default gateway port, then start it."],
+  ["iflow gateway ...", "Gateway control via WebSocket."],
   [
-    'newclaw agent --to +15555550123 --message "Run summary" --deliver',
+    'iflow agent --to +15555550123 --message "Run summary" --deliver',
     "Talk directly to the agent using the Gateway; optionally send the WhatsApp reply.",
   ],
   [
-    'newclaw message send --channel telegram --target @mychat --message "Hi"',
+    'iflow message send --channel telegram --target @mychat --message "Hi"',
     "Send via your Telegram bot.",
   ],
 ] as const;
@@ -34,11 +34,11 @@ export function configureProgramHelp(program: Command, ctx: ProgramContext) {
     .version(ctx.programVersion)
     .option(
       "--dev",
-      "Dev profile: isolate state under ~/.newclaw-dev, default gateway port 19001, and shift derived ports (browser/canvas)",
+      "Dev profile: isolate state under ~/.iflow-dev, default gateway port 19001, and shift derived ports (browser/canvas)",
     )
     .option(
       "--profile <name>",
-      "Use a named profile (isolates NEWCLAW_STATE_DIR/NEWCLAW_CONFIG_PATH under ~/.newclaw-<name>)",
+      "Use a named profile (isolates IFLOW_STATE_DIR/IFLOW_CONFIG_PATH under ~/.iflow-<name>)",
     );
 
   program.option("--no-color", "Disable ANSI colors", false);
@@ -86,7 +86,7 @@ export function configureProgramHelp(program: Command, ctx: ProgramContext) {
     if (command !== program) {
       return "";
     }
-    const docs = formatDocsLink("/cli", "docs.newclaw.ai/cli");
+    const docs = formatDocsLink("/cli", "docs.iflow.ai/cli");
     return `\n${theme.heading("Examples:")}\n${fmtExamples}\n\n${theme.muted("Docs:")} ${docs}\n`;
   });
 }

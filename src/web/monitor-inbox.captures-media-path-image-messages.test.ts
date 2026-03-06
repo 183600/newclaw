@@ -86,7 +86,7 @@ describe("web monitor inbox", () => {
       created: true,
     });
     resetWebInboundDedupe();
-    authDir = fsSync.mkdtempSync(path.join(os.tmpdir(), "newclaw-auth-"));
+    authDir = fsSync.mkdtempSync(path.join(os.tmpdir(), "iflow-auth-"));
   });
 
   afterEach(() => {
@@ -169,7 +169,7 @@ describe("web monitor inbox", () => {
   });
 
   it("logs inbound bodies to file", async () => {
-    const logPath = path.join(os.tmpdir(), `newclaw-log-test-${crypto.randomUUID()}.log`);
+    const logPath = path.join(os.tmpdir(), `iflow-log-test-${crypto.randomUUID()}.log`);
     setLoggerOverride({ level: "trace", file: logPath });
 
     const onMessage = vi.fn();

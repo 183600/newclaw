@@ -14,16 +14,16 @@ describe("normalizeLegacyConfigValues", () => {
   };
 
   beforeEach(() => {
-    previousOauthDir = process.env.NEWCLAW_OAUTH_DIR;
-    tempOauthDir = fs.mkdtempSync(path.join(os.tmpdir(), "newclaw-oauth-"));
-    process.env.NEWCLAW_OAUTH_DIR = tempOauthDir;
+    previousOauthDir = process.env.IFLOW_OAUTH_DIR;
+    tempOauthDir = fs.mkdtempSync(path.join(os.tmpdir(), "iflow-oauth-"));
+    process.env.IFLOW_OAUTH_DIR = tempOauthDir;
   });
 
   afterEach(() => {
     if (previousOauthDir === undefined) {
-      delete process.env.NEWCLAW_OAUTH_DIR;
+      delete process.env.IFLOW_OAUTH_DIR;
     } else {
-      process.env.NEWCLAW_OAUTH_DIR = previousOauthDir;
+      process.env.IFLOW_OAUTH_DIR = previousOauthDir;
     }
     if (tempOauthDir) {
       fs.rmSync(tempOauthDir, { recursive: true, force: true });
@@ -93,7 +93,7 @@ describe("normalizeLegacyConfigValues", () => {
   });
 
   it("copies legacy ack reaction when authDir override exists", () => {
-    const customDir = fs.mkdtempSync(path.join(os.tmpdir(), "newclaw-wa-auth-"));
+    const customDir = fs.mkdtempSync(path.join(os.tmpdir(), "iflow-wa-auth-"));
     try {
       writeCreds(customDir);
 

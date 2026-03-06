@@ -7,14 +7,14 @@ title: "OpenAI Chat Completions"
 
 # OpenAI Chat Completions (HTTP)
 
-NewClaw’s Gateway can serve a small OpenAI-compatible Chat Completions endpoint.
+iFlow’s Gateway can serve a small OpenAI-compatible Chat Completions endpoint.
 
 This endpoint is **disabled by default**. Enable it in config first.
 
 - `POST /v1/chat/completions`
 - Same port as the Gateway (WS + HTTP multiplex): `http://<gateway-host>:<port>/v1/chat/completions`
 
-Under the hood, requests are executed as a normal Gateway agent run (same codepath as `newclaw agent`), so routing/permissions/config match your Gateway.
+Under the hood, requests are executed as a normal Gateway agent run (same codepath as `iflow agent`), so routing/permissions/config match your Gateway.
 
 ## Authentication
 
@@ -24,23 +24,23 @@ Uses the Gateway auth configuration. Send a bearer token:
 
 Notes:
 
-- When `gateway.auth.mode="token"`, use `gateway.auth.token` (or `NEWCLAW_GATEWAY_TOKEN`).
-- When `gateway.auth.mode="password"`, use `gateway.auth.password` (or `NEWCLAW_GATEWAY_PASSWORD`).
+- When `gateway.auth.mode="token"`, use `gateway.auth.token` (or `IFLOW_GATEWAY_TOKEN`).
+- When `gateway.auth.mode="password"`, use `gateway.auth.password` (or `IFLOW_GATEWAY_PASSWORD`).
 
 ## Choosing an agent
 
 No custom headers required: encode the agent id in the OpenAI `model` field:
 
-- `model: "newclaw:<agentId>"` (example: `"newclaw:main"`, `"newclaw:beta"`)
+- `model: "iflow:<agentId>"` (example: `"iflow:main"`, `"iflow:beta"`)
 - `model: "agent:<agentId>"` (alias)
 
-Or target a specific NewClaw agent by header:
+Or target a specific iFlow agent by header:
 
-- `x-newclaw-agent-id: <agentId>` (default: `main`)
+- `x-iflow-agent-id: <agentId>` (default: `main`)
 
 Advanced:
 
-- `x-newclaw-session-key: <sessionKey>` to fully control session routing.
+- `x-iflow-session-key: <sessionKey>` to fully control session routing.
 
 ## Enabling the endpoint
 
@@ -96,9 +96,9 @@ Non-streaming:
 curl -sS http://127.0.0.1:18789/v1/chat/completions \
   -H 'Authorization: Bearer YOUR_TOKEN' \
   -H 'Content-Type: application/json' \
-  -H 'x-newclaw-agent-id: main' \
+  -H 'x-iflow-agent-id: main' \
   -d '{
-    "model": "newclaw",
+    "model": "iflow",
     "messages": [{"role":"user","content":"hi"}]
   }'
 ```
@@ -109,9 +109,9 @@ Streaming:
 curl -N http://127.0.0.1:18789/v1/chat/completions \
   -H 'Authorization: Bearer YOUR_TOKEN' \
   -H 'Content-Type: application/json' \
-  -H 'x-newclaw-agent-id: main' \
+  -H 'x-iflow-agent-id: main' \
   -d '{
-    "model": "newclaw",
+    "model": "iflow",
     "stream": true,
     "messages": [{"role":"user","content":"hi"}]
   }'

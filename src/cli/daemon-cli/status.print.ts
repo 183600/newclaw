@@ -102,7 +102,7 @@ export function printDaemonStatus(status: DaemonStatus, opts: { json: boolean })
     }
     defaultRuntime.error(
       warnText(
-        `Recommendation: run "${formatCliCommand("newclaw doctor")}" (or "${formatCliCommand("newclaw doctor --repair")}").`,
+        `Recommendation: run "${formatCliCommand("iflow doctor")}" (or "${formatCliCommand("iflow doctor --repair")}").`,
       ),
     );
   }
@@ -136,7 +136,7 @@ export function printDaemonStatus(status: DaemonStatus, opts: { json: boolean })
       );
       defaultRuntime.error(
         errorText(
-          `Fix: rerun \`${formatCliCommand("newclaw gateway install --force")}\` from the same --profile / NEWCLAW_STATE_DIR you expect.`,
+          `Fix: rerun \`${formatCliCommand("iflow gateway install --force")}\` from the same --profile / IFLOW_STATE_DIR you expect.`,
         ),
       );
     }
@@ -234,15 +234,13 @@ export function printDaemonStatus(status: DaemonStatus, opts: { json: boolean })
 
   if (service.runtime?.cachedLabel) {
     const env = (service.command?.environment ?? process.env) as NodeJS.ProcessEnv;
-    const labelValue = resolveGatewayLaunchAgentLabel(env.NEWCLAW_PROFILE);
+    const labelValue = resolveGatewayLaunchAgentLabel(env.IFLOW_PROFILE);
     defaultRuntime.error(
       errorText(
         `LaunchAgent label cached but plist missing. Clear with: launchctl bootout gui/$UID/${labelValue}`,
       ),
     );
-    defaultRuntime.error(
-      errorText(`Then reinstall: ${formatCliCommand("newclaw gateway install")}`),
-    );
+    defaultRuntime.error(errorText(`Then reinstall: ${formatCliCommand("iflow gateway install")}`));
     spacer();
   }
 
@@ -277,7 +275,7 @@ export function printDaemonStatus(status: DaemonStatus, opts: { json: boolean })
     }
     if (process.platform === "linux") {
       const env = (service.command?.environment ?? process.env) as NodeJS.ProcessEnv;
-      const unit = resolveGatewaySystemdServiceName(env.NEWCLAW_PROFILE);
+      const unit = resolveGatewaySystemdServiceName(env.IFLOW_PROFILE);
       defaultRuntime.error(
         errorText(`Logs: journalctl --user -u ${unit}.service -n 200 --no-pager`),
       );
@@ -316,6 +314,6 @@ export function printDaemonStatus(status: DaemonStatus, opts: { json: boolean })
     spacer();
   }
 
-  defaultRuntime.log(`${label("Troubles:")} run ${formatCliCommand("newclaw status")}`);
-  defaultRuntime.log(`${label("Troubleshooting:")} https://docs.newclaw.ai/troubleshooting`);
+  defaultRuntime.log(`${label("Troubles:")} run ${formatCliCommand("iflow status")}`);
+  defaultRuntime.log(`${label("Troubleshooting:")} https://docs.iflow.ai/troubleshooting`);
 }

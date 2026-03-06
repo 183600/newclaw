@@ -1,4 +1,4 @@
-import type { NewClawConfig } from "../config/config.js";
+import type { iFlowConfig } from "../config/config.js";
 import { resolveDefaultAgentId } from "../agents/agent-scope.js";
 import { listBindings } from "./bindings.js";
 import {
@@ -19,7 +19,7 @@ export type RoutePeer = {
 };
 
 export type ResolveAgentRouteInput = {
-  cfg: NewClawConfig;
+  cfg: iFlowConfig;
   channel: string;
   accountId?: string | null;
   peer?: RoutePeer | null;
@@ -97,12 +97,12 @@ export function buildAgentSessionKey(params: {
   });
 }
 
-function listAgents(cfg: NewClawConfig) {
+function listAgents(cfg: iFlowConfig) {
   const agents = cfg.agents?.list;
   return Array.isArray(agents) ? agents : [];
 }
 
-function pickFirstExistingAgentId(cfg: NewClawConfig, agentId: string): string {
+function pickFirstExistingAgentId(cfg: iFlowConfig, agentId: string): string {
   const trimmed = (agentId ?? "").trim();
   if (!trimmed) {
     return sanitizeAgentId(trimmed);

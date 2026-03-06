@@ -39,21 +39,18 @@ export function registerStatusHealthSessionsCommands(program: Command) {
       "after",
       () =>
         `\n${theme.heading("Examples:")}\n${formatHelpExamples([
-          ["newclaw status", "Show channel health + session summary."],
-          ["newclaw status --all", "Full diagnosis (read-only)."],
-          ["newclaw status --json", "Machine-readable output."],
-          ["newclaw status --usage", "Show model provider usage/quota snapshots."],
-          [
-            "newclaw status --deep",
-            "Run channel probes (WA + Telegram + Discord + Slack + Signal).",
-          ],
-          ["newclaw status --deep --timeout 5000", "Tighten probe timeout."],
+          ["iflow status", "Show channel health + session summary."],
+          ["iflow status --all", "Full diagnosis (read-only)."],
+          ["iflow status --json", "Machine-readable output."],
+          ["iflow status --usage", "Show model provider usage/quota snapshots."],
+          ["iflow status --deep", "Run channel probes (WA + Telegram + Discord + Slack + Signal)."],
+          ["iflow status --deep --timeout 5000", "Tighten probe timeout."],
         ])}`,
     )
     .addHelpText(
       "after",
       () =>
-        `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/status", "docs.newclaw.ai/cli/status")}\n`,
+        `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/status", "docs.iflow.ai/cli/status")}\n`,
     )
     .action(async (opts) => {
       const verbose = resolveVerbose(opts);
@@ -87,7 +84,7 @@ export function registerStatusHealthSessionsCommands(program: Command) {
     .addHelpText(
       "after",
       () =>
-        `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/health", "docs.newclaw.ai/cli/health")}\n`,
+        `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/health", "docs.iflow.ai/cli/health")}\n`,
     )
     .action(async (opts) => {
       const verbose = resolveVerbose(opts);
@@ -119,10 +116,10 @@ export function registerStatusHealthSessionsCommands(program: Command) {
       "after",
       () =>
         `\n${theme.heading("Examples:")}\n${formatHelpExamples([
-          ["newclaw sessions", "List all sessions."],
-          ["newclaw sessions --active 120", "Only last 2 hours."],
-          ["newclaw sessions --json", "Machine-readable output."],
-          ["newclaw sessions --store ./tmp/sessions.json", "Use a specific session store."],
+          ["iflow sessions", "List all sessions."],
+          ["iflow sessions --active 120", "Only last 2 hours."],
+          ["iflow sessions --json", "Machine-readable output."],
+          ["iflow sessions --store ./tmp/sessions.json", "Use a specific session store."],
         ])}\n\n${theme.muted(
           "Shows token usage per session when the agent reports it; set agents.defaults.contextTokens to cap the window and show %.",
         )}`,
@@ -130,7 +127,7 @@ export function registerStatusHealthSessionsCommands(program: Command) {
     .addHelpText(
       "after",
       () =>
-        `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/sessions", "docs.newclaw.ai/cli/sessions")}\n`,
+        `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/sessions", "docs.iflow.ai/cli/sessions")}\n`,
     )
     .action(async (opts) => {
       setVerbose(Boolean(opts.verbose));

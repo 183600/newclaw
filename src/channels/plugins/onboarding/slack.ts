@@ -1,4 +1,4 @@
-import type { NewClawConfig } from "../../../config/config.js";
+import type { iFlowConfig } from "../../../config/config.js";
 import type { DmPolicy } from "../../../config/types.js";
 import type { WizardPrompter } from "../../../wizard/prompts.js";
 import type { ChannelOnboardingAdapter, ChannelOnboardingDmPolicy } from "../onboarding-types.js";
@@ -16,7 +16,7 @@ import { addWildcardAllowFrom, promptAccountId } from "./helpers.js";
 
 const channel = "slack" as const;
 
-function setSlackDmPolicy(cfg: NewClawConfig, dmPolicy: DmPolicy) {
+function setSlackDmPolicy(cfg: iFlowConfig, dmPolicy: DmPolicy) {
   const allowFrom =
     dmPolicy === "open" ? addWildcardAllowFrom(cfg.channels?.slack?.dm?.allowFrom) : undefined;
   return {
@@ -37,11 +37,11 @@ function setSlackDmPolicy(cfg: NewClawConfig, dmPolicy: DmPolicy) {
 }
 
 function buildSlackManifest(botName: string) {
-  const safeName = botName.trim() || "NewClaw";
+  const safeName = botName.trim() || "iFlow";
   const manifest = {
     display_information: {
       name: safeName,
-      description: `${safeName} connector for NewClaw`,
+      description: `${safeName} connector for iFlow`,
     },
     features: {
       bot_user: {
@@ -54,8 +54,8 @@ function buildSlackManifest(botName: string) {
       },
       slash_commands: [
         {
-          command: "/newclaw",
-          description: "Send a message to NewClaw",
+          command: "/iflow",
+          description: "Send a message to iFlow",
           should_escape: false,
         },
       ],
@@ -125,10 +125,10 @@ async function noteSlackTokenHelp(prompter: WizardPrompter, botName: string): Pr
 }
 
 function setSlackGroupPolicy(
-  cfg: NewClawConfig,
+  cfg: iFlowConfig,
   accountId: string,
   groupPolicy: "open" | "allowlist" | "disabled",
-): NewClawConfig {
+): iFlowConfig {
   if (accountId === DEFAULT_ACCOUNT_ID) {
     return {
       ...cfg,
@@ -163,10 +163,10 @@ function setSlackGroupPolicy(
 }
 
 function setSlackChannelAllowlist(
-  cfg: NewClawConfig,
+  cfg: iFlowConfig,
   accountId: string,
   channelKeys: string[],
-): NewClawConfig {
+): iFlowConfig {
   const channels = Object.fromEntries(channelKeys.map((key) => [key, { allow: true }]));
   if (accountId === DEFAULT_ACCOUNT_ID) {
     return {
@@ -201,7 +201,7 @@ function setSlackChannelAllowlist(
   };
 }
 
-function setSlackAllowFrom(cfg: NewClawConfig, allowFrom: string[]): NewClawConfig {
+function setSlackAllowFrom(cfg: iFlowConfig, allowFrom: string[]): iFlowConfig {
   return {
     ...cfg,
     channels: {
@@ -226,10 +226,10 @@ function parseSlackAllowFromInput(raw: string): string[] {
 }
 
 async function promptSlackAllowFrom(params: {
-  cfg: NewClawConfig;
+  cfg: iFlowConfig;
   prompter: WizardPrompter;
   accountId?: string;
-}): Promise<NewClawConfig> {
+}): Promise<iFlowConfig> {
   const accountId =
     params.accountId && normalizeAccountId(params.accountId)
       ? (normalizeAccountId(params.accountId) ?? DEFAULT_ACCOUNT_ID)
@@ -370,7 +370,7 @@ export const slackOnboardingAdapter: ChannelOnboardingAdapter = {
     const slackBotName = String(
       await prompter.text({
         message: "Slack bot display name (used for manifest)",
-        initialValue: "NewClaw",
+        initialValue: "iFlow",
       }),
     ).trim();
     if (!accountConfigured) {

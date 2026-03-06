@@ -1,8 +1,8 @@
 import fs from "node:fs/promises";
 import { describe, expect, it, vi } from "vitest";
-import type { NewClawConfig } from "../config/config.js";
+import type { iFlowConfig } from "../config/config.js";
 import type { SandboxContext } from "./sandbox.js";
-import { ensureNewClawModelsJson } from "./models-config.js";
+import { ensureiFlowModelsJson } from "./models-config.js";
 import { buildEmbeddedSandboxInfo } from "./pi-embedded-runner.js";
 
 vi.mock("@mariozechner/pi-ai", async () => {
@@ -68,10 +68,10 @@ const _makeOpenAiConfig = (modelIds: string[]) =>
         },
       },
     },
-  }) satisfies NewClawConfig;
+  }) satisfies iFlowConfig;
 
-const _ensureModels = (cfg: NewClawConfig, agentDir: string) =>
-  ensureNewClawModelsJson(cfg, agentDir) as unknown;
+const _ensureModels = (cfg: iFlowConfig, agentDir: string) =>
+  ensureiFlowModelsJson(cfg, agentDir) as unknown;
 
 const _textFromContent = (content: unknown) => {
   if (typeof content === "string") {
@@ -107,14 +107,14 @@ describe("buildEmbeddedSandboxInfo", () => {
     const sandbox = {
       enabled: true,
       sessionKey: "session:test",
-      workspaceDir: "/tmp/newclaw-sandbox",
-      agentWorkspaceDir: "/tmp/newclaw-workspace",
+      workspaceDir: "/tmp/iflow-sandbox",
+      agentWorkspaceDir: "/tmp/iflow-workspace",
       workspaceAccess: "none",
-      containerName: "newclaw-sbx-test",
+      containerName: "iflow-sbx-test",
       containerWorkdir: "/workspace",
       docker: {
-        image: "newclaw-sandbox:bookworm-slim",
-        containerPrefix: "newclaw-sbx-",
+        image: "iflow-sandbox:bookworm-slim",
+        containerPrefix: "iflow-sbx-",
         workdir: "/workspace",
         readOnlyRoot: true,
         tmpfs: ["/tmp"],
@@ -131,13 +131,13 @@ describe("buildEmbeddedSandboxInfo", () => {
       browser: {
         bridgeUrl: "http://localhost:9222",
         noVncUrl: "http://localhost:6080",
-        containerName: "newclaw-sbx-browser-test",
+        containerName: "iflow-sbx-browser-test",
       },
     } satisfies SandboxContext;
 
     expect(buildEmbeddedSandboxInfo(sandbox)).toEqual({
       enabled: true,
-      workspaceDir: "/tmp/newclaw-sandbox",
+      workspaceDir: "/tmp/iflow-sandbox",
       workspaceAccess: "none",
       agentWorkspaceMount: undefined,
       browserBridgeUrl: "http://localhost:9222",
@@ -149,14 +149,14 @@ describe("buildEmbeddedSandboxInfo", () => {
     const sandbox = {
       enabled: true,
       sessionKey: "session:test",
-      workspaceDir: "/tmp/newclaw-sandbox",
-      agentWorkspaceDir: "/tmp/newclaw-workspace",
+      workspaceDir: "/tmp/iflow-sandbox",
+      agentWorkspaceDir: "/tmp/iflow-workspace",
       workspaceAccess: "none",
-      containerName: "newclaw-sbx-test",
+      containerName: "iflow-sbx-test",
       containerWorkdir: "/workspace",
       docker: {
-        image: "newclaw-sandbox:bookworm-slim",
-        containerPrefix: "newclaw-sbx-",
+        image: "iflow-sandbox:bookworm-slim",
+        containerPrefix: "iflow-sbx-",
         workdir: "/workspace",
         readOnlyRoot: true,
         tmpfs: ["/tmp"],
@@ -180,7 +180,7 @@ describe("buildEmbeddedSandboxInfo", () => {
       }),
     ).toEqual({
       enabled: true,
-      workspaceDir: "/tmp/newclaw-sandbox",
+      workspaceDir: "/tmp/iflow-sandbox",
       workspaceAccess: "none",
       agentWorkspaceMount: undefined,
       hostBrowserAllowed: false,

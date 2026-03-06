@@ -1,6 +1,6 @@
 import { createRequire } from "node:module";
 
-declare const __NEWCLAW_VERSION__: string | undefined;
+declare const __IFLOW_VERSION__: string | undefined;
 
 function readVersionFromPackageJson(): string | null {
   try {
@@ -12,11 +12,11 @@ function readVersionFromPackageJson(): string | null {
   }
 }
 
-// Single source of truth for the current NewClaw version.
+// Single source of truth for the current iFlow version.
 // - Embedded/bundled builds: injected define or env var.
 // - Dev/npm builds: package.json.
 export const VERSION =
-  (typeof __NEWCLAW_VERSION__ === "string" && __NEWCLAW_VERSION__) ||
-  process.env.NEWCLAW_BUNDLED_VERSION ||
+  (typeof __IFLOW_VERSION__ === "string" && __IFLOW_VERSION__) ||
+  process.env.IFLOW_BUNDLED_VERSION ||
   readVersionFromPackageJson() ||
   "0.0.0";

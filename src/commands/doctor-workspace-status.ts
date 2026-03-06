@@ -1,11 +1,11 @@
-import type { NewClawConfig } from "../config/config.js";
+import type { iFlowConfig } from "../config/config.js";
 import { resolveAgentWorkspaceDir, resolveDefaultAgentId } from "../agents/agent-scope.js";
 import { buildWorkspaceSkillStatus } from "../agents/skills-status.js";
-import { loadNewClawPlugins } from "../plugins/loader.js";
+import { loadiFlowPlugins } from "../plugins/loader.js";
 import { note } from "../terminal/note.js";
 import { detectLegacyWorkspaceDirs, formatLegacyWorkspaceWarning } from "./doctor-workspace.js";
 
-export function noteWorkspaceStatus(cfg: NewClawConfig) {
+export function noteWorkspaceStatus(cfg: iFlowConfig) {
   const workspaceDir = resolveAgentWorkspaceDir(cfg, resolveDefaultAgentId(cfg));
   const legacyWorkspace = detectLegacyWorkspaceDirs({ workspaceDir });
   if (legacyWorkspace.legacyDirs.length > 0) {
@@ -25,7 +25,7 @@ export function noteWorkspaceStatus(cfg: NewClawConfig) {
     "Skills status",
   );
 
-  const pluginRegistry = loadNewClawPlugins({
+  const pluginRegistry = loadiFlowPlugins({
     config: cfg,
     workspaceDir,
     logger: {

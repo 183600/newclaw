@@ -1,4 +1,4 @@
-import type { NewClawApp } from "./app.ts";
+import type { iFlowApp } from "./app.ts";
 import { refreshChat } from "./app-chat.ts";
 import {
   startLogsPolling,
@@ -177,19 +177,19 @@ export async function refreshActiveTab(host: SettingsHost) {
     await loadChannelsTab(host);
   }
   if (host.tab === "instances") {
-    await loadPresence(host as unknown as NewClawApp);
+    await loadPresence(host as unknown as iFlowApp);
   }
   if (host.tab === "sessions") {
-    await loadSessions(host as unknown as NewClawApp);
+    await loadSessions(host as unknown as iFlowApp);
   }
   if (host.tab === "cron") {
     await loadCron(host);
   }
   if (host.tab === "skills") {
-    await loadSkills(host as unknown as NewClawApp);
+    await loadSkills(host as unknown as iFlowApp);
   }
   if (host.tab === "agents") {
-    const app = host as unknown as NewClawApp;
+    const app = host as unknown as iFlowApp;
     await loadAgents(app);
     await loadConfig(app);
     const agentIds = app.agentsList?.agents?.map((entry) => entry.id) ?? [];
@@ -212,10 +212,10 @@ export async function refreshActiveTab(host: SettingsHost) {
     }
   }
   if (host.tab === "nodes") {
-    await loadNodes(host as unknown as NewClawApp);
-    await loadDevices(host as unknown as NewClawApp);
-    await loadConfig(host as unknown as NewClawApp);
-    await loadExecApprovals(host as unknown as NewClawApp);
+    await loadNodes(host as unknown as iFlowApp);
+    await loadDevices(host as unknown as iFlowApp);
+    await loadConfig(host as unknown as iFlowApp);
+    await loadExecApprovals(host as unknown as iFlowApp);
   }
   if (host.tab === "chat") {
     await refreshChat(host as unknown as Parameters<typeof refreshChat>[0]);
@@ -225,16 +225,16 @@ export async function refreshActiveTab(host: SettingsHost) {
     );
   }
   if (host.tab === "config") {
-    await loadConfigSchema(host as unknown as NewClawApp);
-    await loadConfig(host as unknown as NewClawApp);
+    await loadConfigSchema(host as unknown as iFlowApp);
+    await loadConfig(host as unknown as iFlowApp);
   }
   if (host.tab === "debug") {
-    await loadDebug(host as unknown as NewClawApp);
+    await loadDebug(host as unknown as iFlowApp);
     host.eventLog = host.eventLogBuffer;
   }
   if (host.tab === "logs") {
     host.logsAtBottom = true;
-    await loadLogs(host as unknown as NewClawApp, { reset: true });
+    await loadLogs(host as unknown as iFlowApp, { reset: true });
     scheduleLogsScroll(host as unknown as Parameters<typeof scheduleLogsScroll>[0], true);
   }
 }
@@ -243,7 +243,7 @@ export function inferBasePath() {
   if (typeof window === "undefined") {
     return "";
   }
-  const configured = window.__NEWCLAW_CONTROL_UI_BASE_PATH__;
+  const configured = window.__IFLOW_CONTROL_UI_BASE_PATH__;
   if (typeof configured === "string" && configured.trim()) {
     return normalizeBasePath(configured);
   }
@@ -396,26 +396,26 @@ export function syncUrlWithSessionKey(sessionKey: string, replace: boolean) {
 
 export async function loadOverview(host: SettingsHost) {
   await Promise.all([
-    loadChannels(host as unknown as NewClawApp, false),
-    loadPresence(host as unknown as NewClawApp),
-    loadSessions(host as unknown as NewClawApp),
-    loadCronStatus(host as unknown as NewClawApp),
-    loadDebug(host as unknown as NewClawApp),
+    loadChannels(host as unknown as iFlowApp, false),
+    loadPresence(host as unknown as iFlowApp),
+    loadSessions(host as unknown as iFlowApp),
+    loadCronStatus(host as unknown as iFlowApp),
+    loadDebug(host as unknown as iFlowApp),
   ]);
 }
 
 export async function loadChannelsTab(host: SettingsHost) {
   await Promise.all([
-    loadChannels(host as unknown as NewClawApp, true),
-    loadConfigSchema(host as unknown as NewClawApp),
-    loadConfig(host as unknown as NewClawApp),
+    loadChannels(host as unknown as iFlowApp, true),
+    loadConfigSchema(host as unknown as iFlowApp),
+    loadConfig(host as unknown as iFlowApp),
   ]);
 }
 
 export async function loadCron(host: SettingsHost) {
   await Promise.all([
-    loadChannels(host as unknown as NewClawApp, false),
-    loadCronStatus(host as unknown as NewClawApp),
-    loadCronJobs(host as unknown as NewClawApp),
+    loadChannels(host as unknown as iFlowApp, false),
+    loadCronStatus(host as unknown as iFlowApp),
+    loadCronJobs(host as unknown as iFlowApp),
   ]);
 }

@@ -117,7 +117,7 @@ export async function createWaSocket(
     version,
     logger,
     printQRInTerminal: false,
-    browser: ["newclaw", "cli", VERSION],
+    browser: ["iflow", "cli", VERSION],
     syncFullHistory: false,
     markOnlineOnConnect: false,
   });
@@ -140,7 +140,7 @@ export async function createWaSocket(
           if (status === DisconnectReason.loggedOut) {
             console.error(
               danger(
-                `WhatsApp session logged out. Run: ${formatCliCommand("newclaw channels login")}`,
+                `WhatsApp session logged out. Run: ${formatCliCommand("iflow channels login")}`,
               ),
             );
           }

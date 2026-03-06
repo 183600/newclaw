@@ -9,7 +9,7 @@ while true; do
   echo "$(date '+%F %T') 开始执行 iflow 任务"
   echo "===================="
 
-  iflow "这个项目是基于NewClaw开发的NewClaw，修改一下项目里面各个地方的名称 think:high" --yolo || true
+  iflow "这个项目是基于iFlow开发的iFlow，修改一下项目里面各个地方的名称 think:high" --yolo || true
   iflow "确保这个项目的各个功能都可以在Linux上正常使用，不要删除这个项目的功能 think:high" --yolo || true
 
   echo "🔁 重新开始循环..."

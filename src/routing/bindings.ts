@@ -1,4 +1,4 @@
-import type { NewClawConfig } from "../config/config.js";
+import type { iFlowConfig } from "../config/config.js";
 import type { AgentBinding } from "../config/types.agents.js";
 import { resolveDefaultAgentId } from "../agents/agent-scope.js";
 import { normalizeChatChannelId } from "../channels/registry.js";
@@ -13,13 +13,13 @@ function normalizeBindingChannelId(raw?: string | null): string | null {
   return fallback || null;
 }
 
-export function listBindings(cfg: NewClawConfig): AgentBinding[] {
+export function listBindings(cfg: iFlowConfig): AgentBinding[] {
   // Support both cfg.agents.bindings and cfg.bindings for backward compatibility
   const bindings = (cfg.agents as { bindings?: unknown })?.bindings || cfg.bindings;
   return Array.isArray(bindings) ? bindings : [];
 }
 
-export function listBoundAccountIds(cfg: NewClawConfig, channelId: string): string[] {
+export function listBoundAccountIds(cfg: iFlowConfig, channelId: string): string[] {
   const normalizedChannel = normalizeBindingChannelId(channelId);
   if (!normalizedChannel) {
     return [];
@@ -47,7 +47,7 @@ export function listBoundAccountIds(cfg: NewClawConfig, channelId: string): stri
 }
 
 export function resolveDefaultAgentBoundAccountId(
-  cfg: NewClawConfig,
+  cfg: iFlowConfig,
   channelId: string,
 ): string | null {
   const normalizedChannel = normalizeBindingChannelId(channelId);
@@ -79,7 +79,7 @@ export function resolveDefaultAgentBoundAccountId(
   return null;
 }
 
-export function buildChannelAccountBindings(cfg: NewClawConfig) {
+export function buildChannelAccountBindings(cfg: iFlowConfig) {
   const map = new Map<string, Map<string, string[]>>();
   for (const binding of listBindings(cfg)) {
     if (!binding || typeof binding !== "object") {

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { NewClawConfig } from "./types.js";
+import type { iFlowConfig } from "./types.js";
 import {
   DEFAULT_AGENT_MAX_CONCURRENT,
   DEFAULT_SUBAGENT_MAX_CONCURRENT,
@@ -25,87 +25,87 @@ describe("resolveAgentMaxConcurrent", () => {
   });
 
   it("should return default value for config without agents", () => {
-    const cfg = {} as NewClawConfig;
+    const cfg = {} as iFlowConfig;
     expect(resolveAgentMaxConcurrent(cfg)).toBe(DEFAULT_AGENT_MAX_CONCURRENT);
   });
 
   it("should return default value for config without agents.defaults", () => {
-    const cfg = { agents: {} } as NewClawConfig;
+    const cfg = { agents: {} } as iFlowConfig;
     expect(resolveAgentMaxConcurrent(cfg)).toBe(DEFAULT_AGENT_MAX_CONCURRENT);
   });
 
   it("should return default value for config without agents.defaults.maxConcurrent", () => {
-    const cfg = { agents: { defaults: {} } } as NewClawConfig;
+    const cfg = { agents: { defaults: {} } } as iFlowConfig;
     expect(resolveAgentMaxConcurrent(cfg)).toBe(DEFAULT_AGENT_MAX_CONCURRENT);
   });
 
   it("should return default value for non-number maxConcurrent", () => {
     const cfg = {
       agents: { defaults: { maxConcurrent: "4" as unknown as number } },
-    } as NewClawConfig;
+    } as iFlowConfig;
     expect(resolveAgentMaxConcurrent(cfg)).toBe(DEFAULT_AGENT_MAX_CONCURRENT);
   });
 
   it("should return default value for NaN maxConcurrent", () => {
     const cfg = {
       agents: { defaults: { maxConcurrent: NaN } },
-    } as NewClawConfig;
+    } as iFlowConfig;
     expect(resolveAgentMaxConcurrent(cfg)).toBe(DEFAULT_AGENT_MAX_CONCURRENT);
   });
 
   it("should return default value for Infinity maxConcurrent", () => {
     const cfg = {
       agents: { defaults: { maxConcurrent: Infinity } },
-    } as NewClawConfig;
+    } as iFlowConfig;
     expect(resolveAgentMaxConcurrent(cfg)).toBe(DEFAULT_AGENT_MAX_CONCURRENT);
   });
 
   it("should return default value for -Infinity maxConcurrent", () => {
     const cfg = {
       agents: { defaults: { maxConcurrent: -Infinity } },
-    } as NewClawConfig;
+    } as iFlowConfig;
     expect(resolveAgentMaxConcurrent(cfg)).toBe(DEFAULT_AGENT_MAX_CONCURRENT);
   });
 
   it("should return 1 for maxConcurrent value of 0", () => {
     const cfg = {
       agents: { defaults: { maxConcurrent: 0 } },
-    } as NewClawConfig;
+    } as iFlowConfig;
     expect(resolveAgentMaxConcurrent(cfg)).toBe(1);
   });
 
   it("should return 1 for negative maxConcurrent value", () => {
     const cfg = {
       agents: { defaults: { maxConcurrent: -5 } },
-    } as NewClawConfig;
+    } as iFlowConfig;
     expect(resolveAgentMaxConcurrent(cfg)).toBe(1);
   });
 
   it("should return 1 for maxConcurrent value of 0.5", () => {
     const cfg = {
       agents: { defaults: { maxConcurrent: 0.5 } },
-    } as NewClawConfig;
+    } as iFlowConfig;
     expect(resolveAgentMaxConcurrent(cfg)).toBe(1);
   });
 
   it("should return 2 for maxConcurrent value of 1.5", () => {
     const cfg = {
       agents: { defaults: { maxConcurrent: 1.5 } },
-    } as NewClawConfig;
+    } as iFlowConfig;
     expect(resolveAgentMaxConcurrent(cfg)).toBe(1);
   });
 
   it("should return configured value for valid maxConcurrent", () => {
     const cfg = {
       agents: { defaults: { maxConcurrent: 10 } },
-    } as NewClawConfig;
+    } as iFlowConfig;
     expect(resolveAgentMaxConcurrent(cfg)).toBe(10);
   });
 
   it("should return configured value for decimal maxConcurrent", () => {
     const cfg = {
       agents: { defaults: { maxConcurrent: 5.7 } },
-    } as NewClawConfig;
+    } as iFlowConfig;
     expect(resolveAgentMaxConcurrent(cfg)).toBe(5);
   });
 });
@@ -116,92 +116,92 @@ describe("resolveSubagentMaxConcurrent", () => {
   });
 
   it("should return default value for config without agents", () => {
-    const cfg = {} as NewClawConfig;
+    const cfg = {} as iFlowConfig;
     expect(resolveSubagentMaxConcurrent(cfg)).toBe(DEFAULT_SUBAGENT_MAX_CONCURRENT);
   });
 
   it("should return default value for config without agents.defaults", () => {
-    const cfg = { agents: {} } as NewClawConfig;
+    const cfg = { agents: {} } as iFlowConfig;
     expect(resolveSubagentMaxConcurrent(cfg)).toBe(DEFAULT_SUBAGENT_MAX_CONCURRENT);
   });
 
   it("should return default value for config without agents.defaults.subagents", () => {
-    const cfg = { agents: { defaults: {} } } as NewClawConfig;
+    const cfg = { agents: { defaults: {} } } as iFlowConfig;
     expect(resolveSubagentMaxConcurrent(cfg)).toBe(DEFAULT_SUBAGENT_MAX_CONCURRENT);
   });
 
   it("should return default value for config without agents.defaults.subagents.maxConcurrent", () => {
-    const cfg = { agents: { defaults: { subagents: {} } } } as NewClawConfig;
+    const cfg = { agents: { defaults: { subagents: {} } } } as iFlowConfig;
     expect(resolveSubagentMaxConcurrent(cfg)).toBe(DEFAULT_SUBAGENT_MAX_CONCURRENT);
   });
 
   it("should return default value for non-number maxConcurrent", () => {
     const cfg = {
       agents: { defaults: { subagents: { maxConcurrent: "8" as unknown as number } } },
-    } as NewClawConfig;
+    } as iFlowConfig;
     expect(resolveSubagentMaxConcurrent(cfg)).toBe(DEFAULT_SUBAGENT_MAX_CONCURRENT);
   });
 
   it("should return default value for NaN maxConcurrent", () => {
     const cfg = {
       agents: { defaults: { subagents: { maxConcurrent: NaN } } },
-    } as NewClawConfig;
+    } as iFlowConfig;
     expect(resolveSubagentMaxConcurrent(cfg)).toBe(DEFAULT_SUBAGENT_MAX_CONCURRENT);
   });
 
   it("should return default value for Infinity maxConcurrent", () => {
     const cfg = {
       agents: { defaults: { subagents: { maxConcurrent: Infinity } } },
-    } as NewClawConfig;
+    } as iFlowConfig;
     expect(resolveSubagentMaxConcurrent(cfg)).toBe(DEFAULT_SUBAGENT_MAX_CONCURRENT);
   });
 
   it("should return default value for -Infinity maxConcurrent", () => {
     const cfg = {
       agents: { defaults: { subagents: { maxConcurrent: -Infinity } } },
-    } as NewClawConfig;
+    } as iFlowConfig;
     expect(resolveSubagentMaxConcurrent(cfg)).toBe(DEFAULT_SUBAGENT_MAX_CONCURRENT);
   });
 
   it("should return 1 for maxConcurrent value of 0", () => {
     const cfg = {
       agents: { defaults: { subagents: { maxConcurrent: 0 } } },
-    } as NewClawConfig;
+    } as iFlowConfig;
     expect(resolveSubagentMaxConcurrent(cfg)).toBe(1);
   });
 
   it("should return 1 for negative maxConcurrent value", () => {
     const cfg = {
       agents: { defaults: { subagents: { maxConcurrent: -5 } } },
-    } as NewClawConfig;
+    } as iFlowConfig;
     expect(resolveSubagentMaxConcurrent(cfg)).toBe(1);
   });
 
   it("should return 1 for maxConcurrent value of 0.5", () => {
     const cfg = {
       agents: { defaults: { subagents: { maxConcurrent: 0.5 } } },
-    } as NewClawConfig;
+    } as iFlowConfig;
     expect(resolveSubagentMaxConcurrent(cfg)).toBe(1);
   });
 
   it("should return 2 for maxConcurrent value of 1.5", () => {
     const cfg = {
       agents: { defaults: { subagents: { maxConcurrent: 1.5 } } },
-    } as NewClawConfig;
+    } as iFlowConfig;
     expect(resolveSubagentMaxConcurrent(cfg)).toBe(1);
   });
 
   it("should return configured value for valid maxConcurrent", () => {
     const cfg = {
       agents: { defaults: { subagents: { maxConcurrent: 16 } } },
-    } as NewClawConfig;
+    } as iFlowConfig;
     expect(resolveSubagentMaxConcurrent(cfg)).toBe(16);
   });
 
   it("should return configured value for decimal maxConcurrent", () => {
     const cfg = {
       agents: { defaults: { subagents: { maxConcurrent: 10.7 } } },
-    } as NewClawConfig;
+    } as iFlowConfig;
     expect(resolveSubagentMaxConcurrent(cfg)).toBe(10);
   });
 });

@@ -7,7 +7,7 @@ import { parseSchtasksQuery, readScheduledTaskCommand, resolveTaskScriptPath } f
 describe("schtasks runtime parsing", () => {
   it("parses status and last run info", () => {
     const output = [
-      "TaskName: \\NewClaw Gateway",
+      "TaskName: \\iFlow Gateway",
       "Status: Ready",
       "Last Run Time: 1/8/2026 1:23:45 AM",
       "Last Run Result: 0x0",
@@ -21,7 +21,7 @@ describe("schtasks runtime parsing", () => {
 
   it("parses running status", () => {
     const output = [
-      "TaskName: \\NewClaw Gateway",
+      "TaskName: \\iFlow Gateway",
       "Status: Running",
       "Last Run Time: 1/8/2026 1:23:45 AM",
       "Last Run Result: 0x0",
@@ -35,68 +35,60 @@ describe("schtasks runtime parsing", () => {
 });
 
 describe("resolveTaskScriptPath", () => {
-  it("uses default path when NEWCLAW_PROFILE is default", () => {
-    const env = { USERPROFILE: "C:\\Users\\test", NEWCLAW_PROFILE: "default" };
-    expect(resolveTaskScriptPath(env)).toBe(
-      path.join("C:\\Users\\test", ".newclaw", "gateway.cmd"),
-    );
+  it("uses default path when IFLOW_PROFILE is default", () => {
+    const env = { USERPROFILE: "C:\\Users\\test", IFLOW_PROFILE: "default" };
+    expect(resolveTaskScriptPath(env)).toBe(path.join("C:\\Users\\test", ".iflow", "gateway.cmd"));
   });
 
-  it("uses default path when NEWCLAW_PROFILE is unset", () => {
+  it("uses default path when IFLOW_PROFILE is unset", () => {
     const env = { USERPROFILE: "C:\\Users\\test" };
+    expect(resolveTaskScriptPath(env)).toBe(path.join("C:\\Users\\test", ".iflow", "gateway.cmd"));
+  });
+
+  it("uses profile-specific path when IFLOW_PROFILE is set to a custom value", () => {
+    const env = { USERPROFILE: "C:\\Users\\test", IFLOW_PROFILE: "jbphoenix" };
     expect(resolveTaskScriptPath(env)).toBe(
-      path.join("C:\\Users\\test", ".newclaw", "gateway.cmd"),
+      path.join("C:\\Users\\test", ".iflow-jbphoenix", "gateway.cmd"),
     );
   });
 
-  it("uses profile-specific path when NEWCLAW_PROFILE is set to a custom value", () => {
-    const env = { USERPROFILE: "C:\\Users\\test", NEWCLAW_PROFILE: "jbphoenix" };
-    expect(resolveTaskScriptPath(env)).toBe(
-      path.join("C:\\Users\\test", ".newclaw-jbphoenix", "gateway.cmd"),
-    );
-  });
-
-  it("prefers NEWCLAW_STATE_DIR over profile-derived defaults", () => {
+  it("prefers IFLOW_STATE_DIR over profile-derived defaults", () => {
     const env = {
       USERPROFILE: "C:\\Users\\test",
-      NEWCLAW_PROFILE: "rescue",
-      NEWCLAW_STATE_DIR: "C:\\State\\newclaw",
+      IFLOW_PROFILE: "rescue",
+      IFLOW_STATE_DIR: "C:\\State\\iflow",
     };
-    expect(resolveTaskScriptPath(env)).toBe(path.join("C:\\State\\newclaw", "gateway.cmd"));
+    expect(resolveTaskScriptPath(env)).toBe(path.join("C:\\State\\iflow", "gateway.cmd"));
   });
 
   it("handles case-insensitive 'Default' profile", () => {
-    const env = { USERPROFILE: "C:\\Users\\test", NEWCLAW_PROFILE: "Default" };
-    expect(resolveTaskScriptPath(env)).toBe(
-      path.join("C:\\Users\\test", ".newclaw", "gateway.cmd"),
-    );
+    const env = { USERPROFILE: "C:\\Users\\test", IFLOW_PROFILE: "Default" };
+    expect(resolveTaskScriptPath(env)).toBe(path.join("C:\\Users\\test", ".iflow", "gateway.cmd"));
   });
 
   it("handles case-insensitive 'DEFAULT' profile", () => {
-    const env = { USERPROFILE: "C:\\Users\\test", NEWCLAW_PROFILE: "DEFAULT" };
-    expect(resolveTaskScriptPath(env)).toBe(
-      path.join("C:\\Users\\test", ".newclaw", "gateway.cmd"),
-    );
+    const env = { USERPROFILE: "C:\\Users\\test", IFLOW_PROFILE: "DEFAULT" };
+    expect(resolveTaskScriptPath(env)).toBe(path.join("C:\\Users\\test", ".iflow", "gateway.cmd"));
   });
 
-  it("trims whitespace from NEWCLAW_PROFILE", () => {
-    const env = { USERPROFILE: "C:\\Users\\test", NEWCLAW_PROFILE: "  myprofile  " };
+  it("trims whitespace from IFLOW_PROFILE", () => {
+    const env = { USERPROFILE: "C:\\Users\\test", IFLOW_PROFILE: "  myprofile  " };
     expect(resolveTaskScriptPath(env)).toBe(
-      path.join("C:\\Users\\test", ".newclaw-myprofile", "gateway.cmd"),
+      path.join("C:\\Users\\test", ".iflow-myprofile", "gateway.cmd"),
     );
   });
 
   it("falls back to HOME when USERPROFILE is not set", () => {
-    const env = { HOME: "/home/test", NEWCLAW_PROFILE: "default" };
-    expect(resolveTaskScriptPath(env)).toBe(path.join("/home/test", ".newclaw", "gateway.cmd"));
+    const env = { HOME: "/home/test", IFLOW_PROFILE: "default" };
+    expect(resolveTaskScriptPath(env)).toBe(path.join("/home/test", ".iflow", "gateway.cmd"));
   });
 });
 
 describe("readScheduledTaskCommand", () => {
   it("parses basic command script", async () => {
-    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "newclaw-schtasks-test-"));
+    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-schtasks-test-"));
     try {
-      const scriptPath = path.join(tmpDir, ".newclaw", "gateway.cmd");
+      const scriptPath = path.join(tmpDir, ".iflow", "gateway.cmd");
       await fs.mkdir(path.dirname(scriptPath), { recursive: true });
       await fs.writeFile(
         scriptPath,
@@ -104,7 +96,7 @@ describe("readScheduledTaskCommand", () => {
         "utf8",
       );
 
-      const env = { USERPROFILE: tmpDir, NEWCLAW_PROFILE: "default" };
+      const env = { USERPROFILE: tmpDir, IFLOW_PROFILE: "default" };
       const result = await readScheduledTaskCommand(env);
       expect(result).toEqual({
         programArguments: ["node", "gateway.js", "--port", "18789"],
@@ -115,21 +107,21 @@ describe("readScheduledTaskCommand", () => {
   });
 
   it("parses script with working directory", async () => {
-    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "newclaw-schtasks-test-"));
+    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-schtasks-test-"));
     try {
-      const scriptPath = path.join(tmpDir, ".newclaw", "gateway.cmd");
+      const scriptPath = path.join(tmpDir, ".iflow", "gateway.cmd");
       await fs.mkdir(path.dirname(scriptPath), { recursive: true });
       await fs.writeFile(
         scriptPath,
-        ["@echo off", "cd /d C:\\Projects\\newclaw", "node gateway.js"].join("\r\n"),
+        ["@echo off", "cd /d C:\\Projects\\iflow", "node gateway.js"].join("\r\n"),
         "utf8",
       );
 
-      const env = { USERPROFILE: tmpDir, NEWCLAW_PROFILE: "default" };
+      const env = { USERPROFILE: tmpDir, IFLOW_PROFILE: "default" };
       const result = await readScheduledTaskCommand(env);
       expect(result).toEqual({
         programArguments: ["node", "gateway.js"],
-        workingDirectory: "C:\\Projects\\newclaw",
+        workingDirectory: "C:\\Projects\\iflow",
       });
     } finally {
       await fs.rm(tmpDir, { recursive: true, force: true });
@@ -137,9 +129,9 @@ describe("readScheduledTaskCommand", () => {
   });
 
   it("parses script with environment variables", async () => {
-    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "newclaw-schtasks-test-"));
+    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-schtasks-test-"));
     try {
-      const scriptPath = path.join(tmpDir, ".newclaw", "gateway.cmd");
+      const scriptPath = path.join(tmpDir, ".iflow", "gateway.cmd");
       await fs.mkdir(path.dirname(scriptPath), { recursive: true });
       await fs.writeFile(
         scriptPath,
@@ -147,7 +139,7 @@ describe("readScheduledTaskCommand", () => {
         "utf8",
       );
 
-      const env = { USERPROFILE: tmpDir, NEWCLAW_PROFILE: "default" };
+      const env = { USERPROFILE: tmpDir, IFLOW_PROFILE: "default" };
       const result = await readScheduledTaskCommand(env);
       expect(result).toEqual({
         programArguments: ["node", "gateway.js"],
@@ -162,9 +154,9 @@ describe("readScheduledTaskCommand", () => {
   });
 
   it("parses script with quoted arguments containing spaces", async () => {
-    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "newclaw-schtasks-test-"));
+    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-schtasks-test-"));
     try {
-      const scriptPath = path.join(tmpDir, ".newclaw", "gateway.cmd");
+      const scriptPath = path.join(tmpDir, ".iflow", "gateway.cmd");
       await fs.mkdir(path.dirname(scriptPath), { recursive: true });
       // Use forward slashes which work in Windows cmd and avoid escape parsing issues
       await fs.writeFile(
@@ -173,7 +165,7 @@ describe("readScheduledTaskCommand", () => {
         "utf8",
       );
 
-      const env = { USERPROFILE: tmpDir, NEWCLAW_PROFILE: "default" };
+      const env = { USERPROFILE: tmpDir, IFLOW_PROFILE: "default" };
       const result = await readScheduledTaskCommand(env);
       expect(result).toEqual({
         programArguments: ["C:/Program Files/Node/node.exe", "gateway.js"],
@@ -184,9 +176,9 @@ describe("readScheduledTaskCommand", () => {
   });
 
   it("returns null when script does not exist", async () => {
-    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "newclaw-schtasks-test-"));
+    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-schtasks-test-"));
     try {
-      const env = { USERPROFILE: tmpDir, NEWCLAW_PROFILE: "default" };
+      const env = { USERPROFILE: tmpDir, IFLOW_PROFILE: "default" };
       const result = await readScheduledTaskCommand(env);
       expect(result).toBeNull();
     } finally {
@@ -195,9 +187,9 @@ describe("readScheduledTaskCommand", () => {
   });
 
   it("returns null when script has no command", async () => {
-    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "newclaw-schtasks-test-"));
+    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-schtasks-test-"));
     try {
-      const scriptPath = path.join(tmpDir, ".newclaw", "gateway.cmd");
+      const scriptPath = path.join(tmpDir, ".iflow", "gateway.cmd");
       await fs.mkdir(path.dirname(scriptPath), { recursive: true });
       await fs.writeFile(
         scriptPath,
@@ -205,7 +197,7 @@ describe("readScheduledTaskCommand", () => {
         "utf8",
       );
 
-      const env = { USERPROFILE: tmpDir, NEWCLAW_PROFILE: "default" };
+      const env = { USERPROFILE: tmpDir, IFLOW_PROFILE: "default" };
       const result = await readScheduledTaskCommand(env);
       expect(result).toBeNull();
     } finally {
@@ -214,31 +206,31 @@ describe("readScheduledTaskCommand", () => {
   });
 
   it("parses full script with all components", async () => {
-    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "newclaw-schtasks-test-"));
+    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-schtasks-test-"));
     try {
-      const scriptPath = path.join(tmpDir, ".newclaw", "gateway.cmd");
+      const scriptPath = path.join(tmpDir, ".iflow", "gateway.cmd");
       await fs.mkdir(path.dirname(scriptPath), { recursive: true });
       await fs.writeFile(
         scriptPath,
         [
           "@echo off",
-          "rem NewClaw Gateway",
-          "cd /d C:\\Projects\\newclaw",
+          "rem iFlow Gateway",
+          "cd /d C:\\Projects\\iflow",
           "set NODE_ENV=production",
-          "set NEWCLAW_PORT=18789",
+          "set IFLOW_PORT=18789",
           "node gateway.js --verbose",
         ].join("\r\n"),
         "utf8",
       );
 
-      const env = { USERPROFILE: tmpDir, NEWCLAW_PROFILE: "default" };
+      const env = { USERPROFILE: tmpDir, IFLOW_PROFILE: "default" };
       const result = await readScheduledTaskCommand(env);
       expect(result).toEqual({
         programArguments: ["node", "gateway.js", "--verbose"],
-        workingDirectory: "C:\\Projects\\newclaw",
+        workingDirectory: "C:\\Projects\\iflow",
         environment: {
           NODE_ENV: "production",
-          NEWCLAW_PORT: "18789",
+          IFLOW_PORT: "18789",
         },
       });
     } finally {

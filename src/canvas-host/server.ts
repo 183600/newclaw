@@ -59,7 +59,7 @@ function defaultIndexHTML() {
   return `<!doctype html>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>NewClaw Canvas</title>
+<title>iFlow Canvas</title>
 <style>
   html, body { height: 100%; margin: 0; background: #000; color: #fff; font: 16px/1.4 -apple-system, BlinkMacSystemFont, system-ui, Segoe UI, Roboto, Helvetica, Arial, sans-serif; }
   .wrap { min-height: 100%; display: grid; place-items: center; padding: 24px; }
@@ -77,7 +77,7 @@ function defaultIndexHTML() {
 <div class="wrap">
   <div class="card">
     <div class="title">
-      <h1>NewClaw Canvas</h1>
+      <h1>iFlow Canvas</h1>
       <div class="sub">Interactive test page (auto-reload enabled)</div>
     </div>
 
@@ -102,14 +102,14 @@ function defaultIndexHTML() {
     !!(
       window.webkit &&
       window.webkit.messageHandlers &&
-      window.webkit.messageHandlers.newclawCanvasA2UIAction
+      window.webkit.messageHandlers.iflowCanvasA2UIAction
     );
   const hasAndroid = () =>
     !!(
-      (window.newclawCanvasA2UIAction &&
-        typeof window.newclawCanvasA2UIAction.postMessage === "function")
+      (window.iflowCanvasA2UIAction &&
+        typeof window.iflowCanvasA2UIAction.postMessage === "function")
     );
-  const hasHelper = () => typeof window.newclawSendUserAction === "function";
+  const hasHelper = () => typeof window.iflowSendUserAction === "function";
   statusEl.innerHTML =
     "Bridge: " +
     (hasHelper() ? "<span class='ok'>ready</span>" : "<span class='bad'>missing</span>") +
@@ -120,16 +120,16 @@ function defaultIndexHTML() {
     const d = ev && ev.detail || {};
     log("Action status: id=" + (d.id || "?") + " ok=" + String(!!d.ok) + (d.error ? (" error=" + d.error) : ""));
   };
-  window.addEventListener("newclaw:a2ui-action-status", onStatus);
+  window.addEventListener("iflow:a2ui-action-status", onStatus);
 
   function send(name, sourceComponentId) {
     if (!hasHelper()) {
-      log("No action bridge found. Ensure you're viewing this on an iOS/Android NewClaw node canvas.");
+      log("No action bridge found. Ensure you're viewing this on an iOS/Android iFlow node canvas.");
       return;
     }
     const sendUserAction =
-      typeof window.newclawSendUserAction === "function"
-        ? window.newclawSendUserAction
+      typeof window.iflowSendUserAction === "function"
+        ? window.iflowSendUserAction
         : undefined;
     const ok = sendUserAction({
       name,
@@ -194,10 +194,10 @@ async function resolveFilePath(rootReal: string, urlPath: string) {
 }
 
 function isDisabledByEnv() {
-  if (isTruthyEnvValue(process.env.NEWCLAW_SKIP_CANVAS_HOST)) {
+  if (isTruthyEnvValue(process.env.IFLOW_SKIP_CANVAS_HOST)) {
     return true;
   }
-  if (isTruthyEnvValue(process.env.NEWCLAW_SKIP_CANVAS_HOST)) {
+  if (isTruthyEnvValue(process.env.IFLOW_SKIP_CANVAS_HOST)) {
     return true;
   }
   if (process.env.NODE_ENV === "test") {
@@ -235,7 +235,7 @@ async function prepareCanvasRoot(rootDir: string) {
 }
 
 function resolveDefaultCanvasRoot(): string {
-  const candidates = [path.join(os.homedir(), ".newclaw", "canvas")];
+  const candidates = [path.join(os.homedir(), ".iflow", "canvas")];
   const existing = candidates.find((dir) => {
     try {
       return fsSync.statSync(dir).isDirectory();
@@ -371,7 +371,7 @@ export async function createCanvasHostHandler(
           res.statusCode = 404;
           res.setHeader("Content-Type", "text/html; charset=utf-8");
           res.end(
-            `<!doctype html><meta charset="utf-8" /><title>NewClaw Canvas</title><pre>Missing file.\nCreate ${rootDir}/index.html</pre>`,
+            `<!doctype html><meta charset="utf-8" /><title>iFlow Canvas</title><pre>Missing file.\nCreate ${rootDir}/index.html</pre>`,
           );
           return true;
         }

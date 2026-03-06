@@ -3,8 +3,8 @@ import { resolveStateDir } from "../config/paths.js";
 import { DEFAULT_AGENT_ID } from "../routing/session-key.js";
 import { resolveUserPath } from "../utils.js";
 
-export function resolveNewClawAgentDir(): string {
-  const override = process.env.NEWCLAW_AGENT_DIR?.trim() || process.env.PI_CODING_AGENT_DIR?.trim();
+export function resolveiFlowAgentDir(): string {
+  const override = process.env.IFLOW_AGENT_DIR?.trim() || process.env.PI_CODING_AGENT_DIR?.trim();
   if (override) {
     return resolveUserPath(override);
   }
@@ -12,10 +12,10 @@ export function resolveNewClawAgentDir(): string {
   return resolveUserPath(defaultAgentDir);
 }
 
-export function ensureNewClawAgentEnv(): string {
-  const dir = resolveNewClawAgentDir();
-  if (!process.env.NEWCLAW_AGENT_DIR) {
-    process.env.NEWCLAW_AGENT_DIR = dir;
+export function ensureiFlowAgentEnv(): string {
+  const dir = resolveiFlowAgentDir();
+  if (!process.env.IFLOW_AGENT_DIR) {
+    process.env.IFLOW_AGENT_DIR = dir;
   }
   if (!process.env.PI_CODING_AGENT_DIR) {
     process.env.PI_CODING_AGENT_DIR = dir;

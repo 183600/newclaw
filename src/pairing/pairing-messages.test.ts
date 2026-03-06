@@ -5,16 +5,16 @@ describe("buildPairingReply", () => {
   let previousProfile: string | undefined;
 
   beforeEach(() => {
-    previousProfile = process.env.NEWCLAW_PROFILE;
-    process.env.NEWCLAW_PROFILE = "isolated";
+    previousProfile = process.env.IFLOW_PROFILE;
+    process.env.IFLOW_PROFILE = "isolated";
   });
 
   afterEach(() => {
     if (previousProfile === undefined) {
-      delete process.env.NEWCLAW_PROFILE;
+      delete process.env.IFLOW_PROFILE;
       return;
     }
-    process.env.NEWCLAW_PROFILE = previousProfile;
+    process.env.IFLOW_PROFILE = previousProfile;
   });
 
   const cases = [
@@ -50,9 +50,9 @@ describe("buildPairingReply", () => {
       const text = buildPairingReply(testCase);
       expect(text).toContain(testCase.idLine);
       expect(text).toContain(`Pairing code: ${testCase.code}`);
-      // CLI commands should respect NEWCLAW_PROFILE when set (most tests run with isolated profile)
+      // CLI commands should respect IFLOW_PROFILE when set (most tests run with isolated profile)
       const commandRe = new RegExp(
-        `(?:newclaw|newclaw) --profile isolated pairing approve ${testCase.channel} <code>`,
+        `(?:iflow|iflow) --profile isolated pairing approve ${testCase.channel} <code>`,
       );
       expect(text).toMatch(commandRe);
     });

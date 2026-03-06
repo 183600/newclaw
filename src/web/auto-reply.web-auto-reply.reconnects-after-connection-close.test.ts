@@ -47,7 +47,7 @@ const rmDirWithRetries = async (dir: string): Promise<void> => {
 beforeEach(async () => {
   resetInboundDedupe();
   previousHome = process.env.HOME;
-  tempHome = await fs.mkdtemp(path.join(os.tmpdir(), "newclaw-web-home-"));
+  tempHome = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-web-home-"));
   process.env.HOME = tempHome;
 });
 
@@ -62,7 +62,7 @@ afterEach(async () => {
 const makeSessionStore = async (
   entries: Record<string, unknown> = {},
 ): Promise<{ storePath: string; cleanup: () => Promise<void> }> => {
-  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "newclaw-session-"));
+  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-session-"));
   const storePath = path.join(dir, "sessions.json");
   await fs.writeFile(storePath, JSON.stringify(entries));
   const cleanup = async () => {
@@ -339,11 +339,11 @@ describe("web auto-reply", () => {
       const firstPattern = escapeRegExp(firstTimestamp);
       const secondPattern = escapeRegExp(secondTimestamp);
       expect(firstArgs.Body).toMatch(
-        new RegExp(`\\[WhatsApp \\+1 (\\+\\d+[smhd] )?${firstPattern}\\] \\[newclaw\\] first`),
+        new RegExp(`\\[WhatsApp \\+1 (\\+\\d+[smhd] )?${firstPattern}\\] \\[iflow\\] first`),
       );
       expect(firstArgs.Body).not.toContain("second");
       expect(secondArgs.Body).toMatch(
-        new RegExp(`\\[WhatsApp \\+1 (\\+\\d+[smhd] )?${secondPattern}\\] \\[newclaw\\] second`),
+        new RegExp(`\\[WhatsApp \\+1 (\\+\\d+[smhd] )?${secondPattern}\\] \\[iflow\\] second`),
       );
       expect(secondArgs.Body).not.toContain("first");
 

@@ -15,7 +15,7 @@ x-i18n:
 
 # 相机捕获（智能体）
 
-NewClaw 支持智能体工作流中的**相机捕获**：
+iFlow 支持智能体工作流中的**相机捕获**：
 
 - **iOS 节点**（通过 Gateway网关配对）：通过 `node.invoke` 捕获**照片**（`jpg`）或**短视频片段**（`mp4`，可选音频）。
 - **Android 节点**（通过 Gateway网关配对）：通过 `node.invoke` 捕获**照片**（`jpg`）或**短视频片段**（`mp4`，可选音频）。
@@ -75,10 +75,10 @@ NewClaw 支持智能体工作流中的**相机捕获**：
 示例：
 
 ```bash
-newclaw nodes camera snap --node <id>               # 默认：前后摄像头都拍摄（2 行 MEDIA 输出）
-newclaw nodes camera snap --node <id> --facing front
-newclaw nodes camera clip --node <id> --duration 3000
-newclaw nodes camera clip --node <id> --no-audio
+iflow nodes camera snap --node <id>               # 默认：前后摄像头都拍摄（2 行 MEDIA 输出）
+iflow nodes camera snap --node <id> --facing front
+iflow nodes camera clip --node <id> --duration 3000
+iflow nodes camera clip --node <id> --no-audio
 ```
 
 注意事项：
@@ -116,31 +116,31 @@ newclaw nodes camera clip --node <id> --no-audio
 
 macOS 伴侣应用提供一个复选框：
 
-- **设置 → 通用 → 允许相机**（`newclaw.cameraEnabled`）
+- **设置 → 通用 → 允许相机**（`iflow.cameraEnabled`）
   - 默认：**关闭**
   - 关闭时：相机请求返回"Camera disabled by user"。
 
 ### CLI 辅助工具（节点调用）
 
-使用主 `newclaw` CLI 在 macOS 节点上调用相机命令。
+使用主 `iflow` CLI 在 macOS 节点上调用相机命令。
 
 示例：
 
 ```bash
-newclaw nodes camera list --node <id>            # 列出相机 ID
-newclaw nodes camera snap --node <id>            # 输出 MEDIA:<path>
-newclaw nodes camera snap --node <id> --max-width 1280
-newclaw nodes camera snap --node <id> --delay-ms 2000
-newclaw nodes camera snap --node <id> --device-id <id>
-newclaw nodes camera clip --node <id> --duration 10s          # 输出 MEDIA:<path>
-newclaw nodes camera clip --node <id> --duration-ms 3000      # 输出 MEDIA:<path>（旧版标志）
-newclaw nodes camera clip --node <id> --device-id <id>
-newclaw nodes camera clip --node <id> --no-audio
+iflow nodes camera list --node <id>            # 列出相机 ID
+iflow nodes camera snap --node <id>            # 输出 MEDIA:<path>
+iflow nodes camera snap --node <id> --max-width 1280
+iflow nodes camera snap --node <id> --delay-ms 2000
+iflow nodes camera snap --node <id> --device-id <id>
+iflow nodes camera clip --node <id> --duration 10s          # 输出 MEDIA:<path>
+iflow nodes camera clip --node <id> --duration-ms 3000      # 输出 MEDIA:<path>（旧版标志）
+iflow nodes camera clip --node <id> --device-id <id>
+iflow nodes camera clip --node <id> --no-audio
 ```
 
 注意事项：
 
-- `newclaw nodes camera snap` 默认 `maxWidth=1600`，除非被覆盖。
+- `iflow nodes camera snap` 默认 `maxWidth=1600`，除非被覆盖。
 - 在 macOS 上，`camera.snap` 在预热/曝光稳定后等待 `delayMs`（默认 2000ms）再进行捕获。
 - 照片载荷会被重新压缩，以将 base64 控制在 5 MB 以内。
 
@@ -154,7 +154,7 @@ newclaw nodes camera clip --node <id> --no-audio
 如需*屏幕*录制（非相机），请使用 macOS 伴侣应用：
 
 ```bash
-newclaw nodes screen record --node <id> --duration 10s --fps 15   # 输出 MEDIA:<path>
+iflow nodes screen record --node <id> --duration 10s --fps 15   # 输出 MEDIA:<path>
 ```
 
 注意事项：

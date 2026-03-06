@@ -5,11 +5,11 @@ import { createBrowserRouteContext } from "./server-context.js";
 vi.mock("./chrome.js", () => ({
   isChromeCdpReady: vi.fn(async () => true),
   isChromeReachable: vi.fn(async () => true),
-  launchNewClawChrome: vi.fn(async () => {
+  launchiFlowChrome: vi.fn(async () => {
     throw new Error("unexpected launch");
   }),
-  resolveNewClawUserDataDir: vi.fn(() => "/tmp/newclaw"),
-  stopNewClawChrome: vi.fn(async () => {}),
+  resolveiFlowUserDataDir: vi.fn(() => "/tmp/iflow"),
+  stopiFlowChrome: vi.fn(async () => {}),
 }));
 
 describe("browser server-context ensureTabAvailable", () => {
@@ -76,7 +76,7 @@ describe("browser server-context ensureTabAvailable", () => {
             cdpPort: 18792,
             color: "#00AA00",
           },
-          newclaw: { cdpPort: 18800, color: "#FF4500" },
+          iflow: { cdpPort: 18800, color: "#FF4500" },
         },
       },
       profiles: new Map(),
@@ -136,7 +136,7 @@ describe("browser server-context ensureTabAvailable", () => {
             cdpPort: 18792,
             color: "#00AA00",
           },
-          newclaw: { cdpPort: 18800, color: "#FF4500" },
+          iflow: { cdpPort: 18800, color: "#FF4500" },
         },
       },
       profiles: new Map(),
@@ -187,7 +187,7 @@ describe("browser server-context ensureTabAvailable", () => {
             cdpPort: 18792,
             color: "#00AA00",
           },
-          newclaw: { cdpPort: 18800, color: "#FF4500" },
+          iflow: { cdpPort: 18800, color: "#FF4500" },
         },
       },
       profiles: new Map(),

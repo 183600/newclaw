@@ -1,6 +1,6 @@
-import { type NewClawConfig, loadConfig } from "../config/config.js";
-import { resolveNewClawAgentDir } from "./agent-paths.js";
-import { ensureNewClawModelsJson } from "./models-config.js";
+import { type iFlowConfig, loadConfig } from "../config/config.js";
+import { resolveiFlowAgentDir } from "./agent-paths.js";
+import { ensureiFlowModelsJson } from "./models-config.js";
 
 export type ModelCatalogEntry = {
   id: string;
@@ -39,7 +39,7 @@ export function __setModelCatalogImportForTest(loader?: () => Promise<PiSdkModul
 }
 
 export async function loadModelCatalog(params?: {
-  config?: NewClawConfig;
+  config?: iFlowConfig;
   useCache?: boolean;
 }): Promise<ModelCatalogEntry[]> {
   if (params?.useCache === false) {
@@ -61,13 +61,13 @@ export async function loadModelCatalog(params?: {
       });
     try {
       const cfg = params?.config ?? loadConfig();
-      await ensureNewClawModelsJson(cfg);
+      await ensureiFlowModelsJson(cfg);
       // IMPORTANT: keep the dynamic import *inside* the try/catch.
       // If this fails once (e.g. during a pnpm install that temporarily swaps node_modules),
       // we must not poison the cache with a rejected promise (otherwise all channel handlers
       // will keep failing until restart).
       const piSdk = await importPiSdk();
-      const agentDir = resolveNewClawAgentDir();
+      const agentDir = resolveiFlowAgentDir();
       const { join } = await import("node:path");
       const authStorage = new piSdk.AuthStorage(join(agentDir, "auth.json"));
       const registry = new piSdk.ModelRegistry(authStorage, join(agentDir, "models.json")) as

@@ -1,15 +1,15 @@
 /**
- * NewClaw Memory (LanceDB) Plugin
+ * iFlow Memory (LanceDB) Plugin
  *
  * Long-term memory with vector search for AI conversations.
  * Uses LanceDB for storage and OpenAI for embeddings.
  * Provides seamless auto-recall and auto-capture via lifecycle hooks.
  */
 
-import type { NewClawPluginApi } from "newclaw/plugin-sdk";
+import type { iFlowPluginApi } from "iflow/plugin-sdk";
 import * as lancedb from "@lancedb/lancedb";
 import { Type } from "@sinclair/typebox";
-import { stringEnum } from "newclaw/plugin-sdk";
+import { stringEnum } from "iflow/plugin-sdk";
 import { randomUUID } from "node:crypto";
 import OpenAI from "openai";
 import {
@@ -233,7 +233,7 @@ const memoryPlugin = {
   kind: "memory" as const,
   configSchema: memoryConfigSchema,
 
-  register(api: NewClawPluginApi) {
+  register(api: iFlowPluginApi) {
     const cfg = memoryConfigSchema.parse(api.pluginConfig);
     const resolvedDbPath = api.resolvePath(cfg.dbPath!);
     const vectorDim = vectorDimsForModel(cfg.embedding.model ?? "text-embedding-3-small");

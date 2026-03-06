@@ -1,15 +1,15 @@
 import type {
   ChannelMessageActionAdapter,
   ChannelMessageActionName,
-  NewClawConfig,
-} from "newclaw/plugin-sdk";
-import { jsonResult, readStringParam } from "newclaw/plugin-sdk";
+  iFlowConfig,
+} from "iflow/plugin-sdk";
+import { jsonResult, readStringParam } from "iflow/plugin-sdk";
 import { listEnabledZaloAccounts } from "./accounts.js";
 import { sendMessageZalo } from "./send.js";
 
 const providerId = "zalo";
 
-function listEnabledAccounts(cfg: NewClawConfig) {
+function listEnabledAccounts(cfg: iFlowConfig) {
   return listEnabledZaloAccounts(cfg).filter(
     (account) => account.enabled && account.tokenSource !== "none",
   );

@@ -9,17 +9,17 @@ import type {
 import type { HookEntry } from "../hooks/types.js";
 import type { PluginRuntime } from "./runtime/types.js";
 import type {
-  NewClawPluginApi,
-  NewClawPluginChannelRegistration,
-  NewClawPluginCliRegistrar,
-  NewClawPluginCommandDefinition,
-  NewClawPluginHttpHandler,
-  NewClawPluginHttpRouteHandler,
-  NewClawPluginHookOptions,
+  iFlowPluginApi,
+  iFlowPluginChannelRegistration,
+  iFlowPluginCliRegistrar,
+  iFlowPluginCommandDefinition,
+  iFlowPluginHttpHandler,
+  iFlowPluginHttpRouteHandler,
+  iFlowPluginHookOptions,
   ProviderPlugin,
-  NewClawPluginService,
-  NewClawPluginToolContext,
-  NewClawPluginToolFactory,
+  iFlowPluginService,
+  iFlowPluginToolContext,
+  iFlowPluginToolFactory,
   PluginConfigUiHint,
   PluginDiagnostic,
   PluginLogger,
@@ -36,7 +36,7 @@ import { normalizePluginHttpPath } from "./http-path.js";
 
 export type PluginToolRegistration = {
   pluginId: string;
-  factory: NewClawPluginToolFactory;
+  factory: iFlowPluginToolFactory;
   names: string[];
   optional: boolean;
   source: string;
@@ -44,21 +44,21 @@ export type PluginToolRegistration = {
 
 export type PluginCliRegistration = {
   pluginId: string;
-  register: NewClawPluginCliRegistrar;
+  register: iFlowPluginCliRegistrar;
   commands: string[];
   source: string;
 };
 
 export type PluginHttpRegistration = {
   pluginId: string;
-  handler: NewClawPluginHttpHandler;
+  handler: iFlowPluginHttpHandler;
   source: string;
 };
 
 export type PluginHttpRouteRegistration = {
   pluginId?: string;
   path: string;
-  handler: NewClawPluginHttpRouteHandler;
+  handler: iFlowPluginHttpRouteHandler;
   source?: string;
 };
 
@@ -84,13 +84,13 @@ export type PluginHookRegistration = {
 
 export type PluginServiceRegistration = {
   pluginId: string;
-  service: NewClawPluginService;
+  service: iFlowPluginService;
   source: string;
 };
 
 export type PluginCommandRegistration = {
   pluginId: string;
-  command: NewClawPluginCommandDefinition;
+  command: iFlowPluginCommandDefinition;
   source: string;
 };
 
@@ -167,13 +167,13 @@ export function createPluginRegistry(registryParams: PluginRegistryParams) {
 
   const registerTool = (
     record: PluginRecord,
-    tool: AnyAgentTool | NewClawPluginToolFactory,
+    tool: AnyAgentTool | iFlowPluginToolFactory,
     opts?: { name?: string; names?: string[]; optional?: boolean },
   ) => {
     const names = opts?.names ?? (opts?.name ? [opts.name] : []);
     const optional = opts?.optional === true;
-    const factory: NewClawPluginToolFactory =
-      typeof tool === "function" ? tool : (_ctx: NewClawPluginToolContext) => tool;
+    const factory: iFlowPluginToolFactory =
+      typeof tool === "function" ? tool : (_ctx: iFlowPluginToolContext) => tool;
 
     if (typeof tool !== "function") {
       names.push(tool.name);
@@ -196,8 +196,8 @@ export function createPluginRegistry(registryParams: PluginRegistryParams) {
     record: PluginRecord,
     events: string | string[],
     handler: Parameters<typeof registerInternalHook>[1],
-    opts: NewClawPluginHookOptions | undefined,
-    config: NewClawPluginApi["config"],
+    opts: iFlowPluginHookOptions | undefined,
+    config: iFlowPluginApi["config"],
   ) => {
     const eventList = Array.isArray(events) ? events : [events];
     const normalizedEvents = eventList.map((event) => event.trim()).filter(Boolean);
@@ -221,7 +221,7 @@ export function createPluginRegistry(registryParams: PluginRegistryParams) {
             ...entry.hook,
             name,
             description,
-            source: "newclaw-plugin",
+            source: "iflow-plugin",
             pluginId: record.id,
           },
           metadata: {
@@ -233,7 +233,7 @@ export function createPluginRegistry(registryParams: PluginRegistryParams) {
           hook: {
             name,
             description,
-            source: "newclaw-plugin",
+            source: "iflow-plugin",
             pluginId: record.id,
             filePath: record.source,
             baseDir: path.dirname(record.source),
@@ -284,7 +284,7 @@ export function createPluginRegistry(registryParams: PluginRegistryParams) {
     record.gatewayMethods.push(trimmed);
   };
 
-  const registerHttpHandler = (record: PluginRecord, handler: NewClawPluginHttpHandler) => {
+  const registerHttpHandler = (record: PluginRecord, handler: iFlowPluginHttpHandler) => {
     record.httpHandlers += 1;
     registry.httpHandlers.push({
       pluginId: record.id,
@@ -295,7 +295,7 @@ export function createPluginRegistry(registryParams: PluginRegistryParams) {
 
   const registerHttpRoute = (
     record: PluginRecord,
-    params: { path: string; handler: NewClawPluginHttpRouteHandler },
+    params: { path: string; handler: iFlowPluginHttpRouteHandler },
   ) => {
     const normalizedPath = normalizePluginHttpPath(params.path);
     if (!normalizedPath) {
@@ -327,11 +327,11 @@ export function createPluginRegistry(registryParams: PluginRegistryParams) {
 
   const registerChannel = (
     record: PluginRecord,
-    registration: NewClawPluginChannelRegistration | ChannelPlugin,
+    registration: iFlowPluginChannelRegistration | ChannelPlugin,
   ) => {
     const normalized =
-      typeof (registration as NewClawPluginChannelRegistration).plugin === "object"
-        ? (registration as NewClawPluginChannelRegistration)
+      typeof (registration as iFlowPluginChannelRegistration).plugin === "object"
+        ? (registration as iFlowPluginChannelRegistration)
         : { plugin: registration as ChannelPlugin };
     const plugin = normalized.plugin;
     const id = typeof plugin?.id === "string" ? plugin.id.trim() : String(plugin?.id ?? "").trim();
@@ -384,7 +384,7 @@ export function createPluginRegistry(registryParams: PluginRegistryParams) {
 
   const registerCli = (
     record: PluginRecord,
-    registrar: NewClawPluginCliRegistrar,
+    registrar: iFlowPluginCliRegistrar,
     opts?: { commands?: string[] },
   ) => {
     const commands = (opts?.commands ?? []).map((cmd) => cmd.trim()).filter(Boolean);
@@ -397,7 +397,7 @@ export function createPluginRegistry(registryParams: PluginRegistryParams) {
     });
   };
 
-  const registerService = (record: PluginRecord, service: NewClawPluginService) => {
+  const registerService = (record: PluginRecord, service: iFlowPluginService) => {
     const id = service.id.trim();
     if (!id) {
       return;
@@ -410,7 +410,7 @@ export function createPluginRegistry(registryParams: PluginRegistryParams) {
     });
   };
 
-  const registerCommand = (record: PluginRecord, command: NewClawPluginCommandDefinition) => {
+  const registerCommand = (record: PluginRecord, command: iFlowPluginCommandDefinition) => {
     const name = command.name.trim();
     if (!name) {
       pushDiagnostic({
@@ -468,10 +468,10 @@ export function createPluginRegistry(registryParams: PluginRegistryParams) {
   const createApi = (
     record: PluginRecord,
     params: {
-      config: NewClawPluginApi["config"];
+      config: iFlowPluginApi["config"];
       pluginConfig?: Record<string, unknown>;
     },
-  ): NewClawPluginApi => {
+  ): iFlowPluginApi => {
     return {
       id: record.id,
       name: record.name,

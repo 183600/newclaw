@@ -1,6 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
-import type { NewClawConfig, HookConfig } from "../config/config.js";
+import type { iFlowConfig, HookConfig } from "../config/config.js";
 import type { HookEligibilityContext, HookEntry } from "./types.js";
 import { resolveHookKey } from "./frontmatter.js";
 
@@ -26,7 +26,7 @@ function isTruthy(value: unknown): boolean {
   return true;
 }
 
-export function resolveConfigPath(config: NewClawConfig | undefined, pathStr: string) {
+export function resolveConfigPath(config: iFlowConfig | undefined, pathStr: string) {
   const parts = pathStr.split(".").filter(Boolean);
   let current: unknown = config;
   for (const part of parts) {
@@ -38,7 +38,7 @@ export function resolveConfigPath(config: NewClawConfig | undefined, pathStr: st
   return current;
 }
 
-export function isConfigPathTruthy(config: NewClawConfig | undefined, pathStr: string): boolean {
+export function isConfigPathTruthy(config: iFlowConfig | undefined, pathStr: string): boolean {
   const value = resolveConfigPath(config, pathStr);
   if (value === undefined && pathStr in DEFAULT_CONFIG_VALUES) {
     return DEFAULT_CONFIG_VALUES[pathStr];
@@ -47,7 +47,7 @@ export function isConfigPathTruthy(config: NewClawConfig | undefined, pathStr: s
 }
 
 export function resolveHookConfig(
-  config: NewClawConfig | undefined,
+  config: iFlowConfig | undefined,
   hookKey: string,
 ): HookConfig | undefined {
   const hooks = config?.hooks?.internal?.entries;
@@ -82,13 +82,13 @@ export function hasBinary(bin: string): boolean {
 
 export function shouldIncludeHook(params: {
   entry: HookEntry;
-  config?: NewClawConfig;
+  config?: iFlowConfig;
   eligibility?: HookEligibilityContext;
 }): boolean {
   const { entry, config, eligibility } = params;
   const hookKey = resolveHookKey(entry.hook.name, entry);
   const hookConfig = resolveHookConfig(config, hookKey);
-  const pluginManaged = entry.hook.source === "newclaw-plugin";
+  const pluginManaged = entry.hook.source === "iflow-plugin";
   const osList = entry.metadata?.os ?? [];
   const remotePlatforms = eligibility?.remote?.platforms ?? [];
 

@@ -1,4 +1,4 @@
-import type { NewClawConfig } from "../../config/config.js";
+import type { iFlowConfig } from "../../config/config.js";
 import type { CommandHandler } from "./commands-types.js";
 import {
   abortEmbeddedPiRun,
@@ -16,7 +16,7 @@ import { incrementCompactionCount } from "./session-updates.js";
 function extractCompactInstructions(params: {
   rawBody?: string;
   ctx: import("../templating.js").MsgContext;
-  cfg: NewClawConfig;
+  cfg: iFlowConfig;
   agentId?: string;
   isGroup: boolean;
 }): string | undefined {

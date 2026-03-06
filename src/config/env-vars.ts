@@ -1,6 +1,6 @@
-import type { NewClawConfig } from "./types.js";
+import type { iFlowConfig } from "./types.js";
 
-export function collectConfigEnvVars(cfg?: NewClawConfig): Record<string, string> {
+export function collectConfigEnvVars(cfg?: iFlowConfig): Record<string, string> {
   const envConfig = cfg?.env;
   if (!envConfig) {
     return {};

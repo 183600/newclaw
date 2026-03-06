@@ -1,5 +1,5 @@
 ---
-summary: "Hubs that link to every NewClaw doc"
+summary: "Hubs that link to every iFlow doc"
 read_when:
   - You want a complete map of the documentation
 title: "Docs Hubs"
@@ -20,7 +20,7 @@ Use these hubs to discover every page, including deep dives and reference docs t
 - [Help](/help)
 - [Configuration](/gateway/configuration)
 - [Configuration examples](/gateway/configuration-examples)
-- [NewClaw assistant](/start/newclaw)
+- [iFlow assistant](/start/iflow)
 - [Showcase](/start/showcase)
 - [Lore](/start/lore)
 

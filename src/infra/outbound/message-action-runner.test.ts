@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { ChannelPlugin } from "../../channels/plugins/types.js";
-import type { NewClawConfig } from "../../config/config.js";
+import type { iFlowConfig } from "../../config/config.js";
 import { slackPlugin } from "../../../extensions/slack/src/channel.js";
 import { telegramPlugin } from "../../../extensions/telegram/src/channel.js";
 import { whatsappPlugin } from "../../../extensions/whatsapp/src/channel.js";
@@ -25,7 +25,7 @@ const slackConfig = {
       appToken: "xapp-test",
     },
   },
-} as NewClawConfig;
+} as iFlowConfig;
 
 const whatsappConfig = {
   channels: {
@@ -33,7 +33,7 @@ const whatsappConfig = {
       allowFrom: ["*"],
     },
   },
-} as NewClawConfig;
+} as iFlowConfig;
 
 describe("runMessageAction context isolation", () => {
   beforeEach(async () => {
@@ -262,7 +262,7 @@ describe("runMessageAction context isolation", () => {
           token: "tg-test",
         },
       },
-    } as NewClawConfig;
+    } as iFlowConfig;
 
     const result = await runMessageAction({
       cfg: multiConfig,
@@ -304,7 +304,7 @@ describe("runMessageAction context isolation", () => {
           },
         },
       },
-    } as NewClawConfig;
+    } as iFlowConfig;
 
     await expect(
       runMessageAction({
@@ -422,7 +422,7 @@ describe("runMessageAction sendAttachment hydration", () => {
           password: "test-password",
         },
       },
-    } as NewClawConfig;
+    } as iFlowConfig;
 
     const result = await runMessageAction({
       cfg,
@@ -490,7 +490,7 @@ describe("runMessageAction accountId defaults", () => {
 
   it("propagates defaultAccountId into params", async () => {
     await runMessageAction({
-      cfg: {} as NewClawConfig,
+      cfg: {} as iFlowConfig,
       action: "send",
       params: {
         channel: "discord",

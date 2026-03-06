@@ -182,7 +182,7 @@ describe("gateway update.run", () => {
       await waitForSignal(() => sigusr1.mock.calls.length > 0);
       expect(sigusr1).toHaveBeenCalled();
 
-      const sentinelPath = path.join(os.homedir(), ".newclaw", "restart-sentinel.json");
+      const sentinelPath = path.join(os.homedir(), ".iflow", "restart-sentinel.json");
       const raw = await fs.readFile(sentinelPath, "utf-8");
       const parsed = JSON.parse(raw) as {
         payload?: { kind?: string; stats?: { mode?: string } };

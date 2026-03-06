@@ -24,7 +24,7 @@ const runtime: RuntimeEnv = {
 };
 
 const baseSnapshot = {
-  path: "/tmp/newclaw.json",
+  path: "/tmp/iflow.json",
   exists: true,
   raw: "{}",
   parsed: {},

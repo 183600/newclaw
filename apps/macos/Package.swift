@@ -1,18 +1,18 @@
 // swift-tools-version: 6.2
-// Package manifest for the NewClaw macOS companion (menu bar app + IPC library).
+// Package manifest for the iFlow macOS companion (menu bar app + IPC library).
 
 import PackageDescription
 
 let package = Package(
-    name: "NewClaw",
+    name: "iFlow",
     platforms: [
         .macOS(.v15),
     ],
     products: [
-        .library(name: "NewClawIPC", targets: ["NewClawIPC"]),
-        .library(name: "NewClawDiscovery", targets: ["NewClawDiscovery"]),
-        .executable(name: "NewClaw", targets: ["NewClaw"]),
-        .executable(name: "newclaw-mac", targets: ["NewClawMacCLI"]),
+        .library(name: "iFlowIPC", targets: ["iFlowIPC"]),
+        .library(name: "iFlowDiscovery", targets: ["iFlowDiscovery"]),
+        .executable(name: "iFlow", targets: ["iFlow"]),
+        .executable(name: "iflow-mac", targets: ["iFlowMacCLI"]),
     ],
     dependencies: [
         .package(url: "https://github.com/orchetect/MenuBarExtraAccess", exact: "1.2.2"),
@@ -20,33 +20,33 @@ let package = Package(
         .package(url: "https://github.com/apple/swift-log.git", from: "1.8.0"),
         .package(url: "https://github.com/sparkle-project/Sparkle", from: "2.8.1"),
         .package(url: "https://github.com/steipete/Peekaboo.git", branch: "main"),
-        .package(path: "../shared/NewClawKit"),
+        .package(path: "../shared/iFlowKit"),
         .package(path: "../../Swabble"),
     ],
     targets: [
         .target(
-            name: "NewClawIPC",
+            name: "iFlowIPC",
             dependencies: [],
             swiftSettings: [
                 .enableUpcomingFeature("StrictConcurrency"),
             ]),
         .target(
-            name: "NewClawDiscovery",
+            name: "iFlowDiscovery",
             dependencies: [
-                .product(name: "NewClawKit", package: "NewClawKit"),
+                .product(name: "iFlowKit", package: "iFlowKit"),
             ],
-            path: "Sources/NewClawDiscovery",
+            path: "Sources/iFlowDiscovery",
             swiftSettings: [
                 .enableUpcomingFeature("StrictConcurrency"),
             ]),
         .executableTarget(
-            name: "NewClaw",
+            name: "iFlow",
             dependencies: [
-                "NewClawIPC",
-                "NewClawDiscovery",
-                .product(name: "NewClawKit", package: "NewClawKit"),
-                .product(name: "NewClawChatUI", package: "NewClawKit"),
-                .product(name: "NewClawProtocol", package: "NewClawKit"),
+                "iFlowIPC",
+                "iFlowDiscovery",
+                .product(name: "iFlowKit", package: "iFlowKit"),
+                .product(name: "iFlowChatUI", package: "iFlowKit"),
+                .product(name: "iFlowProtocol", package: "iFlowKit"),
                 .product(name: "SwabbleKit", package: "swabble"),
                 .product(name: "MenuBarExtraAccess", package: "MenuBarExtraAccess"),
                 .product(name: "Subprocess", package: "swift-subprocess"),
@@ -59,30 +59,30 @@ let package = Package(
                 "Resources/Info.plist",
             ],
             resources: [
-                .copy("Resources/NewClaw.icns"),
+                .copy("Resources/iFlow.icns"),
                 .copy("Resources/DeviceModels"),
             ],
             swiftSettings: [
                 .enableUpcomingFeature("StrictConcurrency"),
             ]),
         .executableTarget(
-            name: "NewClawMacCLI",
+            name: "iFlowMacCLI",
             dependencies: [
-                "NewClawDiscovery",
-                .product(name: "NewClawKit", package: "NewClawKit"),
-                .product(name: "NewClawProtocol", package: "NewClawKit"),
+                "iFlowDiscovery",
+                .product(name: "iFlowKit", package: "iFlowKit"),
+                .product(name: "iFlowProtocol", package: "iFlowKit"),
             ],
-            path: "Sources/NewClawMacCLI",
+            path: "Sources/iFlowMacCLI",
             swiftSettings: [
                 .enableUpcomingFeature("StrictConcurrency"),
             ]),
         .testTarget(
-            name: "NewClawIPCTests",
+            name: "iFlowIPCTests",
             dependencies: [
-                "NewClawIPC",
-                "NewClaw",
-                "NewClawDiscovery",
-                .product(name: "NewClawProtocol", package: "NewClawKit"),
+                "iFlowIPC",
+                "iFlow",
+                "iFlowDiscovery",
+                .product(name: "iFlowProtocol", package: "iFlowKit"),
                 .product(name: "SwabbleKit", package: "swabble"),
             ],
             swiftSettings: [

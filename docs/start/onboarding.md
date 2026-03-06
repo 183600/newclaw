@@ -1,5 +1,5 @@
 ---
-summary: "First-run onboarding flow for NewClaw (macOS app)"
+summary: "First-run onboarding flow for iFlow (macOS app)"
 read_when:
   - Designing the macOS onboarding assistant
   - Implementing auth or identity setup
@@ -49,7 +49,7 @@ The macOS app supports Anthropic OAuth (Claude Pro/Max). The flow:
 
 - Opens the browser for OAuth (PKCE)
 - Asks the user to paste the `code#state` value
-- Writes credentials to `~/.newclaw/credentials/oauth.json`
+- Writes credentials to `~/.iflow/credentials/oauth.json`
 
 Other providers (OpenAI, custom APIs) are configured via environment variables
 or config files for now.
@@ -71,7 +71,7 @@ Onboarding requests TCC permissions needed for:
 
 ## 6) CLI (optional)
 
-The app can install the global `newclaw` CLI via npm/pnpm so terminal
+The app can install the global `iflow` CLI via npm/pnpm so terminal
 workflows and launchd tasks work out of the box.
 
 ## 7) Onboarding chat (dedicated session)
@@ -82,7 +82,7 @@ from your normal conversation.
 
 ## Agent bootstrap ritual
 
-On the first agent run, NewClaw bootstraps a workspace (default `~/.newclaw/workspace`):
+On the first agent run, iFlow bootstraps a workspace (default `~/.iflow/workspace`):
 
 - Seeds `AGENTS.md`, `BOOTSTRAP.md`, `IDENTITY.md`, `USER.md`
 - Runs a short Q&A ritual (one question at a time)
@@ -94,7 +94,7 @@ On the first agent run, NewClaw bootstraps a workspace (default `~/.newclaw/work
 Gmail Pub/Sub setup is currently a manual step. Use:
 
 ```bash
-newclaw webhooks gmail setup --account you@gmail.com
+iflow webhooks gmail setup --account you@gmail.com
 ```
 
 See [/automation/gmail-pubsub](/automation/gmail-pubsub) for details.
@@ -104,7 +104,7 @@ See [/automation/gmail-pubsub](/automation/gmail-pubsub) for details.
 When the Gateway runs on another machine, credentials and workspace files live
 **on that host**. If you need OAuth in remote mode, create:
 
-- `~/.newclaw/credentials/oauth.json`
-- `~/.newclaw/agents/<agentId>/agent/auth-profiles.json`
+- `~/.iflow/credentials/oauth.json`
+- `~/.iflow/agents/<agentId>/agent/auth-profiles.json`
 
 on the gateway host.

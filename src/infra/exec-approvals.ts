@@ -60,8 +60,8 @@ const DEFAULT_SECURITY: ExecSecurity = "deny";
 const DEFAULT_ASK: ExecAsk = "on-miss";
 const DEFAULT_ASK_FALLBACK: ExecSecurity = "deny";
 const DEFAULT_AUTO_ALLOW_SKILLS = false;
-const DEFAULT_SOCKET = "~/.newclaw/exec-approvals.sock";
-const DEFAULT_FILE = "~/.newclaw/exec-approvals.json";
+const DEFAULT_SOCKET = "~/.iflow/exec-approvals.sock";
+const DEFAULT_FILE = "~/.iflow/exec-approvals.json";
 export const DEFAULT_SAFE_BINS = ["jq", "grep", "cut", "sort", "uniq", "head", "tail", "tr", "wc"];
 
 function hashExecApprovalsRaw(raw: string | null): string {

@@ -121,12 +121,12 @@ describe("provider timeouts (e2e)", () => {
     async () => {
       const prev = {
         home: process.env.HOME,
-        configPath: process.env.NEWCLAW_CONFIG_PATH,
-        token: process.env.NEWCLAW_GATEWAY_TOKEN,
-        skipChannels: process.env.NEWCLAW_SKIP_CHANNELS,
-        skipGmail: process.env.NEWCLAW_SKIP_GMAIL_WATCHER,
-        skipCron: process.env.NEWCLAW_SKIP_CRON,
-        skipCanvas: process.env.NEWCLAW_SKIP_CANVAS_HOST,
+        configPath: process.env.IFLOW_CONFIG_PATH,
+        token: process.env.IFLOW_GATEWAY_TOKEN,
+        skipChannels: process.env.IFLOW_SKIP_CHANNELS,
+        skipGmail: process.env.IFLOW_SKIP_GMAIL_WATCHER,
+        skipCron: process.env.IFLOW_SKIP_CRON,
+        skipCanvas: process.env.IFLOW_SKIP_CANVAS_HOST,
       };
 
       const originalFetch = globalThis.fetch;
@@ -156,19 +156,19 @@ describe("provider timeouts (e2e)", () => {
       };
       (globalThis as unknown as { fetch: unknown }).fetch = fetchImpl;
 
-      const tempHome = await fs.mkdtemp(path.join(os.tmpdir(), "newclaw-timeout-e2e-"));
+      const tempHome = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-timeout-e2e-"));
       process.env.HOME = tempHome;
-      process.env.NEWCLAW_SKIP_CHANNELS = "1";
-      process.env.NEWCLAW_SKIP_GMAIL_WATCHER = "1";
-      process.env.NEWCLAW_SKIP_CRON = "1";
-      process.env.NEWCLAW_SKIP_CANVAS_HOST = "1";
+      process.env.IFLOW_SKIP_CHANNELS = "1";
+      process.env.IFLOW_SKIP_GMAIL_WATCHER = "1";
+      process.env.IFLOW_SKIP_CRON = "1";
+      process.env.IFLOW_SKIP_CANVAS_HOST = "1";
 
       const token = `test-${randomUUID()}`;
-      process.env.NEWCLAW_GATEWAY_TOKEN = token;
+      process.env.IFLOW_GATEWAY_TOKEN = token;
 
-      const configDir = path.join(tempHome, ".newclaw");
+      const configDir = path.join(tempHome, ".iflow");
       await fs.mkdir(configDir, { recursive: true });
-      const configPath = path.join(configDir, "newclaw.json");
+      const configPath = path.join(configDir, "iflow.json");
 
       const cfg = {
         agents: {
@@ -222,7 +222,7 @@ describe("provider timeouts (e2e)", () => {
       };
 
       await fs.writeFile(configPath, `${JSON.stringify(cfg, null, 2)}\n`);
-      process.env.NEWCLAW_CONFIG_PATH = configPath;
+      process.env.IFLOW_CONFIG_PATH = configPath;
 
       const port = await getFreeGatewayPort();
       const server = await startGatewayServer(port, {
@@ -274,34 +274,34 @@ describe("provider timeouts (e2e)", () => {
           process.env.HOME = prev.home;
         }
         if (prev.configPath === undefined) {
-          delete process.env.NEWCLAW_CONFIG_PATH;
+          delete process.env.IFLOW_CONFIG_PATH;
         } else {
-          process.env.NEWCLAW_CONFIG_PATH = prev.configPath;
+          process.env.IFLOW_CONFIG_PATH = prev.configPath;
         }
         if (prev.token === undefined) {
-          delete process.env.NEWCLAW_GATEWAY_TOKEN;
+          delete process.env.IFLOW_GATEWAY_TOKEN;
         } else {
-          process.env.NEWCLAW_GATEWAY_TOKEN = prev.token;
+          process.env.IFLOW_GATEWAY_TOKEN = prev.token;
         }
         if (prev.skipChannels === undefined) {
-          delete process.env.NEWCLAW_SKIP_CHANNELS;
+          delete process.env.IFLOW_SKIP_CHANNELS;
         } else {
-          process.env.NEWCLAW_SKIP_CHANNELS = prev.skipChannels;
+          process.env.IFLOW_SKIP_CHANNELS = prev.skipChannels;
         }
         if (prev.skipGmail === undefined) {
-          delete process.env.NEWCLAW_SKIP_GMAIL_WATCHER;
+          delete process.env.IFLOW_SKIP_GMAIL_WATCHER;
         } else {
-          process.env.NEWCLAW_SKIP_GMAIL_WATCHER = prev.skipGmail;
+          process.env.IFLOW_SKIP_GMAIL_WATCHER = prev.skipGmail;
         }
         if (prev.skipCron === undefined) {
-          delete process.env.NEWCLAW_SKIP_CRON;
+          delete process.env.IFLOW_SKIP_CRON;
         } else {
-          process.env.NEWCLAW_SKIP_CRON = prev.skipCron;
+          process.env.IFLOW_SKIP_CRON = prev.skipCron;
         }
         if (prev.skipCanvas === undefined) {
-          delete process.env.NEWCLAW_SKIP_CANVAS_HOST;
+          delete process.env.IFLOW_SKIP_CANVAS_HOST;
         } else {
-          process.env.NEWCLAW_SKIP_CANVAS_HOST = prev.skipCanvas;
+          process.env.IFLOW_SKIP_CANVAS_HOST = prev.skipCanvas;
         }
       }
     },

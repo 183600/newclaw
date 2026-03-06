@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   parseFrontmatter,
-  resolveNewClawMetadata,
+  resolveiFlowMetadata,
   resolveHookInvocationPolicy,
 } from "./frontmatter.js";
 
@@ -41,7 +41,7 @@ name: session-memory
 description: "Save session context"
 metadata:
   {
-    "newclaw": {
+    "iflow": {
       "emoji": "💾",
       "events": ["command:new"]
     }
@@ -58,8 +58,8 @@ metadata:
 
     // Verify the metadata is valid JSON
     const parsed = JSON.parse(result.metadata);
-    expect(parsed.newclaw.emoji).toBe("💾");
-    expect(parsed.newclaw.events).toEqual(["command:new"]);
+    expect(parsed.iflow.emoji).toBe("💾");
+    expect(parsed.iflow.events).toEqual(["command:new"]);
   });
 
   it("parses multi-line metadata with complex nested structure", () => {
@@ -68,7 +68,7 @@ name: command-logger
 description: "Log all command events"
 metadata:
   {
-    "newclaw":
+    "iflow":
       {
         "emoji": "📝",
         "events": ["command"],
@@ -83,21 +83,21 @@ metadata:
     expect(result.metadata).toBeDefined();
 
     const parsed = JSON.parse(result.metadata);
-    expect(parsed.newclaw.emoji).toBe("📝");
-    expect(parsed.newclaw.events).toEqual(["command"]);
-    expect(parsed.newclaw.requires.config).toEqual(["workspace.dir"]);
-    expect(parsed.newclaw.install[0].kind).toBe("bundled");
+    expect(parsed.iflow.emoji).toBe("📝");
+    expect(parsed.iflow.events).toEqual(["command"]);
+    expect(parsed.iflow.requires.config).toEqual(["workspace.dir"]);
+    expect(parsed.iflow.install[0].kind).toBe("bundled");
   });
 
   it("handles single-line metadata (inline JSON)", () => {
     const content = `---
 name: simple-hook
-metadata: {"newclaw": {"events": ["test"]}}
+metadata: {"iflow": {"events": ["test"]}}
 ---
 `;
     const result = parseFrontmatter(content);
     expect(result.name).toBe("simple-hook");
-    expect(result.metadata).toBe('{"newclaw": {"events": ["test"]}}');
+    expect(result.metadata).toBe('{"iflow": {"events": ["test"]}}');
   });
 
   it("handles mixed single-line and multi-line values", () => {
@@ -107,7 +107,7 @@ description: "A hook with mixed values"
 homepage: https://example.com
 metadata:
   {
-    "newclaw": {
+    "iflow": {
       "events": ["command:new"]
     }
   }
@@ -148,12 +148,12 @@ description: 'single-quoted'
   });
 });
 
-describe("resolveNewClawMetadata", () => {
-  it("extracts newclaw metadata from parsed frontmatter", () => {
+describe("resolveiFlowMetadata", () => {
+  it("extracts iflow metadata from parsed frontmatter", () => {
     const frontmatter = {
       name: "test-hook",
       metadata: JSON.stringify({
-        newclaw: {
+        iflow: {
           emoji: "🔥",
           events: ["command:new", "command:reset"],
           requires: {
@@ -164,7 +164,7 @@ describe("resolveNewClawMetadata", () => {
       }),
     };
 
-    const result = resolveNewClawMetadata(frontmatter);
+    const result = resolveiFlowMetadata(frontmatter);
     expect(result).toBeDefined();
     expect(result?.emoji).toBe("🔥");
     expect(result?.events).toEqual(["command:new", "command:reset"]);
@@ -174,15 +174,15 @@ describe("resolveNewClawMetadata", () => {
 
   it("returns undefined when metadata is missing", () => {
     const frontmatter = { name: "no-metadata" };
-    const result = resolveNewClawMetadata(frontmatter);
+    const result = resolveiFlowMetadata(frontmatter);
     expect(result).toBeUndefined();
   });
 
-  it("returns undefined when newclaw key is missing", () => {
+  it("returns undefined when iflow key is missing", () => {
     const frontmatter = {
       metadata: JSON.stringify({ other: "data" }),
     };
-    const result = resolveNewClawMetadata(frontmatter);
+    const result = resolveiFlowMetadata(frontmatter);
     expect(result).toBeUndefined();
   });
 
@@ -190,41 +190,41 @@ describe("resolveNewClawMetadata", () => {
     const frontmatter = {
       metadata: "not valid json {",
     };
-    const result = resolveNewClawMetadata(frontmatter);
+    const result = resolveiFlowMetadata(frontmatter);
     expect(result).toBeUndefined();
   });
 
   it("handles install specs", () => {
     const frontmatter = {
       metadata: JSON.stringify({
-        newclaw: {
+        iflow: {
           events: ["command"],
           install: [
-            { id: "bundled", kind: "bundled", label: "Bundled with NewClaw" },
-            { id: "npm", kind: "npm", package: "@newclaw/hook" },
+            { id: "bundled", kind: "bundled", label: "Bundled with iFlow" },
+            { id: "npm", kind: "npm", package: "@iflow/hook" },
           ],
         },
       }),
     };
 
-    const result = resolveNewClawMetadata(frontmatter);
+    const result = resolveiFlowMetadata(frontmatter);
     expect(result?.install).toHaveLength(2);
     expect(result?.install?.[0].kind).toBe("bundled");
     expect(result?.install?.[1].kind).toBe("npm");
-    expect(result?.install?.[1].package).toBe("@newclaw/hook");
+    expect(result?.install?.[1].package).toBe("@iflow/hook");
   });
 
   it("handles os restrictions", () => {
     const frontmatter = {
       metadata: JSON.stringify({
-        newclaw: {
+        iflow: {
           events: ["command"],
           os: ["darwin", "linux"],
         },
       }),
     };
 
-    const result = resolveNewClawMetadata(frontmatter);
+    const result = resolveiFlowMetadata(frontmatter);
     expect(result?.os).toEqual(["darwin", "linux"]);
   });
 
@@ -233,15 +233,15 @@ describe("resolveNewClawMetadata", () => {
     const content = `---
 name: session-memory
 description: "Save session context to memory when /new command is issued"
-homepage: https://docs.newclaw.ai/hooks#session-memory
+homepage: https://docs.iflow.ai/hooks#session-memory
 metadata:
   {
-    "newclaw":
+    "iflow":
       {
         "emoji": "💾",
         "events": ["command:new"],
         "requires": { "config": ["workspace.dir"] },
-        "install": [{ "id": "bundled", "kind": "bundled", "label": "Bundled with NewClaw" }],
+        "install": [{ "id": "bundled", "kind": "bundled", "label": "Bundled with iFlow" }],
       },
   }
 ---
@@ -253,28 +253,28 @@ metadata:
     expect(frontmatter.name).toBe("session-memory");
     expect(frontmatter.metadata).toBeDefined();
 
-    const newclaw = resolveNewClawMetadata(frontmatter);
-    expect(newclaw).toBeDefined();
-    expect(newclaw?.emoji).toBe("💾");
-    expect(newclaw?.events).toEqual(["command:new"]);
-    expect(newclaw?.requires?.config).toEqual(["workspace.dir"]);
-    expect(newclaw?.install?.[0].kind).toBe("bundled");
+    const iflow = resolveiFlowMetadata(frontmatter);
+    expect(iflow).toBeDefined();
+    expect(iflow?.emoji).toBe("💾");
+    expect(iflow?.events).toEqual(["command:new"]);
+    expect(iflow?.requires?.config).toEqual(["workspace.dir"]);
+    expect(iflow?.install?.[0].kind).toBe("bundled");
   });
 
   it("parses YAML metadata map", () => {
     const content = `---
 name: yaml-metadata
 metadata:
-  newclaw:
+  iflow:
     emoji: disk
     events:
       - command:new
 ---
 `;
     const frontmatter = parseFrontmatter(content);
-    const newclaw = resolveNewClawMetadata(frontmatter);
-    expect(newclaw?.emoji).toBe("disk");
-    expect(newclaw?.events).toEqual(["command:new"]);
+    const iflow = resolveiFlowMetadata(frontmatter);
+    expect(iflow?.emoji).toBe("disk");
+    expect(iflow?.events).toEqual(["command:new"]);
   });
 });
 

@@ -7,7 +7,7 @@
 
 import path from "node:path";
 import { pathToFileURL } from "node:url";
-import type { NewClawConfig } from "../config/config.js";
+import type { iFlowConfig } from "../config/config.js";
 import type { InternalHookHandler } from "./internal-hooks.js";
 import { resolveHookConfig } from "./config.js";
 import { shouldIncludeHook } from "./config.js";
@@ -21,7 +21,7 @@ import { loadWorkspaceHookEntries } from "./workspace.js";
  * 1. Directory-based discovery (bundled, managed, workspace)
  * 2. Legacy config handlers (backwards compatibility)
  *
- * @param cfg - NewClaw configuration
+ * @param cfg - iFlow configuration
  * @param workspaceDir - Workspace directory for hook discovery
  * @returns Number of handlers successfully loaded
  *
@@ -33,7 +33,7 @@ import { loadWorkspaceHookEntries } from "./workspace.js";
  * console.log(`Loaded ${count} hook handlers`);
  * ```
  */
-export async function loadInternalHooks(cfg: NewClawConfig, workspaceDir: string): Promise<number> {
+export async function loadInternalHooks(cfg: iFlowConfig, workspaceDir: string): Promise<number> {
   // Check if hooks are enabled
   if (!cfg.hooks?.internal?.enabled) {
     return 0;

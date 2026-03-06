@@ -1,5 +1,5 @@
 ---
-summary: "CLI reference for `newclaw system` (system events, heartbeat, presence)"
+summary: "CLI reference for `iflow system` (system events, heartbeat, presence)"
 read_when:
   - You want to enqueue a system event without creating a cron job
   - You need to enable or disable heartbeats
@@ -7,7 +7,7 @@ read_when:
 title: "system"
 ---
 
-# `newclaw system`
+# `iflow system`
 
 System-level helpers for the Gateway: enqueue system events, control heartbeats,
 and view presence.
@@ -15,10 +15,10 @@ and view presence.
 ## Common commands
 
 ```bash
-newclaw system event --text "Check for urgent follow-ups" --mode now
-newclaw system heartbeat enable
-newclaw system heartbeat last
-newclaw system presence
+iflow system event --text "Check for urgent follow-ups" --mode now
+iflow system heartbeat enable
+iflow system heartbeat last
+iflow system presence
 ```
 
 ## `system event`

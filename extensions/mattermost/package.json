@@ -1,12 +1,12 @@
 {
-  "name": "@newclaw/mattermost",
+  "name": "@iflow/mattermost",
   "version": "2026.2.2",
-  "description": "NewClaw Mattermost channel plugin",
+  "description": "iFlow Mattermost channel plugin",
   "type": "module",
   "devDependencies": {
-    "newclaw": "workspace:*"
+    "iflow": "workspace:*"
   },
-  "newclaw": {
+  "iflow": {
     "extensions": [
       "./index.ts"
     ],
@@ -20,7 +20,7 @@
       "order": 65
     },
     "install": {
-      "npmSpec": "@newclaw/mattermost",
+      "npmSpec": "@iflow/mattermost",
       "localPath": "extensions/mattermost",
       "defaultChoice": "npm"
     }

@@ -1,4 +1,4 @@
-import type { RuntimeEnv, ReplyPayload, NewClawConfig } from "newclaw/plugin-sdk";
+import type { RuntimeEnv, ReplyPayload, iFlowConfig } from "iflow/plugin-sdk";
 import { format } from "node:util";
 import { getTlonRuntime } from "../runtime.js";
 import { normalizeShip, parseChannelNest } from "../targets.js";
@@ -29,7 +29,7 @@ type ChannelAuthorization = {
 };
 
 function resolveChannelAuthorization(
-  cfg: NewClawConfig,
+  cfg: iFlowConfig,
   channelNest: string,
 ): { mode: "restricted" | "open"; allowedShips: string[] } {
   const tlonConfig = cfg.channels?.tlon as

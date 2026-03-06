@@ -20,7 +20,7 @@ vi.mock("../runtime.js", () => ({
 
 describe("browser extension install", () => {
   it("installs into the state dir (never node_modules)", async () => {
-    const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "newclaw-ext-"));
+    const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "iflow-ext-"));
     const { installChromeExtension } = await import("./browser-cli-extension.js");
 
     const sourceDir = path.resolve(process.cwd(), "assets/chrome-extension");
@@ -32,9 +32,9 @@ describe("browser extension install", () => {
   });
 
   it("copies extension path to clipboard", async () => {
-    const prev = process.env.NEWCLAW_STATE_DIR;
-    const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "newclaw-ext-path-"));
-    process.env.NEWCLAW_STATE_DIR = tmp;
+    const prev = process.env.IFLOW_STATE_DIR;
+    const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "iflow-ext-path-"));
+    process.env.IFLOW_STATE_DIR = tmp;
 
     try {
       copyToClipboard.mockReset();
@@ -63,9 +63,9 @@ describe("browser extension install", () => {
       expect(copyToClipboard).toHaveBeenCalledWith(dir);
     } finally {
       if (prev === undefined) {
-        delete process.env.NEWCLAW_STATE_DIR;
+        delete process.env.IFLOW_STATE_DIR;
       } else {
-        process.env.NEWCLAW_STATE_DIR = prev;
+        process.env.IFLOW_STATE_DIR = prev;
       }
     }
   });

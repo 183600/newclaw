@@ -34,7 +34,7 @@ describe("runGatewayUpdate", () => {
   let tempDir: string;
 
   beforeEach(async () => {
-    tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "newclaw-update-"));
+    tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "iflow-update-"));
   });
 
   afterEach(async () => {
@@ -45,7 +45,7 @@ describe("runGatewayUpdate", () => {
     await fs.mkdir(path.join(tempDir, ".git"));
     await fs.writeFile(
       path.join(tempDir, "package.json"),
-      JSON.stringify({ name: "newclaw", version: "1.0.0" }),
+      JSON.stringify({ name: "iflow", version: "1.0.0" }),
       "utf-8",
     );
     const { runner, calls } = createRunner({
@@ -70,7 +70,7 @@ describe("runGatewayUpdate", () => {
     await fs.mkdir(path.join(tempDir, ".git"));
     await fs.writeFile(
       path.join(tempDir, "package.json"),
-      JSON.stringify({ name: "newclaw", version: "1.0.0" }),
+      JSON.stringify({ name: "iflow", version: "1.0.0" }),
       "utf-8",
     );
     const { runner, calls } = createRunner({
@@ -103,7 +103,7 @@ describe("runGatewayUpdate", () => {
     await fs.mkdir(path.join(tempDir, ".git"));
     await fs.writeFile(
       path.join(tempDir, "package.json"),
-      JSON.stringify({ name: "newclaw", version: "1.0.0", packageManager: "pnpm@8.0.0" }),
+      JSON.stringify({ name: "iflow", version: "1.0.0", packageManager: "pnpm@8.0.0" }),
       "utf-8",
     );
     const stableTag = "v1.0.1-1";
@@ -121,7 +121,7 @@ describe("runGatewayUpdate", () => {
       "pnpm build": { stdout: "" },
       "pnpm ui:build": { stdout: "" },
       [`git -C ${tempDir} checkout -- dist/control-ui/`]: { stdout: "" },
-      "pnpm newclaw doctor --non-interactive": { stdout: "" },
+      "pnpm iflow doctor --non-interactive": { stdout: "" },
     });
 
     const result = await runGatewayUpdate({
@@ -139,7 +139,7 @@ describe("runGatewayUpdate", () => {
   it("skips update when no git root", async () => {
     await fs.writeFile(
       path.join(tempDir, "package.json"),
-      JSON.stringify({ name: "newclaw", packageManager: "pnpm@8.0.0" }),
+      JSON.stringify({ name: "iflow", packageManager: "pnpm@8.0.0" }),
       "utf-8",
     );
     await fs.writeFile(path.join(tempDir, "pnpm-lock.yaml"), "", "utf-8");
@@ -163,11 +163,11 @@ describe("runGatewayUpdate", () => {
 
   it("updates global npm installs when detected", async () => {
     const nodeModules = path.join(tempDir, "node_modules");
-    const pkgRoot = path.join(nodeModules, "newclaw");
+    const pkgRoot = path.join(nodeModules, "iflow");
     await fs.mkdir(pkgRoot, { recursive: true });
     await fs.writeFile(
       path.join(pkgRoot, "package.json"),
-      JSON.stringify({ name: "newclaw", version: "1.0.0" }),
+      JSON.stringify({ name: "iflow", version: "1.0.0" }),
       "utf-8",
     );
 
@@ -181,10 +181,10 @@ describe("runGatewayUpdate", () => {
       if (key === "npm root -g") {
         return { stdout: nodeModules, stderr: "", code: 0 };
       }
-      if (key === "npm i -g newclaw@latest") {
+      if (key === "npm i -g iflow@latest") {
         await fs.writeFile(
           path.join(pkgRoot, "package.json"),
-          JSON.stringify({ name: "newclaw", version: "2.0.0" }),
+          JSON.stringify({ name: "iflow", version: "2.0.0" }),
           "utf-8",
         );
         return { stdout: "ok", stderr: "", code: 0 };
@@ -205,18 +205,18 @@ describe("runGatewayUpdate", () => {
     expect(result.mode).toBe("npm");
     expect(result.before?.version).toBe("1.0.0");
     expect(result.after?.version).toBe("2.0.0");
-    expect(calls.some((call) => call === "npm i -g newclaw@latest")).toBe(true);
+    expect(calls.some((call) => call === "npm i -g iflow@latest")).toBe(true);
   });
 
   it("cleans stale npm rename dirs before global update", async () => {
     const nodeModules = path.join(tempDir, "node_modules");
-    const pkgRoot = path.join(nodeModules, "newclaw");
-    const staleDir = path.join(nodeModules, ".newclaw-stale");
+    const pkgRoot = path.join(nodeModules, "iflow");
+    const staleDir = path.join(nodeModules, ".iflow-stale");
     await fs.mkdir(staleDir, { recursive: true });
     await fs.mkdir(pkgRoot, { recursive: true });
     await fs.writeFile(
       path.join(pkgRoot, "package.json"),
-      JSON.stringify({ name: "newclaw", version: "1.0.0" }),
+      JSON.stringify({ name: "iflow", version: "1.0.0" }),
       "utf-8",
     );
 
@@ -232,7 +232,7 @@ describe("runGatewayUpdate", () => {
       if (key === "pnpm root -g") {
         return { stdout: "", stderr: "", code: 1 };
       }
-      if (key === "npm i -g newclaw@latest") {
+      if (key === "npm i -g iflow@latest") {
         stalePresentAtInstall = await pathExists(staleDir);
         return { stdout: "ok", stderr: "", code: 0 };
       }
@@ -252,11 +252,11 @@ describe("runGatewayUpdate", () => {
 
   it("updates global npm installs with tag override", async () => {
     const nodeModules = path.join(tempDir, "node_modules");
-    const pkgRoot = path.join(nodeModules, "newclaw");
+    const pkgRoot = path.join(nodeModules, "iflow");
     await fs.mkdir(pkgRoot, { recursive: true });
     await fs.writeFile(
       path.join(pkgRoot, "package.json"),
-      JSON.stringify({ name: "newclaw", version: "1.0.0" }),
+      JSON.stringify({ name: "iflow", version: "1.0.0" }),
       "utf-8",
     );
 
@@ -270,10 +270,10 @@ describe("runGatewayUpdate", () => {
       if (key === "npm root -g") {
         return { stdout: nodeModules, stderr: "", code: 0 };
       }
-      if (key === "npm i -g newclaw@beta") {
+      if (key === "npm i -g iflow@beta") {
         await fs.writeFile(
           path.join(pkgRoot, "package.json"),
-          JSON.stringify({ name: "newclaw", version: "2.0.0" }),
+          JSON.stringify({ name: "iflow", version: "2.0.0" }),
           "utf-8",
         );
         return { stdout: "ok", stderr: "", code: 0 };
@@ -295,7 +295,7 @@ describe("runGatewayUpdate", () => {
     expect(result.mode).toBe("npm");
     expect(result.before?.version).toBe("1.0.0");
     expect(result.after?.version).toBe("2.0.0");
-    expect(calls.some((call) => call === "npm i -g newclaw@beta")).toBe(true);
+    expect(calls.some((call) => call === "npm i -g iflow@beta")).toBe(true);
   });
 
   it("updates global bun installs when detected", async () => {
@@ -305,11 +305,11 @@ describe("runGatewayUpdate", () => {
 
     try {
       const bunGlobalRoot = path.join(bunInstall, "install", "global", "node_modules");
-      const pkgRoot = path.join(bunGlobalRoot, "newclaw");
+      const pkgRoot = path.join(bunGlobalRoot, "iflow");
       await fs.mkdir(pkgRoot, { recursive: true });
       await fs.writeFile(
         path.join(pkgRoot, "package.json"),
-        JSON.stringify({ name: "newclaw", version: "1.0.0" }),
+        JSON.stringify({ name: "iflow", version: "1.0.0" }),
         "utf-8",
       );
 
@@ -326,10 +326,10 @@ describe("runGatewayUpdate", () => {
         if (key === "pnpm root -g") {
           return { stdout: "", stderr: "", code: 1 };
         }
-        if (key === "bun add -g newclaw@latest") {
+        if (key === "bun add -g iflow@latest") {
           await fs.writeFile(
             path.join(pkgRoot, "package.json"),
-            JSON.stringify({ name: "newclaw", version: "2.0.0" }),
+            JSON.stringify({ name: "iflow", version: "2.0.0" }),
             "utf-8",
           );
           return { stdout: "ok", stderr: "", code: 0 };
@@ -347,7 +347,7 @@ describe("runGatewayUpdate", () => {
       expect(result.mode).toBe("bun");
       expect(result.before?.version).toBe("1.0.0");
       expect(result.after?.version).toBe("2.0.0");
-      expect(calls.some((call) => call === "bun add -g newclaw@latest")).toBe(true);
+      expect(calls.some((call) => call === "bun add -g iflow@latest")).toBe(true);
     } finally {
       if (oldBunInstall === undefined) {
         delete process.env.BUN_INSTALL;
@@ -357,7 +357,7 @@ describe("runGatewayUpdate", () => {
     }
   });
 
-  it("rejects git roots that are not a newclaw checkout", async () => {
+  it("rejects git roots that are not a iflow checkout", async () => {
     await fs.mkdir(path.join(tempDir, ".git"));
     const cwdSpy = vi.spyOn(process, "cwd").mockReturnValue(tempDir);
     const { runner, calls } = createRunner({
@@ -373,7 +373,7 @@ describe("runGatewayUpdate", () => {
     cwdSpy.mockRestore();
 
     expect(result.status).toBe("error");
-    expect(result.reason).toBe("not-newclaw-root");
+    expect(result.reason).toBe("not-iflow-root");
     expect(calls.some((call) => call.includes("status --porcelain"))).toBe(false);
   });
 });

@@ -1,9 +1,9 @@
 ---
 read_when:
-  - 使用 `newclaw browser` 并需要常见任务的示例
+  - 使用 `iflow browser` 并需要常见任务的示例
   - 想要通过节点主机控制运行在另一台机器上的浏览器
   - 想要使用 Chrome 扩展中继（通过工具栏按钮附加/分离）
-summary: "`newclaw browser` 的 CLI 参考（配置文件、标签页、操作、扩展中继）"
+summary: "`iflow browser` 的 CLI 参考（配置文件、标签页、操作、扩展中继）"
 title: browser
 x-i18n:
   generated_at: "2026-02-01T19:58:45Z"
@@ -14,9 +14,9 @@ x-i18n:
   workflow: 14
 ---
 
-# `newclaw browser`
+# `iflow browser`
 
-管理 NewClaw 的浏览器控制服务器并执行浏览器操作（标签页、快照、截图、导航、点击、输入）。
+管理 iFlow 的浏览器控制服务器并执行浏览器操作（标签页、快照、截图、导航、点击、输入）。
 
 相关内容：
 
@@ -34,38 +34,38 @@ x-i18n:
 ## 快速开始（本地）
 
 ```bash
-newclaw browser --browser-profile chrome tabs
-newclaw browser --browser-profile newclaw start
-newclaw browser --browser-profile newclaw open https://example.com
-newclaw browser --browser-profile newclaw snapshot
+iflow browser --browser-profile chrome tabs
+iflow browser --browser-profile iflow start
+iflow browser --browser-profile iflow open https://example.com
+iflow browser --browser-profile iflow snapshot
 ```
 
 ## 配置文件
 
 配置文件是命名的浏览器路由配置。实际使用中：
 
-- `newclaw`：启动/附加到一个专用的 NewClaw 管理的 Chrome 实例（隔离的用户数据目录）。
+- `iflow`：启动/附加到一个专用的 iFlow 管理的 Chrome 实例（隔离的用户数据目录）。
 - `chrome`：通过 Chrome 扩展中继控制你现有的 Chrome 标签页。
 
 ```bash
-newclaw browser profiles
-newclaw browser create-profile --name work --color "#FF5A36"
-newclaw browser delete-profile --name work
+iflow browser profiles
+iflow browser create-profile --name work --color "#FF5A36"
+iflow browser delete-profile --name work
 ```
 
 使用特定配置文件：
 
 ```bash
-newclaw browser --browser-profile work tabs
+iflow browser --browser-profile work tabs
 ```
 
 ## 标签页
 
 ```bash
-newclaw browser tabs
-newclaw browser open https://docs.newclaw.ai
-newclaw browser focus <targetId>
-newclaw browser close <targetId>
+iflow browser tabs
+iflow browser open https://docs.iflow.ai
+iflow browser focus <targetId>
+iflow browser close <targetId>
 ```
 
 ## 快照 / 截图 / 操作
@@ -73,21 +73,21 @@ newclaw browser close <targetId>
 快照：
 
 ```bash
-newclaw browser snapshot
+iflow browser snapshot
 ```
 
 截图：
 
 ```bash
-newclaw browser screenshot
+iflow browser screenshot
 ```
 
 导航/点击/输入（基于引用的 UI 自动化）：
 
 ```bash
-newclaw browser navigate https://example.com
-newclaw browser click <ref>
-newclaw browser type <ref> "hello"
+iflow browser navigate https://example.com
+iflow browser click <ref>
+iflow browser type <ref> "hello"
 ```
 
 ## Chrome 扩展中继（通过工具栏按钮附加）
@@ -97,8 +97,8 @@ newclaw browser type <ref> "hello"
 将未打包的扩展安装到稳定路径：
 
 ```bash
-newclaw browser extension install
-newclaw browser extension path
+iflow browser extension install
+iflow browser extension path
 ```
 
 然后在 Chrome 中 → `chrome://extensions` → 启用"开发者模式" → "加载已解压的扩展程序" → 选择打印出的文件夹。

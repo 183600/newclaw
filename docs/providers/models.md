@@ -1,5 +1,5 @@
 ---
-summary: "Model providers (LLMs) supported by NewClaw"
+summary: "Model providers (LLMs) supported by iFlow"
 read_when:
   - You want to choose a model provider
   - You want quick setup examples for LLM auth + model selection
@@ -8,7 +8,7 @@ title: "Model Provider Quickstart"
 
 # Model Providers
 
-NewClaw can use many LLM providers. Pick one, authenticate, then set the default
+iFlow can use many LLM providers. Pick one, authenticate, then set the default
 model as `provider/model`.
 
 ## Highlight: Venice (Venice AI)
@@ -22,7 +22,7 @@ See [Venice AI](/providers/venice).
 
 ## Quick start (two steps)
 
-1. Authenticate with the provider (usually via `newclaw onboard`).
+1. Authenticate with the provider (usually via `iflow onboard`).
 2. Set the default model:
 
 ```json5

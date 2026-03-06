@@ -8,7 +8,7 @@ title: "Brave Search"
 
 # Brave Search API
 
-NewClaw uses Brave Search as the default provider for `web_search`.
+iFlow uses Brave Search as the default provider for `web_search`.
 
 ## Get an API key
 

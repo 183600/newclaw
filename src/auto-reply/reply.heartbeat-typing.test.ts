@@ -45,7 +45,7 @@ async function withTempHome<T>(fn: (home: string) => Promise<T>): Promise<T> {
       runEmbeddedPiAgentMock.mockClear();
       return await fn(home);
     },
-    { prefix: "newclaw-typing-" },
+    { prefix: "iflow-typing-" },
   );
 }
 
@@ -54,7 +54,7 @@ function makeCfg(home: string) {
     agents: {
       defaults: {
         model: "anthropic/claude-opus-4-5",
-        workspace: join(home, "newclaw"),
+        workspace: join(home, "iflow"),
       },
     },
     channels: {

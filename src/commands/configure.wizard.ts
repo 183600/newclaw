@@ -1,4 +1,4 @@
-import type { NewClawConfig } from "../config/config.js";
+import type { iFlowConfig } from "../config/config.js";
 import type { RuntimeEnv } from "../runtime.js";
 import type {
   ChannelsWizardMode,
@@ -79,7 +79,7 @@ async function promptChannelMode(runtime: RuntimeEnv): Promise<ChannelsWizardMod
         {
           value: "remove",
           label: "Remove channel config",
-          hint: "Delete channel tokens/settings from newclaw.json",
+          hint: "Delete channel tokens/settings from iflow.json",
         },
       ],
       initialValue: "configure",
@@ -89,9 +89,9 @@ async function promptChannelMode(runtime: RuntimeEnv): Promise<ChannelsWizardMod
 }
 
 async function promptWebToolsConfig(
-  nextConfig: NewClawConfig,
+  nextConfig: iFlowConfig,
   runtime: RuntimeEnv,
-): Promise<NewClawConfig> {
+): Promise<iFlowConfig> {
   const existingSearch = nextConfig.tools?.web?.search;
   const existingFetch = nextConfig.tools?.web?.fetch;
   const hasSearchKey = Boolean(existingSearch?.apiKey);
@@ -100,7 +100,7 @@ async function promptWebToolsConfig(
     [
       "Web search lets your agent look things up online using the `web_search` tool.",
       "It requires a Brave Search API key (you can store it in the config or set BRAVE_API_KEY in the Gateway environment).",
-      "Docs: https://docs.newclaw.ai/tools/web",
+      "Docs: https://docs.iflow.ai/tools/web",
     ].join("\n"),
     "Web search",
   );
@@ -136,7 +136,7 @@ async function promptWebToolsConfig(
         [
           "No key stored yet, so web_search will stay unavailable.",
           "Store a key here or set BRAVE_API_KEY in the Gateway environment.",
-          "Docs: https://docs.newclaw.ai/tools/web",
+          "Docs: https://docs.iflow.ai/tools/web",
         ].join("\n"),
         "Web search",
       );
@@ -175,11 +175,11 @@ export async function runConfigureWizard(
 ) {
   try {
     printWizardHeader(runtime);
-    intro(opts.command === "update" ? "NewClaw update wizard" : "NewClaw configure");
+    intro(opts.command === "update" ? "iFlow update wizard" : "iFlow configure");
     const prompter = createClackPrompter();
 
     const snapshot = await readConfigFileSnapshot();
-    const baseConfig: NewClawConfig = snapshot.valid ? snapshot.config : {};
+    const baseConfig: iFlowConfig = snapshot.valid ? snapshot.config : {};
 
     if (snapshot.exists) {
       const title = snapshot.valid ? "Existing config detected" : "Invalid config";
@@ -189,14 +189,14 @@ export async function runConfigureWizard(
           [
             ...snapshot.issues.map((iss) => `- ${iss.path}: ${iss.message}`),
             "",
-            "Docs: https://docs.newclaw.ai/gateway/configuration",
+            "Docs: https://docs.iflow.ai/gateway/configuration",
           ].join("\n"),
           "Config issues",
         );
       }
       if (!snapshot.valid) {
         outro(
-          `Config invalid. Run \`${formatCliCommand("newclaw doctor")}\` to repair it, then re-run configure.`,
+          `Config invalid. Run \`${formatCliCommand("iflow doctor")}\` to repair it, then re-run configure.`,
         );
         runtime.exit(1);
         return;
@@ -206,8 +206,8 @@ export async function runConfigureWizard(
     const localUrl = "ws://127.0.0.1:18789";
     const localProbe = await probeGatewayReachable({
       url: localUrl,
-      token: baseConfig.gateway?.auth?.token ?? process.env.NEWCLAW_GATEWAY_TOKEN,
-      password: baseConfig.gateway?.auth?.password ?? process.env.NEWCLAW_GATEWAY_PASSWORD,
+      token: baseConfig.gateway?.auth?.token ?? process.env.IFLOW_GATEWAY_TOKEN,
+      password: baseConfig.gateway?.auth?.password ?? process.env.IFLOW_GATEWAY_PASSWORD,
     });
     const remoteUrl = baseConfig.gateway?.remote?.url?.trim() ?? "";
     const remoteProbe = remoteUrl
@@ -274,7 +274,7 @@ export async function runConfigureWizard(
     let gatewayToken: string | undefined =
       nextConfig.gateway?.auth?.token ??
       baseConfig.gateway?.auth?.token ??
-      process.env.NEWCLAW_GATEWAY_TOKEN;
+      process.env.IFLOW_GATEWAY_TOKEN;
 
     const persistConfig = async () => {
       nextConfig = applyWizardMetadata(nextConfig, {
@@ -377,8 +377,8 @@ export async function runConfigureWizard(
         const remoteUrl = nextConfig.gateway?.remote?.url?.trim();
         const wsUrl =
           nextConfig.gateway?.mode === "remote" && remoteUrl ? remoteUrl : localLinks.wsUrl;
-        const token = nextConfig.gateway?.auth?.token ?? process.env.NEWCLAW_GATEWAY_TOKEN;
-        const password = nextConfig.gateway?.auth?.password ?? process.env.NEWCLAW_GATEWAY_PASSWORD;
+        const token = nextConfig.gateway?.auth?.token ?? process.env.IFLOW_GATEWAY_TOKEN;
+        const password = nextConfig.gateway?.auth?.password ?? process.env.IFLOW_GATEWAY_PASSWORD;
         await waitForGatewayReachable({
           url: wsUrl,
           token,
@@ -392,8 +392,8 @@ export async function runConfigureWizard(
           note(
             [
               "Docs:",
-              "https://docs.newclaw.ai/gateway/health",
-              "https://docs.newclaw.ai/gateway/troubleshooting",
+              "https://docs.iflow.ai/gateway/health",
+              "https://docs.iflow.ai/gateway/troubleshooting",
             ].join("\n"),
             "Health check help",
           );
@@ -503,9 +503,8 @@ export async function runConfigureWizard(
           const remoteUrl = nextConfig.gateway?.remote?.url?.trim();
           const wsUrl =
             nextConfig.gateway?.mode === "remote" && remoteUrl ? remoteUrl : localLinks.wsUrl;
-          const token = nextConfig.gateway?.auth?.token ?? process.env.NEWCLAW_GATEWAY_TOKEN;
-          const password =
-            nextConfig.gateway?.auth?.password ?? process.env.NEWCLAW_GATEWAY_PASSWORD;
+          const token = nextConfig.gateway?.auth?.token ?? process.env.IFLOW_GATEWAY_TOKEN;
+          const password = nextConfig.gateway?.auth?.password ?? process.env.IFLOW_GATEWAY_PASSWORD;
           await waitForGatewayReachable({
             url: wsUrl,
             token,
@@ -519,8 +518,8 @@ export async function runConfigureWizard(
             note(
               [
                 "Docs:",
-                "https://docs.newclaw.ai/gateway/health",
-                "https://docs.newclaw.ai/gateway/troubleshooting",
+                "https://docs.iflow.ai/gateway/health",
+                "https://docs.iflow.ai/gateway/troubleshooting",
               ].join("\n"),
               "Health check help",
             );
@@ -552,9 +551,9 @@ export async function runConfigureWizard(
       basePath: nextConfig.gateway?.controlUi?.basePath,
     });
     // Try both new and old passwords since gateway may still have old config.
-    const newPassword = nextConfig.gateway?.auth?.password ?? process.env.NEWCLAW_GATEWAY_PASSWORD;
-    const oldPassword = baseConfig.gateway?.auth?.password ?? process.env.NEWCLAW_GATEWAY_PASSWORD;
-    const token = nextConfig.gateway?.auth?.token ?? process.env.NEWCLAW_GATEWAY_TOKEN;
+    const newPassword = nextConfig.gateway?.auth?.password ?? process.env.IFLOW_GATEWAY_PASSWORD;
+    const oldPassword = baseConfig.gateway?.auth?.password ?? process.env.IFLOW_GATEWAY_PASSWORD;
+    const token = nextConfig.gateway?.auth?.token ?? process.env.IFLOW_GATEWAY_TOKEN;
 
     let gatewayProbe = await probeGatewayReachable({
       url: links.wsUrl,
@@ -578,7 +577,7 @@ export async function runConfigureWizard(
         `Web UI: ${links.httpUrl}`,
         `Gateway WS: ${links.wsUrl}`,
         gatewayStatusLine,
-        "Docs: https://docs.newclaw.ai/web/control-ui",
+        "Docs: https://docs.iflow.ai/web/control-ui",
       ].join("\n"),
       "Control UI",
     );

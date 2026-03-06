@@ -1,4 +1,4 @@
-import { resolveChannelMediaMaxBytes, type NewClawConfig } from "newclaw/plugin-sdk";
+import { resolveChannelMediaMaxBytes, type iFlowConfig } from "iflow/plugin-sdk";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { sendBlueBubblesAttachment } from "./attachments.js";
@@ -55,7 +55,7 @@ function resolveFilenameFromSource(source?: string): string | undefined {
 }
 
 export async function sendBlueBubblesMedia(params: {
-  cfg: NewClawConfig;
+  cfg: iFlowConfig;
   to: string;
   mediaUrl?: string;
   mediaPath?: string;

@@ -74,7 +74,7 @@ const findLatestMtime = (dirPath, shouldSkip) => {
 };
 
 const shouldBuild = () => {
-  if (env.NEWCLAW_FORCE_BUILD === "1") {
+  if (env.IFLOW_FORCE_BUILD === "1") {
     return true;
   }
   const stampMtime = statMtime(buildStampPath);
@@ -100,14 +100,14 @@ const shouldBuild = () => {
 };
 
 const logRunner = (message) => {
-  if (env.NEWCLAW_RUNNER_LOG === "0") {
+  if (env.IFLOW_RUNNER_LOG === "0") {
     return;
   }
-  process.stderr.write(`[newclaw] ${message}\n`);
+  process.stderr.write(`[iflow] ${message}\n`);
 };
 
 const runNode = () => {
-  const nodeProcess = spawn(process.execPath, ["newclaw.mjs", ...args], {
+  const nodeProcess = spawn(process.execPath, ["iflow.mjs", ...args], {
     cwd,
     env,
     stdio: "inherit",

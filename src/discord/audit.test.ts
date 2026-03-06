@@ -27,7 +27,7 @@ describe("discord audit", () => {
           },
         },
       },
-    } as unknown as import("../config/config.js").NewClawConfig;
+    } as unknown as import("../config/config.js").iFlowConfig;
 
     const collected = collectDiscordAuditChannelIds({
       cfg,

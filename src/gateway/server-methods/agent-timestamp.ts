@@ -1,4 +1,4 @@
-import type { NewClawConfig } from "../../config/types.js";
+import type { iFlowConfig } from "../../config/types.js";
 import { resolveUserTimezone } from "../../agents/date-time.js";
 import { formatZonedTimestamp } from "../../auto-reply/envelope.js";
 
@@ -71,9 +71,9 @@ export function injectTimestamp(message: string, opts?: TimestampInjectionOption
 }
 
 /**
- * Build TimestampInjectionOptions from an NewClawConfig.
+ * Build TimestampInjectionOptions from an iFlowConfig.
  */
-export function timestampOptsFromConfig(cfg: NewClawConfig): TimestampInjectionOptions {
+export function timestampOptsFromConfig(cfg: iFlowConfig): TimestampInjectionOptions {
   return {
     timezone: resolveUserTimezone(cfg.agents?.defaults?.userTimezone),
   };

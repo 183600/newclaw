@@ -253,7 +253,7 @@ describe("provider usage loading", () => {
     await withTempHome(
       async (tempHome) => {
         const agentDir = path.join(
-          process.env.NEWCLAW_STATE_DIR ?? path.join(tempHome, ".newclaw"),
+          process.env.IFLOW_STATE_DIR ?? path.join(tempHome, ".iflow"),
           "agents",
           "main",
           "agent",
@@ -328,9 +328,9 @@ describe("provider usage loading", () => {
       },
       {
         env: {
-          NEWCLAW_STATE_DIR: (home) => path.join(home, ".newclaw"),
+          IFLOW_STATE_DIR: (home) => path.join(home, ".iflow"),
         },
-        prefix: "newclaw-provider-usage-",
+        prefix: "iflow-provider-usage-",
       },
     );
   });

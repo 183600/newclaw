@@ -27,7 +27,7 @@ function makePathEnv(binDir: string): NodeJS.ProcessEnv {
 }
 
 function makeTempDir() {
-  return fs.mkdtempSync(path.join(os.tmpdir(), "newclaw-exec-approvals-"));
+  return fs.mkdtempSync(path.join(os.tmpdir(), "iflow-exec-approvals-"));
 }
 
 describe("exec approvals allowlist matching", () => {
@@ -452,7 +452,7 @@ describe("exec approvals wildcard agent", () => {
     const homedirSpy = vi.spyOn(os, "homedir").mockReturnValue(dir);
 
     try {
-      const approvalsPath = path.join(dir, ".newclaw", "exec-approvals.json");
+      const approvalsPath = path.join(dir, ".iflow", "exec-approvals.json");
       fs.mkdirSync(path.dirname(approvalsPath), { recursive: true });
       fs.writeFileSync(
         approvalsPath,

@@ -13,13 +13,13 @@ title: "TUI"
 1. Start the Gateway.
 
 ```bash
-newclaw gateway
+iflow gateway
 ```
 
 2. Open the TUI.
 
 ```bash
-newclaw tui
+iflow tui
 ```
 
 3. Type a message and press Enter.
@@ -27,7 +27,7 @@ newclaw tui
 Remote Gateway:
 
 ```bash
-newclaw tui --url ws://<host>:<port> --token <gateway-token>
+iflow tui --url ws://<host>:<port> --token <gateway-token>
 ```
 
 Use `--password` if your Gateway uses password auth.
@@ -58,7 +58,7 @@ Use `--password` if your Gateway uses password auth.
 - Turn delivery on:
   - `/deliver on`
   - or the Settings panel
-  - or start with `newclaw tui --deliver`
+  - or start with `iflow tui --deliver`
 
 ## Pickers + overlays
 
@@ -147,13 +147,13 @@ Other Gateway slash commands (for example, `/context`) are forwarded to the Gate
 No output after sending a message:
 
 - Run `/status` in the TUI to confirm the Gateway is connected and idle/busy.
-- Check the Gateway logs: `newclaw logs --follow`.
-- Confirm the agent can run: `newclaw status` and `newclaw models status`.
+- Check the Gateway logs: `iflow logs --follow`.
+- Confirm the agent can run: `iflow status` and `iflow models status`.
 - If you expect messages in a chat channel, enable delivery (`/deliver on` or `--deliver`).
 - `--history-limit <n>`: History entries to load (default 200)
 
 ## Troubleshooting
 
 - `disconnected`: ensure the Gateway is running and your `--url/--token/--password` are correct.
-- No agents in picker: check `newclaw agents list` and your routing config.
+- No agents in picker: check `iflow agents list` and your routing config.
 - Empty session picker: you might be in global scope or have no sessions yet.

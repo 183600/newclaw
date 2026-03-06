@@ -51,24 +51,24 @@ export function registerAgentCommands(program: Command, args: { agentChannelOpti
         `
 ${theme.heading("Examples:")}
 ${formatHelpExamples([
-  ['newclaw agent --to +15555550123 --message "status update"', "Start a new session."],
-  ['newclaw agent --agent ops --message "Summarize logs"', "Use a specific agent."],
+  ['iflow agent --to +15555550123 --message "status update"', "Start a new session."],
+  ['iflow agent --agent ops --message "Summarize logs"', "Use a specific agent."],
   [
-    'newclaw agent --session-id 1234 --message "Summarize inbox" --thinking medium',
+    'iflow agent --session-id 1234 --message "Summarize inbox" --thinking medium',
     "Target a session with explicit thinking level.",
   ],
   [
-    'newclaw agent --to +15555550123 --message "Trace logs" --verbose on --json',
+    'iflow agent --to +15555550123 --message "Trace logs" --verbose on --json',
     "Enable verbose logging and JSON output.",
   ],
-  ['newclaw agent --to +15555550123 --message "Summon reply" --deliver', "Deliver reply."],
+  ['iflow agent --to +15555550123 --message "Summon reply" --deliver', "Deliver reply."],
   [
-    'newclaw agent --agent ops --message "Generate report" --deliver --reply-channel slack --reply-to "#reports"',
+    'iflow agent --agent ops --message "Generate report" --deliver --reply-channel slack --reply-to "#reports"',
     "Send reply to a different channel/target.",
   ],
 ])}
 
-${theme.muted("Docs:")} ${formatDocsLink("/cli/agent", "docs.newclaw.ai/cli/agent")}`,
+${theme.muted("Docs:")} ${formatDocsLink("/cli/agent", "docs.iflow.ai/cli/agent")}`,
     )
     .action(async (opts) => {
       const verboseLevel = typeof opts.verbose === "string" ? opts.verbose.toLowerCase() : "";
@@ -86,7 +86,7 @@ ${theme.muted("Docs:")} ${formatDocsLink("/cli/agent", "docs.newclaw.ai/cli/agen
     .addHelpText(
       "after",
       () =>
-        `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/agents", "docs.newclaw.ai/cli/agents")}\n`,
+        `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/agents", "docs.iflow.ai/cli/agents")}\n`,
     );
 
   agents
@@ -155,14 +155,14 @@ ${theme.muted("Docs:")} ${formatDocsLink("/cli/agent", "docs.newclaw.ai/cli/agen
         `
 ${theme.heading("Examples:")}
 ${formatHelpExamples([
-  ['newclaw agents set-identity --agent main --name "NewClaw" --emoji "🦞"', "Set name + emoji."],
-  ["newclaw agents set-identity --agent main --avatar avatars/newclaw.png", "Set avatar path."],
+  ['iflow agents set-identity --agent main --name "iFlow" --emoji "🦞"', "Set name + emoji."],
+  ["iflow agents set-identity --agent main --avatar avatars/iflow.png", "Set avatar path."],
   [
-    "newclaw agents set-identity --workspace ~/.newclaw/workspace --from-identity",
+    "iflow agents set-identity --workspace ~/.iflow/workspace --from-identity",
     "Load from IDENTITY.md.",
   ],
   [
-    "newclaw agents set-identity --identity-file ~/.newclaw/workspace/IDENTITY.md --agent main",
+    "iflow agents set-identity --identity-file ~/.iflow/workspace/IDENTITY.md --agent main",
     "Use a specific IDENTITY.md.",
   ],
 ])}

@@ -1,8 +1,8 @@
 import {
   resolveChannelMediaMaxBytes,
-  type NewClawConfig,
+  type iFlowConfig,
   type PluginRuntime,
-} from "newclaw/plugin-sdk";
+} from "iflow/plugin-sdk";
 import type { MSTeamsAccessTokenProvider } from "./attachments/types.js";
 import type {
   MSTeamsConversationStore,
@@ -92,7 +92,7 @@ async function findConversationReference(recipient: {
 }
 
 export async function resolveMSTeamsSendContext(params: {
-  cfg: NewClawConfig;
+  cfg: iFlowConfig;
   to: string;
 }): Promise<MSTeamsProactiveContext> {
   const msteamsCfg = params.cfg.channels?.msteams;

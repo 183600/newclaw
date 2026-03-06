@@ -1,4 +1,4 @@
-import type { ChannelAccountSnapshot, ChannelPlugin, NewClawConfig } from "newclaw/plugin-sdk";
+import type { ChannelAccountSnapshot, ChannelPlugin, iFlowConfig } from "iflow/plugin-sdk";
 import {
   applyAccountNameToChannelSection,
   buildChannelConfigSchema,
@@ -12,7 +12,7 @@ import {
   resolveBlueBubblesGroupRequireMention,
   resolveBlueBubblesGroupToolPolicy,
   setAccountEnabledInConfigSection,
-} from "newclaw/plugin-sdk";
+} from "iflow/plugin-sdk";
 import {
   listBlueBubblesAccountIds,
   type ResolvedBlueBubblesAccount,
@@ -262,7 +262,7 @@ export const bluebubblesPlugin: ChannelPlugin<ResolvedBlueBubblesAccount> = {
               ...(input.webhookPath ? { webhookPath: input.webhookPath } : {}),
             },
           },
-        } as NewClawConfig;
+        } as iFlowConfig;
       }
       return {
         ...next,
@@ -283,7 +283,7 @@ export const bluebubblesPlugin: ChannelPlugin<ResolvedBlueBubblesAccount> = {
             },
           },
         },
-      } as NewClawConfig;
+      } as iFlowConfig;
     },
   },
   pairing: {

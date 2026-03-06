@@ -1,4 +1,4 @@
-import type { NewClawConfig } from "./config.js";
+import type { iFlowConfig } from "./config.js";
 import { normalizeProviderId } from "../agents/model-selection.js";
 import {
   getChannelPluginCatalogEntry,
@@ -17,7 +17,7 @@ type PluginEnableChange = {
 };
 
 export type PluginAutoEnableResult = {
-  config: NewClawConfig;
+  config: iFlowConfig;
   changes: string[];
 };
 
@@ -65,16 +65,13 @@ function accountsHaveKeys(value: unknown, keys: string[]): boolean {
   return false;
 }
 
-function resolveChannelConfig(
-  cfg: NewClawConfig,
-  channelId: string,
-): Record<string, unknown> | null {
+function resolveChannelConfig(cfg: iFlowConfig, channelId: string): Record<string, unknown> | null {
   const channels = cfg.channels as Record<string, unknown> | undefined;
   const entry = channels?.[channelId];
   return isRecord(entry) ? entry : null;
 }
 
-function isTelegramConfigured(cfg: NewClawConfig, env: NodeJS.ProcessEnv): boolean {
+function isTelegramConfigured(cfg: iFlowConfig, env: NodeJS.ProcessEnv): boolean {
   if (hasNonEmptyString(env.TELEGRAM_BOT_TOKEN)) {
     return true;
   }
@@ -91,7 +88,7 @@ function isTelegramConfigured(cfg: NewClawConfig, env: NodeJS.ProcessEnv): boole
   return recordHasKeys(entry);
 }
 
-function isDiscordConfigured(cfg: NewClawConfig, env: NodeJS.ProcessEnv): boolean {
+function isDiscordConfigured(cfg: iFlowConfig, env: NodeJS.ProcessEnv): boolean {
   if (hasNonEmptyString(env.DISCORD_BOT_TOKEN)) {
     return true;
   }
@@ -108,7 +105,7 @@ function isDiscordConfigured(cfg: NewClawConfig, env: NodeJS.ProcessEnv): boolea
   return recordHasKeys(entry);
 }
 
-function isSlackConfigured(cfg: NewClawConfig, env: NodeJS.ProcessEnv): boolean {
+function isSlackConfigured(cfg: iFlowConfig, env: NodeJS.ProcessEnv): boolean {
   if (
     hasNonEmptyString(env.SLACK_BOT_TOKEN) ||
     hasNonEmptyString(env.SLACK_APP_TOKEN) ||
@@ -133,7 +130,7 @@ function isSlackConfigured(cfg: NewClawConfig, env: NodeJS.ProcessEnv): boolean 
   return recordHasKeys(entry);
 }
 
-function isSignalConfigured(cfg: NewClawConfig): boolean {
+function isSignalConfigured(cfg: iFlowConfig): boolean {
   const entry = resolveChannelConfig(cfg, "signal");
   if (!entry) {
     return false;
@@ -153,7 +150,7 @@ function isSignalConfigured(cfg: NewClawConfig): boolean {
   return recordHasKeys(entry);
 }
 
-function isIMessageConfigured(cfg: NewClawConfig): boolean {
+function isIMessageConfigured(cfg: iFlowConfig): boolean {
   const entry = resolveChannelConfig(cfg, "imessage");
   if (!entry) {
     return false;
@@ -164,7 +161,7 @@ function isIMessageConfigured(cfg: NewClawConfig): boolean {
   return recordHasKeys(entry);
 }
 
-function isWhatsAppConfigured(cfg: NewClawConfig): boolean {
+function isWhatsAppConfigured(cfg: iFlowConfig): boolean {
   if (hasAnyWhatsAppAuth(cfg)) {
     return true;
   }
@@ -175,13 +172,13 @@ function isWhatsAppConfigured(cfg: NewClawConfig): boolean {
   return recordHasKeys(entry);
 }
 
-function isGenericChannelConfigured(cfg: NewClawConfig, channelId: string): boolean {
+function isGenericChannelConfigured(cfg: iFlowConfig, channelId: string): boolean {
   const entry = resolveChannelConfig(cfg, channelId);
   return recordHasKeys(entry);
 }
 
 export function isChannelConfigured(
-  cfg: NewClawConfig,
+  cfg: iFlowConfig,
   channelId: string,
   env: NodeJS.ProcessEnv = process.env,
 ): boolean {
@@ -203,7 +200,7 @@ export function isChannelConfigured(
   }
 }
 
-function collectModelRefs(cfg: NewClawConfig): string[] {
+function collectModelRefs(cfg: iFlowConfig): string[] {
   const refs: string[] = [];
   const pushModelRef = (value: unknown) => {
     if (typeof value === "string" && value.trim()) {
@@ -257,7 +254,7 @@ function extractProviderFromModelRef(value: string): string | null {
   return normalizeProviderId(trimmed.slice(0, slash));
 }
 
-function isProviderConfigured(cfg: NewClawConfig, providerId: string): boolean {
+function isProviderConfigured(cfg: iFlowConfig, providerId: string): boolean {
   const normalized = normalizeProviderId(providerId);
 
   const profiles = cfg.auth?.profiles;
@@ -293,10 +290,7 @@ function isProviderConfigured(cfg: NewClawConfig, providerId: string): boolean {
   return false;
 }
 
-function resolveConfiguredPlugins(
-  cfg: NewClawConfig,
-  env: NodeJS.ProcessEnv,
-): PluginEnableChange[] {
+function resolveConfiguredPlugins(cfg: iFlowConfig, env: NodeJS.ProcessEnv): PluginEnableChange[] {
   const changes: PluginEnableChange[] = [];
   const channelIds = new Set(CHANNEL_PLUGIN_IDS);
   const configuredChannels = cfg.channels as Record<string, unknown> | undefined;
@@ -330,12 +324,12 @@ function resolveConfiguredPlugins(
   return changes;
 }
 
-function isPluginExplicitlyDisabled(cfg: NewClawConfig, pluginId: string): boolean {
+function isPluginExplicitlyDisabled(cfg: iFlowConfig, pluginId: string): boolean {
   const entry = cfg.plugins?.entries?.[pluginId];
   return entry?.enabled === false;
 }
 
-function isPluginDenied(cfg: NewClawConfig, pluginId: string): boolean {
+function isPluginDenied(cfg: iFlowConfig, pluginId: string): boolean {
   const deny = cfg.plugins?.deny;
   return Array.isArray(deny) && deny.includes(pluginId);
 }
@@ -350,7 +344,7 @@ function resolvePreferredOverIds(pluginId: string): string[] {
 }
 
 function shouldSkipPreferredPluginAutoEnable(
-  cfg: NewClawConfig,
+  cfg: iFlowConfig,
   entry: PluginEnableChange,
   configured: PluginEnableChange[],
 ): boolean {
@@ -372,7 +366,7 @@ function shouldSkipPreferredPluginAutoEnable(
   return false;
 }
 
-function ensureAllowlisted(cfg: NewClawConfig, pluginId: string): NewClawConfig {
+function ensureAllowlisted(cfg: iFlowConfig, pluginId: string): iFlowConfig {
   const allow = cfg.plugins?.allow;
   if (!Array.isArray(allow) || allow.includes(pluginId)) {
     return cfg;
@@ -386,7 +380,7 @@ function ensureAllowlisted(cfg: NewClawConfig, pluginId: string): NewClawConfig 
   };
 }
 
-function enablePluginEntry(cfg: NewClawConfig, pluginId: string): NewClawConfig {
+function enablePluginEntry(cfg: iFlowConfig, pluginId: string): iFlowConfig {
   const entries = {
     ...cfg.plugins?.entries,
     [pluginId]: {
@@ -415,7 +409,7 @@ function formatAutoEnableChange(entry: PluginEnableChange): string {
 }
 
 export function applyPluginAutoEnable(params: {
-  config: NewClawConfig;
+  config: iFlowConfig;
   env?: NodeJS.ProcessEnv;
 }): PluginAutoEnableResult {
   const env = params.env ?? process.env;

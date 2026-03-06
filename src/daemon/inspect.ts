@@ -15,7 +15,7 @@ export type ExtraGatewayService = {
   label: string;
   detail: string;
   scope: "user" | "system";
-  marker?: "newclaw" | "clawdbot" | "moltbot";
+  marker?: "iflow" | "clawdbot" | "moltbot";
   legacy?: boolean;
 };
 
@@ -23,13 +23,13 @@ export type FindExtraGatewayServicesOptions = {
   deep?: boolean;
 };
 
-const EXTRA_MARKERS = ["newclaw", "clawdbot", "moltbot"] as const;
+const EXTRA_MARKERS = ["iflow", "clawdbot", "moltbot"] as const;
 const execFileAsync = promisify(execFile);
 
 export function renderGatewayServiceCleanupHints(
   env: Record<string, string | undefined> = process.env as Record<string, string | undefined>,
 ): string[] {
-  const profile = env.NEWCLAW_PROFILE;
+  const profile = env.IFLOW_PROFILE;
   switch (process.platform) {
     case "darwin": {
       const label = resolveGatewayLaunchAgentLabel(profile);
@@ -73,8 +73,8 @@ function detectMarker(content: string): Marker | null {
 
 function hasGatewayServiceMarker(content: string): boolean {
   const lower = content.toLowerCase();
-  const markerKeys = ["newclaw_service_marker"];
-  const kindKeys = ["newclaw_service_kind"];
+  const markerKeys = ["iflow_service_marker"];
+  const kindKeys = ["iflow_service_kind"];
   const markerValues = [GATEWAY_SERVICE_MARKER.toLowerCase()];
   const hasMarkerKey = markerKeys.some((key) => lower.includes(key));
   const hasKindKey = kindKeys.some((key) => lower.includes(key));
@@ -87,7 +87,7 @@ function hasGatewayServiceMarker(content: string): boolean {
   );
 }
 
-function isNewClawGatewayLaunchdService(label: string, contents: string): boolean {
+function isiFlowGatewayLaunchdService(label: string, contents: string): boolean {
   if (hasGatewayServiceMarker(contents)) {
     return true;
   }
@@ -95,26 +95,26 @@ function isNewClawGatewayLaunchdService(label: string, contents: string): boolea
   if (!lowerContents.includes("gateway")) {
     return false;
   }
-  return label.startsWith("ai.newclaw.");
+  return label.startsWith("ai.iflow.");
 }
 
-function isNewClawGatewaySystemdService(name: string, contents: string): boolean {
+function isiFlowGatewaySystemdService(name: string, contents: string): boolean {
   if (hasGatewayServiceMarker(contents)) {
     return true;
   }
-  if (!name.startsWith("newclaw-gateway")) {
+  if (!name.startsWith("iflow-gateway")) {
     return false;
   }
   return contents.toLowerCase().includes("gateway");
 }
 
-function isNewClawGatewayTaskName(name: string): boolean {
+function isiFlowGatewayTaskName(name: string): boolean {
   const normalized = name.trim().toLowerCase();
   if (!normalized) {
     return false;
   }
   const defaultName = resolveGatewayWindowsTaskName().toLowerCase();
-  return normalized === defaultName || normalized.startsWith("newclaw gateway");
+  return normalized === defaultName || normalized.startsWith("iflow gateway");
 }
 
 function tryExtractPlistLabel(contents: string): string | null {
@@ -185,7 +185,7 @@ async function scanLaunchdDir(params: {
     if (isIgnoredLaunchdLabel(label)) {
       continue;
     }
-    if (marker === "newclaw" && isNewClawGatewayLaunchdService(label, contents)) {
+    if (marker === "iflow" && isiFlowGatewayLaunchdService(label, contents)) {
       continue;
     }
     results.push({
@@ -194,7 +194,7 @@ async function scanLaunchdDir(params: {
       detail: `plist: ${fullPath}`,
       scope: params.scope,
       marker,
-      legacy: marker !== "newclaw" || isLegacyLabel(label),
+      legacy: marker !== "iflow" || isLegacyLabel(label),
     });
   }
 
@@ -232,7 +232,7 @@ async function scanSystemdDir(params: {
     if (!marker) {
       continue;
     }
-    if (marker === "newclaw" && isNewClawGatewaySystemdService(name, contents)) {
+    if (marker === "iflow" && isiFlowGatewaySystemdService(name, contents)) {
       continue;
     }
     results.push({
@@ -241,7 +241,7 @@ async function scanSystemdDir(params: {
       detail: `unit: ${fullPath}`,
       scope: params.scope,
       marker,
-      legacy: marker !== "newclaw",
+      legacy: marker !== "iflow",
     });
   }
 
@@ -414,7 +414,7 @@ export async function findExtraGatewayServices(
       if (!name) {
         continue;
       }
-      if (isNewClawGatewayTaskName(name)) {
+      if (isiFlowGatewayTaskName(name)) {
         continue;
       }
       const lowerName = name.toLowerCase();
@@ -435,7 +435,7 @@ export async function findExtraGatewayServices(
         detail: task.taskToRun ? `task: ${name}, run: ${task.taskToRun}` : name,
         scope: "system",
         marker,
-        legacy: marker !== "newclaw",
+        legacy: marker !== "iflow",
       });
     }
     return results;

@@ -1,4 +1,4 @@
-import type { NewClawConfig } from "../config/config.js";
+import type { iFlowConfig } from "../config/config.js";
 import { DEFAULT_ACCOUNT_ID, normalizeAccountId } from "../routing/session-key.js";
 
 export type DiscordTokenSource = "env" | "config" | "none";
@@ -20,7 +20,7 @@ export function normalizeDiscordToken(raw?: string | null): string | undefined {
 }
 
 export function resolveDiscordToken(
-  cfg?: NewClawConfig,
+  cfg?: iFlowConfig,
   opts: { accountId?: string | null; envToken?: string | null } = {},
 ): DiscordTokenResolution {
   const accountId = normalizeAccountId(opts.accountId);

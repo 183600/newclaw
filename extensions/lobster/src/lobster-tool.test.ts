@@ -2,10 +2,10 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import type { NewClawPluginApi, NewClawPluginToolContext } from "../../../src/plugins/types.js";
+import type { iFlowPluginApi, iFlowPluginToolContext } from "../../../src/plugins/types.js";
 import { createLobsterTool } from "./lobster-tool.js";
 
-async function writeFakeLobsterScript(scriptBody: string, prefix = "newclaw-lobster-plugin-") {
+async function writeFakeLobsterScript(scriptBody: string, prefix = "iflow-lobster-plugin-") {
   const dir = await fs.mkdtemp(path.join(os.tmpdir(), prefix));
   const isWindows = process.platform === "win32";
 
@@ -31,7 +31,7 @@ async function writeFakeLobster(params: { payload: unknown }) {
   return await writeFakeLobsterScript(scriptBody);
 }
 
-function fakeApi(overrides: Partial<NewClawPluginApi> = {}): NewClawPluginApi {
+function fakeApi(overrides: Partial<iFlowPluginApi> = {}): iFlowPluginApi {
   return {
     id: "lobster",
     name: "lobster",
@@ -57,7 +57,7 @@ function fakeApi(overrides: Partial<NewClawPluginApi> = {}): NewClawPluginApi {
   };
 }
 
-function fakeCtx(overrides: Partial<NewClawPluginToolContext> = {}): NewClawPluginToolContext {
+function fakeCtx(overrides: Partial<iFlowPluginToolContext> = {}): iFlowPluginToolContext {
   return {
     config: {},
     workspaceDir: "/tmp",
@@ -100,7 +100,7 @@ describe("lobster plugin tool", () => {
       `const payload = ${JSON.stringify(payload)};\n` +
         `console.log("noise before json");\n` +
         `process.stdout.write(JSON.stringify(payload));\n`,
-      "newclaw-lobster-plugin-noisy-",
+      "iflow-lobster-plugin-noisy-",
     );
 
     const originalPath = process.env.PATH;
@@ -213,7 +213,7 @@ describe("lobster plugin tool", () => {
   it("rejects invalid JSON from lobster", async () => {
     const { dir } = await writeFakeLobsterScript(
       `process.stdout.write("nope");\n`,
-      "newclaw-lobster-plugin-bad-",
+      "iflow-lobster-plugin-bad-",
     );
 
     const originalPath = process.env.PATH;
@@ -234,7 +234,7 @@ describe("lobster plugin tool", () => {
 
   it("can be gated off in sandboxed contexts", async () => {
     const api = fakeApi();
-    const factoryTool = (ctx: NewClawPluginToolContext) => {
+    const factoryTool = (ctx: iFlowPluginToolContext) => {
       if (ctx.sandboxed) {
         return null;
       }

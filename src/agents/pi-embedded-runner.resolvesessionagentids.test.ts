@@ -1,8 +1,8 @@
 import fs from "node:fs/promises";
 import { describe, expect, it, vi } from "vitest";
-import type { NewClawConfig } from "../config/config.js";
+import type { iFlowConfig } from "../config/config.js";
 import { resolveSessionAgentIds } from "./agent-scope.js";
-import { ensureNewClawModelsJson } from "./models-config.js";
+import { ensureiFlowModelsJson } from "./models-config.js";
 
 vi.mock("@mariozechner/pi-ai", async () => {
   const actual = await vi.importActual<typeof import("@mariozechner/pi-ai")>("@mariozechner/pi-ai");
@@ -67,10 +67,10 @@ const _makeOpenAiConfig = (modelIds: string[]) =>
         },
       },
     },
-  }) satisfies NewClawConfig;
+  }) satisfies iFlowConfig;
 
-const _ensureModels = (cfg: NewClawConfig, agentDir: string) =>
-  ensureNewClawModelsJson(cfg, agentDir) as unknown;
+const _ensureModels = (cfg: iFlowConfig, agentDir: string) =>
+  ensureiFlowModelsJson(cfg, agentDir) as unknown;
 
 const _textFromContent = (content: unknown) => {
   if (typeof content === "string") {
@@ -103,7 +103,7 @@ describe("resolveSessionAgentIds", () => {
     agents: {
       list: [{ id: "main" }, { id: "beta", default: true }],
     },
-  } as NewClawConfig;
+  } as iFlowConfig;
 
   it("falls back to the configured default when sessionKey is missing", () => {
     const { defaultAgentId, sessionAgentId } = resolveSessionAgentIds({

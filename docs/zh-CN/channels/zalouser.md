@@ -1,6 +1,6 @@
 ---
 read_when:
-  - 为 NewClaw 设置 Zalo Personal
+  - 为 iFlow 设置 Zalo Personal
   - 调试 Zalo Personal 登录或消息流
 summary: 通过 zca-cli（二维码登录）支持 Zalo 个人账号，功能与配置说明
 title: Zalo Personal
@@ -23,8 +23,8 @@ x-i18n:
 
 Zalo Personal 以插件形式提供，不包含在核心安装包中。
 
-- 通过 CLI 安装：`newclaw plugins install @newclaw/zalouser`
-- 或从源码检出安装：`newclaw plugins install ./extensions/zalouser`
+- 通过 CLI 安装：`iflow plugins install @iflow/zalouser`
+- 或从源码检出安装：`iflow plugins install ./extensions/zalouser`
 - 详情：[插件](/plugin)
 
 ## 前置条件：zca-cli
@@ -38,7 +38,7 @@ Gateway网关所在机器必须在 `PATH` 中包含 `zca` 可执行文件。
 
 1. 安装插件（见上文）。
 2. 登录（二维码方式，在 Gateway网关机器上操作）：
-   - `newclaw channels login --channel zalouser`
+   - `iflow channels login --channel zalouser`
    - 使用 Zalo 手机应用扫描终端中的二维码。
 3. 启用渠道：
 
@@ -71,9 +71,9 @@ Gateway网关所在机器必须在 `PATH` 中包含 `zca` 可执行文件。
 使用通讯录 CLI 发现联系人/群组及其 ID：
 
 ```bash
-newclaw directory self --channel zalouser
-newclaw directory peers list --channel zalouser --query "name"
-newclaw directory groups list --channel zalouser --query "work"
+iflow directory self --channel zalouser
+iflow directory peers list --channel zalouser --query "name"
+iflow directory groups list --channel zalouser --query "work"
 ```
 
 ## 限制
@@ -88,8 +88,8 @@ newclaw directory groups list --channel zalouser --query "work"
 
 通过以下方式批准：
 
-- `newclaw pairing list zalouser`
-- `newclaw pairing approve zalouser <code>`
+- `iflow pairing list zalouser`
+- `iflow pairing approve zalouser <code>`
 
 ## 群组访问（可选）
 
@@ -99,7 +99,7 @@ newclaw directory groups list --channel zalouser --query "work"
   - `channels.zalouser.groups`（键为群组 ID 或名称）
 - 禁止所有群组：`channels.zalouser.groupPolicy = "disabled"`。
 - 配置向导可以提示设置群组允许列表。
-- 启动时，NewClaw 会将允许列表中的群组/用户名称解析为 ID 并记录映射关系；未解析的条目保持原样。
+- 启动时，iFlow 会将允许列表中的群组/用户名称解析为 ID 并记录映射关系；未解析的条目保持原样。
 
 示例：
 
@@ -143,5 +143,5 @@ newclaw directory groups list --channel zalouser --query "work"
 
 **登录状态无法保持：**
 
-- `newclaw channels status --probe`
-- 重新登录：`newclaw channels logout --channel zalouser && newclaw channels login --channel zalouser`
+- `iflow channels status --probe`
+- 重新登录：`iflow channels logout --channel zalouser && iflow channels login --channel zalouser`

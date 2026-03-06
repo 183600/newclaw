@@ -1,4 +1,4 @@
-import NewClawKit
+import iFlowKit
 import Observation
 import SwiftUI
 import WebKit
@@ -13,7 +13,7 @@ final class ScreenController {
     var urlString: String = ""
     var errorText: String?
 
-    /// Callback invoked when an newclaw:// deep link is tapped in the canvas
+    /// Callback invoked when an iflow:// deep link is tapped in the canvas
     var onDeepLink: ((URL) -> Void)?
 
     /// Callback invoked when the user clicks an A2UI action (e.g. button) inside the canvas web UI.
@@ -101,7 +101,7 @@ final class ScreenController {
         let js = """
         (() => {
           try {
-            const api = globalThis.__newclaw;
+            const api = globalThis.__iflow;
             if (!api) return;
             if (typeof api.setDebugStatusEnabled === 'function') {
               api.setDebugStatusEnabled(\(enabled ? "true" : "false"));
@@ -124,7 +124,7 @@ final class ScreenController {
                 let res = try await self.eval(javaScript: """
                 (() => {
                   try {
-                    const host = globalThis.newclawA2UI;
+                    const host = globalThis.iflowA2UI;
                     return !!host && typeof host.applyMessages === 'function';
                   } catch (_) { return false; }
                 })()
@@ -185,7 +185,7 @@ final class ScreenController {
 
     func snapshotBase64(
         maxWidth: CGFloat? = nil,
-        format: NewClawCanvasSnapshotFormat,
+        format: iFlowCanvasSnapshotFormat,
         quality: Double? = nil) async throws -> String
     {
         let config = WKSnapshotConfiguration()
@@ -230,7 +230,7 @@ final class ScreenController {
         subdirectory: String)
         -> URL?
     {
-        let bundle = NewClawKitResources.bundle
+        let bundle = iFlowKitResources.bundle
         return bundle.url(forResource: name, withExtension: ext, subdirectory: subdirectory)
             ?? bundle.url(forResource: name, withExtension: ext)
     }
@@ -343,7 +343,7 @@ extension Double {
 
 // MARK: - Navigation Delegate
 
-/// Handles navigation policy to intercept newclaw:// deep links from canvas
+/// Handles navigation policy to intercept iflow:// deep links from canvas
 @MainActor
 private final class ScreenNavigationDelegate: NSObject, WKNavigationDelegate {
     weak var controller: ScreenController?
@@ -358,8 +358,8 @@ private final class ScreenNavigationDelegate: NSObject, WKNavigationDelegate {
             return
         }
 
-        // Intercept newclaw:// deep links.
-        if url.scheme?.lowercased() == "newclaw" {
+        // Intercept iflow:// deep links.
+        if url.scheme?.lowercased() == "iflow" {
             decisionHandler(.cancel)
             self.controller?.onDeepLink?(url)
             return
@@ -387,7 +387,7 @@ private final class ScreenNavigationDelegate: NSObject, WKNavigationDelegate {
 }
 
 private final class CanvasA2UIActionMessageHandler: NSObject, WKScriptMessageHandler {
-    static let messageName = "newclawCanvasA2UIAction"
+    static let messageName = "iflowCanvasA2UIAction"
     static let handlerNames = [messageName]
 
     weak var controller: ScreenController?

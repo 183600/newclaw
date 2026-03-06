@@ -23,8 +23,8 @@ Gateway网关在 Linux 上完全受支持。**推荐使用 Node 作为运行时*
 ## 新手快速路径（VPS）
 
 1. 安装 Node 22+
-2. `npm i -g newclaw@latest`
-3. `newclaw onboard --install-daemon`
+2. `npm i -g iflow@latest`
+3. `iflow onboard --install-daemon`
 4. 从你的笔记本电脑：`ssh -N -L 18789:127.0.0.1:18789 <user>@<host>`
 5. 打开 `http://127.0.0.1:18789/` 并粘贴你的令牌
 
@@ -46,19 +46,19 @@ Gateway网关在 Linux 上完全受支持。**推荐使用 Node 作为运行时*
 使用以下任一方式：
 
 ```
-newclaw onboard --install-daemon
+iflow onboard --install-daemon
 ```
 
 或：
 
 ```
-newclaw gateway install
+iflow gateway install
 ```
 
 或：
 
 ```
-newclaw configure
+iflow configure
 ```
 
 出现提示时选择 **Gateway网关服务**。
@@ -66,25 +66,25 @@ newclaw configure
 修复/迁移：
 
 ```
-newclaw doctor
+iflow doctor
 ```
 
 ## 系统控制（systemd 用户单元）
 
-NewClaw 默认安装 systemd **用户**服务。对于共享或常驻服务器，请使用**系统**服务。完整的单元示例和指南请参阅 [Gateway网关运维手册](/gateway)。
+iFlow 默认安装 systemd **用户**服务。对于共享或常驻服务器，请使用**系统**服务。完整的单元示例和指南请参阅 [Gateway网关运维手册](/gateway)。
 
 最小化设置：
 
-创建 `~/.config/systemd/user/newclaw-gateway[-<profile>].service`：
+创建 `~/.config/systemd/user/iflow-gateway[-<profile>].service`：
 
 ```
 [Unit]
-Description=NewClaw Gateway网关 (profile: <profile>, v<version>)
+Description=iFlow Gateway网关 (profile: <profile>, v<version>)
 After=network-online.target
 Wants=network-online.target
 
 [Service]
-ExecStart=/usr/local/bin/newclaw gateway --port 18789
+ExecStart=/usr/local/bin/iflow gateway --port 18789
 Restart=always
 RestartSec=5
 
@@ -95,5 +95,5 @@ WantedBy=default.target
 启用服务：
 
 ```
-systemctl --user enable --now newclaw-gateway[-<profile>].service
+systemctl --user enable --now iflow-gateway[-<profile>].service
 ```

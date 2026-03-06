@@ -1,2 +1,2 @@
 export const PAIRING_APPROVED_MESSAGE =
-  "✅ NewClaw access approved. Send a message to start chatting.";
+  "✅ iFlow access approved. Send a message to start chatting.";

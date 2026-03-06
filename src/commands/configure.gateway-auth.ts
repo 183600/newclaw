@@ -1,4 +1,4 @@
-import type { NewClawConfig, GatewayAuthConfig } from "../config/config.js";
+import type { iFlowConfig, GatewayAuthConfig } from "../config/config.js";
 import type { RuntimeEnv } from "../runtime.js";
 import type { WizardPrompter } from "../wizard/prompts.js";
 import { ensureAuthProfileStore } from "../agents/auth-profiles.js";
@@ -39,10 +39,10 @@ export function buildGatewayAuthConfig(params: {
 }
 
 export async function promptAuthConfig(
-  cfg: NewClawConfig,
+  cfg: iFlowConfig,
   runtime: RuntimeEnv,
   prompter: WizardPrompter,
-): Promise<NewClawConfig> {
+): Promise<iFlowConfig> {
   const authChoice = await promptAuthChoiceGrouped({
     prompter,
     store: ensureAuthProfileStore(undefined, {

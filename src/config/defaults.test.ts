@@ -1,5 +1,5 @@
 import { describe, expect, it, beforeEach, afterEach, vi } from "vitest";
-import type { NewClawConfig } from "./types.js";
+import type { iFlowConfig } from "./types.js";
 import {
   applyMessageDefaults,
   applySessionDefaults,
@@ -13,7 +13,7 @@ import {
 
 describe("applyMessageDefaults", () => {
   it("should set default ackReactionScope when not present", () => {
-    const config = {} as NewClawConfig;
+    const config = {} as iFlowConfig;
     const result = applyMessageDefaults(config);
 
     expect(result.messages?.ackReactionScope).toBe("group-mentions");
@@ -22,7 +22,7 @@ describe("applyMessageDefaults", () => {
   it("should preserve existing ackReactionScope", () => {
     const config = {
       messages: { ackReactionScope: "all" },
-    } as NewClawConfig;
+    } as iFlowConfig;
     const result = applyMessageDefaults(config);
 
     expect(result.messages?.ackReactionScope).toBe("all");
@@ -34,7 +34,7 @@ describe("applyMessageDefaults", () => {
         format: "markdown",
         maxLength: 1000,
       },
-    } as NewClawConfig;
+    } as iFlowConfig;
     const result = applyMessageDefaults(config);
 
     expect(result.messages?.format).toBe("markdown");
@@ -54,7 +54,7 @@ describe("applySessionDefaults", () => {
   it("should ignore session.mainKey and always set to 'main'", () => {
     const config = {
       session: { mainKey: "custom" },
-    } as NewClawConfig;
+    } as iFlowConfig;
     const result = applySessionDefaults(config, { warn: mockWarn });
 
     expect(result.session?.mainKey).toBe("main");
@@ -66,7 +66,7 @@ describe("applySessionDefaults", () => {
   it("should not warn when mainKey is already 'main'", () => {
     const config = {
       session: { mainKey: "main" },
-    } as NewClawConfig;
+    } as iFlowConfig;
     const result = applySessionDefaults(config, { warn: mockWarn });
 
     expect(result.session?.mainKey).toBe("main");
@@ -74,7 +74,7 @@ describe("applySessionDefaults", () => {
   });
 
   it("should not modify config when session is undefined", () => {
-    const config = {} as NewClawConfig;
+    const config = {} as iFlowConfig;
     const result = applySessionDefaults(config, { warn: mockWarn });
 
     expect(result).toBe(config);
@@ -84,7 +84,7 @@ describe("applySessionDefaults", () => {
   it("should not modify config when session.mainKey is undefined", () => {
     const config = {
       session: {},
-    } as NewClawConfig;
+    } as iFlowConfig;
     const result = applySessionDefaults(config, { warn: mockWarn });
 
     expect(result).toBe(config);
@@ -104,7 +104,7 @@ describe("applyTalkApiKey", () => {
   it("should add talk API key when env var is set", () => {
     vi.stubEnv("ELEVENLABS_API_KEY", "test-api-key");
 
-    const config = {} as NewClawConfig;
+    const config = {} as iFlowConfig;
     const result = applyTalkApiKey(config);
 
     expect(result.talk?.apiKey).toBe("test-api-key");
@@ -115,14 +115,14 @@ describe("applyTalkApiKey", () => {
 
     const config = {
       talk: { apiKey: "existing-key" },
-    } as NewClawConfig;
+    } as iFlowConfig;
     const result = applyTalkApiKey(config);
 
     expect(result.talk?.apiKey).toBe("existing-key");
   });
 
   it("should not modify config when no env var and no existing key", () => {
-    const config = {} as NewClawConfig;
+    const config = {} as iFlowConfig;
     const result = applyTalkApiKey(config);
 
     expect(result.talk).toBeUndefined();
@@ -133,7 +133,7 @@ describe("applyAgentDefaults", () => {
   it("should set default maxConcurrent when not present", () => {
     const config = {
       agents: { defaults: {} },
-    } as NewClawConfig;
+    } as iFlowConfig;
     const result = applyAgentDefaults(config);
 
     expect(result.agents?.defaults?.maxConcurrent).toBeDefined();
@@ -143,7 +143,7 @@ describe("applyAgentDefaults", () => {
   it("should set default subagent maxConcurrent when not present", () => {
     const config = {
       agents: { defaults: {} },
-    } as NewClawConfig;
+    } as iFlowConfig;
     const result = applyAgentDefaults(config);
 
     expect(result.agents?.defaults?.subagents?.maxConcurrent).toBeDefined();
@@ -158,7 +158,7 @@ describe("applyAgentDefaults", () => {
           subagents: { maxConcurrent: 5 },
         },
       },
-    } as NewClawConfig;
+    } as iFlowConfig;
     const result = applyAgentDefaults(config);
 
     expect(result.agents?.defaults?.maxConcurrent).toBe(10);
@@ -166,7 +166,7 @@ describe("applyAgentDefaults", () => {
   });
 
   it("should create agents.defaults when agents is undefined", () => {
-    const config = {} as NewClawConfig;
+    const config = {} as iFlowConfig;
     const result = applyAgentDefaults(config);
 
     expect(result).not.toBe(config);
@@ -179,7 +179,7 @@ describe("applyLoggingDefaults", () => {
   it("should set redactSensitive to 'tools' when not present", () => {
     const config = {
       logging: {},
-    } as NewClawConfig;
+    } as iFlowConfig;
     const result = applyLoggingDefaults(config);
 
     expect(result.logging?.redactSensitive).toBe("tools");
@@ -188,14 +188,14 @@ describe("applyLoggingDefaults", () => {
   it("should preserve existing redactSensitive setting", () => {
     const config = {
       logging: { redactSensitive: "all" },
-    } as NewClawConfig;
+    } as iFlowConfig;
     const result = applyLoggingDefaults(config);
 
     expect(result.logging?.redactSensitive).toBe("all");
   });
 
   it("should not modify config when logging is undefined", () => {
-    const config = {} as NewClawConfig;
+    const config = {} as iFlowConfig;
     const result = applyLoggingDefaults(config);
 
     expect(result).toBe(config);
@@ -206,7 +206,7 @@ describe("applyCompactionDefaults", () => {
   it("should set compaction mode to 'safeguard' when not present", () => {
     const config = {
       agents: { defaults: {} },
-    } as NewClawConfig;
+    } as iFlowConfig;
     const result = applyCompactionDefaults(config);
 
     expect(result.agents?.defaults?.compaction?.mode).toBe("safeguard");
@@ -219,14 +219,14 @@ describe("applyCompactionDefaults", () => {
           compaction: { mode: "aggressive" },
         },
       },
-    } as NewClawConfig;
+    } as iFlowConfig;
     const result = applyCompactionDefaults(config);
 
     expect(result.agents?.defaults?.compaction?.mode).toBe("aggressive");
   });
 
   it("should not modify config when agents.defaults is undefined", () => {
-    const config = { agents: {} } as NewClawConfig;
+    const config = { agents: {} } as iFlowConfig;
     const result = applyCompactionDefaults(config);
 
     expect(result).toBe(config);
@@ -243,7 +243,7 @@ describe("applyModelDefaults", () => {
           },
         },
       },
-    } as NewClawConfig;
+    } as iFlowConfig;
     const result = applyModelDefaults(config);
 
     const model = result.models?.providers?.["test-provider"]?.models?.[0];
@@ -273,7 +273,7 @@ describe("applyModelDefaults", () => {
           },
         },
       },
-    } as NewClawConfig;
+    } as iFlowConfig;
     const result = applyModelDefaults(config);
 
     const model = result.models?.providers?.["test-provider"]?.models?.[0];
@@ -285,7 +285,7 @@ describe("applyModelDefaults", () => {
   });
 
   it("should not modify config when models is undefined", () => {
-    const config = {} as NewClawConfig;
+    const config = {} as iFlowConfig;
     const result = applyModelDefaults(config);
 
     expect(result).toBe(config);
