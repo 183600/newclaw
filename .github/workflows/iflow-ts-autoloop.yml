@@ -30,10 +30,11 @@ jobs:
       GH_TOKEN: ${{ github.token }}
 
     steps:
-      - name: Checkout with PAT
+      - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          token: ${{ secrets.CLAW_PAT }}
+          # 修改点：使用内置 token，无需配置额外的 Secret，解决 "Input required" 报错
+          token: ${{ github.token }}
           fetch-depth: 0
 
       - name: Ensure branch and git identity
