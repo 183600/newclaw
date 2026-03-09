@@ -1,4 +1,4 @@
-name: claw-ts-autoloop
+name: iflow-ts-autoloop
 
 on:
   workflow_dispatch:
@@ -7,7 +7,7 @@ on:
       - main
 
 concurrency:
-  group: claw-autoflow-${{ github.ref }}
+  group: iflow-autoflow-${{ github.ref }}
   cancel-in-progress: true
 
 permissions:
@@ -21,20 +21,19 @@ jobs:
       RUN_HOURS: 5
       WORK_BRANCH: main
 
-      RELEASE_MARKER_FILE: .git/claw_release_tag
+      RELEASE_MARKER_FILE: .git/iflow_release_tag
 
-      CLAW_API_KEY: ${{ secrets.CLAW_API_KEY }}
-      CLAW_BASE_URL: https://maas-api.cn-huabei-1.xf-yun.com/v2
-      CLAW_MODEL_NAME: xopkimik25
+      IFLOW_API_KEY: ${{ secrets.IFLOW_API_KEY }}
+      IFLOW_BASE_URL: https://maas-api.cn-huabei-1.xf-yun.com/v2
+      IFLOW_MODEL_NAME: xopkimik25
 
       GH_TOKEN: ${{ github.token }}
 
     steps:
-      - name: Checkout repository
+      - name: Checkout with PAT
         uses: actions/checkout@v4
         with:
-          # 修改点：使用内置 token，无需配置额外的 Secret，解决 "Input required" 报错
-          token: ${{ github.token }}
+          token: ${{ secrets.IFLOW_PAT }}
           fetch-depth: 0
 
       - name: Ensure branch and git identity
@@ -44,8 +43,8 @@ jobs:
           BRANCH="${WORK_BRANCH:-main}"
           git fetch origin "${BRANCH}" --prune
           git checkout -B "${BRANCH}" "origin/${BRANCH}"
-          git config user.name "claw-bot"
-          git config user.email "claw-bot@users.noreply.github.com"
+          git config user.name "iflow-bot"
+          git config user.email "iflow-bot@users.noreply.github.com"
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v2
@@ -66,18 +65,18 @@ jobs:
           corepack enable
           pnpm --version
 
-      - name: Install Claw CLI
+      - name: Install iFlow CLI
         shell: bash
         run: |
           set -euo pipefail
-          pnpm add -g @claw-ai/claw-cli@latest
-          claw --version
+          pnpm add -g @iflow-ai/iflow-cli@latest
+          iflow --version
 
-      - name: Verify CLAW_API_KEY
+      - name: Verify IFLOW_API_KEY
         shell: bash
         run: |
           set -euo pipefail
-          test -n "${CLAW_API_KEY:-}" || { echo "Missing CLAW_API_KEY secret"; exit 1; }
+          test -n "${IFLOW_API_KEY:-}" || { echo "Missing IFLOW_API_KEY secret"; exit 1; }
 
       - name: Install Project Dependencies (pnpm)
         shell: bash
@@ -112,7 +111,7 @@ jobs:
           MARKER_FILE="${RELEASE_MARKER_FILE}"
           if [[ ! -f "${MARKER_FILE}" ]]; then
             GIT_DIR_REAL="$(git rev-parse --git-dir 2>/dev/null || echo ".git")"
-            MARKER_FILE="${GIT_DIR_REAL%/}/claw_release_tag"
+            MARKER_FILE="${GIT_DIR_REAL%/}/iflow_release_tag"
           fi
           if [[ -f "${MARKER_FILE}" ]]; then
             echo "Release tag prepared: $(cat "${MARKER_FILE}")"
