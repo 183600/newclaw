@@ -23,7 +23,7 @@ jobs:
 
       RELEASE_MARKER_FILE: .git/iflow_release_tag
 
-      IFLOW_API_KEY: ${{ secrets.IFLOW_API_KEY }}
+      CLAW_API_KEY: ${{ secrets.CLAW_API_KEY }}
       IFLOW_BASE_URL: https://maas-api.cn-huabei-1.xf-yun.com/v2
       IFLOW_MODEL_NAME: xopkimik25
 
@@ -72,11 +72,11 @@ jobs:
           pnpm add -g @iflow-ai/iflow-cli@latest
           iflow --version
 
-      - name: Verify IFLOW_API_KEY
+      - name: Verify CLAW_API_KEY
         shell: bash
         run: |
           set -euo pipefail
-          test -n "${IFLOW_API_KEY:-}" || { echo "Missing IFLOW_API_KEY secret"; exit 1; }
+          test -n "${CLAW_API_KEY:-}" || { echo "Missing CLAW_API_KEY secret"; exit 1; }
 
       - name: Install Project Dependencies (pnpm)
         shell: bash
