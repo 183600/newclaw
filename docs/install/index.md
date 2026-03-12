@@ -1,7 +1,7 @@
 ---
-summary: "Install iFlow (recommended installer, global install, or from source)"
+summary: "Install NewClaw (recommended installer, global install, or from source)"
 read_when:
-  - Installing iFlow
+  - Installing NewClaw
   - You want to install from GitHub
 title: "Install"
 ---
@@ -13,19 +13,19 @@ Use the installer unless you have a reason not to. It sets up the CLI and runs o
 ## Quick install (recommended)
 
 ```bash
-curl -fsSL https://iflow.ai/install.sh | bash
+curl -fsSL https://newclaw.ai/install.sh | bash
 ```
 
 Windows (PowerShell):
 
 ```powershell
-iwr -useb https://iflow.ai/install.ps1 | iex
+iwr -useb https://newclaw.ai/install.ps1 | iex
 ```
 
 Next step (if you skipped onboarding):
 
 ```bash
-iflow onboard --install-daemon
+newclaw onboard --install-daemon
 ```
 
 ## System requirements
@@ -41,13 +41,13 @@ iflow onboard --install-daemon
 Installs `iflow` globally via npm and runs onboarding.
 
 ```bash
-curl -fsSL https://iflow.ai/install.sh | bash
+curl -fsSL https://newclaw.ai/install.sh | bash
 ```
 
 Installer flags:
 
 ```bash
-curl -fsSL https://iflow.ai/install.sh | bash -s -- --help
+curl -fsSL https://newclaw.ai/install.sh | bash -s -- --help
 ```
 
 Details: [Installer internals](/install/installer).
@@ -55,7 +55,7 @@ Details: [Installer internals](/install/installer).
 Non-interactive (skip onboarding):
 
 ```bash
-curl -fsSL https://iflow.ai/install.sh | bash -s -- --no-onboard
+curl -fsSL https://newclaw.ai/install.sh | bash -s -- --no-onboard
 ```
 
 ### 2) Global install (manual)
@@ -86,21 +86,21 @@ pnpm requires explicit approval for packages with build scripts. After the first
 Then:
 
 ```bash
-iflow onboard --install-daemon
+newclaw onboard --install-daemon
 ```
 
 ### 3) From source (contributors/dev)
 
 ```bash
-git clone https://github.com/iflow/iflow.git
+git clone https://github.com/newclaw/newclaw.git
 cd iflow
 pnpm install
 pnpm ui:build # auto-installs UI deps on first run
 pnpm build
-iflow onboard --install-daemon
+newclaw onboard --install-daemon
 ```
 
-Tip: if you don’t have a global install yet, run repo commands via `pnpm iflow ...`.
+Tip: if you don’t have a global install yet, run repo commands via `pnpm newclaw ...`.
 
 ### 4) Other install options
 
@@ -111,10 +111,10 @@ Tip: if you don’t have a global install yet, run repo commands via `pnpm iflow
 
 ## After install
 
-- Run onboarding: `iflow onboard --install-daemon`
-- Quick check: `iflow doctor`
-- Check gateway health: `iflow status` + `iflow health`
-- Open the dashboard: `iflow dashboard`
+- Run onboarding: `newclaw onboard --install-daemon`
+- Quick check: `newclaw doctor`
+- Check gateway health: `newclaw status` + `newclaw health`
+- Open the dashboard: `newclaw dashboard`
 
 ## Install method: npm vs git (installer)
 
@@ -127,16 +127,16 @@ The installer supports two methods:
 
 ```bash
 # Explicit npm
-curl -fsSL https://iflow.ai/install.sh | bash -s -- --install-method npm
+curl -fsSL https://newclaw.ai/install.sh | bash -s -- --install-method npm
 
 # Install from GitHub (source checkout)
-curl -fsSL https://iflow.ai/install.sh | bash -s -- --install-method git
+curl -fsSL https://newclaw.ai/install.sh | bash -s -- --install-method git
 ```
 
 Common flags:
 
 - `--install-method npm|git`
-- `--git-dir <path>` (default: `~/iflow`)
+- `--git-dir <path>` (default: `~/newclaw`)
 - `--no-git-update` (skip `git pull` when using an existing checkout)
 - `--no-prompt` (disable prompts; required in CI/automation)
 - `--dry-run` (print what would happen; make no changes)
@@ -146,12 +146,12 @@ Common flags:
 
 Equivalent env vars (useful for automation):
 
-- `IFLOW_INSTALL_METHOD=git|npm`
-- `IFLOW_GIT_DIR=...`
-- `IFLOW_GIT_UPDATE=0|1`
-- `IFLOW_NO_PROMPT=1`
-- `IFLOW_DRY_RUN=1`
-- `IFLOW_NO_ONBOARD=1`
+- `NEWCLAW_INSTALL_METHOD=git|npm`
+- `NEWCLAW_GIT_DIR=...`
+- `NEWCLAW_GIT_UPDATE=0|1`
+- `NEWCLAW_NO_PROMPT=1`
+- `NEWCLAW_DRY_RUN=1`
+- `NEWCLAW_NO_ONBOARD=1`
 - `SHARP_IGNORE_GLOBAL_LIBVIPS=0|1` (default: `1`; avoids `sharp` building against system libvips)
 
 ## Troubleshooting: `iflow` not found (PATH)

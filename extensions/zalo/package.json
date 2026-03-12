@@ -4,11 +4,11 @@
   "description": "Claw Zalo channel plugin",
   "type": "module",
   "dependencies": {
-    "iflow": "workspace:*",
+    "newclaw": "workspace:*",
     "undici": "7.20.0"
   },
   "devDependencies": {
-    "iflow": "workspace:*"
+    "newclaw": "workspace:*"
   },
   "claw": {
     "extensions": [

@@ -52,7 +52,7 @@ Keep the Gateway on loopback and let Tailscale Serve proxy it:
 Then start the gateway:
 
 ```bash
-iflow gateway
+newclaw gateway
 ```
 
 Open:
@@ -74,7 +74,7 @@ Open:
 Then start the gateway (token required for non-loopback binds):
 
 ```bash
-iflow gateway
+newclaw gateway
 ```
 
 Open:
@@ -88,7 +88,7 @@ Open:
   gateway: {
     bind: "loopback",
     tailscale: { mode: "funnel" },
-    auth: { mode: "password" }, // or IFLOW_GATEWAY_PASSWORD
+    auth: { mode: "password" }, // or NEWCLAW_GATEWAY_PASSWORD
   },
 }
 ```

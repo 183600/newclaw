@@ -11,7 +11,7 @@ title: "Agent Workspace"
 The workspace is the agent's home. It is the only working directory used for
 file tools and for workspace context. Keep it private and treat it as memory.
 
-This is separate from `~/.iflow/`, which stores config, credentials, and
+This is separate from `~/.newclaw/`, which stores config, credentials, and
 sessions.
 
 **Important:** the workspace is the **default cwd**, not a hard sandbox. Tools
@@ -19,24 +19,24 @@ resolve relative paths against the workspace, but absolute paths can still reach
 elsewhere on the host unless sandboxing is enabled. If you need isolation, use
 [`agents.defaults.sandbox`](/gateway/sandboxing) (and/or per‑agent sandbox config).
 When sandboxing is enabled and `workspaceAccess` is not `"rw"`, tools operate
-inside a sandbox workspace under `~/.iflow/sandboxes`, not your host workspace.
+inside a sandbox workspace under `~/.newclaw/sandboxes`, not your host workspace.
 
 ## Default location
 
-- Default: `~/.iflow/workspace`
-- If `IFLOW_PROFILE` is set and not `"default"`, the default becomes
-  `~/.iflow/workspace-<profile>`.
-- Override in `~/.iflow/iflow.json`:
+- Default: `~/.newclaw/workspace`
+- If `NEWCLAW_PROFILE` is set and not `"default"`, the default becomes
+  `~/.newclaw/workspace-<profile>`.
+- Override in `~/.newclaw/newclaw.json`:
 
 ```json5
 {
   agent: {
-    workspace: "~/.iflow/workspace",
+    workspace: "~/.newclaw/workspace",
   },
 }
 ```
 
-`iflow onboard`, `iflow configure`, or `iflow setup` will create the
+`newclaw onboard`, `newclaw configure`, or `newclaw setup` will create the
 workspace and seed the bootstrap files if they are missing.
 
 If you already manage the workspace files yourself, you can disable bootstrap
@@ -48,20 +48,20 @@ file creation:
 
 ## Extra workspace folders
 
-Older installs may have created `~/iflow`. Keeping multiple workspace
+Older installs may have created `~/newclaw`. Keeping multiple workspace
 directories around can cause confusing auth or state drift, because only one
 workspace is active at a time.
 
 **Recommendation:** keep a single active workspace. If you no longer use the
-extra folders, archive or move them to Trash (for example `trash ~/iflow`).
+extra folders, archive or move them to Trash (for example `trash ~/newclaw`).
 If you intentionally keep multiple workspaces, make sure
 `agents.defaults.workspace` points to the active one.
 
-`iflow doctor` warns when it detects extra workspace directories.
+`newclaw doctor` warns when it detects extra workspace directories.
 
 ## Workspace file map (what each file means)
 
-These are the standard files iFlow expects inside the workspace:
+These are the standard files NewClaw expects inside the workspace:
 
 - `AGENTS.md`
   - Operating instructions for the agent and how it should use memory.
@@ -114,20 +114,20 @@ See [Memory](/concepts/memory) for the workflow and automatic memory flush.
 - `canvas/` (optional)
   - Canvas UI files for node displays (for example `canvas/index.html`).
 
-If any bootstrap file is missing, iFlow injects a "missing file" marker into
+If any bootstrap file is missing, NewClaw injects a "missing file" marker into
 the session and continues. Large bootstrap files are truncated when injected;
 adjust the limit with `agents.defaults.bootstrapMaxChars` (default: 20000).
-`iflow setup` can recreate missing defaults without overwriting existing
+`newclaw setup` can recreate missing defaults without overwriting existing
 files.
 
 ## What is NOT in the workspace
 
-These live under `~/.iflow/` and should NOT be committed to the workspace repo:
+These live under `~/.newclaw/` and should NOT be committed to the workspace repo:
 
-- `~/.iflow/iflow.json` (config)
-- `~/.iflow/credentials/` (OAuth tokens, API keys)
-- `~/.iflow/agents/<agentId>/sessions/` (session transcripts + metadata)
-- `~/.iflow/skills/` (managed skills)
+- `~/.newclaw/newclaw.json` (config)
+- `~/.newclaw/credentials/` (OAuth tokens, API keys)
+- `~/.newclaw/agents/<agentId>/sessions/` (session transcripts + metadata)
+- `~/.newclaw/skills/` (managed skills)
 
 If you need to migrate sessions or config, copy them separately and keep them
 out of version control.
@@ -146,7 +146,7 @@ If git is installed, brand-new workspaces are initialized automatically. If this
 workspace is not already a repo, run:
 
 ```bash
-cd ~/.iflow/workspace
+cd ~/.newclaw/workspace
 git init
 git add AGENTS.md SOUL.md TOOLS.md IDENTITY.md USER.md HEARTBEAT.md memory/
 git commit -m "Add agent workspace"
@@ -201,11 +201,11 @@ git push
 Even in a private repo, avoid storing secrets in the workspace:
 
 - API keys, OAuth tokens, passwords, or private credentials.
-- Anything under `~/.iflow/`.
+- Anything under `~/.newclaw/`.
 - Raw dumps of chats or sensitive attachments.
 
 If you must store sensitive references, use placeholders and keep the real
-secret elsewhere (password manager, environment variables, or `~/.iflow/`).
+secret elsewhere (password manager, environment variables, or `~/.newclaw/`).
 
 Suggested `.gitignore` starter:
 
@@ -219,10 +219,10 @@ Suggested `.gitignore` starter:
 
 ## Moving the workspace to a new machine
 
-1. Clone the repo to the desired path (default `~/.iflow/workspace`).
-2. Set `agents.defaults.workspace` to that path in `~/.iflow/iflow.json`.
-3. Run `iflow setup --workspace <path>` to seed any missing files.
-4. If you need sessions, copy `~/.iflow/agents/<agentId>/sessions/` from the
+1. Clone the repo to the desired path (default `~/.newclaw/workspace`).
+2. Set `agents.defaults.workspace` to that path in `~/.newclaw/newclaw.json`.
+3. Run `newclaw setup --workspace <path>` to seed any missing files.
+4. If you need sessions, copy `~/.newclaw/agents/<agentId>/sessions/` from the
    old machine separately.
 
 ## Advanced notes

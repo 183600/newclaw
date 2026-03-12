@@ -1,29 +1,29 @@
 ---
-summary: "CLI reference for `iflow update` (safe-ish source update + gateway auto-restart)"
+summary: "CLI reference for `newclaw update` (safe-ish source update + gateway auto-restart)"
 read_when:
   - You want to update a source checkout safely
   - You need to understand `--update` shorthand behavior
 title: "update"
 ---
 
-# `iflow update`
+# `newclaw update`
 
-Safely update iFlow and switch between stable/beta/dev channels.
+Safely update NewClaw and switch between stable/beta/dev channels.
 
 If you installed via **npm/pnpm** (global install, no git metadata), updates happen via the package manager flow in [Updating](/install/updating).
 
 ## Usage
 
 ```bash
-iflow update
-iflow update status
-iflow update wizard
-iflow update --channel beta
-iflow update --channel dev
-iflow update --tag beta
-iflow update --no-restart
-iflow update --json
-iflow --update
+newclaw update
+newclaw update status
+newclaw update wizard
+newclaw update --channel beta
+newclaw update --channel dev
+newclaw update --tag beta
+newclaw update --no-restart
+newclaw update --json
+newclaw --update
 ```
 
 ## Options
@@ -41,9 +41,9 @@ Note: downgrades require confirmation because older versions can break configura
 Show the active update channel + git tag/branch/SHA (for source checkouts), plus update availability.
 
 ```bash
-iflow update status
-iflow update status --json
-iflow update status --timeout 10
+newclaw update status
+newclaw update status --json
+newclaw update status --timeout 10
 ```
 
 Options:
@@ -59,10 +59,10 @@ offers to create one.
 
 ## What it does
 
-When you switch channels explicitly (`--channel ...`), iFlow also keeps the
+When you switch channels explicitly (`--channel ...`), NewClaw also keeps the
 install method aligned:
 
-- `dev` → ensures a git checkout (default: `~/iflow`, override with `IFLOW_GIT_DIR`),
+- `dev` → ensures a git checkout (default: `~/newclaw`, override with `NEWCLAW_GIT_DIR`),
   updates it, and installs the global CLI from that checkout.
 - `stable`/`beta` → installs from npm using the matching dist-tag.
 
@@ -83,16 +83,16 @@ High-level:
 5. Rebases onto the selected commit (dev only).
 6. Installs deps (pnpm preferred; npm fallback).
 7. Builds + builds the Control UI.
-8. Runs `iflow doctor` as the final “safe update” check.
+8. Runs `newclaw doctor` as the final “safe update” check.
 9. Syncs plugins to the active channel (dev uses bundled extensions; stable/beta uses npm) and updates npm-installed plugins.
 
 ## `--update` shorthand
 
-`iflow --update` rewrites to `iflow update` (useful for shells and launcher scripts).
+`newclaw --update` rewrites to `newclaw update` (useful for shells and launcher scripts).
 
 ## See also
 
-- `iflow doctor` (offers to run update first on git checkouts)
+- `newclaw doctor` (offers to run update first on git checkouts)
 - [Development channels](/install/development-channels)
 - [Updating](/install/updating)
 - [CLI reference](/cli)

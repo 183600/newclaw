@@ -1,16 +1,16 @@
-# iFlow Chrome Extension (Browser Relay)
+# NewClaw Chrome Extension (Browser Relay)
 
-Purpose: attach iFlow to an existing Chrome tab so the Gateway can automate it (via the local CDP relay server).
+Purpose: attach NewClaw to an existing Chrome tab so the Gateway can automate it (via the local CDP relay server).
 
 ## Dev / load unpacked
 
-1. Build/run iFlow Gateway with browser control enabled.
+1. Build/run NewClaw Gateway with browser control enabled.
 2. Ensure the relay server is reachable at `http://127.0.0.1:18792/` (default).
 3. Install the extension to a stable path:
 
    ```bash
-   iflow browser extension install
-   iflow browser extension path
+   newclaw browser extension install
+   newclaw browser extension path
    ```
 
 4. Chrome → `chrome://extensions` → enable “Developer mode”.

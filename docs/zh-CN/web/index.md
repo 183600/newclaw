@@ -59,7 +59,7 @@ Gateway网关在与 Gateway网关 WebSocket 相同的端口上提供一个小型
 然后启动 Gateway网关：
 
 ```bash
-iflow gateway
+newclaw gateway
 ```
 
 打开：
@@ -81,7 +81,7 @@ iflow gateway
 然后启动 Gateway网关（非 local loopback 绑定需要令牌）：
 
 ```bash
-iflow gateway
+newclaw gateway
 ```
 
 打开：
@@ -95,7 +95,7 @@ iflow gateway
   gateway: {
     bind: "loopback",
     tailscale: { mode: "funnel" },
-    auth: { mode: "password" }, // 或 IFLOW_GATEWAY_PASSWORD
+    auth: { mode: "password" }, // 或 NEWCLAW_GATEWAY_PASSWORD
   },
 }
 ```

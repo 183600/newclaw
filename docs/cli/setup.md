@@ -1,14 +1,14 @@
 ---
-summary: "CLI reference for `iflow setup` (initialize config + workspace)"
+summary: "CLI reference for `newclaw setup` (initialize config + workspace)"
 read_when:
   - You’re doing first-run setup without the full onboarding wizard
   - You want to set the default workspace path
 title: "setup"
 ---
 
-# `iflow setup`
+# `newclaw setup`
 
-Initialize `~/.iflow/iflow.json` and the agent workspace.
+Initialize `~/.newclaw/newclaw.json` and the agent workspace.
 
 Related:
 
@@ -18,12 +18,12 @@ Related:
 ## Examples
 
 ```bash
-iflow setup
-iflow setup --workspace ~/.iflow/workspace
+newclaw setup
+newclaw setup --workspace ~/.newclaw/workspace
 ```
 
 To run the wizard via setup:
 
 ```bash
-iflow setup --wizard
+newclaw setup --wizard
 ```

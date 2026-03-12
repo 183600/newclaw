@@ -1,1 +1,1 @@
-console.warn("moltbot renamed -> iflow");
+console.warn("moltbot renamed -> newclaw");

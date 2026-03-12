@@ -22,7 +22,7 @@ x-i18n:
 
 在聊天中使用 `/debug` 设置**仅运行时**的配置覆盖（仅内存，不写入磁盘）。
 `/debug` 默认禁用；通过 `commands.debug: true` 启用。
-当你需要切换一些不常用的设置而又不想编辑 `iflow.json` 时，这非常方便。
+当你需要切换一些不常用的设置而又不想编辑 `newclaw.json` 时，这非常方便。
 
 示例：
 
@@ -55,25 +55,25 @@ tsx watch src/entry.ts gateway --force
 
 使用开发配置文件来隔离状态，搭建一个安全的、可随时丢弃的调试环境。有**两个** `--dev` 标志：
 
-- **全局 `--dev`（配置文件）：** 将状态隔离到 `~/.iflow-dev`，并将 Gateway网关默认端口设为 `19001`（派生端口随之偏移）。
+- **全局 `--dev`（配置文件）：** 将状态隔离到 `~/.newclaw-dev`，并将 Gateway网关默认端口设为 `19001`（派生端口随之偏移）。
 - **`gateway --dev`：告诉 Gateway网关在缺少配置和工作区时自动创建默认配置 + 工作区**（并跳过 BOOTSTRAP.md）。
 
 推荐流程（开发配置文件 + 开发引导）：
 
 ```bash
 pnpm gateway:dev
-IFLOW_PROFILE=dev iflow tui
+NEWCLAW_PROFILE=dev newclaw tui
 ```
 
-如果你还没有全局安装，可通过 `pnpm iflow ...` 运行 CLI。
+如果你还没有全局安装，可通过 `pnpm newclaw ...` 运行 CLI。
 
 具体效果：
 
 1. **配置文件隔离**（全局 `--dev`）
-   - `IFLOW_PROFILE=dev`
-   - `IFLOW_STATE_DIR=~/.iflow-dev`
-   - `IFLOW_CONFIG_PATH=~/.iflow-dev/iflow.json`
-   - `IFLOW_GATEWAY_PORT=19001`（浏览器/画布端口随之偏移）
+   - `NEWCLAW_PROFILE=dev`
+   - `NEWCLAW_STATE_DIR=~/.newclaw-dev`
+   - `NEWCLAW_CONFIG_PATH=~/.newclaw-dev/newclaw.json`
+   - `NEWCLAW_GATEWAY_PORT=19001`（浏览器/画布端口随之偏移）
 
 2. **开发引导**（`gateway --dev`）
    - 如缺少配置则写入最小配置（`gateway.mode=local`，绑定 local loopback）。
@@ -82,7 +82,7 @@ IFLOW_PROFILE=dev iflow tui
    - 如缺少工作区文件则进行初始化：
      `AGENTS.md`、`SOUL.md`、`TOOLS.md`、`IDENTITY.md`、`USER.md`、`HEARTBEAT.md`。
    - 默认身份：**C3‑PO**（礼仪机器人）。
-   - 在开发模式下跳过渠道提供商（`IFLOW_SKIP_CHANNELS=1`）。
+   - 在开发模式下跳过渠道提供商（`NEWCLAW_SKIP_CHANNELS=1`）。
 
 重置流程（全新开始）：
 
@@ -94,7 +94,7 @@ pnpm gateway:dev:reset
 如需显式指定，请使用环境变量形式：
 
 ```bash
-IFLOW_PROFILE=dev iflow gateway --dev --reset
+NEWCLAW_PROFILE=dev newclaw gateway --dev --reset
 ```
 
 `--reset` 会清除配置、凭据、会话和开发工作区（使用 `trash` 而非 `rm`），然后重新创建默认的开发环境。
@@ -102,12 +102,12 @@ IFLOW_PROFILE=dev iflow gateway --dev --reset
 提示：如果非开发 Gateway网关已在运行（launchd/systemd），请先停止它：
 
 ```bash
-iflow gateway stop
+newclaw gateway stop
 ```
 
-## 原始流日志（iFlow）
+## 原始流日志（NewClaw）
 
-iFlow 可以在任何过滤/格式化之前记录**原始助手流**。
+NewClaw 可以在任何过滤/格式化之前记录**原始助手流**。
 这是查看推理内容是以纯文本增量到达还是以独立思考块到达的最佳方式。
 
 通过 CLI 启用：
@@ -119,19 +119,19 @@ pnpm gateway:watch --force --raw-stream
 可选的路径覆盖：
 
 ```bash
-pnpm gateway:watch --force --raw-stream --raw-stream-path ~/.iflow/logs/raw-stream.jsonl
+pnpm gateway:watch --force --raw-stream --raw-stream-path ~/.newclaw/logs/raw-stream.jsonl
 ```
 
 等效的环境变量：
 
 ```bash
-IFLOW_RAW_STREAM=1
-IFLOW_RAW_STREAM_PATH=~/.iflow/logs/raw-stream.jsonl
+NEWCLAW_RAW_STREAM=1
+NEWCLAW_RAW_STREAM_PATH=~/.newclaw/logs/raw-stream.jsonl
 ```
 
 默认文件：
 
-`~/.iflow/logs/raw-stream.jsonl`
+`~/.newclaw/logs/raw-stream.jsonl`
 
 ## 原始数据块日志（pi-mono）
 

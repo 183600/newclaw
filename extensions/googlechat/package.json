@@ -7,10 +7,10 @@
     "google-auth-library": "^10.5.0"
   },
   "devDependencies": {
-    "iflow": "workspace:*"
+    "newclaw": "workspace:*"
   },
   "peerDependencies": {
-    "iflow": ">=2026.1.26"
+    "newclaw": ">=2026.1.26"
   },
   "claw": {
     "extensions": [

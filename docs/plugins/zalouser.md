@@ -1,14 +1,14 @@
 ---
 summary: "Zalo Personal plugin: QR login + messaging via zca-cli (plugin install + channel config + CLI + tool)"
 read_when:
-  - You want Zalo Personal (unofficial) support in iFlow
+  - You want Zalo Personal (unofficial) support in NewClaw
   - You are configuring or developing the zalouser plugin
 title: "Zalo Personal Plugin"
 ---
 
 # Zalo Personal (plugin)
 
-Zalo Personal support for iFlow via a plugin, using `zca-cli` to automate a normal Zalo user account.
+Zalo Personal support for NewClaw via a plugin, using `zca-cli` to automate a normal Zalo user account.
 
 > **Warning:** Unofficial automation may lead to account suspension/ban. Use at your own risk.
 
@@ -27,7 +27,7 @@ If you use a remote Gateway, install/configure it on the **machine running the G
 ### Option A: install from npm
 
 ```bash
-iflow plugins install @iflow/zalouser
+newclaw plugins install @newclaw/zalouser
 ```
 
 Restart the Gateway afterwards.
@@ -35,7 +35,7 @@ Restart the Gateway afterwards.
 ### Option B: install from a local folder (dev)
 
 ```bash
-iflow plugins install ./extensions/zalouser
+newclaw plugins install ./extensions/zalouser
 cd ./extensions/zalouser && pnpm install
 ```
 
@@ -67,11 +67,11 @@ Channel config lives under `channels.zalouser` (not `plugins.entries.*`):
 ## CLI
 
 ```bash
-iflow channels login --channel zalouser
-iflow channels logout --channel zalouser
-iflow channels status --probe
-iflow message send --channel zalouser --target <threadId> --message "Hello from iFlow"
-iflow directory peers list --channel zalouser --query "name"
+newclaw channels login --channel zalouser
+newclaw channels logout --channel zalouser
+newclaw channels status --probe
+newclaw message send --channel zalouser --target <threadId> --message "Hello from NewClaw"
+newclaw directory peers list --channel zalouser --query "name"
 ```
 
 ## Agent tool

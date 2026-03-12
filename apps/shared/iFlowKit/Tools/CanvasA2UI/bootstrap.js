@@ -4,7 +4,7 @@ import { ContextProvider } from "@lit/context";
 
 import { v0_8 } from "@a2ui/lit";
 import "@a2ui/lit/ui";
-import { themeContext } from "@iflow/a2ui-theme-context";
+import { themeContext } from "@newclaw/a2ui-theme-context";
 
 const modalStyles = css`
   dialog {
@@ -41,8 +41,7 @@ const buttonShadow = isAndroid ? "0 2px 10px rgba(6, 182, 212, 0.14)" : "0 10px 
 const statusShadow = isAndroid ? "0 2px 10px rgba(0, 0, 0, 0.18)" : "0 10px 24px rgba(0, 0, 0, 0.25)";
 const statusBlur = isAndroid ? "10px" : "14px";
 
-const iflowTheme = {
-  components: {
+  const newclawTheme = {  components: {
     AudioPlayer: emptyClasses(),
     Button: emptyClasses(),
     Card: emptyClasses(),
@@ -151,8 +150,7 @@ const iflowTheme = {
   },
 };
 
-class iFlowA2UIHost extends LitElement {
-  static properties = {
+  class NewClawA2UIHost extends LitElement {  static properties = {
     surfaces: { state: true },
     pendingAction: { state: true },
     toast: { state: true },
@@ -161,8 +159,7 @@ class iFlowA2UIHost extends LitElement {
   #processor = v0_8.Data.createSignalA2uiMessageProcessor();
   themeProvider = new ContextProvider(this, {
     context: themeContext,
-    initialValue: iflowTheme,
-  });
+          initialValue: newclawTheme,  });
 
   surfaces = [];
   pendingAction = null;
@@ -176,11 +173,10 @@ class iFlowA2UIHost extends LitElement {
       position: relative;
       box-sizing: border-box;
       padding:
-        var(--iflow-a2ui-inset-top, 0px)
-        var(--iflow-a2ui-inset-right, 0px)
-        var(--iflow-a2ui-inset-bottom, 0px)
-        var(--iflow-a2ui-inset-left, 0px);
-    }
+              var(--newclaw-a2ui-inset-top, 0px)
+              var(--newclaw-a2ui-inset-right, 0px)
+              var(--newclaw-a2ui-inset-bottom, 0px)
+              var(--newclaw-a2ui-inset-left, 0px);    }
 
     #surfaces {
       display: grid;
@@ -188,14 +184,14 @@ class iFlowA2UIHost extends LitElement {
       gap: 12px;
       height: 100%;
       overflow: auto;
-      padding-bottom: var(--iflow-a2ui-scroll-pad-bottom, 0px);
+      padding-bottom: var(--newclaw-a2ui-scroll-pad-bottom, 0px);
     }
 
     .status {
       position: absolute;
       left: 50%;
       transform: translateX(-50%);
-      top: var(--iflow-a2ui-status-top, 12px);
+      top: var(--newclaw-a2ui-status-top, 12px);
       display: inline-flex;
       align-items: center;
       gap: 8px;
@@ -216,7 +212,7 @@ class iFlowA2UIHost extends LitElement {
       position: absolute;
       left: 50%;
       transform: translateX(-50%);
-      bottom: var(--iflow-a2ui-toast-bottom, 12px);
+      bottom: var(--newclaw-a2ui-toast-bottom, 12px);
       display: inline-flex;
       align-items: center;
       gap: 8px;
@@ -242,7 +238,7 @@ class iFlowA2UIHost extends LitElement {
       position: absolute;
       left: 50%;
       transform: translateX(-50%);
-      top: var(--iflow-a2ui-empty-top, var(--iflow-a2ui-status-top, 12px));
+      top: var(--newclaw-a2ui-empty-top, var(--newclaw-a2ui-status-top, 12px));
       text-align: center;
       opacity: 0.8;
       padding: 10px 12px;
@@ -280,10 +276,10 @@ class iFlowA2UIHost extends LitElement {
       reset: () => this.reset(),
       getSurfaces: () => Array.from(this.#processor.getSurfaces().keys()),
     };
-    globalThis.iflowA2UI = api;
+    globalThis.newclawA2UI = api;
     this.addEventListener("a2uiaction", (evt) => this.#handleA2UIAction(evt));
     this.#statusListener = (evt) => this.#handleActionStatus(evt);
-    for (const eventName of ["iflow:a2ui-action-status"]) {
+    for (const eventName of ["newclaw:a2ui-action-status"]) {
       globalThis.addEventListener(eventName, this.#statusListener);
     }
     this.#syncSurfaces();
@@ -292,7 +288,7 @@ class iFlowA2UIHost extends LitElement {
   disconnectedCallback() {
     super.disconnectedCallback();
     if (this.#statusListener) {
-      for (const eventName of ["iflow:a2ui-action-status"]) {
+      for (const eventName of ["newclaw:a2ui-action-status"]) {
         globalThis.removeEventListener(eventName, this.#statusListener);
       }
       this.#statusListener = null;
@@ -397,15 +393,14 @@ class iFlowA2UIHost extends LitElement {
       ...(Object.keys(context).length ? { context } : {}),
     };
 
-    globalThis.__iflowLastA2UIAction = userAction;
+    globalThis.__newclawLastA2UIAction = userAction;
 
     const handler =
-      globalThis.webkit?.messageHandlers?.iflowCanvasA2UIAction ??
-      globalThis.iflowCanvasA2UIAction;
-    if (handler?.postMessage) {
+        globalThis.webkit?.messageHandlers?.newclawCanvasA2UIAction ??
+        globalThis.newclawCanvasA2UIAction;    if (handler?.postMessage) {
       try {
         // WebKit message handlers support structured objects; Android's JS interface expects strings.
-        if (handler === globalThis.iflowCanvasA2UIAction) {
+        if (handler === globalThis.newclawCanvasA2UIAction) {
           handler.postMessage(JSON.stringify({ userAction }));
         } else {
           handler.postMessage({ userAction });
@@ -485,6 +480,5 @@ class iFlowA2UIHost extends LitElement {
   }
 }
 
-if (!customElements.get("iflow-a2ui-host")) {
-  customElements.define("iflow-a2ui-host", iFlowA2UIHost);
-}
+  if (!customElements.get("newclaw-a2ui-host")) {
+    customElements.define("newclaw-a2ui-host", NewClawA2UIHost);}

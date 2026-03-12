@@ -1,20 +1,20 @@
 ---
-summary: "GLM model family overview + how to use it in iFlow"
+summary: "GLM model family overview + how to use it in NewClaw"
 read_when:
-  - You want GLM models in iFlow
+  - You want GLM models in NewClaw
   - You need the model naming convention and setup
 title: "GLM Models"
 ---
 
 # GLM models
 
-GLM is a **model family** (not a company) available through the Z.AI platform. In iFlow, GLM
+GLM is a **model family** (not a company) available through the Z.AI platform. In NewClaw, GLM
 models are accessed via the `zai` provider and model IDs like `zai/glm-4.7`.
 
 ## CLI setup
 
 ```bash
-iflow onboard --auth-choice zai-api-key
+newclaw onboard --auth-choice zai-api-key
 ```
 
 ## Config snippet

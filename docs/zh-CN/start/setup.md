@@ -2,7 +2,7 @@
 read_when:
   - 在新机器上进行设置
   - 你想要"最新最好的版本"同时不破坏你的个人配置
-summary: 设置指南：在保持更新的同时维护你的个性化 iFlow 配置
+summary: 设置指南：在保持更新的同时维护你的个性化 NewClaw 配置
 title: 设置
 x-i18n:
   generated_at: "2026-02-01T21:39:04Z"
@@ -19,7 +19,7 @@ x-i18n:
 
 ## 简而言之
 
-- **个性化配置存放在仓库之外：** `~/.iflow/workspace`（工作区）+ `~/.iflow/iflow.json`（配置）。
+- **个性化配置存放在仓库之外：** `~/.newclaw/workspace`（工作区）+ `~/.newclaw/newclaw.json`（配置）。
 - **稳定工作流：** 安装 macOS 应用；让它运行内置的 Gateway网关。
 - **前沿工作流：** 自行通过 `pnpm gateway:watch` 运行 Gateway网关，然后让 macOS 应用以本地模式接入。
 
@@ -33,43 +33,43 @@ x-i18n:
 
 如果你想要"100% 按我的方式定制"*同时*方便更新，请将自定义内容放在：
 
-- **配置：** `~/.iflow/iflow.json`（JSON/JSON5 风格）
-- **工作区：** `~/.iflow/workspace`（Skills、提示词、记忆；建议设为私有 git 仓库）
+- **配置：** `~/.newclaw/newclaw.json`（JSON/JSON5 风格）
+- **工作区：** `~/.newclaw/workspace`（Skills、提示词、记忆；建议设为私有 git 仓库）
 
 初始化一次：
 
 ```bash
-iflow setup
+newclaw setup
 ```
 
 在本仓库内，使用本地 CLI 入口：
 
 ```bash
-iflow setup
+newclaw setup
 ```
 
-如果你还没有全局安装，请通过 `pnpm iflow setup` 运行。
+如果你还没有全局安装，请通过 `pnpm newclaw setup` 运行。
 
 ## 稳定工作流（macOS 应用优先）
 
-1. 安装并启动 **iFlow.app**（菜单栏）。
+1. 安装并启动 **NewClaw.app**（菜单栏）。
 2. 完成新手引导/权限检查清单（TCC 授权提示）。
 3. 确保 Gateway网关处于**本地**模式并正在运行（由应用管理）。
 4. 关联聊天界面（示例：WhatsApp）：
 
 ```bash
-iflow channels login
+newclaw channels login
 ```
 
 5. 安装完整性检查：
 
 ```bash
-iflow health
+newclaw health
 ```
 
 如果你的版本中新手引导不可用：
 
-- 运行 `iflow setup`，然后 `iflow channels login`，接着手动启动 Gateway网关（`iflow gateway`）。
+- 运行 `newclaw setup`，然后 `newclaw channels login`，接着手动启动 Gateway网关（`newclaw gateway`）。
 
 ## 前沿工作流（在终端中运行 Gateway网关）
 
@@ -92,7 +92,7 @@ pnpm gateway:watch
 
 `gateway:watch` 以监视模式运行 Gateway网关，TypeScript 文件变更时自动重载。
 
-### 2) 将 macOS 应用指向你运行的 Gateway网关在 **iFlow.app** 中：
+### 2) 将 macOS 应用指向你运行的 Gateway网关在 **NewClaw.app** 中：
 
 - 连接模式：**本地**
   应用将接入在配置端口上运行的 Gateway网关。
@@ -103,33 +103,33 @@ pnpm gateway:watch
 - 或通过 CLI 验证：
 
 ```bash
-iflow health
+newclaw health
 ```
 
 ### 常见陷阱
 
 - **端口错误：** Gateway网关 WS 默认使用 `ws://127.0.0.1:18789`；保持应用 + CLI 使用相同端口。
 - **状态存储位置：**
-  - 凭据：`~/.iflow/credentials/`
-  - 会话：`~/.iflow/agents/<agentId>/sessions/`
-  - 日志：`/tmp/iflow/`
+  - 凭据：`~/.newclaw/credentials/`
+  - 会话：`~/.newclaw/agents/<agentId>/sessions/`
+  - 日志：`/tmp/newclaw/`
 
 ## 凭据存储映射
 
 在调试认证或决定备份内容时参考：
 
-- **WhatsApp**：`~/.iflow/credentials/whatsapp/<accountId>/creds.json`
+- **WhatsApp**：`~/.newclaw/credentials/whatsapp/<accountId>/creds.json`
 - **Telegram 机器人令牌**：配置/环境变量或 `channels.telegram.tokenFile`
 - **Discord 机器人令牌**：配置/环境变量（尚不支持令牌文件）
 - **Slack 令牌**：配置/环境变量（`channels.slack.*`）
-- **配对允许列表**：`~/.iflow/credentials/<channel>-allowFrom.json`
-- **模型认证配置文件**：`~/.iflow/agents/<agentId>/agent/auth-profiles.json`
-- **旧版 OAuth 导入**：`~/.iflow/credentials/oauth.json`
+- **配对允许列表**：`~/.newclaw/credentials/<channel>-allowFrom.json`
+- **模型认证配置文件**：`~/.newclaw/agents/<agentId>/agent/auth-profiles.json`
+- **旧版 OAuth 导入**：`~/.newclaw/credentials/oauth.json`
   更多详情：[安全](/gateway/security#credential-storage-map)。
 
 ## 更新（不破坏你的配置）
 
-- 将 `~/.iflow/workspace` 和 `~/.iflow/` 视为"你的东西"；不要将个人提示词/配置放入 `iflow` 仓库中。
+- 将 `~/.newclaw/workspace` 和 `~/.newclaw/` 视为"你的东西"；不要将个人提示词/配置放入 `iflow` 仓库中。
 - 更新源码：`git pull` + `pnpm install`（当 lockfile 变更时）+ 继续使用 `pnpm gateway:watch`。
 
 ## Linux（systemd 用户服务）
@@ -150,5 +150,5 @@ sudo loginctl enable-linger $USER
 - [Gateway网关运维手册](/gateway)（标志、进程管理、端口）
 - [Gateway网关配置](/gateway/configuration)（配置结构 + 示例）
 - [Discord](/channels/discord) 和 [Telegram](/channels/telegram)（回复标签 + replyToMode 设置）
-- [iFlow 助手设置](/start/iflow)
+- [NewClaw 助手设置](/start/iflow)
 - [macOS 应用](/platforms/macos)（Gateway网关生命周期）

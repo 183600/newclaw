@@ -1,12 +1,12 @@
 ---
-summary: "CLI reference for `iflow hooks` (agent hooks)"
+summary: "CLI reference for `newclaw hooks` (agent hooks)"
 read_when:
   - You want to manage agent hooks
   - You want to install or update hooks
 title: "hooks"
 ---
 
-# `iflow hooks`
+# `newclaw hooks`
 
 Manage agent hooks (event-driven automations for commands like `/new`, `/reset`, and gateway startup).
 
@@ -18,7 +18,7 @@ Related:
 ## List All Hooks
 
 ```bash
-iflow hooks list
+newclaw hooks list
 ```
 
 List all discovered hooks from workspace, managed, and bundled directories.
@@ -44,7 +44,7 @@ Ready:
 **Example (verbose):**
 
 ```bash
-iflow hooks list --verbose
+newclaw hooks list --verbose
 ```
 
 Shows missing requirements for ineligible hooks.
@@ -52,7 +52,7 @@ Shows missing requirements for ineligible hooks.
 **Example (JSON):**
 
 ```bash
-iflow hooks list --json
+newclaw hooks list --json
 ```
 
 Returns structured JSON for programmatic use.
@@ -60,7 +60,7 @@ Returns structured JSON for programmatic use.
 ## Get Hook Information
 
 ```bash
-iflow hooks info <name>
+newclaw hooks info <name>
 ```
 
 Show detailed information about a specific hook.
@@ -76,7 +76,7 @@ Show detailed information about a specific hook.
 **Example:**
 
 ```bash
-iflow hooks info session-memory
+newclaw hooks info session-memory
 ```
 
 **Output:**
@@ -90,7 +90,7 @@ Details:
   Source: iflow-bundled
   Path: /path/to/iflow/hooks/bundled/session-memory/HOOK.md
   Handler: /path/to/iflow/hooks/bundled/session-memory/handler.ts
-  Homepage: https://docs.iflow.ai/hooks#session-memory
+  Homepage: https://docs.newclaw.ai/hooks#session-memory
   Events: command:new
 
 Requirements:
@@ -100,7 +100,7 @@ Requirements:
 ## Check Hooks Eligibility
 
 ```bash
-iflow hooks check
+newclaw hooks check
 ```
 
 Show summary of hook eligibility status (how many are ready vs. not ready).
@@ -122,12 +122,12 @@ Not ready: 0
 ## Enable a Hook
 
 ```bash
-iflow hooks enable <name>
+newclaw hooks enable <name>
 ```
 
-Enable a specific hook by adding it to your config (`~/.iflow/config.json`).
+Enable a specific hook by adding it to your config (`~/.newclaw/config.json`).
 
-**Note:** Hooks managed by plugins show `plugin:<id>` in `iflow hooks list` and
+**Note:** Hooks managed by plugins show `plugin:<id>` in `newclaw hooks list` and
 can’t be enabled/disabled here. Enable/disable the plugin instead.
 
 **Arguments:**
@@ -137,7 +137,7 @@ can’t be enabled/disabled here. Enable/disable the plugin instead.
 **Example:**
 
 ```bash
-iflow hooks enable session-memory
+newclaw hooks enable session-memory
 ```
 
 **Output:**
@@ -159,7 +159,7 @@ iflow hooks enable session-memory
 ## Disable a Hook
 
 ```bash
-iflow hooks disable <name>
+newclaw hooks disable <name>
 ```
 
 Disable a specific hook by updating your config.
@@ -171,7 +171,7 @@ Disable a specific hook by updating your config.
 **Example:**
 
 ```bash
-iflow hooks disable command-logger
+newclaw hooks disable command-logger
 ```
 
 **Output:**
@@ -187,14 +187,14 @@ iflow hooks disable command-logger
 ## Install Hooks
 
 ```bash
-iflow hooks install <path-or-spec>
+newclaw hooks install <path-or-spec>
 ```
 
 Install a hook pack from a local folder/archive or npm.
 
 **What it does:**
 
-- Copies the hook pack into `~/.iflow/hooks/<id>`
+- Copies the hook pack into `~/.newclaw/hooks/<id>`
 - Enables the installed hooks in `hooks.internal.entries.*`
 - Records the install under `hooks.internal.installs`
 
@@ -208,23 +208,23 @@ Install a hook pack from a local folder/archive or npm.
 
 ```bash
 # Local directory
-iflow hooks install ./my-hook-pack
+newclaw hooks install ./my-hook-pack
 
 # Local archive
-iflow hooks install ./my-hook-pack.zip
+newclaw hooks install ./my-hook-pack.zip
 
 # NPM package
-iflow hooks install @iflow/my-hook-pack
+newclaw hooks install @newclaw/my-hook-pack
 
 # Link a local directory without copying
-iflow hooks install -l ./my-hook-pack
+newclaw hooks install -l ./my-hook-pack
 ```
 
 ## Update Hooks
 
 ```bash
-iflow hooks update <id>
-iflow hooks update --all
+newclaw hooks update <id>
+newclaw hooks update --all
 ```
 
 Update installed hook packs (npm installs only).
@@ -243,10 +243,10 @@ Saves session context to memory when you issue `/new`.
 **Enable:**
 
 ```bash
-iflow hooks enable session-memory
+newclaw hooks enable session-memory
 ```
 
-**Output:** `~/.iflow/workspace/memory/YYYY-MM-DD-slug.md`
+**Output:** `~/.newclaw/workspace/memory/YYYY-MM-DD-slug.md`
 
 **See:** [session-memory documentation](/hooks#session-memory)
 
@@ -257,22 +257,22 @@ Logs all command events to a centralized audit file.
 **Enable:**
 
 ```bash
-iflow hooks enable command-logger
+newclaw hooks enable command-logger
 ```
 
-**Output:** `~/.iflow/logs/commands.log`
+**Output:** `~/.newclaw/logs/commands.log`
 
 **View logs:**
 
 ```bash
 # Recent commands
-tail -n 20 ~/.iflow/logs/commands.log
+tail -n 20 ~/.newclaw/logs/commands.log
 
 # Pretty-print
-cat ~/.iflow/logs/commands.log | jq .
+cat ~/.newclaw/logs/commands.log | jq .
 
 # Filter by action
-grep '"action":"new"' ~/.iflow/logs/commands.log | jq .
+grep '"action":"new"' ~/.newclaw/logs/commands.log | jq .
 ```
 
 **See:** [command-logger documentation](/hooks#command-logger)
@@ -284,7 +284,7 @@ Swaps injected `SOUL.md` content with `SOUL_EVIL.md` during a purge window or by
 **Enable:**
 
 ```bash
-iflow hooks enable soul-evil
+newclaw hooks enable soul-evil
 ```
 
 **See:** [SOUL Evil Hook](/hooks/soul-evil)
@@ -298,7 +298,7 @@ Runs `BOOT.md` when the gateway starts (after channels start).
 **Enable**:
 
 ```bash
-iflow hooks enable boot-md
+newclaw hooks enable boot-md
 ```
 
 **See:** [boot-md documentation](/hooks#boot-md)

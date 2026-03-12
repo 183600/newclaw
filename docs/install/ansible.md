@@ -1,5 +1,5 @@
 ---
-summary: "Automated, hardened iFlow installation with Ansible, Tailscale VPN, and firewall isolation"
+summary: "Automated, hardened NewClaw installation with Ansible, Tailscale VPN, and firewall isolation"
 read_when:
   - You want automated server deployment with security hardening
   - You need firewall-isolated setup with VPN access
@@ -9,7 +9,7 @@ title: "Ansible"
 
 # Ansible Installation
 
-The recommended way to deploy iFlow to production servers is via **[iflow-ansible](https://github.com/iflow/iflow-ansible)** — an automated installer with security-first architecture.
+The recommended way to deploy NewClaw to production servers is via **[iflow-ansible](https://github.com/newclaw/newclaw-ansible)** — an automated installer with security-first architecture.
 
 ## Quick Start
 
@@ -19,7 +19,7 @@ One-command install:
 curl -fsSL https://raw.githubusercontent.com/iflow/iflow-ansible/main/install.sh | bash
 ```
 
-> **📦 Full guide: [github.com/iflow/iflow-ansible](https://github.com/iflow/iflow-ansible)**
+> **📦 Full guide: [github.com/newclaw/newclaw-ansible](https://github.com/newclaw/newclaw-ansible)**
 >
 > The iflow-ansible repo is the source of truth for Ansible deployment. This page is a quick overview.
 
@@ -47,14 +47,14 @@ The Ansible playbook installs and configures:
 2. **UFW firewall** (SSH + Tailscale ports only)
 3. **Docker CE + Compose V2** (for agent sandboxes)
 4. **Node.js 22.x + pnpm** (runtime dependencies)
-5. **iFlow** (host-based, not containerized)
+5. **NewClaw** (host-based, not containerized)
 6. **Systemd service** (auto-start with security hardening)
 
 Note: The gateway runs **directly on the host** (not in Docker), but agent sandboxes use Docker for isolation. See [Sandboxing](/gateway/sandboxing) for details.
 
 ## Post-Install Setup
 
-After installation completes, switch to the iflow user:
+After installation completes, switch to the newclaw user:
 
 ```bash
 sudo -i -u iflow
@@ -62,7 +62,7 @@ sudo -i -u iflow
 
 The post-install script will guide you through:
 
-1. **Onboarding wizard**: Configure iFlow settings
+1. **Onboarding wizard**: Configure NewClaw settings
 2. **Provider login**: Connect WhatsApp/Telegram/Discord/Signal
 3. **Gateway testing**: Verify the installation
 4. **Tailscale setup**: Connect to your VPN mesh
@@ -74,14 +74,14 @@ The post-install script will guide you through:
 sudo systemctl status iflow
 
 # View live logs
-sudo journalctl -u iflow -f
+sudo journalctl -u newclaw -f
 
 # Restart gateway
 sudo systemctl restart iflow
 
-# Provider login (run as iflow user)
+# Provider login (run as newclaw user)
 sudo -i -u iflow
-iflow channels login
+newclaw channels login
 ```
 
 ## Security Architecture
@@ -118,7 +118,7 @@ If you prefer manual control over the automation:
 sudo apt update && sudo apt install -y ansible git
 
 # 2. Clone repository
-git clone https://github.com/iflow/iflow-ansible.git
+git clone https://github.com/newclaw/newclaw-ansible.git
 cd iflow-ansible
 
 # 3. Install Ansible collections
@@ -131,9 +131,9 @@ ansible-galaxy collection install -r requirements.yml
 # ansible-playbook playbook.yml --ask-become-pass
 ```
 
-## Updating iFlow
+## Updating NewClaw
 
-The Ansible installer sets up iFlow for manual updates. See [Updating](/install/updating) for the standard update flow.
+The Ansible installer sets up NewClaw for manual updates. See [Updating](/install/updating) for the standard update flow.
 
 To re-run the Ansible playbook (e.g., for configuration changes):
 
@@ -158,14 +158,14 @@ If you're locked out:
 
 ```bash
 # Check logs
-sudo journalctl -u iflow -n 100
+sudo journalctl -u newclaw -n 100
 
 # Verify permissions
 sudo ls -la /opt/iflow
 
 # Test manual start
 sudo -i -u iflow
-cd ~/iflow
+cd ~/newclaw
 pnpm start
 ```
 
@@ -176,11 +176,11 @@ pnpm start
 sudo systemctl status docker
 
 # Check sandbox image
-sudo docker images | grep iflow-sandbox
+sudo docker images | grep newclaw-sandbox
 
 # Build sandbox image if missing
 cd /opt/iflow/iflow
-sudo -u iflow ./scripts/sandbox-setup.sh
+sudo -u newclaw ./scripts/sandbox-setup.sh
 ```
 
 ### Provider login fails
@@ -189,20 +189,20 @@ Make sure you're running as the `iflow` user:
 
 ```bash
 sudo -i -u iflow
-iflow channels login
+newclaw channels login
 ```
 
 ## Advanced Configuration
 
 For detailed security architecture and troubleshooting:
 
-- [Security Architecture](https://github.com/iflow/iflow-ansible/blob/main/docs/security.md)
-- [Technical Details](https://github.com/iflow/iflow-ansible/blob/main/docs/architecture.md)
-- [Troubleshooting Guide](https://github.com/iflow/iflow-ansible/blob/main/docs/troubleshooting.md)
+- [Security Architecture](https://github.com/newclaw/newclaw-ansible/blob/main/docs/security.md)
+- [Technical Details](https://github.com/newclaw/newclaw-ansible/blob/main/docs/architecture.md)
+- [Troubleshooting Guide](https://github.com/newclaw/newclaw-ansible/blob/main/docs/troubleshooting.md)
 
 ## Related
 
-- [iflow-ansible](https://github.com/iflow/iflow-ansible) — full deployment guide
+- [iflow-ansible](https://github.com/newclaw/newclaw-ansible) — full deployment guide
 - [Docker](/install/docker) — containerized gateway setup
 - [Sandboxing](/gateway/sandboxing) — agent sandbox configuration
 - [Multi-Agent Sandbox & Tools](/multi-agent-sandbox-tools) — per-agent isolation

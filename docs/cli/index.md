@@ -1,5 +1,5 @@
 ---
-summary: "iFlow CLI reference for `iflow` commands, subcommands, and options"
+summary: "NewClaw CLI reference for `iflow` commands, subcommands, and options"
 read_when:
   - Adding or modifying CLI commands or options
   - Documenting new command surfaces
@@ -54,10 +54,10 @@ This page describes the current CLI behavior. If commands change, update this do
 
 ## Global flags
 
-- `--dev`: isolate state under `~/.iflow-dev` and shift default ports.
-- `--profile <name>`: isolate state under `~/.iflow-<name>`.
+- `--dev`: isolate state under `~/.newclaw-dev` and shift default ports.
+- `--profile <name>`: isolate state under `~/.newclaw-<name>`.
 - `--no-color`: disable ANSI colors.
-- `--update`: shorthand for `iflow update` (source installs only).
+- `--update`: shorthand for `newclaw update` (source installs only).
 - `-V`, `--version`, `-v`: print version and exit.
 
 ## Output styling
@@ -70,7 +70,7 @@ This page describes the current CLI behavior. If commands change, update this do
 
 ## Color palette
 
-iFlow uses a lobster palette for CLI output.
+NewClaw uses a lobster palette for CLI output.
 
 - `accent` (#FF5A2D): headings, labels, primary highlights.
 - `accentBright` (#FF7A3D): command names, emphasis.
@@ -86,7 +86,7 @@ Palette source of truth: `src/terminal/palette.ts` (aka “lobster seam”).
 ## Command tree
 
 ```
-iflow [--dev] [--profile <name>] <command>
+newclaw [--dev] [--profile <name>] <command>
   setup
   onboard
   configure
@@ -237,23 +237,23 @@ iflow [--dev] [--profile <name>] <command>
   tui
 ```
 
-Note: plugins can add additional top-level commands (for example `iflow voicecall`).
+Note: plugins can add additional top-level commands (for example `newclaw voicecall`).
 
 ## Security
 
-- `iflow security audit` — audit config + local state for common security foot-guns.
-- `iflow security audit --deep` — best-effort live Gateway probe.
-- `iflow security audit --fix` — tighten safe defaults and chmod state/config.
+- `newclaw security audit` — audit config + local state for common security foot-guns.
+- `newclaw security audit --deep` — best-effort live Gateway probe.
+- `newclaw security audit --fix` — tighten safe defaults and chmod state/config.
 
 ## Plugins
 
 Manage extensions and their config:
 
-- `iflow plugins list` — discover plugins (use `--json` for machine output).
-- `iflow plugins info <id>` — show details for a plugin.
-- `iflow plugins install <path|.tgz|npm-spec>` — install a plugin (or add a plugin path to `plugins.load.paths`).
-- `iflow plugins enable <id>` / `disable <id>` — toggle `plugins.entries.<id>.enabled`.
-- `iflow plugins doctor` — report plugin load errors.
+- `newclaw plugins list` — discover plugins (use `--json` for machine output).
+- `newclaw plugins info <id>` — show details for a plugin.
+- `newclaw plugins install <path|.tgz|npm-spec>` — install a plugin (or add a plugin path to `plugins.load.paths`).
+- `newclaw plugins enable <id>` / `disable <id>` — toggle `plugins.entries.<id>.enabled`.
+- `newclaw plugins doctor` — report plugin load errors.
 
 Most plugin changes require a gateway restart. See [/plugin](/plugin).
 
@@ -261,9 +261,9 @@ Most plugin changes require a gateway restart. See [/plugin](/plugin).
 
 Vector search over `MEMORY.md` + `memory/*.md`:
 
-- `iflow memory status` — show index stats.
-- `iflow memory index` — reindex memory files.
-- `iflow memory search "<query>"` — semantic search over memory.
+- `newclaw memory status` — show index stats.
+- `newclaw memory index` — reindex memory files.
+- `newclaw memory search "<query>"` — semantic search over memory.
 
 ## Chat slash commands
 
@@ -283,7 +283,7 @@ Initialize config + workspace.
 
 Options:
 
-- `--workspace <dir>`: agent workspace path (default `~/.iflow/workspace`).
+- `--workspace <dir>`: agent workspace path (default `~/.newclaw/workspace`).
 - `--wizard`: run the onboarding wizard.
 - `--non-interactive`: run wizard without prompts.
 - `--mode <local|remote>`: wizard mode.
@@ -343,7 +343,7 @@ Interactive configuration wizard (models, channels, skills, gateway).
 
 ### `config`
 
-Non-interactive config helpers (get/set/unset). Running `iflow config` with no
+Non-interactive config helpers (get/set/unset). Running `newclaw config` with no
 subcommand launches the wizard.
 
 Subcommands:
@@ -372,8 +372,8 @@ Manage chat channel accounts (WhatsApp/Telegram/Discord/Google Chat/Slack/Matter
 Subcommands:
 
 - `channels list`: show configured channels and auth profiles.
-- `channels status`: check gateway reachability and channel health (`--probe` runs extra checks; use `iflow health` or `iflow status --deep` for gateway health probes).
-- Tip: `channels status` prints warnings with suggested fixes when it can detect common misconfigurations (then points you to `iflow doctor`).
+- `channels status`: check gateway reachability and channel health (`--probe` runs extra checks; use `newclaw health` or `newclaw status --deep` for gateway health probes).
+- Tip: `channels status` prints warnings with suggested fixes when it can detect common misconfigurations (then points you to `newclaw doctor`).
 - `channels logs`: show recent channel logs from the gateway log file.
 - `channels add`: wizard-style setup when no flags are passed; flags switch to non-interactive mode.
 - `channels remove`: disable by default; pass `--delete` to remove config entries without prompts.
@@ -413,11 +413,11 @@ More detail: [/concepts/oauth](/concepts/oauth)
 Examples:
 
 ```bash
-iflow channels add --channel telegram --account alerts --name "Alerts Bot" --token $TELEGRAM_BOT_TOKEN
-iflow channels add --channel discord --account work --name "Work Bot" --token $DISCORD_BOT_TOKEN
-iflow channels remove --channel discord --account work --delete
-iflow channels status --probe
-iflow status --deep
+newclaw channels add --channel telegram --account alerts --name "Alerts Bot" --token $TELEGRAM_BOT_TOKEN
+newclaw channels add --channel discord --account work --name "Work Bot" --token $DISCORD_BOT_TOKEN
+newclaw channels remove --channel discord --account work --delete
+newclaw channels status --probe
+newclaw status --deep
 ```
 
 ### `skills`
@@ -486,8 +486,8 @@ Subcommands:
 
 Examples:
 
-- `iflow message send --target +15555550123 --message "Hi"`
-- `iflow message poll --channel discord --target channel:123 --poll-question "Snack?" --poll-option Pizza --poll-option Sushi`
+- `newclaw message send --target +15555550123 --message "Hi"`
+- `newclaw message poll --channel discord --target channel:123 --poll-question "Snack?" --poll-option Pizza --poll-option Sushi`
 
 ### `agent`
 
@@ -572,12 +572,12 @@ Notes:
 
 ### Usage tracking
 
-iFlow can surface provider usage/quota when OAuth/API creds are available.
+NewClaw can surface provider usage/quota when OAuth/API creds are available.
 
 Surfaces:
 
 - `/status` (adds a short provider usage line when available)
-- `iflow status --usage` (prints full provider breakdown)
+- `newclaw status --usage` (prints full provider breakdown)
 - macOS menu bar (Usage section under Context)
 
 Notes:
@@ -687,7 +687,7 @@ Notes:
 
 - `gateway status` probes the Gateway RPC by default using the service’s resolved port/config (override with `--url/--token/--password`).
 - `gateway status` supports `--no-probe`, `--deep`, and `--json` for scripting.
-- `gateway status` also surfaces legacy or extra gateway services when it can detect them (`--deep` adds system-level scans). Profile-named iFlow services are treated as first-class and aren't flagged as "extra".
+- `gateway status` also surfaces legacy or extra gateway services when it can detect them (`--deep` adds system-level scans). Profile-named NewClaw services are treated as first-class and aren't flagged as "extra".
 - `gateway status` prints which config path the CLI uses vs which config the service likely uses (service env), plus the resolved probe target URL.
 - `gateway install|uninstall|start|stop|restart` support `--json` for scripting (default output stays human-friendly).
 - `gateway install` defaults to Node runtime; bun is **not recommended** (WhatsApp/Telegram bugs).
@@ -705,11 +705,11 @@ Notes:
 Examples:
 
 ```bash
-iflow logs --follow
-iflow logs --limit 200
-iflow logs --plain
-iflow logs --json
-iflow logs --no-color
+newclaw logs --follow
+newclaw logs --limit 200
+newclaw logs --plain
+newclaw logs --json
+newclaw logs --no-color
 ```
 
 ### `gateway <subcommand>`
@@ -743,13 +743,13 @@ Preferred Anthropic auth (setup-token):
 
 ```bash
 claude setup-token
-iflow models auth setup-token --provider anthropic
-iflow models status
+newclaw models auth setup-token --provider anthropic
+newclaw models status
 ```
 
 ### `models` (root)
 
-`iflow models` is an alias for `models status`.
+`newclaw models` is an alias for `models status`.
 
 Root options:
 
@@ -905,7 +905,7 @@ All `cron` commands accept `--url`, `--token`, `--timeout`, `--expect-final`.
 ## Node host
 
 `node` runs a **headless node host** or manages it as a background service. See
-[`iflow node`](/cli/node).
+[`newclaw node`](/cli/node).
 
 Subcommands:
 
@@ -960,7 +960,7 @@ Location:
 
 ## Browser
 
-Browser control CLI (dedicated Chrome/Brave/Edge/Chromium). See [`iflow browser`](/cli/browser) and the [Browser tool](/tools/browser).
+Browser control CLI (dedicated Chrome/Brave/Edge/Chromium). See [`newclaw browser`](/cli/browser) and the [Browser tool](/tools/browser).
 
 Common options:
 

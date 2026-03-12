@@ -8,7 +8,7 @@ title: "acp"
 
 # acp
 
-Run the ACP (Agent Client Protocol) bridge that talks to a iFlow Gateway.
+Run the ACP (Agent Client Protocol) bridge that talks to a NewClaw Gateway.
 
 This command speaks ACP over stdio for IDEs and forwards prompts to the Gateway
 over WebSocket. It keeps ACP sessions mapped to Gateway session keys.
@@ -16,19 +16,19 @@ over WebSocket. It keeps ACP sessions mapped to Gateway session keys.
 ## Usage
 
 ```bash
-iflow acp
+newclaw acp
 
 # Remote Gateway
-iflow acp --url wss://gateway-host:18789 --token <token>
+newclaw acp --url wss://gateway-host:18789 --token <token>
 
 # Attach to an existing session key
-iflow acp --session agent:main:main
+newclaw acp --session agent:main:main
 
 # Attach by label (must already exist)
-iflow acp --session-label "support inbox"
+newclaw acp --session-label "support inbox"
 
 # Reset the session key before the first prompt
-iflow acp --session agent:main:main --reset-session
+newclaw acp --session agent:main:main --reset-session
 ```
 
 ## ACP client (debug)
@@ -37,35 +37,35 @@ Use the built-in ACP client to sanity-check the bridge without an IDE.
 It spawns the ACP bridge and lets you type prompts interactively.
 
 ```bash
-iflow acp client
+newclaw acp client
 
 # Point the spawned bridge at a remote Gateway
-iflow acp client --server-args --url wss://gateway-host:18789 --token <token>
+newclaw acp client --server-args --url wss://gateway-host:18789 --token <token>
 
 # Override the server command (default: iflow)
-iflow acp client --server "node" --server-args iflow.mjs acp --url ws://127.0.0.1:19001
+newclaw acp client --server "node" --server-args iflow.mjs acp --url ws://127.0.0.1:19001
 ```
 
 ## How to use this
 
 Use ACP when an IDE (or other client) speaks Agent Client Protocol and you want
-it to drive a iFlow Gateway session.
+it to drive a NewClaw Gateway session.
 
 1. Ensure the Gateway is running (local or remote).
 2. Configure the Gateway target (config or flags).
-3. Point your IDE to run `iflow acp` over stdio.
+3. Point your IDE to run `newclaw acp` over stdio.
 
 Example config (persisted):
 
 ```bash
-iflow config set gateway.remote.url wss://gateway-host:18789
-iflow config set gateway.remote.token <token>
+newclaw config set gateway.remote.url wss://gateway-host:18789
+newclaw config set gateway.remote.token <token>
 ```
 
 Example direct run (no config write):
 
 ```bash
-iflow acp --url wss://gateway-host:18789 --token <token>
+newclaw acp --url wss://gateway-host:18789 --token <token>
 ```
 
 ## Selecting agents
@@ -75,9 +75,9 @@ ACP does not pick agents directly. It routes by the Gateway session key.
 Use agent-scoped session keys to target a specific agent:
 
 ```bash
-iflow acp --session agent:main:main
-iflow acp --session agent:design:main
-iflow acp --session agent:qa:bug-123
+newclaw acp --session agent:main:main
+newclaw acp --session agent:design:main
+newclaw acp --session agent:qa:bug-123
 ```
 
 Each ACP session maps to a single Gateway session key. One agent can have many
@@ -91,7 +91,7 @@ Add a custom ACP agent in `~/.config/zed/settings.json` (or use Zed’s Settings
 ```json
 {
   "agent_servers": {
-    "iFlow ACP": {
+    "NewClaw ACP": {
       "type": "custom",
       "command": "iflow",
       "args": ["acp"],
@@ -106,7 +106,7 @@ To target a specific Gateway or agent:
 ```json
 {
   "agent_servers": {
-    "iFlow ACP": {
+    "NewClaw ACP": {
       "type": "custom",
       "command": "iflow",
       "args": [
@@ -124,7 +124,7 @@ To target a specific Gateway or agent:
 }
 ```
 
-In Zed, open the Agent panel and select “iFlow ACP” to start a thread.
+In Zed, open the Agent panel and select “NewClaw ACP” to start a thread.
 
 ## Session mapping
 

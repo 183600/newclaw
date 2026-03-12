@@ -20,15 +20,15 @@ x-i18n:
 
 Zalo 以插件形式提供，不包含在核心安装中。
 
-- 通过 CLI 安装：`iflow plugins install @iflow/zalo`
+- 通过 CLI 安装：`newclaw plugins install @newclaw/zalo`
 - 或在新手引导中选择 **Zalo** 并确认安装提示
 - 详情：[插件](/plugin)
 
 ## 快速设置（新手）
 
 1. 安装 Zalo 插件：
-   - 从源码检出安装：`iflow plugins install ./extensions/zalo`
-   - 从 npm 安装（如已发布）：`iflow plugins install @iflow/zalo`
+   - 从源码检出安装：`newclaw plugins install ./extensions/zalo`
+   - 从 npm 安装（如已发布）：`newclaw plugins install @newclaw/zalo`
    - 或在新手引导中选择 **Zalo** 并确认安装提示
 2. 设置令牌：
    - 环境变量：`ZALO_BOT_TOKEN=...`
@@ -109,8 +109,8 @@ Zalo 是一款面向越南市场的即时通讯应用；其 Bot API 允许 Gatew
 
 - 默认：`channels.zalo.dmPolicy = "pairing"`。未知发送者会收到配对码；消息在批准前将被忽略（配对码 1 小时后过期）。
 - 批准方式：
-  - `iflow pairing list zalo`
-  - `iflow pairing approve zalo <CODE>`
+  - `newclaw pairing list zalo`
+  - `newclaw pairing approve zalo <CODE>`
 - 配对是默认的令牌交换方式。详情：[配对](/start/pairing)
 - `channels.zalo.allowFrom` 接受数字用户 ID（不支持用户名查找）。
 
@@ -148,15 +148,15 @@ Zalo 是一款面向越南市场的即时通讯应用；其 Bot API 允许 Gatew
 ## 投递目标（CLI/定时任务）
 
 - 使用聊天 ID 作为目标。
-- 示例：`iflow message send --channel zalo --target 123456789 --message "hi"`。
+- 示例：`newclaw message send --channel zalo --target 123456789 --message "hi"`。
 
 ## 故障排除
 
 **机器人无响应：**
 
-- 检查令牌是否有效：`iflow channels status --probe`
+- 检查令牌是否有效：`newclaw channels status --probe`
 - 验证发送者是否已批准（配对或 allowFrom）
-- 检查 Gateway网关日志：`iflow logs --follow`
+- 检查 Gateway网关日志：`newclaw logs --follow`
 
 **Webhook 未收到事件：**
 

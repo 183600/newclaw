@@ -8,7 +8,7 @@ plugins {
 }
 
 android {
-  namespace = "ai.claw.android"
+  namespace = "ai.newclaw.android"
   compileSdk = 36
 
   sourceSets {
@@ -18,7 +18,7 @@ android {
   }
 
   defaultConfig {
-    applicationId = "ai.claw.android"
+    applicationId = "ai.newclaw.android"
     minSdk = 31
     targetSdk = 36
     versionCode = 202602020

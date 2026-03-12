@@ -13,17 +13,17 @@ title: "Troubleshooting"
 Run these in order:
 
 ```bash
-iflow status
-iflow status --all
-iflow gateway probe
-iflow logs --follow
-iflow doctor
+newclaw status
+newclaw status --all
+newclaw gateway probe
+newclaw logs --follow
+newclaw doctor
 ```
 
 If the gateway is reachable, deep probes:
 
 ```bash
-iflow status --deep
+newclaw status --deep
 ```
 
 ## Common “it broke” cases
@@ -39,16 +39,16 @@ Almost always a Node/npm PATH issue. Start here:
 Re-run the installer in verbose mode to see the full trace and npm output:
 
 ```bash
-curl -fsSL https://iflow.ai/install.sh | bash -s -- --verbose
+curl -fsSL https://newclaw.ai/install.sh | bash -s -- --verbose
 ```
 
 For beta installs:
 
 ```bash
-curl -fsSL https://iflow.ai/install.sh | bash -s -- --beta --verbose
+curl -fsSL https://newclaw.ai/install.sh | bash -s -- --beta --verbose
 ```
 
-You can also set `IFLOW_VERBOSE=1` instead of the flag.
+You can also set `NEWCLAW_VERBOSE=1` instead of the flag.
 
 ### Gateway “unauthorized”, can’t connect, or keeps reconnecting
 
@@ -60,10 +60,10 @@ You can also set `IFLOW_VERBOSE=1` instead of the flag.
 - [Gateway troubleshooting](/gateway/troubleshooting)
 - [Control UI](/web/control-ui#insecure-http)
 
-### `docs.iflow.ai` shows an SSL error (Comcast/Xfinity)
+### `docs.newclaw.ai` shows an SSL error (Comcast/Xfinity)
 
-Some Comcast/Xfinity connections block `docs.iflow.ai` via Xfinity Advanced Security.
-Disable Advanced Security or add `docs.iflow.ai` to the allowlist, then retry.
+Some Comcast/Xfinity connections block `docs.newclaw.ai` via Xfinity Advanced Security.
+Disable Advanced Security or add `docs.newclaw.ai` to the allowlist, then retry.
 
 - Xfinity Advanced Security help: https://www.xfinity.com/support/articles/using-xfinity-xfi-advanced-security
 - Quick sanity checks: try a mobile hotspot or VPN to confirm it’s ISP-level filtering
@@ -83,7 +83,7 @@ Disable Advanced Security or add `docs.iflow.ai` to the allowlist, then retry.
 This usually means `agents.defaults.models` is configured as an allowlist. When it’s non-empty,
 only those provider/model keys can be selected.
 
-- Check the allowlist: `iflow config get agents.defaults.models`
+- Check the allowlist: `newclaw config get agents.defaults.models`
 - Add the model you want (or clear the allowlist) and retry `/model`
 - Use `/models` to browse the allowed providers/models
 
@@ -92,7 +92,7 @@ only those provider/model keys can be selected.
 Paste a safe report:
 
 ```bash
-iflow status --all
+newclaw status --all
 ```
 
-If you can, include the relevant log tail from `iflow logs --follow`.
+If you can, include the relevant log tail from `newclaw logs --follow`.

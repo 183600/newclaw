@@ -15,7 +15,7 @@ x-i18n:
 
 # Skills（macOS）
 
-macOS 应用通过 Gateway网关展示 iFlow Skills；不会在本地解析 Skills。
+macOS 应用通过 Gateway网关展示 NewClaw Skills；不会在本地解析 Skills。
 
 ## 数据来源
 
@@ -32,7 +32,7 @@ macOS 应用通过 Gateway网关展示 iFlow Skills；不会在本地解析 Skil
 
 ## 环境变量/API 密钥
 
-- 应用将密钥存储在 `~/.iflow/iflow.json` 的 `skills.entries.<skillKey>` 下。
+- 应用将密钥存储在 `~/.newclaw/newclaw.json` 的 `skills.entries.<skillKey>` 下。
 - `skills.update` 可修改 `enabled`、`apiKey` 和 `env`。
 
 ## 远程模式

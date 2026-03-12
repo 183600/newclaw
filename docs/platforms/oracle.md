@@ -1,19 +1,19 @@
 ---
-summary: "iFlow on Oracle Cloud (Always Free ARM)"
+summary: "NewClaw on Oracle Cloud (Always Free ARM)"
 read_when:
-  - Setting up iFlow on Oracle Cloud
-  - Looking for low-cost VPS hosting for iFlow
-  - Want 24/7 iFlow on a small server
+  - Setting up NewClaw on Oracle Cloud
+  - Looking for low-cost VPS hosting for NewClaw
+  - Want 24/7 NewClaw on a small server
 title: "Oracle Cloud"
 ---
 
-# iFlow on Oracle Cloud (OCI)
+# NewClaw on Oracle Cloud (OCI)
 
 ## Goal
 
-Run a persistent iFlow Gateway on Oracle Cloud's **Always Free** ARM tier.
+Run a persistent NewClaw Gateway on Oracle Cloud's **Always Free** ARM tier.
 
-Oracle’s free tier can be a great fit for iFlow (especially if you already have an OCI account), but it comes with tradeoffs:
+Oracle’s free tier can be a great fit for NewClaw (especially if you already have an OCI account), but it comes with tradeoffs:
 
 - ARM architecture (most things work, but some binaries may be x86-only)
 - Capacity and signup can be finicky
@@ -96,10 +96,10 @@ tailscale status
 
 **From now on, connect via Tailscale:** `ssh ubuntu@iflow` (or use the Tailscale IP).
 
-## 5) Install iFlow
+## 5) Install NewClaw
 
 ```bash
-curl -fsSL https://iflow.ai/install.sh | bash
+curl -fsSL https://newclaw.ai/install.sh | bash
 source ~/.bashrc
 ```
 
@@ -113,27 +113,27 @@ Use token auth as the default. It’s predictable and avoids needing any “inse
 
 ```bash
 # Keep the Gateway private on the VM
-iflow config set gateway.bind loopback
+newclaw config set gateway.bind loopback
 
 # Require auth for the Gateway + Control UI
-iflow config set gateway.auth.mode token
-iflow doctor --generate-gateway-token
+newclaw config set gateway.auth.mode token
+newclaw doctor --generate-gateway-token
 
 # Expose over Tailscale Serve (HTTPS + tailnet access)
-iflow config set gateway.tailscale.mode serve
-iflow config set gateway.trustedProxies '["127.0.0.1"]'
+newclaw config set gateway.tailscale.mode serve
+newclaw config set gateway.trustedProxies '["127.0.0.1"]'
 
-systemctl --user restart iflow-gateway
+systemctl --user restart newclaw-gateway
 ```
 
 ## 7) Verify
 
 ```bash
 # Check version
-iflow --version
+newclaw --version
 
 # Check daemon status
-systemctl --user status iflow-gateway
+systemctl --user status newclaw-gateway
 
 # Check Tailscale Serve
 tailscale serve status
@@ -178,7 +178,7 @@ No SSH tunnel needed. Tailscale provides:
 
 With the VCN locked down (only UDP 41641 open) and the Gateway bound to loopback, you get strong defense-in-depth: public traffic is blocked at the network edge, and admin access happens over your tailnet.
 
-This setup often removes the _need_ for extra host-based firewall rules purely to stop Internet-wide SSH brute force — but you should still keep the OS updated, run `iflow security audit`, and verify you aren’t accidentally listening on public interfaces.
+This setup often removes the _need_ for extra host-based firewall rules purely to stop Internet-wide SSH brute force — but you should still keep the OS updated, run `newclaw security audit`, and verify you aren’t accidentally listening on public interfaces.
 
 ### What's Already Protected
 
@@ -193,8 +193,8 @@ This setup often removes the _need_ for extra host-based firewall rules purely t
 
 ### Still Recommended
 
-- **Credential permissions:** `chmod 700 ~/.iflow`
-- **Security audit:** `iflow security audit`
+- **Credential permissions:** `chmod 700 ~/.newclaw`
+- **Security audit:** `newclaw security audit`
 - **System updates:** `sudo apt update && sudo apt upgrade` regularly
 - **Monitor Tailscale:** Review devices in [Tailscale admin console](https://login.tailscale.com/admin)
 
@@ -243,15 +243,15 @@ Free tier ARM instances are popular. Try:
 sudo tailscale status
 
 # Re-authenticate
-sudo tailscale up --ssh --hostname=iflow --reset
+sudo tailscale up --ssh --hostname=newclaw --reset
 ```
 
 ### Gateway won't start
 
 ```bash
-iflow gateway status
-iflow doctor --non-interactive
-journalctl --user -u iflow-gateway -n 50
+newclaw gateway status
+newclaw doctor --non-interactive
+journalctl --user -u newclaw-gateway -n 50
 ```
 
 ### Can't reach Control UI
@@ -264,7 +264,7 @@ tailscale serve status
 curl http://localhost:18789
 
 # Restart if needed
-systemctl --user restart iflow-gateway
+systemctl --user restart newclaw-gateway
 ```
 
 ### ARM binary issues
@@ -283,13 +283,13 @@ Most npm packages work fine. For binaries, look for `linux-arm64` or `aarch64` r
 
 All state lives in:
 
-- `~/.iflow/` — config, credentials, session data
-- `~/.iflow/workspace/` — workspace (SOUL.md, memory, artifacts)
+- `~/.newclaw/` — config, credentials, session data
+- `~/.newclaw/workspace/` — workspace (SOUL.md, memory, artifacts)
 
 Back up periodically:
 
 ```bash
-tar -czvf iflow-backup.tar.gz ~/.iflow ~/.iflow/workspace
+tar -czvf iflow-backup.tar.gz ~/.newclaw ~/.newclaw/workspace
 ```
 
 ---

@@ -10,11 +10,11 @@ title: "Getting Started"
 
 Goal: go from **zero** → **first working chat** (with sane defaults) as quickly as possible.
 
-Fastest chat: open the Control UI (no channel setup needed). Run `iflow dashboard`
+Fastest chat: open the Control UI (no channel setup needed). Run `newclaw dashboard`
 and chat in the browser, or open `http://127.0.0.1:18789/` on the gateway host.
 Docs: [Dashboard](/web/dashboard) and [Control UI](/web/control-ui).
 
-Recommended path: use the **CLI onboarding wizard** (`iflow onboard`). It sets up:
+Recommended path: use the **CLI onboarding wizard** (`newclaw onboard`). It sets up:
 
 - model/auth (OAuth recommended)
 - gateway settings
@@ -34,7 +34,7 @@ run on host, set an explicit per-agent override:
   "routing": {
     "agents": {
       "main": {
-        "workspace": "~/.iflow/workspace",
+        "workspace": "~/.newclaw/workspace",
         "sandbox": { "mode": "off" }
       }
     }
@@ -47,7 +47,7 @@ run on host, set an explicit per-agent override:
 - Node `>=22`
 - `pnpm` (optional; recommended if you build from source)
 - **Recommended:** Brave Search API key for web search. Easiest path:
-  `iflow configure --section web` (stores `tools.web.search.apiKey`).
+  `newclaw configure --section web` (stores `tools.web.search.apiKey`).
   See [Web tools](/tools/web).
 
 macOS: if you plan to build the apps, install Xcode / CLT. For the CLI + gateway only, Node is enough.
@@ -56,7 +56,7 @@ Windows: use **WSL2** (Ubuntu recommended). WSL2 is strongly recommended; native
 ## 1) Install the CLI (recommended)
 
 ```bash
-curl -fsSL https://iflow.ai/install.sh | bash
+curl -fsSL https://newclaw.ai/install.sh | bash
 ```
 
 Installer options (install method, non-interactive, from GitHub): [Install](/install).
@@ -64,7 +64,7 @@ Installer options (install method, non-interactive, from GitHub): [Install](/ins
 Windows (PowerShell):
 
 ```powershell
-iwr -useb https://iflow.ai/install.ps1 | iex
+iwr -useb https://newclaw.ai/install.ps1 | iex
 ```
 
 Alternative (global install):
@@ -80,7 +80,7 @@ pnpm add -g iflow@latest
 ## 2) Run the onboarding wizard (and install the service)
 
 ```bash
-iflow onboard --install-daemon
+newclaw onboard --install-daemon
 ```
 
 What you’ll choose:
@@ -98,8 +98,8 @@ Wizard doc: [Wizard](/start/wizard)
 
 - **Recommended Anthropic path:** set an API key (wizard can store it for service use). `claude setup-token` is also supported if you want to reuse Claude Code credentials.
 
-- OAuth credentials (legacy import): `~/.iflow/credentials/oauth.json`
-- Auth profiles (OAuth + API keys): `~/.iflow/agents/<agentId>/agent/auth-profiles.json`
+- OAuth credentials (legacy import): `~/.newclaw/credentials/oauth.json`
+- Auth profiles (OAuth + API keys): `~/.newclaw/agents/<agentId>/agent/auth-profiles.json`
 
 Headless/server tip: do OAuth on a normal machine first, then copy `oauth.json` to the gateway host.
 
@@ -108,13 +108,13 @@ Headless/server tip: do OAuth on a normal machine first, then copy `oauth.json` 
 If you installed the service during onboarding, the Gateway should already be running:
 
 ```bash
-iflow gateway status
+newclaw gateway status
 ```
 
 Manual run (foreground):
 
 ```bash
-iflow gateway --port 18789 --verbose
+newclaw gateway --port 18789 --verbose
 ```
 
 Dashboard (local loopback): `http://127.0.0.1:18789/`
@@ -126,9 +126,9 @@ channels. If you use WhatsApp or Telegram, run the Gateway with **Node**.
 ## 3.5) Quick verify (2 min)
 
 ```bash
-iflow status
-iflow health
-iflow security audit --deep
+newclaw status
+newclaw health
+newclaw security audit --deep
 ```
 
 ## 4) Pair + connect your first chat surface
@@ -136,7 +136,7 @@ iflow security audit --deep
 ### WhatsApp (QR login)
 
 ```bash
-iflow channels login
+newclaw channels login
 ```
 
 Scan via WhatsApp → Settings → Linked Devices.
@@ -159,26 +159,26 @@ Default posture: unknown DMs get a short code and messages are not processed unt
 If your first DM gets no reply, approve the pairing:
 
 ```bash
-iflow pairing list whatsapp
-iflow pairing approve whatsapp <code>
+newclaw pairing list whatsapp
+newclaw pairing approve whatsapp <code>
 ```
 
 Pairing doc: [Pairing](/start/pairing)
 
 ## From source (development)
 
-If you’re hacking on iFlow itself, run from source:
+If you’re hacking on NewClaw itself, run from source:
 
 ```bash
-git clone https://github.com/iflow/iflow.git
+git clone https://github.com/newclaw/newclaw.git
 cd iflow
 pnpm install
 pnpm ui:build # auto-installs UI deps on first run
 pnpm build
-iflow onboard --install-daemon
+newclaw onboard --install-daemon
 ```
 
-If you don’t have a global install yet, run the onboarding step via `pnpm iflow ...` from the repo.
+If you don’t have a global install yet, run the onboarding step via `pnpm newclaw ...` from the repo.
 `pnpm build` also bundles A2UI assets; if you need to run just that step, use `pnpm canvas:a2ui:bundle`.
 
 Gateway (from this repo):
@@ -192,13 +192,13 @@ node iflow.mjs gateway --port 18789 --verbose
 In a new terminal, send a test message:
 
 ```bash
-iflow message send --target +15555550123 --message "Hello from iFlow"
+newclaw message send --target +15555550123 --message "Hello from NewClaw"
 ```
 
-If `iflow health` shows “no auth configured”, go back to the wizard and set OAuth/key auth — the agent won’t be able to respond without it.
+If `newclaw health` shows “no auth configured”, go back to the wizard and set OAuth/key auth — the agent won’t be able to respond without it.
 
-Tip: `iflow status --all` is the best pasteable, read-only debug report.
-Health probes: `iflow health` (or `iflow status --deep`) asks the running gateway for a health snapshot.
+Tip: `newclaw status --all` is the best pasteable, read-only debug report.
+Health probes: `newclaw health` (or `newclaw status --deep`) asks the running gateway for a health snapshot.
 
 ## Next steps (optional, but great)
 

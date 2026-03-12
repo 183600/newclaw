@@ -2,7 +2,7 @@
 read_when:
   - 添加或修改插件/扩展
   - 记录插件安装或加载规则
-summary: iFlow 插件/扩展：发现、配置与安全
+summary: NewClaw 插件/扩展：发现、配置与安全
 title: 插件
 x-i18n:
   generated_at: "2026-02-01T21:36:00Z"
@@ -17,22 +17,22 @@ x-i18n:
 
 ## 快速入门（初次接触插件？）
 
-插件就是一个**小型代码模块**，用于为 iFlow 扩展额外功能（命令、工具和 Gateway网关 RPC）。
+插件就是一个**小型代码模块**，用于为 NewClaw 扩展额外功能（命令、工具和 Gateway网关 RPC）。
 
-大多数情况下，当你需要某个尚未内置到 iFlow 核心的功能（或希望将可选功能从主安装中分离出来）时，就会使用插件。
+大多数情况下，当你需要某个尚未内置到 NewClaw 核心的功能（或希望将可选功能从主安装中分离出来）时，就会使用插件。
 
 快速上手：
 
 1. 查看已加载的插件：
 
 ```bash
-iflow plugins list
+newclaw plugins list
 ```
 
 2. 安装官方插件（示例：Voice Call）：
 
 ```bash
-iflow plugins install @iflow/voice-call
+newclaw plugins install @newclaw/voice-call
 ```
 
 3. 重启 Gateway网关，然后在 `plugins.entries.<id>.config` 下进行配置。
@@ -41,21 +41,21 @@ iflow plugins install @iflow/voice-call
 
 ## 可用插件（官方）
 
-- 自 2026.1.15 起，Microsoft Teams 仅以插件形式提供；如果使用 Teams，请安装 `@iflow/msteams`。
+- 自 2026.1.15 起，Microsoft Teams 仅以插件形式提供；如果使用 Teams，请安装 `@newclaw/msteams`。
 - Memory (Core) — 内置记忆搜索插件（默认通过 `plugins.slots.memory` 启用）
 - Memory (LanceDB) — 内置长期记忆插件（自动召回/捕获；设置 `plugins.slots.memory = "memory-lancedb"`）
-- [Voice Call](/plugins/voice-call) — `@iflow/voice-call`
-- [Zalo Personal](/plugins/zalouser) — `@iflow/zalouser`
-- [Matrix](/channels/matrix) — `@iflow/matrix`
-- [Nostr](/channels/nostr) — `@iflow/nostr`
-- [Zalo](/channels/zalo) — `@iflow/zalo`
-- [Microsoft Teams](/channels/msteams) — `@iflow/msteams`
+- [Voice Call](/plugins/voice-call) — `@newclaw/voice-call`
+- [Zalo Personal](/plugins/zalouser) — `@newclaw/zalouser`
+- [Matrix](/channels/matrix) — `@newclaw/matrix`
+- [Nostr](/channels/nostr) — `@newclaw/nostr`
+- [Zalo](/channels/zalo) — `@newclaw/zalo`
+- [Microsoft Teams](/channels/msteams) — `@newclaw/msteams`
 - Google Antigravity OAuth（提供商认证）— 内置为 `google-antigravity-auth`（默认禁用）
 - Gemini CLI OAuth（提供商认证）— 内置为 `google-gemini-cli-auth`（默认禁用）
 - Qwen OAuth（提供商认证）— 内置为 `qwen-portal-auth`（默认禁用）
 - Copilot Proxy（提供商认证）— 本地 VS Code Copilot Proxy 桥接；与内置的 `github-copilot` 设备登录不同（内置，默认禁用）
 
-iFlow 插件是**TypeScript 模块**，在运行时通过 jiti 加载。**配置验证不会执行插件代码**；而是使用插件清单和 JSON Schema。参见[插件清单](/plugins/manifest)。
+NewClaw 插件是**TypeScript 模块**，在运行时通过 jiti 加载。**配置验证不会执行插件代码**；而是使用插件清单和 JSON Schema。参见[插件清单](/plugins/manifest)。
 
 插件可以注册：
 
@@ -77,7 +77,7 @@ iFlow 插件是**TypeScript 模块**，在运行时通过 jiti 加载。**配置
 
 ```ts
 const result = await api.runtime.tts.textToSpeechTelephony({
-  text: "Hello from iFlow",
+  text: "Hello from NewClaw",
   cfg: api.config,
 });
 ```
@@ -90,7 +90,7 @@ const result = await api.runtime.tts.textToSpeechTelephony({
 
 ## 发现与优先级
 
-iFlow 按以下顺序扫描：
+NewClaw 按以下顺序扫描：
 
 1. 配置路径
 
@@ -103,14 +103,14 @@ iFlow 按以下顺序扫描：
 
 3. 全局扩展
 
-- `~/.iflow/extensions/*.ts`
-- `~/.iflow/extensions/*/index.ts`
+- `~/.newclaw/extensions/*.ts`
+- `~/.newclaw/extensions/*/index.ts`
 
-4. 内置扩展（随 iFlow 一起发布，**默认禁用**）
+4. 内置扩展（随 NewClaw 一起发布，**默认禁用**）
 
 - `<iflow>/extensions/*`
 
-内置插件必须通过 `plugins.entries.<id>.enabled` 或 `iflow plugins enable <id>` 显式启用。已安装的插件默认启用，但可以用同样的方式禁用。
+内置插件必须通过 `plugins.entries.<id>.enabled` 或 `newclaw plugins enable <id>` 显式启用。已安装的插件默认启用，但可以用同样的方式禁用。
 
 每个插件的根目录中必须包含一个 `iflow.plugin.json` 文件。如果路径指向一个文件，插件根目录就是该文件所在目录，且必须包含清单文件。
 
@@ -141,7 +141,7 @@ iFlow 按以下顺序扫描：
 
 ```json
 {
-  "name": "@iflow/nextcloud-talk",
+  "name": "@newclaw/nextcloud-talk",
   "iflow": {
     "extensions": ["./index.ts"],
     "channel": {
@@ -155,7 +155,7 @@ iFlow 按以下顺序扫描：
       "aliases": ["nc-talk", "nc"]
     },
     "install": {
-      "npmSpec": "@iflow/nextcloud-talk",
+      "npmSpec": "@newclaw/nextcloud-talk",
       "localPath": "extensions/nextcloud-talk",
       "defaultChoice": "npm"
     }
@@ -163,13 +163,13 @@ iFlow 按以下顺序扫描：
 }
 ```
 
-iFlow 还可以合并**外部渠道目录**（例如，MPM 注册表导出）。将 JSON 文件放置在以下位置之一：
+NewClaw 还可以合并**外部渠道目录**（例如，MPM 注册表导出）。将 JSON 文件放置在以下位置之一：
 
-- `~/.iflow/mpm/plugins.json`
-- `~/.iflow/mpm/catalog.json`
-- `~/.iflow/plugins/catalog.json`
+- `~/.newclaw/mpm/plugins.json`
+- `~/.newclaw/mpm/catalog.json`
+- `~/.newclaw/plugins/catalog.json`
 
-或者将 `IFLOW_PLUGIN_CATALOG_PATHS`（或 `IFLOW_MPM_CATALOG_PATHS`）指向一个或多个 JSON 文件（以逗号/分号/`PATH` 分隔）。每个文件应包含 `{ "entries": [ { "name": "@scope/pkg", "iflow": { "channel": {...}, "install": {...} } } ] }`。
+或者将 `NEWCLAW_PLUGIN_CATALOG_PATHS`（或 `NEWCLAW_MPM_CATALOG_PATHS`）指向一个或多个 JSON 文件（以逗号/分号/`PATH` 分隔）。每个文件应包含 `{ "entries": [ { "name": "@scope/pkg", "iflow": { "channel": {...}, "install": {...} } } ] }`。
 
 ## 插件 ID
 
@@ -178,7 +178,7 @@ iFlow 还可以合并**外部渠道目录**（例如，MPM 注册表导出）。
 - 包集合：`package.json` 中的 `name`
 - 独立文件：文件基本名称（`~/.../voice-call.ts` → `voice-call`）
 
-如果插件导出了 `id`，iFlow 会使用它，但当它与配置的 id 不匹配时会发出警告。
+如果插件导出了 `id`，NewClaw 会使用它，但当它与配置的 id 不匹配时会发出警告。
 
 ## 配置
 
@@ -233,7 +233,7 @@ iFlow 还可以合并**外部渠道目录**（例如，MPM 注册表导出）。
 
 控制界面使用 `config.schema`（JSON Schema + `uiHints`）来渲染更好的表单。
 
-iFlow 在运行时根据已发现的插件增强 `uiHints`：
+NewClaw 在运行时根据已发现的插件增强 `uiHints`：
 
 - 为 `plugins.entries.<id>` / `.enabled` / `.config` 添加每个插件的标签
 - 合并插件提供的可选配置字段提示到：
@@ -264,24 +264,24 @@ iFlow 在运行时根据已发现的插件增强 `uiHints`：
 ## CLI
 
 ```bash
-iflow plugins list
-iflow plugins info <id>
-iflow plugins install <path>                 # 将本地文件/目录复制到 ~/.iflow/extensions/<id>
-iflow plugins install ./extensions/voice-call # 相对路径也可以
-iflow plugins install ./plugin.tgz           # 从本地 tarball 安装
-iflow plugins install ./plugin.zip           # 从本地 zip 安装
-iflow plugins install -l ./extensions/voice-call # 链接（不复制）用于开发
-iflow plugins install @iflow/voice-call # 从 npm 安装
-iflow plugins update <id>
-iflow plugins update --all
-iflow plugins enable <id>
-iflow plugins disable <id>
-iflow plugins doctor
+newclaw plugins list
+newclaw plugins info <id>
+newclaw plugins install <path>                 # 将本地文件/目录复制到 ~/.newclaw/extensions/<id>
+newclaw plugins install ./extensions/voice-call # 相对路径也可以
+newclaw plugins install ./plugin.tgz           # 从本地 tarball 安装
+newclaw plugins install ./plugin.zip           # 从本地 zip 安装
+newclaw plugins install -l ./extensions/voice-call # 链接（不复制）用于开发
+newclaw plugins install @newclaw/voice-call # 从 npm 安装
+newclaw plugins update <id>
+newclaw plugins update --all
+newclaw plugins enable <id>
+newclaw plugins disable <id>
+newclaw plugins doctor
 ```
 
 `plugins update` 仅适用于通过 `plugins.installs` 跟踪的 npm 安装。
 
-插件也可以注册自己的顶级命令（示例：`iflow voicecall`）。
+插件也可以注册自己的顶级命令（示例：`newclaw voicecall`）。
 
 ## 插件 API（概览）
 
@@ -308,16 +308,16 @@ export default function register(api) {
 
 - 钩子目录遵循常规钩子结构（`HOOK.md` + `handler.ts`）。
 - 钩子资格规则仍然适用（操作系统/二进制文件/环境/配置要求）。
-- 插件管理的钩子在 `iflow hooks list` 中显示为 `plugin:<id>`。
-- 你不能通过 `iflow hooks` 启用/禁用插件管理的钩子；请改为启用/禁用插件。
+- 插件管理的钩子在 `newclaw hooks list` 中显示为 `plugin:<id>`。
+- 你不能通过 `newclaw hooks` 启用/禁用插件管理的钩子；请改为启用/禁用插件。
 
 ## 提供商插件（模型认证）
 
-插件可以注册**模型提供商认证**流程，这样用户可以在 iFlow 内运行 OAuth 或 API 密钥设置（无需外部脚本）。
+插件可以注册**模型提供商认证**流程，这样用户可以在 NewClaw 内运行 OAuth 或 API 密钥设置（无需外部脚本）。
 
 通过 `api.registerProvider(...)` 注册提供商。每个提供商公开一个或多个认证方法（OAuth、API 密钥、设备代码等）。这些方法驱动：
 
-- `iflow models auth login --provider <id> [--method <id>]`
+- `newclaw models auth login --provider <id> [--method <id>]`
 
 示例：
 
@@ -537,7 +537,7 @@ export default function (api) {
 - `isAuthorizedSender`：发送者是否为授权用户
 - `args`：命令后传递的参数（如果 `acceptsArgs: true`）
 - `commandBody`：完整的命令文本
-- `config`：当前的 iFlow 配置
+- `config`：当前的 NewClaw 配置
 
 命令选项：
 
@@ -600,13 +600,13 @@ export default function (api) {
 推荐的打包方式：
 
 - 主包：`iflow`（本仓库）
-- 插件：`@iflow/*` 下的独立 npm 包（示例：`@iflow/voice-call`）
+- 插件：`@newclaw/*` 下的独立 npm 包（示例：`@newclaw/voice-call`）
 
 发布约定：
 
 - 插件 `package.json` 必须包含 `iflow.extensions`，其中列出一个或多个入口文件。
 - 入口文件可以是 `.js` 或 `.ts`（jiti 在运行时加载 TS）。
-- `iflow plugins install <npm-spec>` 使用 `npm pack`，提取到 `~/.iflow/extensions/<id>/`，并在配置中启用。
+- `newclaw plugins install <npm-spec>` 使用 `npm pack`，提取到 `~/.newclaw/extensions/<id>/`，并在配置中启用。
 - 配置键稳定性：带作用域的包会被规范化为**不带作用域**的 id 用于 `plugins.entries.*`。
 
 ## 示例插件：Voice Call
@@ -615,7 +615,7 @@ export default function (api) {
 
 - 源码：`extensions/voice-call`
 - Skills：`skills/voice-call`
-- CLI：`iflow voicecall start|status`
+- CLI：`newclaw voicecall start|status`
 - 工具：`voice_call`
 - RPC：`voicecall.start`、`voicecall.status`
 - 配置（twilio）：`provider: "twilio"` + `twilio.accountSid/authToken/from`（可选 `statusCallbackUrl`、`twimlUrl`）

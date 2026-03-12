@@ -1,16 +1,16 @@
 ---
-summary: "iFlow on DigitalOcean (simple paid VPS option)"
+summary: "NewClaw on DigitalOcean (simple paid VPS option)"
 read_when:
-  - Setting up iFlow on DigitalOcean
-  - Looking for cheap VPS hosting for iFlow
+  - Setting up NewClaw on DigitalOcean
+  - Looking for cheap VPS hosting for NewClaw
 title: "DigitalOcean"
 ---
 
-# iFlow on DigitalOcean
+# NewClaw on DigitalOcean
 
 ## Goal
 
-Run a persistent iFlow Gateway on DigitalOcean for **$6/month** (or $4/mo with reserved pricing).
+Run a persistent NewClaw Gateway on DigitalOcean for **$6/month** (or $4/mo with reserved pricing).
 
 If you want a $0/month option and don’t mind ARM + provider-specific setup, see the [Oracle Cloud guide](/platforms/oracle).
 
@@ -56,7 +56,7 @@ If you want a $0/month option and don’t mind ARM + provider-specific setup, se
 ssh root@YOUR_DROPLET_IP
 ```
 
-## 3) Install iFlow
+## 3) Install NewClaw
 
 ```bash
 # Update system
@@ -66,17 +66,17 @@ apt update && apt upgrade -y
 curl -fsSL https://deb.nodesource.com/setup_22.x | bash -
 apt install -y nodejs
 
-# Install iFlow
-curl -fsSL https://iflow.ai/install.sh | bash
+# Install NewClaw
+curl -fsSL https://newclaw.ai/install.sh | bash
 
 # Verify
-iflow --version
+newclaw --version
 ```
 
 ## 4) Run Onboarding
 
 ```bash
-iflow onboard --install-daemon
+newclaw onboard --install-daemon
 ```
 
 The wizard will walk you through:
@@ -90,13 +90,13 @@ The wizard will walk you through:
 
 ```bash
 # Check status
-iflow status
+newclaw status
 
 # Check service
-systemctl --user status iflow-gateway.service
+systemctl --user status newclaw-gateway.service
 
 # View logs
-journalctl --user -u iflow-gateway.service -f
+journalctl --user -u newclaw-gateway.service -f
 ```
 
 ## 6) Access the Dashboard
@@ -120,8 +120,8 @@ curl -fsSL https://tailscale.com/install.sh | sh
 tailscale up
 
 # Configure Gateway to use Tailscale Serve
-iflow config set gateway.tailscale.mode serve
-iflow gateway restart
+newclaw config set gateway.tailscale.mode serve
+newclaw gateway restart
 ```
 
 Open: `https://<magicdns>/`
@@ -134,8 +134,8 @@ Notes:
 **Option C: Tailnet bind (no Serve)**
 
 ```bash
-iflow config set gateway.bind tailnet
-iflow gateway restart
+newclaw config set gateway.bind tailnet
+newclaw gateway restart
 ```
 
 Open: `http://<tailscale-ip>:18789` (token required).
@@ -145,14 +145,14 @@ Open: `http://<tailscale-ip>:18789` (token required).
 ### Telegram
 
 ```bash
-iflow pairing list telegram
-iflow pairing approve telegram <CODE>
+newclaw pairing list telegram
+newclaw pairing approve telegram <CODE>
 ```
 
 ### WhatsApp
 
 ```bash
-iflow channels login whatsapp
+newclaw channels login whatsapp
 # Scan QR code
 ```
 
@@ -194,13 +194,13 @@ htop
 
 All state lives in:
 
-- `~/.iflow/` — config, credentials, session data
-- `~/.iflow/workspace/` — workspace (SOUL.md, memory, etc.)
+- `~/.newclaw/` — config, credentials, session data
+- `~/.newclaw/workspace/` — workspace (SOUL.md, memory, etc.)
 
 These survive reboots. Back them up periodically:
 
 ```bash
-tar -czvf iflow-backup.tar.gz ~/.iflow ~/.iflow/workspace
+tar -czvf iflow-backup.tar.gz ~/.newclaw ~/.newclaw/workspace
 ```
 
 ---
@@ -230,9 +230,9 @@ For the full setup guide, see [Oracle Cloud](/platforms/oracle). For signup tips
 ### Gateway won't start
 
 ```bash
-iflow gateway status
-iflow doctor --non-interactive
-journalctl -u iflow --no-pager -n 50
+newclaw gateway status
+newclaw doctor --non-interactive
+journalctl -u newclaw --no-pager -n 50
 ```
 
 ### Port already in use

@@ -17,10 +17,10 @@ export function resolveIsNixMode(env: NodeJS.ProcessEnv = process.env): boolean 
 export const isNixMode = resolveIsNixMode();
 
 const LEGACY_STATE_DIRNAMES = [".iflow", ".iflowdbot", ".moltbot", ".moldbot"] as const;
-const NEW_STATE_DIRNAME = ".iflow";
-const CONFIG_FILENAME = "iflow.json";
+const NEW_STATE_DIRNAME = ".newclaw";
+const CONFIG_FILENAME = "newclaw.json";
 const LEGACY_CONFIG_FILENAMES = [
-  "iflow.json",
+  "newclaw.json",
   "clawdbot.json",
   "moltbot.json",
   "moldbot.json",
@@ -215,7 +215,7 @@ export const DEFAULT_GATEWAY_PORT = 18789;
 export function resolveGatewayLockDir(tmpdir: () => string = os.tmpdir): string {
   const base = tmpdir();
   const uid = typeof process.getuid === "function" ? process.getuid() : undefined;
-  const suffix = uid != null ? `iflow-${uid}` : "iflow";
+  const suffix = uid != null ? `newclaw-${uid}` : "newclaw";
   return path.join(base, suffix);
 }
 

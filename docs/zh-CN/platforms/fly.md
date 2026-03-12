@@ -1,5 +1,5 @@
 ---
-description: Deploy iFlow on Fly.io
+description: Deploy NewClaw on Fly.io
 title: Fly.io
 x-i18n:
   generated_at: "2026-02-01T21:21:15Z"
@@ -12,7 +12,7 @@ x-i18n:
 
 # Fly.io 部署
 
-**目标：** 在 [Fly.io](https://fly.io) 机器上运行 iFlow Gateway网关，配备持久化存储、自动 HTTPS 和 Discord/渠道访问。
+**目标：** 在 [Fly.io](https://fly.io) 机器上运行 NewClaw Gateway网关，配备持久化存储、自动 HTTPS 和 Discord/渠道访问。
 
 ## 你需要什么
 
@@ -32,7 +32,7 @@ x-i18n:
 
 ```bash
 # 克隆仓库
-git clone https://github.com/iflow/iflow.git
+git clone https://github.com/newclaw/newclaw.git
 cd iflow
 
 # 创建新的 Fly 应用（选择你自己的名称）
@@ -59,8 +59,8 @@ primary_region = "iad"
 
 [env]
   NODE_ENV = "production"
-  IFLOW_PREFER_PNPM = "1"
-  IFLOW_STATE_DIR = "/data"
+  NEWCLAW_PREFER_PNPM = "1"
+  NEWCLAW_STATE_DIR = "/data"
   NODE_OPTIONS = "--max-old-space-size=1536"
 
 [processes]
@@ -85,19 +85,19 @@ primary_region = "iad"
 
 **关键设置：**
 
-| 设置                        | 原因                                                                   |
-| --------------------------- | ---------------------------------------------------------------------- |
-| `--bind lan`                | 绑定到 `0.0.0.0`，使 Fly 的代理能够访问 Gateway网关                    |
-| `--allow-unconfigured`      | 无需配置文件即可启动（之后再创建）                                     |
-| `internal_port = 3000`      | 必须与 `--port 3000`（或 `IFLOW_GATEWAY_PORT`）匹配，用于 Fly 健康检查 |
-| `memory = "2048mb"`         | 512MB 太小；推荐 2GB                                                   |
-| `IFLOW_STATE_DIR = "/data"` | 将状态持久化到卷上                                                     |
+| 设置                          | 原因                                                                     |
+| ----------------------------- | ------------------------------------------------------------------------ |
+| `--bind lan`                  | 绑定到 `0.0.0.0`，使 Fly 的代理能够访问 Gateway网关                      |
+| `--allow-unconfigured`        | 无需配置文件即可启动（之后再创建）                                       |
+| `internal_port = 3000`        | 必须与 `--port 3000`（或 `NEWCLAW_GATEWAY_PORT`）匹配，用于 Fly 健康检查 |
+| `memory = "2048mb"`           | 512MB 太小；推荐 2GB                                                     |
+| `NEWCLAW_STATE_DIR = "/data"` | 将状态持久化到卷上                                                       |
 
 ## 3）设置密钥
 
 ```bash
 # 必需：Gateway网关令牌（用于非 local loopback 绑定）
-fly secrets set IFLOW_GATEWAY_TOKEN=$(openssl rand -hex 32)
+fly secrets set NEWCLAW_GATEWAY_TOKEN=$(openssl rand -hex 32)
 
 # 模型提供商 API 密钥
 fly secrets set ANTHROPIC_API_KEY=sk-ant-...
@@ -112,9 +112,9 @@ fly secrets set DISCORD_BOT_TOKEN=MTQ...
 
 **注意事项：**
 
-- 非 local loopback 绑定（`--bind lan`）出于安全需要 `IFLOW_GATEWAY_TOKEN`。
+- 非 local loopback 绑定（`--bind lan`）出于安全需要 `NEWCLAW_GATEWAY_TOKEN`。
 - 请像对待密码一样对待这些令牌。
-- **所有 API 密钥和令牌优先使用环境变量而非配置文件**。这样可以避免密钥出现在 `iflow.json` 中，防止意外暴露或被记录到日志。
+- **所有 API 密钥和令牌优先使用环境变量而非配置文件**。这样可以避免密钥出现在 `newclaw.json` 中，防止意外暴露或被记录到日志。
 
 ## 4）部署
 
@@ -150,7 +150,7 @@ fly ssh console
 
 ```bash
 mkdir -p /data
-cat > /data/iflow.json << 'EOF'
+cat > /data/newclaw.json << 'EOF'
 {
   "agents": {
     "defaults": {
@@ -202,7 +202,7 @@ cat > /data/iflow.json << 'EOF'
 EOF
 ```
 
-**注意：** 当 `IFLOW_STATE_DIR=/data` 时，配置路径为 `/data/iflow.json`。
+**注意：** 当 `NEWCLAW_STATE_DIR=/data` 时，配置路径为 `/data/newclaw.json`。
 
 **注意：** Discord 令牌可以来自：
 
@@ -230,7 +230,7 @@ fly open
 
 或访问 `https://my-iflow.fly.dev/`
 
-粘贴你的 Gateway网关令牌（即 `IFLOW_GATEWAY_TOKEN` 的值）进行认证。
+粘贴你的 Gateway网关令牌（即 `NEWCLAW_GATEWAY_TOKEN` 的值）进行认证。
 
 ### 日志
 
@@ -257,7 +257,7 @@ Gateway网关绑定到了 `127.0.0.1` 而不是 `0.0.0.0`。
 
 Fly 无法通过配置的端口访问 Gateway网关。
 
-**修复：** 确保 `internal_port` 与 Gateway网关端口匹配（设置 `--port 3000` 或 `IFLOW_GATEWAY_PORT=3000`）。
+**修复：** 确保 `internal_port` 与 Gateway网关端口匹配（设置 `--port 3000` 或 `NEWCLAW_GATEWAY_PORT=3000`）。
 
 ### 内存不足（OOM）/ 内存问题
 
@@ -295,12 +295,12 @@ fly machine restart <machine-id>
 
 ### 配置未被读取
 
-如果使用 `--allow-unconfigured`，Gateway网关会创建一个最小配置。你在 `/data/iflow.json` 的自定义配置应在重启后被读取。
+如果使用 `--allow-unconfigured`，Gateway网关会创建一个最小配置。你在 `/data/newclaw.json` 的自定义配置应在重启后被读取。
 
 验证配置是否存在：
 
 ```bash
-fly ssh console --command "cat /data/iflow.json"
+fly ssh console --command "cat /data/newclaw.json"
 ```
 
 ### 通过 SSH 写入配置
@@ -309,24 +309,24 @@ fly ssh console --command "cat /data/iflow.json"
 
 ```bash
 # 使用 echo + tee（从本地管道到远程）
-echo '{"your":"config"}' | fly ssh console -C "tee /data/iflow.json"
+echo '{"your":"config"}' | fly ssh console -C "tee /data/newclaw.json"
 
 # 或使用 sftp
 fly sftp shell
-> put /local/path/config.json /data/iflow.json
+> put /local/path/config.json /data/newclaw.json
 ```
 
 **注意：** 如果文件已存在，`fly sftp` 可能会失败。请先删除：
 
 ```bash
-fly ssh console --command "rm /data/iflow.json"
+fly ssh console --command "rm /data/newclaw.json"
 ```
 
 ### 状态未持久化
 
 如果重启后凭据或会话丢失，说明状态目录写入了容器文件系统。
 
-**修复：** 确保 `fly.toml` 中设置了 `IFLOW_STATE_DIR=/data` 并重新部署。
+**修复：** 确保 `fly.toml` 中设置了 `NEWCLAW_STATE_DIR=/data` 并重新部署。
 
 ## 更新
 

@@ -4,10 +4,10 @@
   "description": "Claw core memory search plugin",
   "type": "module",
   "devDependencies": {
-    "iflow": "workspace:*"
+    "newclaw": "workspace:*"
   },
   "peerDependencies": {
-    "iflow": ">=2026.1.26"
+    "newclaw": ">=2026.1.26"
   },
   "claw": {
     "extensions": [

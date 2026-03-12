@@ -1,7 +1,7 @@
 ---
 summary: "LINE Messaging API plugin setup, config, and usage"
 read_when:
-  - You want to connect iFlow to LINE
+  - You want to connect NewClaw to LINE
   - You need LINE webhook + credential setup
   - You want LINE-specific message options
 title: LINE
@@ -9,7 +9,7 @@ title: LINE
 
 # LINE (plugin)
 
-LINE connects to iFlow via the LINE Messaging API. The plugin runs as a webhook
+LINE connects to NewClaw via the LINE Messaging API. The plugin runs as a webhook
 receiver on the gateway and uses your channel access token + channel secret for
 authentication.
 
@@ -22,13 +22,13 @@ are not supported.
 Install the LINE plugin:
 
 ```bash
-iflow plugins install @iflow/line
+newclaw plugins install @newclaw/line
 ```
 
 Local checkout (when running from a git repo):
 
 ```bash
-iflow plugins install ./extensions/line
+newclaw plugins install ./extensions/line
 ```
 
 ## Setup
@@ -107,8 +107,8 @@ Direct messages default to pairing. Unknown senders get a pairing code and their
 messages are ignored until approved.
 
 ```bash
-iflow pairing list line
-iflow pairing approve line <CODE>
+newclaw pairing list line
+newclaw pairing approve line <CODE>
 ```
 
 Allowlists and policies:

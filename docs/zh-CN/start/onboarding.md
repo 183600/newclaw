@@ -2,7 +2,7 @@
 read_when:
   - 设计 macOS 新手引导助手
   - 实现认证或身份设置
-summary: iFlow 首次运行新手引导流程（macOS 应用）
+summary: NewClaw 首次运行新手引导流程（macOS 应用）
 title: 新手引导
 x-i18n:
   generated_at: "2026-02-01T21:38:45Z"
@@ -52,7 +52,7 @@ macOS 应用支持 Anthropic OAuth（Claude Pro/Max）。流程如下：
 
 - 打开浏览器进行 OAuth（PKCE）
 - 要求用户粘贴 `code#state` 值
-- 将凭据写入 `~/.iflow/credentials/oauth.json`
+- 将凭据写入 `~/.newclaw/credentials/oauth.json`
 
 其他提供商（OpenAI、自定义 API）目前通过环境变量或配置文件进行配置。
 
@@ -80,7 +80,7 @@ macOS 应用支持 Anthropic OAuth（Claude Pro/Max）。流程如下：
 
 ## 智能体引导仪式
 
-在智能体首次运行时，iFlow 会引导创建工作区（默认 `~/.iflow/workspace`）：
+在智能体首次运行时，NewClaw 会引导创建工作区（默认 `~/.newclaw/workspace`）：
 
 - 生成 `AGENTS.md`、`BOOTSTRAP.md`、`IDENTITY.md`、`USER.md` 种子文件
 - 运行简短的问答仪式（每次一个问题）
@@ -92,7 +92,7 @@ macOS 应用支持 Anthropic OAuth（Claude Pro/Max）。流程如下：
 Gmail Pub/Sub 设置目前是一个手动步骤。请使用：
 
 ```bash
-iflow webhooks gmail setup --account you@gmail.com
+newclaw webhooks gmail setup --account you@gmail.com
 ```
 
 详情请参阅 [/automation/gmail-pubsub](/automation/gmail-pubsub)。
@@ -101,5 +101,5 @@ iflow webhooks gmail setup --account you@gmail.com
 
 当 Gateway网关在另一台机器上运行时，凭据和工作区文件位于**该主机上**。如果你需要在远程模式下使用 OAuth，请在 Gateway网关主机上创建：
 
-- `~/.iflow/credentials/oauth.json`
-- `~/.iflow/agents/<agentId>/agent/auth-profiles.json`
+- `~/.newclaw/credentials/oauth.json`
+- `~/.newclaw/agents/<agentId>/agent/auth-profiles.json`

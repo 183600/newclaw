@@ -1,18 +1,18 @@
 // swift-tools-version: 6.2
-// Package manifest for the iFlow macOS companion (menu bar app + IPC library).
+// Package manifest for the NewClaw macOS companion (menu bar app + IPC library).
 
 import PackageDescription
 
 let package = Package(
-    name: "iFlow",
+    name: "NewClaw",
     platforms: [
         .macOS(.v15),
     ],
     products: [
-        .library(name: "iFlowIPC", targets: ["iFlowIPC"]),
-        .library(name: "iFlowDiscovery", targets: ["iFlowDiscovery"]),
-        .executable(name: "iFlow", targets: ["iFlow"]),
-        .executable(name: "iflow-mac", targets: ["iFlowMacCLI"]),
+        .library(name: "NewClawIPC", targets: ["NewClawIPC"]),
+        .library(name: "NewClawDiscovery", targets: ["NewClawDiscovery"]),
+        .executable(name: "NewClaw", targets: ["NewClaw"]),
+        .executable(name: "newclaw-mac", targets: ["NewClawMacCLI"]),
     ],
     dependencies: [
         .package(url: "https://github.com/orchetect/MenuBarExtraAccess", exact: "1.2.2"),
@@ -25,13 +25,13 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: "iFlowIPC",
+            name: "NewClawIPC",
             dependencies: [],
             swiftSettings: [
                 .enableUpcomingFeature("StrictConcurrency"),
             ]),
         .target(
-            name: "iFlowDiscovery",
+            name: "NewClawDiscovery",
             dependencies: [
                 .product(name: "iFlowKit", package: "iFlowKit"),
             ],
@@ -40,10 +40,10 @@ let package = Package(
                 .enableUpcomingFeature("StrictConcurrency"),
             ]),
         .executableTarget(
-            name: "iFlow",
+            name: "NewClaw",
             dependencies: [
-                "iFlowIPC",
-                "iFlowDiscovery",
+                "NewClawIPC",
+                "NewClawDiscovery",
                 .product(name: "iFlowKit", package: "iFlowKit"),
                 .product(name: "iFlowChatUI", package: "iFlowKit"),
                 .product(name: "iFlowProtocol", package: "iFlowKit"),
@@ -59,16 +59,16 @@ let package = Package(
                 "Resources/Info.plist",
             ],
             resources: [
-                .copy("Resources/iFlow.icns"),
+                .copy("Resources/NewClaw.icns"),
                 .copy("Resources/DeviceModels"),
             ],
             swiftSettings: [
                 .enableUpcomingFeature("StrictConcurrency"),
             ]),
         .executableTarget(
-            name: "iFlowMacCLI",
+            name: "NewClawMacCLI",
             dependencies: [
-                "iFlowDiscovery",
+                "NewClawDiscovery",
                 .product(name: "iFlowKit", package: "iFlowKit"),
                 .product(name: "iFlowProtocol", package: "iFlowKit"),
             ],

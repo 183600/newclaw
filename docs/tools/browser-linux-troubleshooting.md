@@ -1,5 +1,5 @@
 ---
-summary: "Fix Chrome/Brave/Edge/Chromium CDP startup issues for iFlow browser control on Linux"
+summary: "Fix Chrome/Brave/Edge/Chromium CDP startup issues for NewClaw browser control on Linux"
 read_when: "Browser control fails on Linux, especially with snap Chromium"
 title: "Browser Troubleshooting"
 ---
@@ -8,7 +8,7 @@ title: "Browser Troubleshooting"
 
 ## Problem: "Failed to start Chrome CDP on port 18800"
 
-iFlow's browser control server fails to launch Chrome/Brave/Edge/Chromium with the error:
+NewClaw's browser control server fails to launch Chrome/Brave/Edge/Chromium with the error:
 
 ```
 {"error":"Error: Failed to start Chrome CDP on port 18800 for profile \"iflow\"."}
@@ -16,7 +16,7 @@ iFlow's browser control server fails to launch Chrome/Brave/Edge/Chromium with t
 
 ### Root Cause
 
-On Ubuntu (and many Linux distros), the default Chromium installation is a **snap package**. Snap's AppArmor confinement interferes with how iFlow spawns and monitors the browser process.
+On Ubuntu (and many Linux distros), the default Chromium installation is a **snap package**. Snap's AppArmor confinement interferes with how NewClaw spawns and monitors the browser process.
 
 The `apt install chromium` command installs a stub package that redirects to snap:
 
@@ -37,7 +37,7 @@ sudo dpkg -i google-chrome-stable_current_amd64.deb
 sudo apt --fix-broken install -y  # if there are dependency errors
 ```
 
-Then update your iFlow config (`~/.iflow/iflow.json`):
+Then update your NewClaw config (`~/.newclaw/newclaw.json`):
 
 ```json
 {
@@ -52,7 +52,7 @@ Then update your iFlow config (`~/.iflow/iflow.json`):
 
 ### Solution 2: Use Snap Chromium with Attach-Only Mode
 
-If you must use snap Chromium, configure iFlow to attach to a manually-started browser:
+If you must use snap Chromium, configure NewClaw to attach to a manually-started browser:
 
 1. Update config:
 
@@ -79,9 +79,9 @@ chromium-browser --headless --no-sandbox --disable-gpu \
 3. Optionally create a systemd user service to auto-start Chrome:
 
 ```ini
-# ~/.config/systemd/user/iflow-browser.service
+# ~/.config/systemd/user/newclaw-browser.service
 [Unit]
-Description=iFlow Browser (Chrome CDP)
+Description=NewClaw Browser (Chrome CDP)
 After=network.target
 
 [Service]
@@ -93,7 +93,7 @@ RestartSec=5
 WantedBy=default.target
 ```
 
-Enable with: `systemctl --user enable --now iflow-browser.service`
+Enable with: `systemctl --user enable --now newclaw-browser.service`
 
 ### Verifying the Browser Works
 
@@ -123,15 +123,15 @@ curl -s http://127.0.0.1:18791/tabs
 
 ### Problem: "Chrome extension relay is running, but no tab is connected"
 
-You’re using the `chrome` profile (extension relay). It expects the iFlow
+You’re using the `chrome` profile (extension relay). It expects the NewClaw
 browser extension to be attached to a live tab.
 
 Fix options:
 
-1. **Use the managed browser:** `iflow browser start --browser-profile iflow`
+1. **Use the managed browser:** `newclaw browser start --browser-profile iflow`
    (or set `browser.defaultProfile: "iflow"`).
 2. **Use the extension relay:** install the extension, open a tab, and click the
-   iFlow extension icon to attach it.
+   NewClaw extension icon to attach it.
 
 Notes:
 

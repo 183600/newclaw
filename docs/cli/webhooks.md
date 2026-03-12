@@ -1,12 +1,12 @@
 ---
-summary: "CLI reference for `iflow webhooks` (webhook helpers + Gmail Pub/Sub)"
+summary: "CLI reference for `newclaw webhooks` (webhook helpers + Gmail Pub/Sub)"
 read_when:
-  - You want to wire Gmail Pub/Sub events into iFlow
+  - You want to wire Gmail Pub/Sub events into NewClaw
   - You want webhook helper commands
 title: "webhooks"
 ---
 
-# `iflow webhooks`
+# `newclaw webhooks`
 
 Webhook helpers and integrations (Gmail Pub/Sub, webhook helpers).
 
@@ -18,8 +18,8 @@ Related:
 ## Gmail
 
 ```bash
-iflow webhooks gmail setup --account you@example.com
-iflow webhooks gmail run
+newclaw webhooks gmail setup --account you@example.com
+newclaw webhooks gmail run
 ```
 
 See [Gmail Pub/Sub documentation](/automation/gmail-pubsub) for details.

@@ -1,9 +1,9 @@
 ---
 read_when:
-  - 学习如何配置 iFlow
+  - 学习如何配置 NewClaw
   - 查找配置示例
-  - 首次设置 iFlow
-summary: 常见 iFlow 设置的符合 Schema 的配置示例
+  - 首次设置 NewClaw
+summary: 常见 NewClaw 设置的符合 Schema 的配置示例
 title: 配置示例
 x-i18n:
   generated_at: "2026-02-01T20:26:09Z"
@@ -24,12 +24,12 @@ x-i18n:
 
 ```json5
 {
-  agent: { workspace: "~/.iflow/workspace" },
+  agent: { workspace: "~/.newclaw/workspace" },
   channels: { whatsapp: { allowFrom: ["+15555550123"] } },
 }
 ```
 
-保存到 `~/.iflow/iflow.json`，即可从该号码私信机器人。
+保存到 `~/.newclaw/newclaw.json`，即可从该号码私信机器人。
 
 ### 推荐的入门配置
 
@@ -41,7 +41,7 @@ x-i18n:
     emoji: "🦞",
   },
   agent: {
-    workspace: "~/.iflow/workspace",
+    workspace: "~/.newclaw/workspace",
     model: { primary: "anthropic/claude-sonnet-4-5" },
   },
   channels: {
@@ -96,7 +96,7 @@ x-i18n:
   // 日志
   logging: {
     level: "info",
-    file: "/tmp/iflow/iflow.log",
+    file: "/tmp/newclaw/iflow.log",
     consoleLevel: "info",
     consoleStyle: "pretty",
     redactSensitive: "tools",
@@ -166,7 +166,7 @@ x-i18n:
       discord: { mode: "idle", idleMinutes: 10080 },
     },
     resetTriggers: ["/new", "/reset"],
-    store: "~/.iflow/agents/default/sessions/sessions.json",
+    store: "~/.newclaw/agents/default/sessions/sessions.json",
     typingIntervalSeconds: 5,
     sendPolicy: {
       default: "allow",
@@ -229,7 +229,7 @@ x-i18n:
   // 智能体运行时
   agents: {
     defaults: {
-      workspace: "~/.iflow/workspace",
+      workspace: "~/.newclaw/workspace",
       userTimezone: "America/Chicago",
       model: {
         primary: "anthropic/claude-sonnet-4-5",
@@ -282,9 +282,9 @@ x-i18n:
       sandbox: {
         mode: "non-main",
         perSession: true,
-        workspaceRoot: "~/.iflow/sandboxes",
+        workspaceRoot: "~/.newclaw/sandboxes",
         docker: {
-          image: "iflow-sandbox:bookworm-slim",
+          image: "newclaw-sandbox:bookworm-slim",
           workdir: "/workspace",
           readOnlyRoot: true,
           tmpfs: ["/tmp", "/var/tmp", "/run"],
@@ -349,7 +349,7 @@ x-i18n:
   // 定时任务
   cron: {
     enabled: true,
-    store: "~/.iflow/cron/cron.json",
+    store: "~/.newclaw/cron/cron.json",
     maxConcurrentRuns: 2,
   },
 
@@ -359,7 +359,7 @@ x-i18n:
     path: "/hooks",
     token: "shared-secret",
     presets: ["gmail"],
-    transformsDir: "~/.iflow/hooks",
+    transformsDir: "~/.newclaw/hooks",
     mappings: [
       {
         id: "gmail-hook",
@@ -379,7 +379,7 @@ x-i18n:
       },
     ],
     gmail: {
-      account: "iflow@gmail.com",
+      account: "newclaw@gmail.com",
       label: "INBOX",
       topic: "projects/<project-id>/topics/gog-gmail-watch",
       subscription: "gog-gmail-watch-push",
@@ -436,7 +436,7 @@ x-i18n:
 
 ```json5
 {
-  agent: { workspace: "~/.iflow/workspace" },
+  agent: { workspace: "~/.newclaw/workspace" },
   channels: {
     whatsapp: { allowFrom: ["+15555550123"] },
     telegram: {
@@ -474,7 +474,7 @@ x-i18n:
     },
   },
   agent: {
-    workspace: "~/.iflow/workspace",
+    workspace: "~/.newclaw/workspace",
     model: {
       primary: "anthropic/claude-sonnet-4-5",
       fallbacks: ["anthropic/claude-opus-4-5"],
@@ -513,7 +513,7 @@ x-i18n:
     },
   },
   agent: {
-    workspace: "~/.iflow/workspace",
+    workspace: "~/.newclaw/workspace",
     model: {
       primary: "anthropic/claude-opus-4-5",
       fallbacks: ["minimax/MiniMax-M2.1"],
@@ -552,7 +552,7 @@ x-i18n:
 ```json5
 {
   agent: {
-    workspace: "~/.iflow/workspace",
+    workspace: "~/.newclaw/workspace",
     model: { primary: "lmstudio/minimax-m2.1-gs32" },
   },
   models: {

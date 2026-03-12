@@ -17,7 +17,7 @@ UI surfaces.
 
 Canvas state is stored under Application Support:
 
-- `~/Library/Application Support/iFlow/canvas/<session>/...`
+- `~/Library/Application Support/NewClaw/canvas/<session>/...`
 
 The Canvas panel serves those files via a **custom URL scheme**:
 
@@ -53,10 +53,10 @@ Canvas is exposed via the **Gateway WebSocket**, so the agent can:
 CLI examples:
 
 ```bash
-iflow nodes canvas present --node <id>
-iflow nodes canvas navigate --node <id> --url "/"
-iflow nodes canvas eval --node <id> --js "document.title"
-iflow nodes canvas snapshot --node <id>
+newclaw nodes canvas present --node <id>
+newclaw nodes canvas navigate --node <id> --url "/"
+newclaw nodes canvas eval --node <id> --js "document.title"
+newclaw nodes canvas snapshot --node <id>
 ```
 
 Notes:
@@ -95,13 +95,13 @@ cat > /tmp/a2ui-v0.8.jsonl <<'EOFA2'
 {"beginRendering":{"surfaceId":"main","root":"root"}}
 EOFA2
 
-iflow nodes canvas a2ui push --jsonl /tmp/a2ui-v0.8.jsonl --node <id>
+newclaw nodes canvas a2ui push --jsonl /tmp/a2ui-v0.8.jsonl --node <id>
 ```
 
 Quick smoke:
 
 ```bash
-iflow nodes canvas a2ui push --node <id> --text "Hello from A2UI"
+newclaw nodes canvas a2ui push --node <id> --text "Hello from A2UI"
 ```
 
 ## Triggering agent runs from Canvas

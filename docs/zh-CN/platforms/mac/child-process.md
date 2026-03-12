@@ -20,7 +20,7 @@ macOS 应用默认**通过 launchd 管理 Gateway网关**，不会将 Gateway网
 
 ## 默认行为（launchd）
 
-- 应用安装一个标签为 `bot.molt.gateway` 的用户级 LaunchAgent（使用 `--profile`/`IFLOW_PROFILE` 时为 `bot.molt.<profile>`；兼容旧版 `com.iflow.*`）。
+- 应用安装一个标签为 `bot.molt.gateway` 的用户级 LaunchAgent（使用 `--profile`/`NEWCLAW_PROFILE` 时为 `bot.molt.<profile>`；兼容旧版 `com.iflow.*`）。
 - 当启用本地模式时，应用会确保 LaunchAgent 已加载，并在需要时启动 Gateway网关。
 - 日志写入 launchd Gateway网关日志路径（可在调试设置中查看）。
 
@@ -37,17 +37,17 @@ launchctl bootout gui/$UID/bot.molt.gateway
 
 `scripts/restart-mac.sh --no-sign` 用于在没有签名密钥时进行快速本地构建。为防止 launchd 指向未签名的中继二进制文件，它会：
 
-- 写入 `~/.iflow/disable-launchagent`。
+- 写入 `~/.newclaw/disable-launchagent`。
 
 已签名的 `scripts/restart-mac.sh` 运行会在检测到该标记文件时清除此覆盖。手动重置方法：
 
 ```bash
-rm ~/.iflow/disable-launchagent
+rm ~/.newclaw/disable-launchagent
 ```
 
 ## 仅连接模式
 
-要强制 macOS 应用**永不安装或管理 launchd**，请使用 `--attach-only`（或 `--no-launchd`）启动。这会设置 `~/.iflow/disable-launchagent`，使应用仅连接到已运行的 Gateway网关。你也可以在调试设置中切换相同的行为。
+要强制 macOS 应用**永不安装或管理 launchd**，请使用 `--attach-only`（或 `--no-launchd`）启动。这会设置 `~/.newclaw/disable-launchagent`，使应用仅连接到已运行的 Gateway网关。你也可以在调试设置中切换相同的行为。
 
 ## 远程模式
 

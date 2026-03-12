@@ -2,7 +2,7 @@
 read_when:
   - 你想添加/移除渠道账号（WhatsApp/Telegram/Discord/Google Chat/Slack/Mattermost（插件）/Signal/iMessage）
   - 你想检查渠道状态或查看渠道日志
-summary: "`iflow channels` 的 CLI 参考（账号、状态、登录/登出、日志）"
+summary: "`newclaw channels` 的 CLI 参考（账号、状态、登录/登出、日志）"
 title: channels
 x-i18n:
   generated_at: "2026-02-01T19:58:48Z"
@@ -13,7 +13,7 @@ x-i18n:
   workflow: 14
 ---
 
-# `iflow channels`
+# `newclaw channels`
 
 管理 Gateway网关上的聊天渠道账号及其运行时状态。
 
@@ -25,43 +25,43 @@ x-i18n:
 ## 常用命令
 
 ```bash
-iflow channels list
-iflow channels status
-iflow channels capabilities
-iflow channels capabilities --channel discord --target channel:123
-iflow channels resolve --channel slack "#general" "@jane"
-iflow channels logs --channel all
+newclaw channels list
+newclaw channels status
+newclaw channels capabilities
+newclaw channels capabilities --channel discord --target channel:123
+newclaw channels resolve --channel slack "#general" "@jane"
+newclaw channels logs --channel all
 ```
 
 ## 添加/移除账号
 
 ```bash
-iflow channels add --channel telegram --token <bot-token>
-iflow channels remove --channel telegram --delete
+newclaw channels add --channel telegram --token <bot-token>
+newclaw channels remove --channel telegram --delete
 ```
 
-提示：`iflow channels add --help` 可查看各渠道的专用参数（token、app token、signal-cli 路径等）。
+提示：`newclaw channels add --help` 可查看各渠道的专用参数（token、app token、signal-cli 路径等）。
 
 ## 登录/登出（交互式）
 
 ```bash
-iflow channels login --channel whatsapp
-iflow channels logout --channel whatsapp
+newclaw channels login --channel whatsapp
+newclaw channels logout --channel whatsapp
 ```
 
 ## 故障排除
 
-- 运行 `iflow status --deep` 进行全面探测。
-- 使用 `iflow doctor` 获取引导式修复。
-- `iflow channels list` 输出 `Claude: HTTP 403 ... user:profile` → 用量快照需要 `user:profile` 权限范围。使用 `--no-usage`，或提供 claude.ai 会话密钥（`CLAUDE_WEB_SESSION_KEY` / `CLAUDE_WEB_COOKIE`），或通过 Claude Code CLI 重新认证。
+- 运行 `newclaw status --deep` 进行全面探测。
+- 使用 `newclaw doctor` 获取引导式修复。
+- `newclaw channels list` 输出 `Claude: HTTP 403 ... user:profile` → 用量快照需要 `user:profile` 权限范围。使用 `--no-usage`，或提供 claude.ai 会话密钥（`CLAUDE_WEB_SESSION_KEY` / `CLAUDE_WEB_COOKIE`），或通过 Claude Code CLI 重新认证。
 
 ## 能力探测
 
 获取提供商能力提示（可用的 intents/scopes）以及静态功能支持：
 
 ```bash
-iflow channels capabilities
-iflow channels capabilities --channel discord --target channel:123
+newclaw channels capabilities
+newclaw channels capabilities --channel discord --target channel:123
 ```
 
 说明：
@@ -75,9 +75,9 @@ iflow channels capabilities --channel discord --target channel:123
 使用提供商目录将渠道/用户名称解析为 ID：
 
 ```bash
-iflow channels resolve --channel slack "#general" "@jane"
-iflow channels resolve --channel discord "My Server/#support" "@someone"
-iflow channels resolve --channel matrix "Project Room"
+newclaw channels resolve --channel slack "#general" "@jane"
+newclaw channels resolve --channel discord "My Server/#support" "@someone"
+newclaw channels resolve --channel matrix "Project Room"
 ```
 
 说明：

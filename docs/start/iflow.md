@@ -1,14 +1,14 @@
 ---
-summary: "End-to-end guide for running iFlow as a personal assistant with safety cautions"
+summary: "End-to-end guide for running NewClaw as a personal assistant with safety cautions"
 read_when:
   - Onboarding a new assistant instance
   - Reviewing safety/permission implications
 title: "Personal Assistant Setup"
 ---
 
-# Building a personal assistant with iFlow
+# Building a personal assistant with NewClaw
 
-iFlow is a WhatsApp + Telegram + Discord + iMessage gateway for **Pi** agents. Plugins add Mattermost. This guide is the "personal assistant" setup: one dedicated WhatsApp number that behaves like your always-on agent.
+NewClaw is a WhatsApp + Telegram + Discord + iMessage gateway for **Pi** agents. Plugins add Mattermost. This guide is the "personal assistant" setup: one dedicated WhatsApp number that behaves like your always-on agent.
 
 ## ⚠️ Safety first
 
@@ -27,7 +27,7 @@ Start conservative:
 ## Prerequisites
 
 - Node **22+**
-- iFlow available on PATH (recommended: global install)
+- NewClaw available on PATH (recommended: global install)
 - A second phone number (SIM/eSIM/prepaid) for the assistant
 
 ```bash
@@ -38,7 +38,7 @@ npm install -g iflow@latest
 From source (development):
 
 ```bash
-git clone https://github.com/iflow/iflow.git
+git clone https://github.com/newclaw/newclaw.git
 cd iflow
 pnpm install
 pnpm ui:build # auto-installs UI deps on first run
@@ -65,23 +65,23 @@ Your Phone (personal)          Second Phone (assistant)
                               └─────────────────┘
 ```
 
-If you link your personal WhatsApp to iFlow, every message to you becomes “agent input”. That’s rarely what you want.
+If you link your personal WhatsApp to NewClaw, every message to you becomes “agent input”. That’s rarely what you want.
 
 ## 5-minute quick start
 
 1. Pair WhatsApp Web (shows QR; scan with the assistant phone):
 
 ```bash
-iflow channels login
+newclaw channels login
 ```
 
 2. Start the Gateway (leave it running):
 
 ```bash
-iflow gateway --port 18789
+newclaw gateway --port 18789
 ```
 
-3. Put a minimal config in `~/.iflow/iflow.json`:
+3. Put a minimal config in `~/.newclaw/newclaw.json`:
 
 ```json5
 {
@@ -91,18 +91,18 @@ iflow gateway --port 18789
 
 Now message the assistant number from your allowlisted phone.
 
-When onboarding finishes, we auto-open the dashboard with your gateway token and print the tokenized link. To reopen later: `iflow dashboard`.
+When onboarding finishes, we auto-open the dashboard with your gateway token and print the tokenized link. To reopen later: `newclaw dashboard`.
 
 ## Give the agent a workspace (AGENTS)
 
-iFlow reads operating instructions and “memory” from its workspace directory.
+NewClaw reads operating instructions and “memory” from its workspace directory.
 
-By default, iFlow uses `~/.iflow/workspace` as the agent workspace, and will create it (plus starter `AGENTS.md`, `SOUL.md`, `TOOLS.md`, `IDENTITY.md`, `USER.md`) automatically on setup/first agent run. `BOOTSTRAP.md` is only created when the workspace is brand new (it should not come back after you delete it).
+By default, NewClaw uses `~/.newclaw/workspace` as the agent workspace, and will create it (plus starter `AGENTS.md`, `SOUL.md`, `TOOLS.md`, `IDENTITY.md`, `USER.md`) automatically on setup/first agent run. `BOOTSTRAP.md` is only created when the workspace is brand new (it should not come back after you delete it).
 
-Tip: treat this folder like iFlow’s “memory” and make it a git repo (ideally private) so your `AGENTS.md` + memory files are backed up. If git is installed, brand-new workspaces are auto-initialized.
+Tip: treat this folder like NewClaw’s “memory” and make it a git repo (ideally private) so your `AGENTS.md` + memory files are backed up. If git is installed, brand-new workspaces are auto-initialized.
 
 ```bash
-iflow setup
+newclaw setup
 ```
 
 Full workspace layout + backup guide: [Agent workspace](/concepts/agent-workspace)
@@ -113,7 +113,7 @@ Optional: choose a different workspace with `agents.defaults.workspace` (support
 ```json5
 {
   agent: {
-    workspace: "~/.iflow/workspace",
+    workspace: "~/.newclaw/workspace",
   },
 }
 ```
@@ -130,7 +130,7 @@ If you already ship your own workspace files from a repo, you can disable bootst
 
 ## The config that turns it into “an assistant”
 
-iFlow defaults to a good assistant setup, but you’ll usually want to tune:
+NewClaw defaults to a good assistant setup, but you’ll usually want to tune:
 
 - persona/instructions in `SOUL.md`
 - thinking defaults (if desired)
@@ -143,7 +143,7 @@ Example:
   logging: { level: "info" },
   agent: {
     model: "anthropic/claude-opus-4-5",
-    workspace: "~/.iflow/workspace",
+    workspace: "~/.newclaw/workspace",
     thinkingDefault: "high",
     timeoutSeconds: 1800,
     // Start with 0; enable later.
@@ -176,20 +176,20 @@ Example:
 
 ## Sessions and memory
 
-- Session files: `~/.iflow/agents/<agentId>/sessions/{{SessionId}}.jsonl`
-- Session metadata (token usage, last route, etc): `~/.iflow/agents/<agentId>/sessions/sessions.json` (legacy: `~/.iflow/sessions/sessions.json`)
+- Session files: `~/.newclaw/agents/<agentId>/sessions/{{SessionId}}.jsonl`
+- Session metadata (token usage, last route, etc): `~/.newclaw/agents/<agentId>/sessions/sessions.json` (legacy: `~/.newclaw/sessions/sessions.json`)
 - `/new` or `/reset` starts a fresh session for that chat (configurable via `resetTriggers`). If sent alone, the agent replies with a short hello to confirm the reset.
 - `/compact [instructions]` compacts the session context and reports the remaining context budget.
 
 ## Heartbeats (proactive mode)
 
-By default, iFlow runs a heartbeat every 30 minutes with the prompt:
+By default, NewClaw runs a heartbeat every 30 minutes with the prompt:
 `Read HEARTBEAT.md if it exists (workspace context). Follow it strictly. Do not infer or repeat old tasks from prior chats. If nothing needs attention, reply HEARTBEAT_OK.`
 Set `agents.defaults.heartbeat.every: "0m"` to disable.
 
-- If `HEARTBEAT.md` exists but is effectively empty (only blank lines and markdown headers like `# Heading`), iFlow skips the heartbeat run to save API calls.
+- If `HEARTBEAT.md` exists but is effectively empty (only blank lines and markdown headers like `# Heading`), NewClaw skips the heartbeat run to save API calls.
 - If the file is missing, the heartbeat still runs and the model decides what to do.
-- If the agent replies with `HEARTBEAT_OK` (optionally with short padding; see `agents.defaults.heartbeat.ackMaxChars`), iFlow suppresses outbound delivery for that heartbeat.
+- If the agent replies with `HEARTBEAT_OK` (optionally with short padding; see `agents.defaults.heartbeat.ackMaxChars`), NewClaw suppresses outbound delivery for that heartbeat.
 - Heartbeats run full agent turns — shorter intervals burn more tokens.
 
 ```json5
@@ -215,25 +215,25 @@ Here’s the screenshot.
 MEDIA:https://example.com/screenshot.png
 ```
 
-iFlow extracts these and sends them as media alongside the text.
+NewClaw extracts these and sends them as media alongside the text.
 
 ## Operations checklist
 
 ```bash
-iflow status          # local status (creds, sessions, queued events)
-iflow status --all    # full diagnosis (read-only, pasteable)
-iflow status --deep   # adds gateway health probes (Telegram + Discord)
-iflow health --json   # gateway health snapshot (WS)
+newclaw status          # local status (creds, sessions, queued events)
+newclaw status --all    # full diagnosis (read-only, pasteable)
+newclaw status --deep   # adds gateway health probes (Telegram + Discord)
+newclaw health --json   # gateway health snapshot (WS)
 ```
 
-Logs live under `/tmp/iflow/` (default: `iflow-YYYY-MM-DD.log`).
+Logs live under `/tmp/newclaw/` (default: `iflow-YYYY-MM-DD.log`).
 
 ## Next steps
 
 - WebChat: [WebChat](/web/webchat)
 - Gateway ops: [Gateway runbook](/gateway)
 - Cron + wakeups: [Cron jobs](/automation/cron-jobs)
-- macOS menu bar companion: [iFlow macOS app](/platforms/macos)
+- macOS menu bar companion: [NewClaw macOS app](/platforms/macos)
 - iOS node app: [iOS app](/platforms/ios)
 - Android node app: [Android app](/platforms/android)
 - Windows status: [Windows (WSL2)](/platforms/windows)

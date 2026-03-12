@@ -1,12 +1,12 @@
 ---
-summary: "CLI reference for `iflow channels` (accounts, status, login/logout, logs)"
+summary: "CLI reference for `newclaw channels` (accounts, status, login/logout, logs)"
 read_when:
   - You want to add/remove channel accounts (WhatsApp/Telegram/Discord/Google Chat/Slack/Mattermost (plugin)/Signal/iMessage)
   - You want to check channel status or tail channel logs
 title: "channels"
 ---
 
-# `iflow channels`
+# `newclaw channels`
 
 Manage chat channel accounts and their runtime status on the Gateway.
 
@@ -18,43 +18,43 @@ Related docs:
 ## Common commands
 
 ```bash
-iflow channels list
-iflow channels status
-iflow channels capabilities
-iflow channels capabilities --channel discord --target channel:123
-iflow channels resolve --channel slack "#general" "@jane"
-iflow channels logs --channel all
+newclaw channels list
+newclaw channels status
+newclaw channels capabilities
+newclaw channels capabilities --channel discord --target channel:123
+newclaw channels resolve --channel slack "#general" "@jane"
+newclaw channels logs --channel all
 ```
 
 ## Add / remove accounts
 
 ```bash
-iflow channels add --channel telegram --token <bot-token>
-iflow channels remove --channel telegram --delete
+newclaw channels add --channel telegram --token <bot-token>
+newclaw channels remove --channel telegram --delete
 ```
 
-Tip: `iflow channels add --help` shows per-channel flags (token, app token, signal-cli paths, etc).
+Tip: `newclaw channels add --help` shows per-channel flags (token, app token, signal-cli paths, etc).
 
 ## Login / logout (interactive)
 
 ```bash
-iflow channels login --channel whatsapp
-iflow channels logout --channel whatsapp
+newclaw channels login --channel whatsapp
+newclaw channels logout --channel whatsapp
 ```
 
 ## Troubleshooting
 
-- Run `iflow status --deep` for a broad probe.
-- Use `iflow doctor` for guided fixes.
-- `iflow channels list` prints `Claude: HTTP 403 ... user:profile` → usage snapshot needs the `user:profile` scope. Use `--no-usage`, or provide a claude.ai session key (`CLAUDE_WEB_SESSION_KEY` / `CLAUDE_WEB_COOKIE`), or re-auth via Claude Code CLI.
+- Run `newclaw status --deep` for a broad probe.
+- Use `newclaw doctor` for guided fixes.
+- `newclaw channels list` prints `Claude: HTTP 403 ... user:profile` → usage snapshot needs the `user:profile` scope. Use `--no-usage`, or provide a claude.ai session key (`CLAUDE_WEB_SESSION_KEY` / `CLAUDE_WEB_COOKIE`), or re-auth via Claude Code CLI.
 
 ## Capabilities probe
 
 Fetch provider capability hints (intents/scopes where available) plus static feature support:
 
 ```bash
-iflow channels capabilities
-iflow channels capabilities --channel discord --target channel:123
+newclaw channels capabilities
+newclaw channels capabilities --channel discord --target channel:123
 ```
 
 Notes:
@@ -68,9 +68,9 @@ Notes:
 Resolve channel/user names to IDs using the provider directory:
 
 ```bash
-iflow channels resolve --channel slack "#general" "@jane"
-iflow channels resolve --channel discord "My Server/#support" "@someone"
-iflow channels resolve --channel matrix "Project Room"
+newclaw channels resolve --channel slack "#general" "@jane"
+newclaw channels resolve --channel discord "My Server/#support" "@someone"
+newclaw channels resolve --channel matrix "Project Room"
 ```
 
 Notes:

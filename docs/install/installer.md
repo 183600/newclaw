@@ -1,7 +1,7 @@
 ---
 summary: "How the installer scripts work (install.sh + install-cli.sh), flags, and automation"
 read_when:
-  - You want to understand `iflow.ai/install.sh`
+  - You want to understand `newclaw.ai/install.sh`
   - You want to automate installs (CI / headless)
   - You want to install from a GitHub checkout
 title: "Installer Internals"
@@ -9,22 +9,22 @@ title: "Installer Internals"
 
 # Installer internals
 
-iFlow ships two installer scripts (served from `iflow.ai`):
+NewClaw ships two installer scripts (served from `newclaw.ai`):
 
-- `https://iflow.ai/install.sh` — “recommended” installer (global npm install by default; can also install from a GitHub checkout)
-- `https://iflow.ai/install-cli.sh` — non-root-friendly CLI installer (installs into a prefix with its own Node)
-- `https://iflow.ai/install.ps1` — Windows PowerShell installer (npm by default; optional git install)
+- `https://newclaw.ai/install.sh` — “recommended” installer (global npm install by default; can also install from a GitHub checkout)
+- `https://newclaw.ai/install-cli.sh` — non-root-friendly CLI installer (installs into a prefix with its own Node)
+- `https://newclaw.ai/install.ps1` — Windows PowerShell installer (npm by default; optional git install)
 
 To see the current flags/behavior, run:
 
 ```bash
-curl -fsSL https://iflow.ai/install.sh | bash -s -- --help
+curl -fsSL https://newclaw.ai/install.sh | bash -s -- --help
 ```
 
 Windows (PowerShell) help:
 
 ```powershell
-& ([scriptblock]::Create((iwr -useb https://iflow.ai/install.ps1))) -?
+& ([scriptblock]::Create((iwr -useb https://newclaw.ai/install.ps1))) -?
 ```
 
 If the installer completes but `iflow` is not found in a new terminal, it’s usually a Node/npm PATH issue. See: [Install](/install#nodejs--npm-path-sanity).
@@ -39,24 +39,24 @@ What it does (high level):
   - `npm` (default): `npm install -g iflow@latest`
   - `git`: clone/build a source checkout and install a wrapper script
 - On Linux: avoid global npm permission errors by switching npm's prefix to `~/.npm-global` when needed.
-- If upgrading an existing install: runs `iflow doctor --non-interactive` (best effort).
-- For git installs: runs `iflow doctor --non-interactive` after install/update (best effort).
+- If upgrading an existing install: runs `newclaw doctor --non-interactive` (best effort).
+- For git installs: runs `newclaw doctor --non-interactive` after install/update (best effort).
 - Mitigates `sharp` native install gotchas by defaulting `SHARP_IGNORE_GLOBAL_LIBVIPS=1` (avoids building against system libvips).
 
 If you _want_ `sharp` to link against a globally-installed libvips (or you’re debugging), set:
 
 ```bash
-SHARP_IGNORE_GLOBAL_LIBVIPS=0 curl -fsSL https://iflow.ai/install.sh | bash
+SHARP_IGNORE_GLOBAL_LIBVIPS=0 curl -fsSL https://newclaw.ai/install.sh | bash
 ```
 
 ### Discoverability / “git install” prompt
 
-If you run the installer while **already inside a iFlow source checkout** (detected via `package.json` + `pnpm-workspace.yaml`), it prompts:
+If you run the installer while **already inside a NewClaw source checkout** (detected via `package.json` + `pnpm-workspace.yaml`), it prompts:
 
 - update and use this checkout (`git`)
 - or migrate to the global npm install (`npm`)
 
-In non-interactive contexts (no TTY / `--no-prompt`), you must pass `--install-method git|npm` (or set `IFLOW_INSTALL_METHOD`), otherwise the script exits with code `2`.
+In non-interactive contexts (no TTY / `--no-prompt`), you must pass `--install-method git|npm` (or set `NEWCLAW_INSTALL_METHOD`), otherwise the script exits with code `2`.
 
 ### Why Git is needed
 
@@ -74,12 +74,12 @@ On some Linux setups (especially after installing Node via the system package ma
 
 ## install-cli.sh (non-root CLI installer)
 
-This script installs `iflow` into a prefix (default: `~/.iflow`) and also installs a dedicated Node runtime under that prefix, so it can work on machines where you don’t want to touch the system Node/npm.
+This script installs `iflow` into a prefix (default: `~/.newclaw`) and also installs a dedicated Node runtime under that prefix, so it can work on machines where you don’t want to touch the system Node/npm.
 
 Help:
 
 ```bash
-curl -fsSL https://iflow.ai/install-cli.sh | bash -s -- --help
+curl -fsSL https://newclaw.ai/install-cli.sh | bash -s -- --help
 ```
 
 ## install.ps1 (Windows PowerShell)
@@ -90,26 +90,26 @@ What it does (high level):
 - Choose install method:
   - `npm` (default): `npm install -g iflow@latest`
   - `git`: clone/build a source checkout and install a wrapper script
-- Runs `iflow doctor --non-interactive` on upgrades and git installs (best effort).
+- Runs `newclaw doctor --non-interactive` on upgrades and git installs (best effort).
 
 Examples:
 
 ```powershell
-iwr -useb https://iflow.ai/install.ps1 | iex
+iwr -useb https://newclaw.ai/install.ps1 | iex
 ```
 
 ```powershell
-iwr -useb https://iflow.ai/install.ps1 | iex -InstallMethod git
+iwr -useb https://newclaw.ai/install.ps1 | iex -InstallMethod git
 ```
 
 ```powershell
-iwr -useb https://iflow.ai/install.ps1 | iex -InstallMethod git -GitDir "C:\\iflow"
+iwr -useb https://newclaw.ai/install.ps1 | iex -InstallMethod git -GitDir "C:\\iflow"
 ```
 
 Environment variables:
 
-- `IFLOW_INSTALL_METHOD=git|npm`
-- `IFLOW_GIT_DIR=...`
+- `NEWCLAW_INSTALL_METHOD=git|npm`
+- `NEWCLAW_GIT_DIR=...`
 
 Git requirement:
 

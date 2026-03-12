@@ -1,6 +1,6 @@
 ---
 read_when:
-  - 你已安装 iFlow 但 `iflow` 提示"command not found"
+  - 你已安装 NewClaw 但 `iflow` 提示"command not found"
   - 你正在新机器上配置 Node.js/npm
   - npm install -g ... 因权限或 PATH 问题失败
 summary: Node.js + npm 安装完整性检查：版本、PATH 及全局安装
@@ -16,7 +16,7 @@ x-i18n:
 
 # Node.js + npm（PATH 安装完整性检查）
 
-iFlow 的运行时基线要求为 **Node 22+**。
+NewClaw 的运行时基线要求为 **Node 22+**。
 
 如果你能运行 `npm install -g iflow@latest`，但之后看到 `iflow: command not found`，这几乎总是 **PATH** 问题：npm 存放全局二进制文件的目录不在你 shell 的 PATH 中。
 

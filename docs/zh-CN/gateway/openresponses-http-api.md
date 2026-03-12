@@ -15,14 +15,14 @@ x-i18n:
 
 # OpenResponses API (HTTP)
 
-iFlow 的 Gateway网关可以提供一个兼容 OpenResponses 的 `POST /v1/responses` 端点。
+NewClaw 的 Gateway网关可以提供一个兼容 OpenResponses 的 `POST /v1/responses` 端点。
 
 此端点**默认禁用**。请先在配置中启用。
 
 - `POST /v1/responses`
 - 与 Gateway网关使用相同端口（WS + HTTP 多路复用）：`http://<gateway-host>:<port>/v1/responses`
 
-底层实现中，请求作为普通的 Gateway网关智能体运行来执行（与 `iflow agent` 相同的代码路径），因此路由/权限/配置与你的 Gateway网关一致。
+底层实现中，请求作为普通的 Gateway网关智能体运行来执行（与 `newclaw agent` 相同的代码路径），因此路由/权限/配置与你的 Gateway网关一致。
 
 ## 认证
 
@@ -32,23 +32,23 @@ iFlow 的 Gateway网关可以提供一个兼容 OpenResponses 的 `POST /v1/resp
 
 说明：
 
-- 当 `gateway.auth.mode="token"` 时，使用 `gateway.auth.token`（或 `IFLOW_GATEWAY_TOKEN`）。
-- 当 `gateway.auth.mode="password"` 时，使用 `gateway.auth.password`（或 `IFLOW_GATEWAY_PASSWORD`）。
+- 当 `gateway.auth.mode="token"` 时，使用 `gateway.auth.token`（或 `NEWCLAW_GATEWAY_TOKEN`）。
+- 当 `gateway.auth.mode="password"` 时，使用 `gateway.auth.password`（或 `NEWCLAW_GATEWAY_PASSWORD`）。
 
 ## 选择智能体
 
 无需自定义头：在 OpenResponses 的 `model` 字段中编码智能体 ID：
 
-- `model: "iflow:<agentId>"`（示例：`"iflow:main"`、`"iflow:beta"`）
+- `model: "newclaw:<agentId>"`（示例：`"iflow:main"`、`"iflow:beta"`）
 - `model: "agent:<agentId>"`（别名）
 
-或通过头指定特定的 iFlow 智能体：
+或通过头指定特定的 NewClaw 智能体：
 
-- `x-iflow-agent-id: <agentId>`（默认：`main`）
+- `x-newclaw-agent-id: <agentId>`（默认：`main`）
 
 高级用法：
 
-- `x-iflow-session-key: <sessionKey>` 完全控制会话路由。
+- `x-newclaw-session-key: <sessionKey>` 完全控制会话路由。
 
 ## 启用端点
 
@@ -297,7 +297,7 @@ URL 获取默认值：
 curl -sS http://127.0.0.1:18789/v1/responses \
   -H 'Authorization: Bearer YOUR_TOKEN' \
   -H 'Content-Type: application/json' \
-  -H 'x-iflow-agent-id: main' \
+  -H 'x-newclaw-agent-id: main' \
   -d '{
     "model": "iflow",
     "input": "hi"
@@ -310,7 +310,7 @@ curl -sS http://127.0.0.1:18789/v1/responses \
 curl -N http://127.0.0.1:18789/v1/responses \
   -H 'Authorization: Bearer YOUR_TOKEN' \
   -H 'Content-Type: application/json' \
-  -H 'x-iflow-agent-id: main' \
+  -H 'x-newclaw-agent-id: main' \
   -d '{
     "model": "iflow",
     "stream": true,

@@ -29,7 +29,7 @@ x-i18n:
 - Gateway网关运行在另一台设备上（macOS、Linux 或通过 WSL2 的 Windows）。
 - 网络路径：
   - 通过 Bonjour 的同一局域网，**或**
-  - 通过单播 DNS-SD 的 Tailnet（示例域名：`iflow.internal.`），**或**
+  - 通过单播 DNS-SD 的 Tailnet（示例域名：`newclaw.internal.`），**或**
   - 手动输入主机/端口（备用方案）。
 
 ## 快速开始（配对 + 连接）
@@ -37,7 +37,7 @@ x-i18n:
 1. 启动 Gateway网关：
 
 ```bash
-iflow gateway --port 18789
+newclaw gateway --port 18789
 ```
 
 2. 在 iOS 应用中，打开设置并选择已发现的 Gateway网关（或启用手动主机并输入主机/端口）。
@@ -45,26 +45,26 @@ iflow gateway --port 18789
 3. 在 Gateway网关主机上批准配对请求：
 
 ```bash
-iflow nodes pending
-iflow nodes approve <requestId>
+newclaw nodes pending
+newclaw nodes approve <requestId>
 ```
 
 4. 验证连接：
 
 ```bash
-iflow nodes status
-iflow gateway call node.list --params "{}"
+newclaw nodes status
+newclaw gateway call node.list --params "{}"
 ```
 
 ## 发现路径
 
 ### Bonjour（局域网）
 
-Gateway网关在 `local.` 上广播 `_iflow-gw._tcp`。iOS 应用会自动列出这些服务。
+Gateway网关在 `local.` 上广播 `_newclaw-gw._tcp`。iOS 应用会自动列出这些服务。
 
 ### Tailnet（跨网络）
 
-如果 mDNS 被阻止，请使用单播 DNS-SD 区域（选择一个域名；示例：`iflow.internal.`）和 Tailscale 分割 DNS。
+如果 mDNS 被阻止，请使用单播 DNS-SD 区域（选择一个域名；示例：`newclaw.internal.`）和 Tailscale 分割 DNS。
 参阅 [Bonjour](/gateway/bonjour) 了解 CoreDNS 配置示例。
 
 ### 手动主机/端口
@@ -76,7 +76,7 @@ Gateway网关在 `local.` 上广播 `_iflow-gw._tcp`。iOS 应用会自动列出
 iOS 节点渲染一个 WKWebView 画布。使用 `node.invoke` 来驱动它：
 
 ```bash
-iflow nodes invoke --node "iOS Node" --command canvas.navigate --params '{"url":"http://<gateway-host>:18793/__claw__/canvas/"}'
+newclaw nodes invoke --node "iOS Node" --command canvas.navigate --params '{"url":"http://<gateway-host>:18793/__claw__/canvas/"}'
 ```
 
 注意事项：
@@ -88,11 +88,11 @@ iflow nodes invoke --node "iOS Node" --command canvas.navigate --params '{"url":
 ### 画布执行 / 快照
 
 ```bash
-iflow nodes invoke --node "iOS Node" --command canvas.eval --params '{"javaScript":"(() => { const {ctx} = window.__iflow; ctx.clearRect(0,0,innerWidth,innerHeight); ctx.lineWidth=6; ctx.strokeStyle=\"#ff2d55\"; ctx.beginPath(); ctx.moveTo(40,40); ctx.lineTo(innerWidth-40, innerHeight-40); ctx.stroke(); return \"ok\"; })()"}'
+newclaw nodes invoke --node "iOS Node" --command canvas.eval --params '{"javaScript":"(() => { const {ctx} = window.__iflow; ctx.clearRect(0,0,innerWidth,innerHeight); ctx.lineWidth=6; ctx.strokeStyle=\"#ff2d55\"; ctx.beginPath(); ctx.moveTo(40,40); ctx.lineTo(innerWidth-40, innerHeight-40); ctx.stroke(); return \"ok\"; })()"}'
 ```
 
 ```bash
-iflow nodes invoke --node "iOS Node" --command canvas.snapshot --params '{"maxWidth":900,"format":"jpeg"}'
+newclaw nodes invoke --node "iOS Node" --command canvas.snapshot --params '{"maxWidth":900,"format":"jpeg"}'
 ```
 
 ## 语音唤醒 + 对话模式
@@ -104,7 +104,7 @@ iflow nodes invoke --node "iOS Node" --command canvas.snapshot --params '{"maxWi
 
 - `NODE_BACKGROUND_UNAVAILABLE`：将 iOS 应用切换到前台（画布/摄像头/屏幕命令需要前台运行）。
 - `A2UI_HOST_NOT_CONFIGURED`：Gateway网关未广播画布主机 URL；请检查 [Gateway网关配置](/gateway/configuration) 中的 `canvasHost`。
-- 配对提示始终未出现：运行 `iflow nodes pending` 并手动批准。
+- 配对提示始终未出现：运行 `newclaw nodes pending` 并手动批准。
 - 重新安装后重连失败：钥匙串中的配对令牌已被清除；请重新配对节点。
 
 ## 相关文档

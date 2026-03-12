@@ -1,7 +1,7 @@
 ---
 read_when:
-  - 想要从终端搜索 iFlow 在线文档
-summary: "`iflow docs` 的 CLI 参考（搜索在线文档索引）"
+  - 想要从终端搜索 NewClaw 在线文档
+summary: "`newclaw docs` 的 CLI 参考（搜索在线文档索引）"
 title: docs
 x-i18n:
   generated_at: "2026-02-01T19:58:52Z"
@@ -12,11 +12,11 @@ x-i18n:
   workflow: 14
 ---
 
-# `iflow docs`
+# `newclaw docs`
 
 搜索在线文档索引。
 
 ```bash
-iflow docs browser extension
-iflow docs sandbox allowHostControl
+newclaw docs browser extension
+newclaw docs sandbox allowHostControl
 ```

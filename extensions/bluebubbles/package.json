@@ -4,7 +4,7 @@
   "description": "Claw BlueBubbles channel plugin",
   "type": "module",
   "devDependencies": {
-    "iflow": "workspace:*"
+    "newclaw": "workspace:*"
   },
   "claw": {
     "extensions": [

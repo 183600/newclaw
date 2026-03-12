@@ -8,7 +8,7 @@ title: "Skills"
 
 # Skills (macOS)
 
-The macOS app surfaces iFlow skills via the gateway; it does not parse skills locally.
+The macOS app surfaces NewClaw skills via the gateway; it does not parse skills locally.
 
 ## Data source
 
@@ -25,7 +25,7 @@ The macOS app surfaces iFlow skills via the gateway; it does not parse skills lo
 
 ## Env/API keys
 
-- The app stores keys in `~/.iflow/iflow.json` under `skills.entries.<skillKey>`.
+- The app stores keys in `~/.newclaw/newclaw.json` under `skills.entries.<skillKey>`.
 - `skills.update` patches `enabled`, `apiKey`, and `env`.
 
 ## Remote mode

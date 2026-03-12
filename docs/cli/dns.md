@@ -1,12 +1,12 @@
 ---
-summary: "CLI reference for `iflow dns` (wide-area discovery helpers)"
+summary: "CLI reference for `newclaw dns` (wide-area discovery helpers)"
 read_when:
   - You want wide-area discovery (DNS-SD) via Tailscale + CoreDNS
-  - You’re setting up split DNS for a custom discovery domain (example: iflow.internal)
+  - You’re setting up split DNS for a custom discovery domain (example: newclaw.internal)
 title: "dns"
 ---
 
-# `iflow dns`
+# `newclaw dns`
 
 DNS helpers for wide-area discovery (Tailscale + CoreDNS). Currently focused on macOS + Homebrew CoreDNS.
 
@@ -18,6 +18,6 @@ Related:
 ## Setup
 
 ```bash
-iflow dns setup
-iflow dns setup --apply
+newclaw dns setup
+newclaw dns setup --apply
 ```

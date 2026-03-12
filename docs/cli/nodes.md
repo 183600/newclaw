@@ -1,12 +1,12 @@
 ---
-summary: "CLI reference for `iflow nodes` (list/status/approve/invoke, camera/canvas/screen)"
+summary: "CLI reference for `newclaw nodes` (list/status/approve/invoke, camera/canvas/screen)"
 read_when:
   - You’re managing paired nodes (cameras, screen, canvas)
   - You need to approve requests or invoke node commands
 title: "nodes"
 ---
 
-# `iflow nodes`
+# `newclaw nodes`
 
 Manage paired nodes (devices) and invoke node capabilities.
 
@@ -23,14 +23,14 @@ Common options:
 ## Common commands
 
 ```bash
-iflow nodes list
-iflow nodes list --connected
-iflow nodes list --last-connected 24h
-iflow nodes pending
-iflow nodes approve <requestId>
-iflow nodes status
-iflow nodes status --connected
-iflow nodes status --last-connected 24h
+newclaw nodes list
+newclaw nodes list --connected
+newclaw nodes list --last-connected 24h
+newclaw nodes pending
+newclaw nodes approve <requestId>
+newclaw nodes status
+newclaw nodes status --connected
+newclaw nodes status --last-connected 24h
 ```
 
 `nodes list` prints pending/paired tables. Paired rows include the most recent connect age (Last Connect).
@@ -40,10 +40,10 @@ filter to nodes that connected within a duration (e.g. `24h`, `7d`).
 ## Invoke / run
 
 ```bash
-iflow nodes invoke --node <id|name|ip> --command <command> --params <json>
-iflow nodes run --node <id|name|ip> <command...>
-iflow nodes run --raw "git status"
-iflow nodes run --agent main --node <id|name|ip> --raw "git status"
+newclaw nodes invoke --node <id|name|ip> --command <command> --params <json>
+newclaw nodes run --node <id|name|ip> <command...>
+newclaw nodes run --raw "git status"
+newclaw nodes run --agent main --node <id|name|ip> --raw "git status"
 ```
 
 Invoke flags:

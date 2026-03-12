@@ -4,7 +4,7 @@
   "description": "Claw Gemini CLI OAuth provider plugin",
   "type": "module",
   "devDependencies": {
-    "iflow": "workspace:*"
+    "newclaw": "workspace:*"
   },
   "claw": {
     "extensions": [

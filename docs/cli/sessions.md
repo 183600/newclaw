@@ -1,16 +1,16 @@
 ---
-summary: "CLI reference for `iflow sessions` (list stored sessions + usage)"
+summary: "CLI reference for `newclaw sessions` (list stored sessions + usage)"
 read_when:
   - You want to list stored sessions and see recent activity
 title: "sessions"
 ---
 
-# `iflow sessions`
+# `newclaw sessions`
 
 List stored conversation sessions.
 
 ```bash
-iflow sessions
-iflow sessions --active 120
-iflow sessions --json
+newclaw sessions
+newclaw sessions --active 120
+newclaw sessions --json
 ```

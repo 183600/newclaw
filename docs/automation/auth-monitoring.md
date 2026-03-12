@@ -8,13 +8,13 @@ title: "Auth Monitoring"
 
 # Auth monitoring
 
-iFlow exposes OAuth expiry health via `iflow models status`. Use that for
+NewClaw exposes OAuth expiry health via `newclaw models status`. Use that for
 automation and alerting; scripts are optional extras for phone workflows.
 
 ## Preferred: CLI check (portable)
 
 ```bash
-iflow models status --check
+newclaw models status --check
 ```
 
 Exit codes:
@@ -30,15 +30,14 @@ This works in cron/systemd and requires no extra scripts.
 These live under `scripts/` and are **optional**. They assume SSH access to the
 gateway host and are tuned for systemd + Termux.
 
-- `scripts/claude-auth-status.sh` now uses `iflow models status --json` as the
-  source of truth (falling back to direct file reads if the CLI is unavailable),
-  so keep `iflow` on `PATH` for timers.
+- `scripts/claude-auth-status.sh` now uses `newclaw models status --json` as the
+- so keep `newclaw` on `PATH` for timers.
 - `scripts/auth-monitor.sh`: cron/systemd timer target; sends alerts (ntfy or phone).
-- `scripts/systemd/iflow-auth-monitor.{service,timer}`: systemd user timer.
-- `scripts/claude-auth-status.sh`: Claude Code + iFlow auth checker (full/json/simple).
+- `scripts/systemd/newclaw-auth-monitor.{service,timer}`: systemd user timer.
+- `scripts/claude-auth-status.sh`: Claude Code + NewClaw auth checker (full/json/simple).
 - `scripts/mobile-reauth.sh`: guided re‑auth flow over SSH.
 - `scripts/termux-quick-auth.sh`: one‑tap widget status + open auth URL.
 - `scripts/termux-auth-widget.sh`: full guided widget flow.
-- `scripts/termux-sync-widget.sh`: sync Claude Code creds → iFlow.
+- `scripts/termux-sync-widget.sh`: sync Claude Code creds → NewClaw.
 
 If you don’t need phone automation or systemd timers, skip these scripts.

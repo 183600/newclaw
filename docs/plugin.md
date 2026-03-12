@@ -1,5 +1,5 @@
 ---
-summary: "iFlow plugins/extensions: discovery, config, and safety"
+summary: "NewClaw plugins/extensions: discovery, config, and safety"
 read_when:
   - Adding or modifying plugins/extensions
   - Documenting plugin install or load rules
@@ -10,11 +10,11 @@ title: "Plugins"
 
 ## Quick start (new to plugins?)
 
-A plugin is just a **small code module** that extends iFlow with extra
+A plugin is just a **small code module** that extends NewClaw with extra
 features (commands, tools, and Gateway RPC).
 
 Most of the time, you’ll use plugins when you want a feature that’s not built
-into core iFlow yet (or you want to keep optional features out of your main
+into core NewClaw yet (or you want to keep optional features out of your main
 install).
 
 Fast path:
@@ -22,13 +22,13 @@ Fast path:
 1. See what’s already loaded:
 
 ```bash
-iflow plugins list
+newclaw plugins list
 ```
 
 2. Install an official plugin (example: Voice Call):
 
 ```bash
-iflow plugins install @iflow/voice-call
+newclaw plugins install @newclaw/voice-call
 ```
 
 3. Restart the Gateway, then configure under `plugins.entries.<id>.config`.
@@ -37,21 +37,21 @@ See [Voice Call](/plugins/voice-call) for a concrete example plugin.
 
 ## Available plugins (official)
 
-- Microsoft Teams is plugin-only as of 2026.1.15; install `@iflow/msteams` if you use Teams.
+- Microsoft Teams is plugin-only as of 2026.1.15; install `@newclaw/msteams` if you use Teams.
 - Memory (Core) — bundled memory search plugin (enabled by default via `plugins.slots.memory`)
 - Memory (LanceDB) — bundled long-term memory plugin (auto-recall/capture; set `plugins.slots.memory = "memory-lancedb"`)
-- [Voice Call](/plugins/voice-call) — `@iflow/voice-call`
-- [Zalo Personal](/plugins/zalouser) — `@iflow/zalouser`
-- [Matrix](/channels/matrix) — `@iflow/matrix`
-- [Nostr](/channels/nostr) — `@iflow/nostr`
-- [Zalo](/channels/zalo) — `@iflow/zalo`
-- [Microsoft Teams](/channels/msteams) — `@iflow/msteams`
+- [Voice Call](/plugins/voice-call) — `@newclaw/voice-call`
+- [Zalo Personal](/plugins/zalouser) — `@newclaw/zalouser`
+- [Matrix](/channels/matrix) — `@newclaw/matrix`
+- [Nostr](/channels/nostr) — `@newclaw/nostr`
+- [Zalo](/channels/zalo) — `@newclaw/zalo`
+- [Microsoft Teams](/channels/msteams) — `@newclaw/msteams`
 - Google Antigravity OAuth (provider auth) — bundled as `google-antigravity-auth` (disabled by default)
 - Gemini CLI OAuth (provider auth) — bundled as `google-gemini-cli-auth` (disabled by default)
 - Qwen OAuth (provider auth) — bundled as `qwen-portal-auth` (disabled by default)
 - Copilot Proxy (provider auth) — local VS Code Copilot Proxy bridge; distinct from built-in `github-copilot` device login (bundled, disabled by default)
 
-iFlow plugins are **TypeScript modules** loaded at runtime via jiti. **Config
+NewClaw plugins are **TypeScript modules** loaded at runtime via jiti. **Config
 validation does not execute plugin code**; it uses the plugin manifest and JSON
 Schema instead. See [Plugin manifest](/plugins/manifest).
 
@@ -75,7 +75,7 @@ Plugins can access selected core helpers via `api.runtime`. For telephony TTS:
 
 ```ts
 const result = await api.runtime.tts.textToSpeechTelephony({
-  text: "Hello from iFlow",
+  text: "Hello from NewClaw",
   cfg: api.config,
 });
 ```
@@ -88,7 +88,7 @@ Notes:
 
 ## Discovery & precedence
 
-iFlow scans, in order:
+NewClaw scans, in order:
 
 1. Config paths
 
@@ -101,15 +101,15 @@ iFlow scans, in order:
 
 3. Global extensions
 
-- `~/.iflow/extensions/*.ts`
-- `~/.iflow/extensions/*/index.ts`
+- `~/.newclaw/extensions/*.ts`
+- `~/.newclaw/extensions/*/index.ts`
 
-4. Bundled extensions (shipped with iFlow, **disabled by default**)
+4. Bundled extensions (shipped with NewClaw, **disabled by default**)
 
 - `<iflow>/extensions/*`
 
 Bundled plugins must be enabled explicitly via `plugins.entries.<id>.enabled`
-or `iflow plugins enable <id>`. Installed plugins are enabled by default,
+or `newclaw plugins enable <id>`. Installed plugins are enabled by default,
 but can be disabled the same way.
 
 Each plugin must include a `iflow.plugin.json` file in its root. If a path
@@ -147,7 +147,7 @@ Example:
 
 ```json
 {
-  "name": "@iflow/nextcloud-talk",
+  "name": "@newclaw/nextcloud-talk",
   "iflow": {
     "extensions": ["./index.ts"],
     "channel": {
@@ -161,7 +161,7 @@ Example:
       "aliases": ["nc-talk", "nc"]
     },
     "install": {
-      "npmSpec": "@iflow/nextcloud-talk",
+      "npmSpec": "@newclaw/nextcloud-talk",
       "localPath": "extensions/nextcloud-talk",
       "defaultChoice": "npm"
     }
@@ -169,14 +169,14 @@ Example:
 }
 ```
 
-iFlow can also merge **external channel catalogs** (for example, an MPM
+NewClaw can also merge **external channel catalogs** (for example, an MPM
 registry export). Drop a JSON file at one of:
 
-- `~/.iflow/mpm/plugins.json`
-- `~/.iflow/mpm/catalog.json`
-- `~/.iflow/plugins/catalog.json`
+- `~/.newclaw/mpm/plugins.json`
+- `~/.newclaw/mpm/catalog.json`
+- `~/.newclaw/plugins/catalog.json`
 
-Or point `IFLOW_PLUGIN_CATALOG_PATHS` (or `IFLOW_MPM_CATALOG_PATHS`) at
+Or point `NEWCLAW_PLUGIN_CATALOG_PATHS` (or `NEWCLAW_MPM_CATALOG_PATHS`) at
 one or more JSON files (comma/semicolon/`PATH`-delimited). Each file should
 contain `{ "entries": [ { "name": "@scope/pkg", "iflow": { "channel": {...}, "install": {...} } } ] }`.
 
@@ -187,7 +187,7 @@ Default plugin ids:
 - Package packs: `package.json` `name`
 - Standalone file: file base name (`~/.../voice-call.ts` → `voice-call`)
 
-If a plugin exports `id`, iFlow uses it but warns when it doesn’t match the
+If a plugin exports `id`, NewClaw uses it but warns when it doesn’t match the
 configured id.
 
 ## Config
@@ -247,7 +247,7 @@ are disabled with diagnostics.
 
 The Control UI uses `config.schema` (JSON Schema + `uiHints`) to render better forms.
 
-iFlow augments `uiHints` at runtime based on discovered plugins:
+NewClaw augments `uiHints` at runtime based on discovered plugins:
 
 - Adds per-plugin labels for `plugins.entries.<id>` / `.enabled` / `.config`
 - Merges optional plugin-provided config field hints under:
@@ -279,24 +279,24 @@ Example:
 ## CLI
 
 ```bash
-iflow plugins list
-iflow plugins info <id>
-iflow plugins install <path>                 # copy a local file/dir into ~/.iflow/extensions/<id>
-iflow plugins install ./extensions/voice-call # relative path ok
-iflow plugins install ./plugin.tgz           # install from a local tarball
-iflow plugins install ./plugin.zip           # install from a local zip
-iflow plugins install -l ./extensions/voice-call # link (no copy) for dev
-iflow plugins install @iflow/voice-call # install from npm
-iflow plugins update <id>
-iflow plugins update --all
-iflow plugins enable <id>
-iflow plugins disable <id>
-iflow plugins doctor
+newclaw plugins list
+newclaw plugins info <id>
+newclaw plugins install <path>                 # copy a local file/dir into ~/.newclaw/extensions/<id>
+newclaw plugins install ./extensions/voice-call # relative path ok
+newclaw plugins install ./plugin.tgz           # install from a local tarball
+newclaw plugins install ./plugin.zip           # install from a local zip
+newclaw plugins install -l ./extensions/voice-call # link (no copy) for dev
+newclaw plugins install @newclaw/voice-call # install from npm
+newclaw plugins update <id>
+newclaw plugins update --all
+newclaw plugins enable <id>
+newclaw plugins disable <id>
+newclaw plugins doctor
 ```
 
 `plugins update` only works for npm installs tracked under `plugins.installs`.
 
-Plugins may also register their own top‑level commands (example: `iflow voicecall`).
+Plugins may also register their own top‑level commands (example: `newclaw voicecall`).
 
 ## Plugin API (overview)
 
@@ -324,18 +324,18 @@ Notes:
 
 - Hook directories follow the normal hook structure (`HOOK.md` + `handler.ts`).
 - Hook eligibility rules still apply (OS/bins/env/config requirements).
-- Plugin-managed hooks show up in `iflow hooks list` with `plugin:<id>`.
-- You cannot enable/disable plugin-managed hooks via `iflow hooks`; enable/disable the plugin instead.
+- Plugin-managed hooks show up in `newclaw hooks list` with `plugin:<id>`.
+- You cannot enable/disable plugin-managed hooks via `newclaw hooks`; enable/disable the plugin instead.
 
 ## Provider plugins (model auth)
 
 Plugins can register **model provider auth** flows so users can run OAuth or
-API-key setup inside iFlow (no external scripts needed).
+API-key setup inside NewClaw (no external scripts needed).
 
 Register a provider via `api.registerProvider(...)`. Each provider exposes one
 or more auth methods (OAuth, API key, device code, etc.). These methods power:
 
-- `iflow models auth login --provider <id> [--method <id>]`
+- `newclaw models auth login --provider <id> [--method <id>]`
 
 Example:
 
@@ -561,7 +561,7 @@ Command handler context:
 - `isAuthorizedSender`: Whether the sender is an authorized user
 - `args`: Arguments passed after the command (if `acceptsArgs: true`)
 - `commandBody`: The full command text
-- `config`: The current iFlow config
+- `config`: The current NewClaw config
 
 Command options:
 
@@ -625,13 +625,13 @@ it’s present in your workspace/managed skills locations.
 Recommended packaging:
 
 - Main package: `iflow` (this repo)
-- Plugins: separate npm packages under `@iflow/*` (example: `@iflow/voice-call`)
+- Plugins: separate npm packages under `@newclaw/*` (example: `@newclaw/voice-call`)
 
 Publishing contract:
 
 - Plugin `package.json` must include `iflow.extensions` with one or more entry files.
 - Entry files can be `.js` or `.ts` (jiti loads TS at runtime).
-- `iflow plugins install <npm-spec>` uses `npm pack`, extracts into `~/.iflow/extensions/<id>/`, and enables it in config.
+- `newclaw plugins install <npm-spec>` uses `npm pack`, extracts into `~/.newclaw/extensions/<id>/`, and enables it in config.
 - Config key stability: scoped packages are normalized to the **unscoped** id for `plugins.entries.*`.
 
 ## Example plugin: Voice Call
@@ -640,7 +640,7 @@ This repo includes a voice‑call plugin (Twilio or log fallback):
 
 - Source: `extensions/voice-call`
 - Skill: `skills/voice-call`
-- CLI: `iflow voicecall start|status`
+- CLI: `newclaw voicecall start|status`
 - Tool: `voice_call`
 - RPC: `voicecall.start`, `voicecall.status`
 - Config (twilio): `provider: "twilio"` + `twilio.accountSid/authToken/from` (optional `statusCallbackUrl`, `twimlUrl`)

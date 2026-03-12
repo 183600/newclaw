@@ -43,6 +43,6 @@ USER node
 # Binds to loopback (127.0.0.1) by default for security.
 #
 # For container platforms requiring external health checks:
-#   1. Set IFLOW_GATEWAY_TOKEN or IFLOW_GATEWAY_PASSWORD env var
+#   1. Set NEWCLAW_GATEWAY_TOKEN or NEWCLAW_GATEWAY_PASSWORD env var
 #   2. Override CMD: ["node","dist/index.js","gateway","--allow-unconfigured","--bind","lan"]
 CMD ["node", "dist/index.js", "gateway", "--allow-unconfigured"]

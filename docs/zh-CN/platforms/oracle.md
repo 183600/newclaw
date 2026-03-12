@@ -1,9 +1,9 @@
 ---
 read_when:
-  - 在 Oracle Cloud 上部署 iFlow
-  - 寻找低成本 VPS 托管方案来运行 iFlow
-  - 希望在小型服务器上全天候运行 iFlow
-summary: 在 Oracle Cloud（Always Free ARM）上运行 iFlow
+  - 在 Oracle Cloud 上部署 NewClaw
+  - 寻找低成本 VPS 托管方案来运行 NewClaw
+  - 希望在小型服务器上全天候运行 NewClaw
+summary: 在 Oracle Cloud（Always Free ARM）上运行 NewClaw
 title: Oracle Cloud
 x-i18n:
   generated_at: "2026-02-01T21:34:35Z"
@@ -14,13 +14,13 @@ x-i18n:
   workflow: 15
 ---
 
-# 在 Oracle Cloud (OCI) 上运行 iFlow
+# 在 Oracle Cloud (OCI) 上运行 NewClaw
 
 ## 目标
 
-在 Oracle Cloud 的 **Always Free** ARM 层级上运行持久化的 iFlow Gateway网关。
+在 Oracle Cloud 的 **Always Free** ARM 层级上运行持久化的 NewClaw Gateway网关。
 
-Oracle 的免费层级非常适合运行 iFlow（特别是如果你已有 OCI 账户），但也存在一些权衡：
+Oracle 的免费层级非常适合运行 NewClaw（特别是如果你已有 OCI 账户），但也存在一些权衡：
 
 - ARM 架构（大多数东西都能运行，但某些二进制文件可能仅支持 x86）
 - 容量和注册流程可能不太稳定
@@ -103,10 +103,10 @@ tailscale status
 
 **从现在开始，通过 Tailscale 连接：** `ssh ubuntu@iflow`（或使用 Tailscale IP）。
 
-## 5) 安装 iFlow
+## 5) 安装 NewClaw
 
 ```bash
-curl -fsSL https://iflow.ai/install.sh | bash
+curl -fsSL https://newclaw.ai/install.sh | bash
 source ~/.bashrc
 ```
 
@@ -120,27 +120,27 @@ source ~/.bashrc
 
 ```bash
 # 将 Gateway网关限制在虚拟机本地
-iflow config set gateway.bind loopback
+newclaw config set gateway.bind loopback
 
 # 为 Gateway网关 + 控制 UI 启用认证
-iflow config set gateway.auth.mode token
-iflow doctor --generate-gateway-token
+newclaw config set gateway.auth.mode token
+newclaw doctor --generate-gateway-token
 
 # 通过 Tailscale Serve 暴露（HTTPS + tailnet 访问）
-iflow config set gateway.tailscale.mode serve
-iflow config set gateway.trustedProxies '["127.0.0.1"]'
+newclaw config set gateway.tailscale.mode serve
+newclaw config set gateway.trustedProxies '["127.0.0.1"]'
 
-systemctl --user restart iflow-gateway
+systemctl --user restart newclaw-gateway
 ```
 
 ## 7) 验证
 
 ```bash
 # 检查版本
-iflow --version
+newclaw --version
 
 # 检查守护进程状态
-systemctl --user status iflow-gateway
+systemctl --user status newclaw-gateway
 
 # 检查 Tailscale Serve
 tailscale serve status
@@ -185,7 +185,7 @@ https://iflow.<tailnet-name>.ts.net/
 
 锁定 VCN（仅开放 UDP 41641）并将 Gateway网关绑定到 local loopback 后，你将获得强大的纵深防御：公共流量在网络边缘被阻止，管理访问通过 tailnet 进行。
 
-这种配置通常不再*需要*额外的主机防火墙规则来阻止全网 SSH 暴力破解——但你仍应保持操作系统更新、运行 `iflow security audit`，并确认没有意外监听公共接口。
+这种配置通常不再*需要*额外的主机防火墙规则来阻止全网 SSH 暴力破解——但你仍应保持操作系统更新、运行 `newclaw security audit`，并确认没有意外监听公共接口。
 
 ### 已受保护的内容
 
@@ -200,8 +200,8 @@ https://iflow.<tailnet-name>.ts.net/
 
 ### 仍然建议执行
 
-- **凭据权限：** `chmod 700 ~/.iflow`
-- **安全审计：** `iflow security audit`
+- **凭据权限：** `chmod 700 ~/.newclaw`
+- **安全审计：** `newclaw security audit`
 - **系统更新：** 定期运行 `sudo apt update && sudo apt upgrade`
 - **监控 Tailscale：** 在 [Tailscale 管理控制台](https://login.tailscale.com/admin) 中检查设备
 
@@ -250,15 +250,15 @@ ssh -L 18789:127.0.0.1:18789 ubuntu@iflow
 sudo tailscale status
 
 # 重新认证
-sudo tailscale up --ssh --hostname=iflow --reset
+sudo tailscale up --ssh --hostname=newclaw --reset
 ```
 
 ### Gateway网关无法启动
 
 ```bash
-iflow gateway status
-iflow doctor --non-interactive
-journalctl --user -u iflow-gateway -n 50
+newclaw gateway status
+newclaw doctor --non-interactive
+journalctl --user -u newclaw-gateway -n 50
 ```
 
 ### 无法访问控制 UI
@@ -271,7 +271,7 @@ tailscale serve status
 curl http://localhost:18789
 
 # 需要时重启
-systemctl --user restart iflow-gateway
+systemctl --user restart newclaw-gateway
 ```
 
 ### ARM 二进制文件问题
@@ -290,13 +290,13 @@ uname -m  # 应显示 aarch64
 
 所有状态保存在：
 
-- `~/.iflow/` — 配置、凭据、会话数据
-- `~/.iflow/workspace/` — 工作区（SOUL.md、记忆、产物）
+- `~/.newclaw/` — 配置、凭据、会话数据
+- `~/.newclaw/workspace/` — 工作区（SOUL.md、记忆、产物）
 
 定期备份：
 
 ```bash
-tar -czvf iflow-backup.tar.gz ~/.iflow ~/.iflow/workspace
+tar -czvf iflow-backup.tar.gz ~/.newclaw ~/.newclaw/workspace
 ```
 
 ---

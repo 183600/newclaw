@@ -9,7 +9,7 @@ title: "Logging"
 
 # Logging
 
-iFlow logs in two places:
+NewClaw logs in two places:
 
 - **File logs** (JSON lines) written by the Gateway.
 - **Console output** shown in terminals and the Control UI.
@@ -21,11 +21,11 @@ levels and formats.
 
 By default, the Gateway writes a rolling log file under:
 
-`/tmp/iflow/iflow-YYYY-MM-DD.log`
+`/tmp/newclaw/iflow-YYYY-MM-DD.log`
 
 The date uses the gateway host's local timezone.
 
-You can override this in `~/.iflow/iflow.json`:
+You can override this in `~/.newclaw/newclaw.json`:
 
 ```json
 {
@@ -42,7 +42,7 @@ You can override this in `~/.iflow/iflow.json`:
 Use the CLI to tail the gateway log file via RPC:
 
 ```bash
-iflow logs --follow
+newclaw logs --follow
 ```
 
 Output modes:
@@ -63,7 +63,7 @@ In JSON mode, the CLI emits `type`-tagged objects:
 If the Gateway is unreachable, the CLI prints a short hint to run:
 
 ```bash
-iflow doctor
+newclaw doctor
 ```
 
 ### Control UI (web)
@@ -76,7 +76,7 @@ See [/web/control-ui](/web/control-ui) for how to open it.
 To filter channel activity (WhatsApp/Telegram/etc), use:
 
 ```bash
-iflow channels logs --channel whatsapp
+newclaw channels logs --channel whatsapp
 ```
 
 ## Log formats
@@ -98,13 +98,13 @@ Console formatting is controlled by `logging.consoleStyle`.
 
 ## Configuring logging
 
-All logging configuration lives under `logging` in `~/.iflow/iflow.json`.
+All logging configuration lives under `logging` in `~/.newclaw/newclaw.json`.
 
 ```json
 {
   "logging": {
     "level": "info",
-    "file": "/tmp/iflow/iflow-YYYY-MM-DD.log",
+    "file": "/tmp/newclaw/iflow-YYYY-MM-DD.log",
     "consoleLevel": "info",
     "consoleStyle": "pretty",
     "redactSensitive": "tools",
@@ -150,7 +150,7 @@ diagnostics + the exporter plugin are enabled.
 
 - **OpenTelemetry (OTel)**: the data model + SDKs for traces, metrics, and logs.
 - **OTLP**: the wire protocol used to export OTel data to a collector/backend.
-- iFlow exports via **OTLP/HTTP (protobuf)** today.
+- NewClaw exports via **OTLP/HTTP (protobuf)** today.
 
 ### Signals exported
 
@@ -210,7 +210,7 @@ Flags are case-insensitive and support wildcards (e.g. `telegram.*` or `*`).
 Env override (one-off):
 
 ```
-IFLOW_DIAGNOSTICS=telegram.http,telegram.payload
+NEWCLAW_DIAGNOSTICS=telegram.http,telegram.payload
 ```
 
 Notes:
@@ -240,7 +240,7 @@ works with any OpenTelemetry collector/backend that accepts OTLP/HTTP.
       "enabled": true,
       "endpoint": "http://otel-collector:4318",
       "protocol": "http/protobuf",
-      "serviceName": "iflow-gateway",
+      "serviceName": "newclaw-gateway",
       "traces": true,
       "metrics": true,
       "logs": true,
@@ -253,7 +253,7 @@ works with any OpenTelemetry collector/backend that accepts OTLP/HTTP.
 
 Notes:
 
-- You can also enable the plugin with `iflow plugins enable diagnostics-otel`.
+- You can also enable the plugin with `newclaw plugins enable diagnostics-otel`.
 - `protocol` currently supports `http/protobuf` only. `grpc` is ignored.
 - Metrics include token usage, cost, context size, run duration, and message-flow
   counters/histograms (webhooks, queueing, session state, queue depth/wait).
@@ -344,7 +344,7 @@ Queues + sessions:
 
 ## Troubleshooting tips
 
-- **Gateway not reachable?** Run `iflow doctor` first.
+- **Gateway not reachable?** Run `newclaw doctor` first.
 - **Logs empty?** Check that the Gateway is running and writing to the file path
   in `logging.file`.
 - **Need more detail?** Set `logging.level` to `debug` or `trace` and retry.

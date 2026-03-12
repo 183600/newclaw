@@ -96,9 +96,9 @@ const spawnGatewayInstance = async (name: string): Promise<GatewayInstance> => {
   const hookToken = `token-${name}-${randomUUID()}`;
   const gatewayToken = `gateway-${name}-${randomUUID()}`;
   const homeDir = await fs.mkdtemp(path.join(os.tmpdir(), `claw-e2e-${name}-`));
-  const configDir = path.join(homeDir, ".iflow");
+  const configDir = path.join(homeDir, ".newclaw");
   await fs.mkdir(configDir, { recursive: true });
-  const configPath = path.join(configDir, "iflow.json");
+  const configPath = path.join(configDir, "newclaw.json");
   const stateDir = path.join(configDir, "state");
   const config = {
     gateway: { port, auth: { mode: "token", token: gatewayToken } },

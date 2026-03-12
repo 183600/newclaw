@@ -1,6 +1,6 @@
 ---
 read_when:
-  - 打包 iFlow.app
+  - 打包 NewClaw.app
   - 调试 macOS gateway launchd 服务
   - 为 macOS 安装 gateway CLI
 summary: macOS 上的 Gateway网关运行时（外部 launchd 服务）
@@ -16,7 +16,7 @@ x-i18n:
 
 # macOS 上的 Gateway网关（外部 launchd）
 
-iFlow.app 不再捆绑 Node/Bun 或 Gateway网关运行时。macOS 应用
+NewClaw.app 不再捆绑 Node/Bun 或 Gateway网关运行时。macOS 应用
 要求**外部**安装 `iflow` CLI，不会将 Gateway网关作为子进程启动，而是管理一个
 按用户配置的 launchd 服务来保持 Gateway网关运行（如果本地已有 Gateway网关在运行，则会连接到现有实例）。
 
@@ -44,17 +44,17 @@ Plist 位置（按用户）：
 管理者：
 
 - macOS 应用在本地模式下负责 LaunchAgent 的安装/更新。
-- CLI 也可以安装它：`iflow gateway install`。
+- CLI 也可以安装它：`newclaw gateway install`。
 
 行为：
 
-- "iFlow Active" 启用/禁用 LaunchAgent。
+- "NewClaw Active" 启用/禁用 LaunchAgent。
 - 退出应用**不会**停止 Gateway网关（launchd 会保持其运行）。
 - 如果配置端口上已有 Gateway网关在运行，应用会连接到该实例，而不是启动新的。
 
 日志：
 
-- launchd 标准输出/错误：`/tmp/iflow/iflow-gateway.log`
+- launchd 标准输出/错误：`/tmp/newclaw/newclaw-gateway.log`
 
 ## 版本兼容性
 
@@ -63,15 +63,15 @@ macOS 应用会将 Gateway网关版本与自身版本进行比对。如果不兼
 ## 冒烟测试
 
 ```bash
-iflow --version
+newclaw --version
 
-IFLOW_SKIP_CHANNELS=1 \
-IFLOW_SKIP_CANVAS_HOST=1 \
-iflow gateway --port 18999 --bind loopback
+NEWCLAW_SKIP_CHANNELS=1 \
+NEWCLAW_SKIP_CANVAS_HOST=1 \
+newclaw gateway --port 18999 --bind loopback
 ```
 
 然后：
 
 ```bash
-iflow gateway call health --url ws://127.0.0.1:18999 --timeout 3000
+newclaw gateway call health --url ws://127.0.0.1:18999 --timeout 3000
 ```

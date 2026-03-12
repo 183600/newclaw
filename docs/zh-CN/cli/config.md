@@ -1,7 +1,7 @@
 ---
 read_when:
   - 你想以非交互方式读取或编辑配置
-summary: "`iflow config` 的 CLI 参考（获取/设置/删除配置值）"
+summary: "`newclaw config` 的 CLI 参考（获取/设置/删除配置值）"
 title: config
 x-i18n:
   generated_at: "2026-02-01T19:58:45Z"
@@ -12,18 +12,18 @@ x-i18n:
   workflow: 14
 ---
 
-# `iflow config`
+# `newclaw config`
 
-配置辅助工具：通过路径获取/设置/删除值。不带子命令运行时将打开配置向导（与 `iflow configure` 相同）。
+配置辅助工具：通过路径获取/设置/删除值。不带子命令运行时将打开配置向导（与 `newclaw configure` 相同）。
 
 ## 示例
 
 ```bash
-iflow config get browser.executablePath
-iflow config set browser.executablePath "/usr/bin/google-chrome"
-iflow config set agents.defaults.heartbeat.every "2h"
-iflow config set agents.list[0].tools.exec.node "node-id-or-name"
-iflow config unset tools.web.search.apiKey
+newclaw config get browser.executablePath
+newclaw config set browser.executablePath "/usr/bin/google-chrome"
+newclaw config set agents.defaults.heartbeat.every "2h"
+newclaw config set agents.list[0].tools.exec.node "node-id-or-name"
+newclaw config unset tools.web.search.apiKey
 ```
 
 ## 路径
@@ -31,15 +31,15 @@ iflow config unset tools.web.search.apiKey
 路径使用点号或方括号表示法：
 
 ```bash
-iflow config get agents.defaults.workspace
-iflow config get agents.list[0].id
+newclaw config get agents.defaults.workspace
+newclaw config get agents.list[0].id
 ```
 
 使用智能体列表索引来指定特定智能体：
 
 ```bash
-iflow config get agents.list
-iflow config set agents.list[1].tools.exec.node "node-id-or-name"
+newclaw config get agents.list
+newclaw config set agents.list[1].tools.exec.node "node-id-or-name"
 ```
 
 ## 值
@@ -48,9 +48,9 @@ iflow config set agents.list[1].tools.exec.node "node-id-or-name"
 使用 `--json` 强制要求 JSON5 解析。
 
 ```bash
-iflow config set agents.defaults.heartbeat.every "0m"
-iflow config set gateway.port 19001 --json
-iflow config set channels.whatsapp.groups '["*"]' --json
+newclaw config set agents.defaults.heartbeat.every "0m"
+newclaw config set gateway.port 19001 --json
+newclaw config set channels.whatsapp.groups '["*"]' --json
 ```
 
 编辑后请重启 Gateway网关。

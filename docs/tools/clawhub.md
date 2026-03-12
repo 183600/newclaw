@@ -1,30 +1,30 @@
 ---
-summary: "iFlowHub guide: public skills registry + CLI workflows"
+summary: "NewClawHub guide: public skills registry + CLI workflows"
 read_when:
-  - Introducing iFlowHub to new users
+  - Introducing NewClawHub to new users
   - Installing, searching, or publishing skills
-  - Explaining iFlowHub CLI flags and sync behavior
-title: "iFlowHub"
+  - Explaining NewClawHub CLI flags and sync behavior
+title: "NewClawHub"
 ---
 
-# iFlowHub
+# NewClawHub
 
-iFlowHub is the **public skill registry for iFlow**. It is a free service: all skills are public, open, and visible to everyone for sharing and reuse. A skill is just a folder with a `SKILL.md` file (plus supporting text files). You can browse skills in the web app or use the CLI to search, install, update, and publish skills.
+NewClawHub is the **public skill registry for NewClaw**. It is a free service: all skills are public, open, and visible to everyone for sharing and reuse. A skill is just a folder with a `SKILL.md` file (plus supporting text files). You can browse skills in the web app or use the CLI to search, install, update, and publish skills.
 
 Site: [clawhub.ai](https://clawhub.ai)
 
-## What iFlowHub is
+## What NewClawHub is
 
-- A public registry for iFlow skills.
+- A public registry for NewClaw skills.
 - A versioned store of skill bundles and metadata.
 - A discovery surface for search, tags, and usage signals.
 
 ## How it works
 
 1. A user publishes a skill bundle (files + metadata).
-2. iFlowHub stores the bundle, parses metadata, and assigns a version.
+2. NewClawHub stores the bundle, parses metadata, and assigns a version.
 3. The registry indexes the skill for search and discovery.
-4. Users browse, download, and install skills in iFlow.
+4. Users browse, download, and install skills in NewClaw.
 
 ## What you can do
 
@@ -36,7 +36,7 @@ Site: [clawhub.ai](https://clawhub.ai)
 
 ## Who this is for (beginner-friendly)
 
-If you want to add new capabilities to your iFlow agent, iFlowHub is the easiest way to find and install skills. You do not need to know how the backend works. You can:
+If you want to add new capabilities to your NewClaw agent, NewClawHub is the easiest way to find and install skills. You do not need to know how the backend works. You can:
 
 - Search for skills by plain language.
 - Install a skill into your workspace.
@@ -50,7 +50,7 @@ If you want to add new capabilities to your iFlow agent, iFlowHub is the easiest
    - `clawhub search "calendar"`
 3. Install a skill:
    - `clawhub install <skill-slug>`
-4. Start a new iFlow session so it picks up the new skill.
+4. Start a new NewClaw session so it picks up the new skill.
 
 ## Install the CLI
 
@@ -64,16 +64,16 @@ npm i -g clawhub
 pnpm add -g clawhub
 ```
 
-## How it fits into iFlow
+## How it fits into NewClaw
 
-By default, the CLI installs skills into `./skills` under your current working directory. If a iFlow workspace is configured, `clawhub` falls back to that workspace unless you override `--workdir` (or `CLAWHUB_WORKDIR`). iFlow loads workspace skills from `<workspace>/skills` and will pick them up in the **next** session. If you already use `~/.iflow/skills` or bundled skills, workspace skills take precedence.
+By default, the CLI installs skills into `./skills` under your current working directory. If a NewClaw workspace is configured, `clawhub` falls back to that workspace unless you override `--workdir` (or `CLAWHUB_WORKDIR`). NewClaw loads workspace skills from `<workspace>/skills` and will pick them up in the **next** session. If you already use `~/.newclaw/skills` or bundled skills, workspace skills take precedence.
 
 For more detail on how skills are loaded, shared, and gated, see
 [Skills](/tools/skills).
 
 ## Skill system overview
 
-A skill is a versioned bundle of files that teaches iFlow how to perform a
+A skill is a versioned bundle of files that teaches NewClaw how to perform a
 specific task. Each publish creates a new version, and the registry keeps a
 history of versions so users can audit changes.
 
@@ -83,7 +83,7 @@ A typical skill includes:
 - Optional configs, scripts, or supporting files used by the skill.
 - Metadata such as tags, summary, and install requirements.
 
-iFlowHub uses metadata to power discovery and safely expose skill capabilities.
+NewClawHub uses metadata to power discovery and safely expose skill capabilities.
 The registry also tracks usage signals (such as stars and downloads) to improve
 ranking and visibility.
 
@@ -99,7 +99,7 @@ ranking and visibility.
 
 ## Security and moderation
 
-iFlowHub is open by default. Anyone can upload skills, but a GitHub account must
+NewClawHub is open by default. Anyone can upload skills, but a GitHub account must
 be at least one week old to publish. This helps slow down abuse without blocking
 legitimate contributors.
 
@@ -112,14 +112,14 @@ Reporting and moderation:
 - Moderators can view hidden skills, unhide them, delete them, or ban users.
 - Abusing the report feature can result in account bans.
 
-Interested in becoming a moderator? Ask in the iFlow Discord and contact a
+Interested in becoming a moderator? Ask in the NewClaw Discord and contact a
 moderator or maintainer.
 
 ## CLI commands and parameters
 
 Global options (apply to all commands):
 
-- `--workdir <dir>`: Working directory (default: current dir; falls back to iFlow workspace).
+- `--workdir <dir>`: Working directory (default: current dir; falls back to NewClaw workspace).
 - `--dir <dir>`: Skills directory, relative to workdir (default: `skills`).
 - `--site <url>`: Site base URL (browser login).
 - `--registry <url>`: Registry API base URL.
@@ -233,12 +233,12 @@ Updates compare the local skill contents to registry versions using a content ha
 
 ### Sync scanning and fallback roots
 
-`clawhub sync` scans your current workdir first. If no skills are found, it falls back to known legacy locations (for example `~/iflow/skills` and `~/.iflow/skills`). This is designed to find older skill installs without extra flags.
+`clawhub sync` scans your current workdir first. If no skills are found, it falls back to known legacy locations (for example `~/newclaw/skills` and `~/.newclaw/skills`). This is designed to find older skill installs without extra flags.
 
 ### Storage and lockfile
 
 - Installed skills are recorded in `.iflowhub/lock.json` under your workdir.
-- Auth tokens are stored in the iFlowHub CLI config file (override via `CLAWHUB_CONFIG_PATH`).
+- Auth tokens are stored in the NewClawHub CLI config file (override via `CLAWHUB_CONFIG_PATH`).
 
 ### Telemetry (install counts)
 

@@ -1,15 +1,15 @@
 ---
-summary: "CLI reference for `iflow browser` (profiles, tabs, actions, extension relay)"
+summary: "CLI reference for `newclaw browser` (profiles, tabs, actions, extension relay)"
 read_when:
-  - You use `iflow browser` and want examples for common tasks
+  - You use `newclaw browser` and want examples for common tasks
   - You want to control a browser running on another machine via a node host
   - You want to use the Chrome extension relay (attach/detach via toolbar button)
 title: "browser"
 ---
 
-# `iflow browser`
+# `newclaw browser`
 
-Manage iFlow’s browser control server and run browser actions (tabs, snapshots, screenshots, navigation, clicks, typing).
+Manage NewClaw’s browser control server and run browser actions (tabs, snapshots, screenshots, navigation, clicks, typing).
 
 Related:
 
@@ -27,38 +27,38 @@ Related:
 ## Quick start (local)
 
 ```bash
-iflow browser --browser-profile chrome tabs
-iflow browser --browser-profile iflow start
-iflow browser --browser-profile iflow open https://example.com
-iflow browser --browser-profile iflow snapshot
+newclaw browser --browser-profile chrome tabs
+newclaw browser --browser-profile newclaw start
+newclaw browser --browser-profile newclaw open https://example.com
+newclaw browser --browser-profile newclaw snapshot
 ```
 
 ## Profiles
 
 Profiles are named browser routing configs. In practice:
 
-- `iflow`: launches/attaches to a dedicated iFlow-managed Chrome instance (isolated user data dir).
+- `iflow`: launches/attaches to a dedicated NewClaw-managed Chrome instance (isolated user data dir).
 - `chrome`: controls your existing Chrome tab(s) via the Chrome extension relay.
 
 ```bash
-iflow browser profiles
-iflow browser create-profile --name work --color "#FF5A36"
-iflow browser delete-profile --name work
+newclaw browser profiles
+newclaw browser create-profile --name work --color "#FF5A36"
+newclaw browser delete-profile --name work
 ```
 
 Use a specific profile:
 
 ```bash
-iflow browser --browser-profile work tabs
+newclaw browser --browser-profile work tabs
 ```
 
 ## Tabs
 
 ```bash
-iflow browser tabs
-iflow browser open https://docs.iflow.ai
-iflow browser focus <targetId>
-iflow browser close <targetId>
+newclaw browser tabs
+newclaw browser open https://docs.newclaw.ai
+newclaw browser focus <targetId>
+newclaw browser close <targetId>
 ```
 
 ## Snapshot / screenshot / actions
@@ -66,21 +66,21 @@ iflow browser close <targetId>
 Snapshot:
 
 ```bash
-iflow browser snapshot
+newclaw browser snapshot
 ```
 
 Screenshot:
 
 ```bash
-iflow browser screenshot
+newclaw browser screenshot
 ```
 
 Navigate/click/type (ref-based UI automation):
 
 ```bash
-iflow browser navigate https://example.com
-iflow browser click <ref>
-iflow browser type <ref> "hello"
+newclaw browser navigate https://example.com
+newclaw browser click <ref>
+newclaw browser type <ref> "hello"
 ```
 
 ## Chrome extension relay (attach via toolbar button)
@@ -90,8 +90,8 @@ This mode lets the agent control an existing Chrome tab that you attach manually
 Install the unpacked extension to a stable path:
 
 ```bash
-iflow browser extension install
-iflow browser extension path
+newclaw browser extension install
+newclaw browser extension path
 ```
 
 Then Chrome → `chrome://extensions` → enable “Developer mode” → “Load unpacked” → select the printed folder.

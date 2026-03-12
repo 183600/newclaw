@@ -6,7 +6,7 @@
 set -euo pipefail
 
 # Configuration
-SUBSYSTEM="ai.iflow"
+SUBSYSTEM="ai.newclaw"
 DEFAULT_LEVEL="info"
 
 # Colors for output
@@ -58,7 +58,7 @@ DESCRIPTION:
     Requires sudo access configured for /usr/bin/log command.
 
 LOG FLOW ARCHITECTURE:
-    Claw logs flow through the macOS unified log (subsystem: ai.iflow).
+    Claw logs flow through the macOS unified log (subsystem: ai.newclaw).
 
 LOG CATEGORIES (examples):
     • voicewake           - Voice wake detection/test harness

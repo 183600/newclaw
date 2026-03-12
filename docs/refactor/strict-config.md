@@ -48,8 +48,8 @@ title: "Strict Config Validation"
 - Doctor runs **every time** config is loaded (dry-run by default).
 - If config invalid:
   - Print a summary + actionable errors.
-  - Instruct: `iflow doctor --fix`.
-- `iflow doctor --fix`:
+  - Instruct: `newclaw doctor --fix`.
+- `newclaw doctor --fix`:
   - Applies migrations.
   - Removes unknown keys.
   - Writes updated config.
@@ -58,14 +58,14 @@ title: "Strict Config Validation"
 
 Allowed (diagnostic-only):
 
-- `iflow doctor`
-- `iflow logs`
-- `iflow health`
-- `iflow help`
-- `iflow status`
-- `iflow gateway status`
+- `newclaw doctor`
+- `newclaw logs`
+- `newclaw health`
+- `newclaw help`
+- `newclaw status`
+- `newclaw gateway status`
 
-Everything else must hard-fail with: “Config invalid. Run `iflow doctor --fix`.”
+Everything else must hard-fail with: “Config invalid. Run `newclaw doctor --fix`.”
 
 ## Error UX format
 

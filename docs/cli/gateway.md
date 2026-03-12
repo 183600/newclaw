@@ -1,5 +1,5 @@
 ---
-summary: "iFlow Gateway CLI (`iflow gateway`) — run, query, and discover gateways"
+summary: "NewClaw Gateway CLI (`newclaw gateway`) — run, query, and discover gateways"
 read_when:
   - Running the Gateway from the CLI (dev or servers)
   - Debugging Gateway auth, bind modes, and connectivity
@@ -9,9 +9,9 @@ title: "gateway"
 
 # Gateway CLI
 
-The Gateway is iFlow’s WebSocket server (channels, nodes, sessions, hooks).
+The Gateway is NewClaw’s WebSocket server (channels, nodes, sessions, hooks).
 
-Subcommands in this page live under `iflow gateway …`.
+Subcommands in this page live under `newclaw gateway …`.
 
 Related docs:
 
@@ -24,18 +24,18 @@ Related docs:
 Run a local Gateway process:
 
 ```bash
-iflow gateway
+newclaw gateway
 ```
 
 Foreground alias:
 
 ```bash
-iflow gateway run
+newclaw gateway run
 ```
 
 Notes:
 
-- By default, the Gateway refuses to start unless `gateway.mode=local` is set in `~/.iflow/iflow.json`. Use `--allow-unconfigured` for ad-hoc/dev runs.
+- By default, the Gateway refuses to start unless `gateway.mode=local` is set in `~/.newclaw/newclaw.json`. Use `--allow-unconfigured` for ad-hoc/dev runs.
 - Binding beyond loopback without auth is blocked (safety guardrail).
 - `SIGUSR1` triggers an in-process restart when authorized (enable `commands.restart` or use the gateway tool/config apply/update).
 - `SIGINT`/`SIGTERM` handlers stop the gateway process, but they don’t restore any custom terminal state. If you wrap the CLI with a TUI or raw-mode input, restore the terminal before exit.
@@ -45,8 +45,8 @@ Notes:
 - `--port <port>`: WebSocket port (default comes from config/env; usually `18789`).
 - `--bind <loopback|lan|tailnet|auto|custom>`: listener bind mode.
 - `--auth <token|password>`: auth mode override.
-- `--token <token>`: token override (also sets `IFLOW_GATEWAY_TOKEN` for the process).
-- `--password <password>`: password override (also sets `IFLOW_GATEWAY_PASSWORD` for the process).
+- `--token <token>`: token override (also sets `NEWCLAW_GATEWAY_TOKEN` for the process).
+- `--password <password>`: password override (also sets `NEWCLAW_GATEWAY_PASSWORD` for the process).
 - `--tailscale <off|serve|funnel>`: expose the Gateway via Tailscale.
 - `--tailscale-reset-on-exit`: reset Tailscale serve/funnel config on shutdown.
 - `--allow-unconfigured`: allow gateway start without `gateway.mode=local` in config.
@@ -81,7 +81,7 @@ Shared options (where supported):
 ### `gateway health`
 
 ```bash
-iflow gateway health --url ws://127.0.0.1:18789
+newclaw gateway health --url ws://127.0.0.1:18789
 ```
 
 ### `gateway status`
@@ -89,8 +89,8 @@ iflow gateway health --url ws://127.0.0.1:18789
 `gateway status` shows the Gateway service (launchd/systemd/schtasks) plus an optional RPC probe.
 
 ```bash
-iflow gateway status
-iflow gateway status --json
+newclaw gateway status
+newclaw gateway status --json
 ```
 
 Options:
@@ -112,8 +112,8 @@ Options:
 If multiple gateways are reachable, it prints all of them. Multiple gateways are supported when you use isolated profiles/ports (e.g., a rescue bot), but most installs still run a single gateway.
 
 ```bash
-iflow gateway probe
-iflow gateway probe --json
+newclaw gateway probe
+newclaw gateway probe --json
 ```
 
 #### Remote over SSH (Mac app parity)
@@ -123,7 +123,7 @@ The macOS app “Remote over SSH” mode uses a local port-forward so the remote
 CLI equivalent:
 
 ```bash
-iflow gateway probe --ssh user@gateway-host
+newclaw gateway probe --ssh user@gateway-host
 ```
 
 Options:
@@ -142,18 +142,18 @@ Config (optional, used as defaults):
 Low-level RPC helper.
 
 ```bash
-iflow gateway call status
-iflow gateway call logs.tail --params '{"sinceMs": 60000}'
+newclaw gateway call status
+newclaw gateway call logs.tail --params '{"sinceMs": 60000}'
 ```
 
 ## Manage the Gateway service
 
 ```bash
-iflow gateway install
-iflow gateway start
-iflow gateway stop
-iflow gateway restart
-iflow gateway uninstall
+newclaw gateway install
+newclaw gateway start
+newclaw gateway stop
+newclaw gateway restart
+newclaw gateway uninstall
 ```
 
 Notes:
@@ -163,10 +163,10 @@ Notes:
 
 ## Discover gateways (Bonjour)
 
-`gateway discover` scans for Gateway beacons (`_iflow-gw._tcp`).
+`gateway discover` scans for Gateway beacons (`_newclaw-gw._tcp`).
 
 - Multicast DNS-SD: `local.`
-- Unicast DNS-SD (Wide-Area Bonjour): choose a domain (example: `iflow.internal.`) and set up split DNS + a DNS server; see [/gateway/bonjour](/gateway/bonjour)
+- Unicast DNS-SD (Wide-Area Bonjour): choose a domain (example: `newclaw.internal.`) and set up split DNS + a DNS server; see [/gateway/bonjour](/gateway/bonjour)
 
 Only gateways with Bonjour discovery enabled (default) advertise the beacon.
 
@@ -183,7 +183,7 @@ Wide-Area discovery records include (TXT):
 ### `gateway discover`
 
 ```bash
-iflow gateway discover
+newclaw gateway discover
 ```
 
 Options:
@@ -194,6 +194,6 @@ Options:
 Examples:
 
 ```bash
-iflow gateway discover --timeout 4000
-iflow gateway discover --json | jq '.beacons[].wsUrl'
+newclaw gateway discover --timeout 4000
+newclaw gateway discover --json | jq '.beacons[].wsUrl'
 ```

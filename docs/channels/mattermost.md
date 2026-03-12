@@ -1,5 +1,5 @@
 ---
-summary: "Mattermost bot setup and iFlow config"
+summary: "Mattermost bot setup and NewClaw config"
 read_when:
   - Setting up Mattermost
   - Debugging Mattermost routing
@@ -19,17 +19,17 @@ Mattermost ships as a plugin and is not bundled with the core install.
 Install via CLI (npm registry):
 
 ```bash
-iflow plugins install @iflow/mattermost
+newclaw plugins install @newclaw/mattermost
 ```
 
 Local checkout (when running from a git repo):
 
 ```bash
-iflow plugins install ./extensions/mattermost
+newclaw plugins install ./extensions/mattermost
 ```
 
 If you choose Mattermost during configure/onboarding and a git checkout is detected,
-iFlow will offer the local install path automatically.
+NewClaw will offer the local install path automatically.
 
 Details: [Plugins](/plugin)
 
@@ -38,7 +38,7 @@ Details: [Plugins](/plugin)
 1. Install the Mattermost plugin.
 2. Create a Mattermost bot account and copy the **bot token**.
 3. Copy the Mattermost **base URL** (e.g., `https://chat.example.com`).
-4. Configure iFlow and start the gateway.
+4. Configure NewClaw and start the gateway.
 
 Minimal config:
 
@@ -94,8 +94,8 @@ Notes:
 
 - Default: `channels.mattermost.dmPolicy = "pairing"` (unknown senders get a pairing code).
 - Approve via:
-  - `iflow pairing list mattermost`
-  - `iflow pairing approve mattermost <CODE>`
+  - `newclaw pairing list mattermost`
+  - `newclaw pairing approve mattermost <CODE>`
 - Public DMs: `channels.mattermost.dmPolicy="open"` plus `channels.mattermost.allowFrom=["*"]`.
 
 ## Channels (groups)
@@ -106,7 +106,7 @@ Notes:
 
 ## Targets for outbound delivery
 
-Use these target formats with `iflow message send` or cron/webhooks:
+Use these target formats with `newclaw message send` or cron/webhooks:
 
 - `channel:<id>` for a channel
 - `user:<id>` for a DM

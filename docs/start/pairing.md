@@ -3,13 +3,13 @@ summary: "Pairing overview: approve who can DM you + which nodes can join"
 read_when:
   - Setting up DM access control
   - Pairing a new iOS/Android node
-  - Reviewing iFlow security posture
+  - Reviewing NewClaw security posture
 title: "Pairing"
 ---
 
 # Pairing
 
-“Pairing” is iFlow’s explicit **owner approval** step.
+“Pairing” is NewClaw’s explicit **owner approval** step.
 It is used in two places:
 
 1. **DM pairing** (who is allowed to talk to the bot)
@@ -32,15 +32,15 @@ Pairing codes:
 ### Approve a sender
 
 ```bash
-iflow pairing list telegram
-iflow pairing approve telegram <CODE>
+newclaw pairing list telegram
+newclaw pairing approve telegram <CODE>
 ```
 
 Supported channels: `telegram`, `whatsapp`, `signal`, `imessage`, `discord`, `slack`.
 
 ### Where the state lives
 
-Stored under `~/.iflow/credentials/`:
+Stored under `~/.newclaw/credentials/`:
 
 - Pending requests: `<channel>-pairing.json`
 - Approved allowlist store: `<channel>-allowFrom.json`
@@ -55,21 +55,21 @@ creates a device pairing request that must be approved.
 ### Approve a node device
 
 ```bash
-iflow devices list
-iflow devices approve <requestId>
-iflow devices reject <requestId>
+newclaw devices list
+newclaw devices approve <requestId>
+newclaw devices reject <requestId>
 ```
 
 ### Where the state lives
 
-Stored under `~/.iflow/devices/`:
+Stored under `~/.newclaw/devices/`:
 
 - `pending.json` (short-lived; pending requests expire)
 - `paired.json` (paired devices + tokens)
 
 ### Notes
 
-- The legacy `node.pair.*` API (CLI: `iflow nodes pending/approve`) is a
+- The legacy `node.pair.*` API (CLI: `newclaw nodes pending/approve`) is a
   separate gateway-owned pairing store. WS nodes still require device pairing.
 
 ## Related docs

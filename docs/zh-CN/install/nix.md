@@ -3,7 +3,7 @@ read_when:
   - 你想要可复现、可回滚的安装方式
   - 你已经在使用 Nix/NixOS/Home Manager
   - 你想要一切固定且声明式管理
-summary: 使用 Nix 声明式安装 iFlow
+summary: 使用 Nix 声明式安装 NewClaw
 title: Nix
 x-i18n:
   generated_at: "2026-02-01T21:08:16Z"
@@ -16,14 +16,14 @@ x-i18n:
 
 # Nix 安装
 
-使用 Nix 运行 iFlow 的推荐方式是通过 **[nix-iflow](https://github.com/iflow/nix-iflow)** — 一个开箱即用的 Home Manager 模块。
+使用 Nix 运行 NewClaw 的推荐方式是通过 **[nix-iflow](https://github.com/iflow/nix-iflow)** — 一个开箱即用的 Home Manager 模块。
 
 ## 快速开始
 
 将以下内容粘贴给你的 AI 智能体（Claude、Cursor 等）：
 
 ```text
-I want to set up nix-iflow on my Mac.
+I want to set up nix-newclaw on my Mac.
 Repository: github:iflow/nix-iflow
 
 What I need you to do:
@@ -34,12 +34,12 @@ What I need you to do:
 5. Fill in the template placeholders and run home-manager switch
 6. Verify: launchd running, bot responds to messages
 
-Reference the nix-iflow README for module options.
+Reference the nix-newclaw README for module options.
 ```
 
 > **📦 完整指南：[github.com/iflow/nix-iflow](https://github.com/iflow/nix-iflow)**
 >
-> nix-iflow 仓库是 Nix 安装的权威来源。本页仅为简要概览。
+> nix-newclaw 仓库是 Nix 安装的权威来源。本页仅为简要概览。
 
 ## 你将获得
 
@@ -52,13 +52,13 @@ Reference the nix-iflow README for module options.
 
 ## Nix 模式运行时行为
 
-当设置了 `IFLOW_NIX_MODE=1` 时（nix-iflow 会自动设置）：
+当设置了 `NEWCLAW_NIX_MODE=1` 时（nix-newclaw 会自动设置）：
 
-iFlow 支持 **Nix 模式**，使配置具有确定性并禁用自动安装流程。
+NewClaw 支持 **Nix 模式**，使配置具有确定性并禁用自动安装流程。
 通过导出以下环境变量启用：
 
 ```bash
-IFLOW_NIX_MODE=1
+NEWCLAW_NIX_MODE=1
 ```
 
 在 macOS 上，GUI 应用不会自动继承 shell 环境变量。你也可以
@@ -70,10 +70,10 @@ defaults write bot.molt.mac iflow.nixMode -bool true
 
 ### 配置 + 状态路径
 
-iFlow 从 `IFLOW_CONFIG_PATH` 读取 JSON5 配置，并将可变数据存储在 `IFLOW_STATE_DIR` 中。
+NewClaw 从 `NEWCLAW_CONFIG_PATH` 读取 JSON5 配置，并将可变数据存储在 `NEWCLAW_STATE_DIR` 中。
 
-- `IFLOW_STATE_DIR`（默认：`~/.iflow`）
-- `IFLOW_CONFIG_PATH`（默认：`$IFLOW_STATE_DIR/iflow.json`）
+- `NEWCLAW_STATE_DIR`（默认：`~/.newclaw`）
+- `NEWCLAW_CONFIG_PATH`（默认：`$NEWCLAW_STATE_DIR/newclaw.json`）
 
 在 Nix 下运行时，请将这些路径显式设置为 Nix 管理的位置，以便运行时状态和配置
 不会进入不可变存储。
@@ -89,10 +89,10 @@ iFlow 从 `IFLOW_CONFIG_PATH` 读取 JSON5 配置，并将可变数据存储在 
 macOS 打包流程需要一个稳定的 Info.plist 模板，位于：
 
 ```
-apps/macos/Sources/iFlow/Resources/Info.plist
+apps/macos/Sources/NewClaw/Resources/Info.plist
 ```
 
-[`scripts/package-mac-app.sh`](https://github.com/iflow/iflow/blob/main/scripts/package-mac-app.sh) 将此模板复制到应用包中并修补动态字段
+[`scripts/package-mac-app.sh`](https://github.com/newclaw/newclaw/blob/main/scripts/package-mac-app.sh) 将此模板复制到应用包中并修补动态字段
 （bundle ID、版本/构建号、Git SHA、Sparkle 密钥）。这使得 plist 对 SwiftPM
 打包和 Nix 构建保持确定性（它们不依赖完整的 Xcode 工具链）。
 

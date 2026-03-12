@@ -21,7 +21,7 @@ If the Gateway is running on the same computer, open:
 
 - http://127.0.0.1:18789/ (or http://localhost:18789/)
 
-If the page fails to load, start the Gateway first: `iflow gateway`.
+If the page fails to load, start the Gateway first: `newclaw gateway`.
 
 Auth is supplied during the WebSocket handshake via:
 
@@ -43,14 +43,14 @@ unauthorized access.
 
 ```bash
 # List pending requests
-iflow devices list
+newclaw devices list
 
 # Approve by request ID
-iflow devices approve <requestId>
+newclaw devices approve <requestId>
 ```
 
 Once approved, the device is remembered and won't require re-approval unless
-you revoke it with `iflow devices revoke --device <id> --role <role>`. See
+you revoke it with `newclaw devices revoke --device <id> --role <role>`. See
 [Devices CLI](/cli/devices) for token rotation and revocation.
 
 **Notes:**
@@ -71,7 +71,7 @@ you revoke it with `iflow devices revoke --device <id> --role <role>`. See
 - Skills: status, enable/disable, install, API key updates (`skills.*`)
 - Nodes: list + caps (`node.list`)
 - Exec approvals: edit gateway or node allowlists + ask policy for `exec host=gateway/node` (`exec.approvals.*`)
-- Config: view/edit `~/.iflow/iflow.json` (`config.get`, `config.set`)
+- Config: view/edit `~/.newclaw/newclaw.json` (`config.get`, `config.set`)
 - Config: apply + restart with validation (`config.apply`) and wake the last active session
 - Config writes include a base-hash guard to prevent clobbering concurrent edits
 - Config schema + form rendering (`config.schema`, including plugin + channel schemas); Raw JSON editor remains available
@@ -96,7 +96,7 @@ you revoke it with `iflow devices revoke --device <id> --role <role>`. See
 Keep the Gateway on loopback and let Tailscale Serve proxy it with HTTPS:
 
 ```bash
-iflow gateway --tailscale serve
+newclaw gateway --tailscale serve
 ```
 
 Open:
@@ -104,7 +104,7 @@ Open:
 - `https://<magicdns>/` (or your configured `gateway.controlUi.basePath`)
 
 By default, Serve requests can authenticate via Tailscale identity headers
-(`tailscale-user-login`) when `gateway.auth.allowTailscale` is `true`. iFlow
+(`tailscale-user-login`) when `gateway.auth.allowTailscale` is `true`. NewClaw
 verifies the identity by resolving the `x-forwarded-for` address with
 `tailscale whois` and matching it to the header, and only accepts these when the
 request hits loopback with Tailscale’s `x-forwarded-*` headers. Set
@@ -114,7 +114,7 @@ if you want to require a token/password even for Serve traffic.
 ### Bind to tailnet + token
 
 ```bash
-iflow gateway --bind tailnet --token "$(openssl rand -hex 32)"
+newclaw gateway --bind tailnet --token "$(openssl rand -hex 32)"
 ```
 
 Then open:
@@ -127,7 +127,7 @@ Paste the token into the UI settings (sent as `connect.params.auth.token`).
 
 If you open the dashboard over plain HTTP (`http://<lan-ip>` or `http://<tailscale-ip>`),
 the browser runs in a **non-secure context** and blocks WebCrypto. By default,
-iFlow **blocks** Control UI connections without device identity.
+NewClaw **blocks** Control UI connections without device identity.
 
 **Recommended fix:** use HTTPS (Tailscale Serve) or open the UI locally:
 
@@ -162,7 +162,7 @@ pnpm ui:build # auto-installs UI deps on first run
 Optional absolute base (when you want fixed asset URLs):
 
 ```bash
-IFLOW_CONTROL_UI_BASE_PATH=/iflow/ pnpm ui:build
+NEWCLAW_CONTROL_UI_BASE_PATH=/iflow/ pnpm ui:build
 ```
 
 For local development (separate dev server):

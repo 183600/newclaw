@@ -15,14 +15,14 @@ x-i18n:
 
 # 钩子
 
-钩子提供了一个可扩展的事件驱动系统，用于在响应智能体命令和事件时自动执行操作。钩子从目录中自动发现，并可通过 CLI 命令管理，类似于 iFlow 中 Skills 的工作方式。
+钩子提供了一个可扩展的事件驱动系统，用于在响应智能体命令和事件时自动执行操作。钩子从目录中自动发现，并可通过 CLI 命令管理，类似于 NewClaw 中 Skills 的工作方式。
 
 ## 快速了解
 
 钩子是在某些事件发生时运行的小脚本。有两种类型：
 
 - **钩子**（本页）：在智能体事件触发时在 Gateway网关内部运行，如 `/new`、`/reset`、`/stop` 或生命周期事件。
-- **Webhook**：外部 HTTP webhook，允许其他系统在 iFlow 中触发工作。参见 [Webhook 钩子](/automation/webhook) 或使用 `iflow webhooks` 获取 Gmail 辅助命令。
+- **Webhook**：外部 HTTP webhook，允许其他系统在 NewClaw 中触发工作。参见 [Webhook 钩子](/automation/webhook) 或使用 `newclaw webhooks` 获取 Gmail 辅助命令。
 
 钩子也可以捆绑在插件中；参见 [插件](/plugin#plugin-hooks)。
 
@@ -42,54 +42,54 @@ x-i18n:
 - 在发出 `/new` 时将会话上下文保存到记忆中
 - 记录所有命令用于审计
 - 在智能体生命周期事件上触发自定义自动化
-- 扩展 iFlow 的行为而无需修改核心代码
+- 扩展 NewClaw 的行为而无需修改核心代码
 
 ## 快速开始
 
 ### 内置钩子
 
-iFlow 附带四个自动发现的内置钩子：
+NewClaw 附带四个自动发现的内置钩子：
 
-- **💾 session-memory**：在你发出 `/new` 时将会话上下文保存到智能体工作区（默认 `~/.iflow/workspace/memory/`）
-- **📝 command-logger**：将所有命令事件记录到 `~/.iflow/logs/commands.log`
+- **💾 session-memory**：在你发出 `/new` 时将会话上下文保存到智能体工作区（默认 `~/.newclaw/workspace/memory/`）
+- **📝 command-logger**：将所有命令事件记录到 `~/.newclaw/logs/commands.log`
 - **🚀 boot-md**：在 Gateway网关启动时运行 `BOOT.md`（需要启用内部钩子）
 - **😈 soul-evil**：在清除窗口期间或随机概率下，将注入的 `SOUL.md` 内容替换为 `SOUL_EVIL.md`
 
 列出可用钩子：
 
 ```bash
-iflow hooks list
+newclaw hooks list
 ```
 
 启用钩子：
 
 ```bash
-iflow hooks enable session-memory
+newclaw hooks enable session-memory
 ```
 
 检查钩子状态：
 
 ```bash
-iflow hooks check
+newclaw hooks check
 ```
 
 获取详细信息：
 
 ```bash
-iflow hooks info session-memory
+newclaw hooks info session-memory
 ```
 
 ### 新手引导
 
-在新手引导（`iflow onboard`）期间，你会被提示启用推荐的钩子。向导会自动发现符合条件的钩子并展示供你选择。
+在新手引导（`newclaw onboard`）期间，你会被提示启用推荐的钩子。向导会自动发现符合条件的钩子并展示供你选择。
 
 ## 钩子发现
 
 钩子从三个目录自动发现（按优先级排序）：
 
 1. **工作区钩子**：`<workspace>/hooks/`（按智能体，最高优先级）
-2. **托管钩子**：`~/.iflow/hooks/`（用户安装，跨工作区共享）
-3. **内置钩子**：`<iflow>/dist/hooks/bundled/`（随 iFlow 附带）
+2. **托管钩子**：`~/.newclaw/hooks/`（用户安装，跨工作区共享）
+3. **内置钩子**：`<iflow>/dist/hooks/bundled/`（随 NewClaw 附带）
 
 托管钩子目录可以是**单个钩子**或**钩子包**（包目录）。
 
@@ -106,7 +106,7 @@ my-hook/
 钩子包是标准的 npm 包，通过 `package.json` 中的 `iflow.hooks` 导出一个或多个钩子。使用以下命令安装：
 
 ```bash
-iflow hooks install <path-or-spec>
+newclaw hooks install <path-or-spec>
 ```
 
 示例 `package.json`：
@@ -122,7 +122,7 @@ iflow hooks install <path-or-spec>
 ```
 
 每个条目指向一个包含 `HOOK.md` 和 `handler.ts`（或 `index.ts`）的钩子目录。
-钩子包可以附带依赖；它们将安装到 `~/.iflow/hooks/<id>` 下。
+钩子包可以附带依赖；它们将安装到 `~/.newclaw/hooks/<id>` 下。
 
 ## 钩子结构
 
@@ -134,7 +134,7 @@ iflow hooks install <path-or-spec>
 ---
 name: my-hook
 description: "这个钩子做什么的简短描述"
-homepage: https://docs.iflow.ai/hooks#my-hook
+homepage: https://docs.newclaw.ai/hooks#my-hook
 metadata:
   { "iflow": { "emoji": "🔗", "events": ["command:new"], "requires": { "bins": ["node"] } } }
 ---
@@ -248,7 +248,7 @@ export default myHandler;
 
 ### 工具结果钩子（插件 API）
 
-这些钩子不是事件流监听器；它们允许插件在 iFlow 持久化工具结果之前同步调整工具结果。
+这些钩子不是事件流监听器；它们允许插件在 NewClaw 持久化工具结果之前同步调整工具结果。
 
 - **`tool_result_persist`**：在工具结果写入会话记录之前进行转换。必须是同步的；返回更新后的工具结果负载或 `undefined` 以保持原样。参见 [智能体循环](/concepts/agent-loop)。
 
@@ -267,13 +267,13 @@ export default myHandler;
 ### 1. 选择位置
 
 - **工作区钩子**（`<workspace>/hooks/`）：按智能体，最高优先级
-- **托管钩子**（`~/.iflow/hooks/`）：跨工作区共享
+- **托管钩子**（`~/.newclaw/hooks/`）：跨工作区共享
 
 ### 2. 创建目录结构
 
 ```bash
-mkdir -p ~/.iflow/hooks/my-hook
-cd ~/.iflow/hooks/my-hook
+mkdir -p ~/.newclaw/hooks/my-hook
+cd ~/.newclaw/hooks/my-hook
 ```
 
 ### 3. 创建 HOOK.md
@@ -311,10 +311,10 @@ export default handler;
 
 ```bash
 # 验证钩子已被发现
-iflow hooks list
+newclaw hooks list
 
 # 启用它
-iflow hooks enable my-hook
+newclaw hooks enable my-hook
 
 # 重启你的 Gateway网关进程（macOS 上重启菜单栏应用，或重启开发进程）
 
@@ -408,46 +408,46 @@ iflow hooks enable my-hook
 
 ```bash
 # 列出所有钩子
-iflow hooks list
+newclaw hooks list
 
 # 仅显示符合条件的钩子
-iflow hooks list --eligible
+newclaw hooks list --eligible
 
 # 详细输出（显示缺失的要求）
-iflow hooks list --verbose
+newclaw hooks list --verbose
 
 # JSON 输出
-iflow hooks list --json
+newclaw hooks list --json
 ```
 
 ### 钩子信息
 
 ```bash
 # 显示钩子的详细信息
-iflow hooks info session-memory
+newclaw hooks info session-memory
 
 # JSON 输出
-iflow hooks info session-memory --json
+newclaw hooks info session-memory --json
 ```
 
 ### 检查资格
 
 ```bash
 # 显示资格摘要
-iflow hooks check
+newclaw hooks check
 
 # JSON 输出
-iflow hooks check --json
+newclaw hooks check --json
 ```
 
 ### 启用/禁用
 
 ```bash
 # 启用钩子
-iflow hooks enable session-memory
+newclaw hooks enable session-memory
 
 # 禁用钩子
-iflow hooks disable command-logger
+newclaw hooks disable command-logger
 ```
 
 ## 内置钩子
@@ -460,7 +460,7 @@ iflow hooks disable command-logger
 
 **要求**：必须配置 `workspace.dir`
 
-**输出**：`<workspace>/memory/YYYY-MM-DD-slug.md`（默认为 `~/.iflow/workspace`）
+**输出**：`<workspace>/memory/YYYY-MM-DD-slug.md`（默认为 `~/.newclaw/workspace`）
 
 **功能**：
 
@@ -488,7 +488,7 @@ iflow hooks disable command-logger
 **启用**：
 
 ```bash
-iflow hooks enable session-memory
+newclaw hooks enable session-memory
 ```
 
 ### command-logger
@@ -499,7 +499,7 @@ iflow hooks enable session-memory
 
 **要求**：无
 
-**输出**：`~/.iflow/logs/commands.log`
+**输出**：`~/.newclaw/logs/commands.log`
 
 **功能**：
 
@@ -518,19 +518,19 @@ iflow hooks enable session-memory
 
 ```bash
 # 查看最近的命令
-tail -n 20 ~/.iflow/logs/commands.log
+tail -n 20 ~/.newclaw/logs/commands.log
 
 # 用 jq 美化输出
-cat ~/.iflow/logs/commands.log | jq .
+cat ~/.newclaw/logs/commands.log | jq .
 
 # 按操作过滤
-grep '"action":"new"' ~/.iflow/logs/commands.log | jq .
+grep '"action":"new"' ~/.newclaw/logs/commands.log | jq .
 ```
 
 **启用**：
 
 ```bash
-iflow hooks enable command-logger
+newclaw hooks enable command-logger
 ```
 
 ### soul-evil
@@ -546,7 +546,7 @@ iflow hooks enable command-logger
 **启用**：
 
 ```bash
-iflow hooks enable soul-evil
+newclaw hooks enable soul-evil
 ```
 
 **配置**：
@@ -587,7 +587,7 @@ iflow hooks enable soul-evil
 **启用**：
 
 ```bash
-iflow hooks enable boot-md
+newclaw hooks enable boot-md
 ```
 
 ## 最佳实践
@@ -670,7 +670,7 @@ Registered hook: boot-md -> gateway:startup
 列出所有已发现的钩子：
 
 ```bash
-iflow hooks list --verbose
+newclaw hooks list --verbose
 ```
 
 ### 检查注册情况
@@ -689,7 +689,7 @@ const handler: HookHandler = async (event) => {
 检查钩子不符合条件的原因：
 
 ```bash
-iflow hooks info my-hook
+newclaw hooks info my-hook
 ```
 
 查看输出中缺失的要求。
@@ -705,7 +705,7 @@ iflow hooks info my-hook
 ./scripts/clawlog.sh -f
 
 # 其他平台
-tail -f ~/.iflow/gateway.log
+tail -f ~/.newclaw/gateway.log
 ```
 
 ### 直接测试钩子
@@ -781,20 +781,20 @@ Gateway网关启动
 1. 检查目录结构：
 
    ```bash
-   ls -la ~/.iflow/hooks/my-hook/
+   ls -la ~/.newclaw/hooks/my-hook/
    # 应该显示：HOOK.md、handler.ts
    ```
 
 2. 验证 HOOK.md 格式：
 
    ```bash
-   cat ~/.iflow/hooks/my-hook/HOOK.md
+   cat ~/.newclaw/hooks/my-hook/HOOK.md
    # 应该有包含 name 和 metadata 的 YAML 前置元数据
    ```
 
 3. 列出所有已发现的钩子：
    ```bash
-   iflow hooks list
+   newclaw hooks list
    ```
 
 ### 钩子不符合条件
@@ -802,7 +802,7 @@ Gateway网关启动
 检查要求：
 
 ```bash
-iflow hooks info my-hook
+newclaw hooks info my-hook
 ```
 
 查看缺失的内容：
@@ -817,7 +817,7 @@ iflow hooks info my-hook
 1. 验证钩子已启用：
 
    ```bash
-   iflow hooks list
+   newclaw hooks list
    # 已启用的钩子旁边应显示 ✓
    ```
 
@@ -864,8 +864,8 @@ node -e "import('./path/to/handler.ts').then(console.log)"
 1. 创建钩子目录：
 
    ```bash
-   mkdir -p ~/.iflow/hooks/my-hook
-   mv ./hooks/handlers/my-handler.ts ~/.iflow/hooks/my-hook/handler.ts
+   mkdir -p ~/.newclaw/hooks/my-hook
+   mv ./hooks/handlers/my-handler.ts ~/.newclaw/hooks/my-hook/handler.ts
    ```
 
 2. 创建 HOOK.md：
@@ -899,7 +899,7 @@ node -e "import('./path/to/handler.ts').then(console.log)"
 
 4. 验证并重启你的 Gateway网关进程：
    ```bash
-   iflow hooks list
+   newclaw hooks list
    # 应该显示：🎯 my-hook ✓
    ```
 
@@ -914,6 +914,6 @@ node -e "import('./path/to/handler.ts').then(console.log)"
 ## 另请参阅
 
 - [CLI 参考：hooks](/cli/hooks)
-- [内置钩子 README](https://github.com/iflow/iflow/tree/main/src/hooks/bundled)
+- [内置钩子 README](https://github.com/newclaw/newclaw/tree/main/src/hooks/bundled)
 - [Webhook 钩子](/automation/webhook)
 - [配置](/gateway/configuration#hooks)

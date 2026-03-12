@@ -39,7 +39,7 @@ Android connects directly to the Gateway WebSocket (default `ws://<host>:18789`)
 ### 1) Start the Gateway
 
 ```bash
-iflow gateway --port 18789 --verbose
+newclaw gateway --port 18789 --verbose
 ```
 
 Confirm in logs you see something like:
@@ -48,7 +48,7 @@ Confirm in logs you see something like:
 
 For tailnet-only setups (recommended for Vienna ⇄ London), bind the gateway to the tailnet IP:
 
-- Set `gateway.bind: "tailnet"` in `~/.iflow/iflow.json` on the gateway host.
+- Set `gateway.bind: "tailnet"` in `~/.newclaw/newclaw.json` on the gateway host.
 - Restart the Gateway / macOS menubar app.
 
 ### 2) Verify discovery (optional)
@@ -56,7 +56,7 @@ For tailnet-only setups (recommended for Vienna ⇄ London), bind the gateway to
 From the gateway machine:
 
 ```bash
-dns-sd -B _iflow-gw._tcp local.
+dns-sd -B _newclaw-gw._tcp local.
 ```
 
 More debugging notes: [Bonjour](/gateway/bonjour).
@@ -65,7 +65,7 @@ More debugging notes: [Bonjour](/gateway/bonjour).
 
 Android NSD/mDNS discovery won’t cross networks. If your Android node and the gateway are on different networks but connected via Tailscale, use Wide-Area Bonjour / unicast DNS-SD instead:
 
-1. Set up a DNS-SD zone (example `iflow.internal.`) on the gateway host and publish `_iflow-gw._tcp` records.
+1. Set up a DNS-SD zone (example `newclaw.internal.`) on the gateway host and publish `_newclaw-gw._tcp` records.
 2. Configure Tailscale split DNS for your chosen domain pointing at that DNS server.
 
 Details and example CoreDNS config: [Bonjour](/gateway/bonjour).
@@ -89,8 +89,8 @@ After the first successful pairing, Android auto-reconnects on launch:
 On the gateway machine:
 
 ```bash
-iflow nodes pending
-iflow nodes approve <requestId>
+newclaw nodes pending
+newclaw nodes approve <requestId>
 ```
 
 Pairing details: [Gateway pairing](/gateway/pairing).
@@ -99,11 +99,11 @@ Pairing details: [Gateway pairing](/gateway/pairing).
 
 - Via nodes status:
   ```bash
-  iflow nodes status
+  newclaw nodes status
   ```
 - Via Gateway:
   ```bash
-  iflow gateway call node.list --params "{}"
+  newclaw gateway call node.list --params "{}"
   ```
 
 ### 6) Chat + history
@@ -122,12 +122,12 @@ If you want the node to show real HTML/CSS/JS that the agent can edit on disk, p
 
 Note: nodes use the standalone canvas host on `canvasHost.port` (default `18793`).
 
-1. Create `~/.iflow/workspace/canvas/index.html` on the gateway host.
+1. Create `~/.newclaw/workspace/canvas/index.html` on the gateway host.
 
 2. Navigate the node to it (LAN):
 
 ```bash
-iflow nodes invoke --node "<Android Node>" --command canvas.navigate --params '{"url":"http://<gateway-hostname>.local:18793/__claw__/canvas/"}'
+newclaw nodes invoke --node "<Android Node>" --command canvas.navigate --params '{"url":"http://<gateway-hostname>.local:18793/__claw__/canvas/"}'
 ```
 
 Tailnet (optional): if both devices are on Tailscale, use a MagicDNS name or tailnet IP instead of `.local`, e.g. `http://<gateway-magicdns>:18793/__claw__/canvas/`.

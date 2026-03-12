@@ -2,14 +2,14 @@
 summary: "Integrated browser control service + action commands"
 read_when:
   - Adding agent-controlled browser automation
-  - Debugging why iflow is interfering with your own Chrome
+  - Debugging why newclaw is interfering with your own Chrome
   - Implementing browser settings + lifecycle in the macOS app
-title: "Browser (iFlow-managed)"
+title: "Browser (NewClaw-managed)"
 ---
 
 # Browser (iflow-managed)
 
-iFlow can run a **dedicated Chrome/Brave/Edge/Chromium profile** that the agent controls.
+NewClaw can run a **dedicated Chrome/Brave/Edge/Chromium profile** that the agent controls.
 It is isolated from your personal browser and is managed through a small local
 control service inside the Gateway (loopback only).
 
@@ -34,10 +34,10 @@ agent automation and verification.
 ## Quick start
 
 ```bash
-iflow browser --browser-profile iflow status
-iflow browser --browser-profile iflow start
-iflow browser --browser-profile iflow open https://example.com
-iflow browser --browser-profile iflow snapshot
+newclaw browser --browser-profile newclaw status
+newclaw browser --browser-profile newclaw start
+newclaw browser --browser-profile newclaw open https://example.com
+newclaw browser --browser-profile newclaw snapshot
 ```
 
 If you get “Browser disabled”, enable it in config (see below) and restart the
@@ -46,14 +46,14 @@ Gateway.
 ## Profiles: `iflow` vs `chrome`
 
 - `iflow`: managed, isolated browser (no extension required).
-- `chrome`: extension relay to your **system browser** (requires the iFlow
+- `chrome`: extension relay to your **system browser** (requires the NewClaw
   extension to be attached to a tab).
 
 Set `browser.defaultProfile: "iflow"` if you want managed mode by default.
 
 ## Configuration
 
-Browser settings live in `~/.iflow/iflow.json`.
+Browser settings live in `~/.newclaw/newclaw.json`.
 
 ```json5
 {
@@ -81,7 +81,7 @@ Notes:
 
 - The browser control service binds to loopback on a port derived from `gateway.port`
   (default: `18791`, which is gateway + 2). The relay uses the next port (`18792`).
-- If you override the Gateway port (`gateway.port` or `IFLOW_GATEWAY_PORT`),
+- If you override the Gateway port (`gateway.port` or `NEWCLAW_GATEWAY_PORT`),
   the derived browser ports shift to stay in the same “family”.
 - `cdpUrl` defaults to the relay port when unset.
 - `remoteCdpTimeoutMs` applies to remote (non-loopback) CDP reachability checks.
@@ -95,13 +95,13 @@ Notes:
 ## Use Brave (or another Chromium-based browser)
 
 If your **system default** browser is Chromium-based (Chrome/Brave/Edge/etc),
-iFlow uses it automatically. Set `browser.executablePath` to override
+NewClaw uses it automatically. Set `browser.executablePath` to override
 auto-detection:
 
 CLI example:
 
 ```bash
-iflow config set browser.executablePath "/usr/bin/google-chrome"
+newclaw config set browser.executablePath "/usr/bin/google-chrome"
 ```
 
 ```json5
@@ -132,20 +132,20 @@ iflow config set browser.executablePath "/usr/bin/google-chrome"
 - **Local control (default):** the Gateway starts the loopback control service and can launch a local browser.
 - **Remote control (node host):** run a node host on the machine that has the browser; the Gateway proxies browser actions to it.
 - **Remote CDP:** set `browser.profiles.<name>.cdpUrl` (or `browser.cdpUrl`) to
-  attach to a remote Chromium-based browser. In this case, iFlow will not launch a local browser.
+  attach to a remote Chromium-based browser. In this case, NewClaw will not launch a local browser.
 
 Remote CDP URLs can include auth:
 
 - Query tokens (e.g., `https://provider.example?token=<token>`)
 - HTTP Basic auth (e.g., `https://user:pass@provider.example`)
 
-iFlow preserves the auth when calling `/json/*` endpoints and when connecting
+NewClaw preserves the auth when calling `/json/*` endpoints and when connecting
 to the CDP WebSocket. Prefer environment variables or secrets managers for
 tokens instead of committing them to config files.
 
 ## Node browser proxy (zero-config default)
 
-If you run a **node host** on the machine that has your browser, iFlow can
+If you run a **node host** on the machine that has your browser, NewClaw can
 auto-route browser tool calls to that node without any extra browser config.
 This is the default path for remote gateways.
 
@@ -160,7 +160,7 @@ Notes:
 ## Browserless (hosted remote CDP)
 
 [Browserless](https://browserless.io) is a hosted Chromium service that exposes
-CDP endpoints over HTTPS. You can point a iFlow browser profile at a
+CDP endpoints over HTTPS. You can point a NewClaw browser profile at a
 Browserless region endpoint and authenticate with your API key.
 
 Example:
@@ -202,7 +202,7 @@ Remote CDP tips:
 
 ## Profiles (multi-browser)
 
-iFlow supports multiple named profiles (routing configs). Profiles can be:
+NewClaw supports multiple named profiles (routing configs). Profiles can be:
 
 - **iflow-managed**: a dedicated Chromium-based browser instance with its own user data directory + CDP port
 - **remote**: an explicit CDP URL (Chromium-based browser running elsewhere)
@@ -219,7 +219,7 @@ All control endpoints accept `?profile=<name>`; the CLI uses `--browser-profile`
 
 ## Chrome extension relay (use your existing Chrome)
 
-iFlow can also drive **your existing Chrome tabs** (no separate “iflow” Chrome instance) via a local CDP relay + a Chrome extension.
+NewClaw can also drive **your existing Chrome tabs** (no separate “iflow” Chrome instance) via a local CDP relay + a Chrome extension.
 
 Full guide: [Chrome extension](/tools/chrome-extension)
 
@@ -227,7 +227,7 @@ Flow:
 
 - The Gateway runs locally (same machine) or a node host runs on the browser machine.
 - A local **relay server** listens at a loopback `cdpUrl` (default: `http://127.0.0.1:18792`).
-- You click the **iFlow Browser Relay** extension icon on a tab to attach (it does not auto-attach).
+- You click the **NewClaw Browser Relay** extension icon on a tab to attach (it does not auto-attach).
 - The agent controls that tab via the normal `browser` tool, by selecting the right profile.
 
 If the Gateway runs elsewhere, run a node host on the browser machine so the Gateway can proxy browser actions.
@@ -245,22 +245,22 @@ Chrome extension relay takeover requires host browser control, so either:
 1. Load the extension (dev/unpacked):
 
 ```bash
-iflow browser extension install
+newclaw browser extension install
 ```
 
 - Chrome → `chrome://extensions` → enable “Developer mode”
-- “Load unpacked” → select the directory printed by `iflow browser extension path`
+- “Load unpacked” → select the directory printed by `newclaw browser extension path`
 - Pin the extension, then click it on the tab you want to control (badge shows `ON`).
 
 2. Use it:
 
-- CLI: `iflow browser --browser-profile chrome tabs`
+- CLI: `newclaw browser --browser-profile chrome tabs`
 - Agent tool: `browser` with `profile="chrome"`
 
 Optional: if you want a different name or relay port, create your own profile:
 
 ```bash
-iflow browser create-profile \
+newclaw browser create-profile \
   --name my-chrome \
   --driver extension \
   --cdp-url http://127.0.0.1:18792 \
@@ -280,7 +280,7 @@ Notes:
 
 ## Browser selection
 
-When launching locally, iFlow picks the first available:
+When launching locally, NewClaw picks the first available:
 
 1. Chrome
 2. Brave
@@ -324,7 +324,7 @@ For the Chrome extension relay driver, ARIA snapshots and screenshots require Pl
 
 If you see `Playwright is not available in this gateway build`, install the full
 Playwright package (not `playwright-core`) and restart the gateway, or reinstall
-iFlow with browser support.
+NewClaw with browser support.
 
 #### Docker Playwright install
 
@@ -338,7 +338,7 @@ docker compose run --rm iflow-cli \
 
 To persist browser downloads, set `PLAYWRIGHT_BROWSERS_PATH` (for example,
 `/home/node/.cache/ms-playwright`) and make sure `/home/node` is persisted via
-`IFLOW_HOME_VOLUME` or a bind mount. See [Docker](/install/docker).
+`NEWCLAW_HOME_VOLUME` or a bind mount. See [Docker](/install/docker).
 
 ## How it works (internal)
 
@@ -360,79 +360,79 @@ All commands also accept `--json` for machine-readable output (stable payloads).
 
 Basics:
 
-- `iflow browser status`
-- `iflow browser start`
-- `iflow browser stop`
-- `iflow browser tabs`
-- `iflow browser tab`
-- `iflow browser tab new`
-- `iflow browser tab select 2`
-- `iflow browser tab close 2`
-- `iflow browser open https://example.com`
-- `iflow browser focus abcd1234`
-- `iflow browser close abcd1234`
+- `newclaw browser status`
+- `newclaw browser start`
+- `newclaw browser stop`
+- `newclaw browser tabs`
+- `newclaw browser tab`
+- `newclaw browser tab new`
+- `newclaw browser tab select 2`
+- `newclaw browser tab close 2`
+- `newclaw browser open https://example.com`
+- `newclaw browser focus abcd1234`
+- `newclaw browser close abcd1234`
 
 Inspection:
 
-- `iflow browser screenshot`
-- `iflow browser screenshot --full-page`
-- `iflow browser screenshot --ref 12`
-- `iflow browser screenshot --ref e12`
-- `iflow browser snapshot`
-- `iflow browser snapshot --format aria --limit 200`
-- `iflow browser snapshot --interactive --compact --depth 6`
-- `iflow browser snapshot --efficient`
-- `iflow browser snapshot --labels`
-- `iflow browser snapshot --selector "#main" --interactive`
-- `iflow browser snapshot --frame "iframe#main" --interactive`
-- `iflow browser console --level error`
-- `iflow browser errors --clear`
-- `iflow browser requests --filter api --clear`
-- `iflow browser pdf`
-- `iflow browser responsebody "**/api" --max-chars 5000`
+- `newclaw browser screenshot`
+- `newclaw browser screenshot --full-page`
+- `newclaw browser screenshot --ref 12`
+- `newclaw browser screenshot --ref e12`
+- `newclaw browser snapshot`
+- `newclaw browser snapshot --format aria --limit 200`
+- `newclaw browser snapshot --interactive --compact --depth 6`
+- `newclaw browser snapshot --efficient`
+- `newclaw browser snapshot --labels`
+- `newclaw browser snapshot --selector "#main" --interactive`
+- `newclaw browser snapshot --frame "iframe#main" --interactive`
+- `newclaw browser console --level error`
+- `newclaw browser errors --clear`
+- `newclaw browser requests --filter api --clear`
+- `newclaw browser pdf`
+- `newclaw browser responsebody "**/api" --max-chars 5000`
 
 Actions:
 
-- `iflow browser navigate https://example.com`
-- `iflow browser resize 1280 720`
-- `iflow browser click 12 --double`
-- `iflow browser click e12 --double`
-- `iflow browser type 23 "hello" --submit`
-- `iflow browser press Enter`
-- `iflow browser hover 44`
-- `iflow browser scrollintoview e12`
-- `iflow browser drag 10 11`
-- `iflow browser select 9 OptionA OptionB`
-- `iflow browser download e12 /tmp/report.pdf`
-- `iflow browser waitfordownload /tmp/report.pdf`
-- `iflow browser upload /tmp/file.pdf`
-- `iflow browser fill --fields '[{"ref":"1","type":"text","value":"Ada"}]'`
-- `iflow browser dialog --accept`
-- `iflow browser wait --text "Done"`
-- `iflow browser wait "#main" --url "**/dash" --load networkidle --fn "window.ready===true"`
-- `iflow browser evaluate --fn '(el) => el.textContent' --ref 7`
-- `iflow browser highlight e12`
-- `iflow browser trace start`
-- `iflow browser trace stop`
+- `newclaw browser navigate https://example.com`
+- `newclaw browser resize 1280 720`
+- `newclaw browser click 12 --double`
+- `newclaw browser click e12 --double`
+- `newclaw browser type 23 "hello" --submit`
+- `newclaw browser press Enter`
+- `newclaw browser hover 44`
+- `newclaw browser scrollintoview e12`
+- `newclaw browser drag 10 11`
+- `newclaw browser select 9 OptionA OptionB`
+- `newclaw browser download e12 /tmp/report.pdf`
+- `newclaw browser waitfordownload /tmp/report.pdf`
+- `newclaw browser upload /tmp/file.pdf`
+- `newclaw browser fill --fields '[{"ref":"1","type":"text","value":"Ada"}]'`
+- `newclaw browser dialog --accept`
+- `newclaw browser wait --text "Done"`
+- `newclaw browser wait "#main" --url "**/dash" --load networkidle --fn "window.ready===true"`
+- `newclaw browser evaluate --fn '(el) => el.textContent' --ref 7`
+- `newclaw browser highlight e12`
+- `newclaw browser trace start`
+- `newclaw browser trace stop`
 
 State:
 
-- `iflow browser cookies`
-- `iflow browser cookies set session abc123 --url "https://example.com"`
-- `iflow browser cookies clear`
-- `iflow browser storage local get`
-- `iflow browser storage local set theme dark`
-- `iflow browser storage session clear`
-- `iflow browser set offline on`
-- `iflow browser set headers --json '{"X-Debug":"1"}'`
-- `iflow browser set credentials user pass`
-- `iflow browser set credentials --clear`
-- `iflow browser set geo 37.7749 -122.4194 --origin "https://example.com"`
-- `iflow browser set geo --clear`
-- `iflow browser set media dark`
-- `iflow browser set timezone America/New_York`
-- `iflow browser set locale en-US`
-- `iflow browser set device "iPhone 14"`
+- `newclaw browser cookies`
+- `newclaw browser cookies set session abc123 --url "https://example.com"`
+- `newclaw browser cookies clear`
+- `newclaw browser storage local get`
+- `newclaw browser storage local set theme dark`
+- `newclaw browser storage session clear`
+- `newclaw browser set offline on`
+- `newclaw browser set headers --json '{"X-Debug":"1"}'`
+- `newclaw browser set credentials user pass`
+- `newclaw browser set credentials --clear`
+- `newclaw browser set geo 37.7749 -122.4194 --origin "https://example.com"`
+- `newclaw browser set geo --clear`
+- `newclaw browser set media dark`
+- `newclaw browser set timezone America/New_York`
+- `newclaw browser set locale en-US`
+- `newclaw browser set device "iPhone 14"`
 
 Notes:
 
@@ -453,16 +453,16 @@ Notes:
 
 ## Snapshots and refs
 
-iFlow supports two “snapshot” styles:
+NewClaw supports two “snapshot” styles:
 
-- **AI snapshot (numeric refs)**: `iflow browser snapshot` (default; `--format ai`)
+- **AI snapshot (numeric refs)**: `newclaw browser snapshot` (default; `--format ai`)
   - Output: a text snapshot that includes numeric refs.
-  - Actions: `iflow browser click 12`, `iflow browser type 23 "hello"`.
+  - Actions: `newclaw browser click 12`, `newclaw browser type 23 "hello"`.
   - Internally, the ref is resolved via Playwright’s `aria-ref`.
 
-- **Role snapshot (role refs like `e12`)**: `iflow browser snapshot --interactive` (or `--compact`, `--depth`, `--selector`, `--frame`)
+- **Role snapshot (role refs like `e12`)**: `newclaw browser snapshot --interactive` (or `--compact`, `--depth`, `--selector`, `--frame`)
   - Output: a role-based list/tree with `[ref=e12]` (and optional `[nth=1]`).
-  - Actions: `iflow browser click e12`, `iflow browser highlight e12`.
+  - Actions: `newclaw browser click e12`, `newclaw browser highlight e12`.
   - Internally, the ref is resolved via `getByRole(...)` (plus `nth()` for duplicates).
   - Add `--labels` to include a viewport screenshot with overlayed `e12` labels.
 
@@ -476,18 +476,18 @@ Ref behavior:
 You can wait on more than just time/text:
 
 - Wait for URL (globs supported by Playwright):
-  - `iflow browser wait --url "**/dash"`
+  - `newclaw browser wait --url "**/dash"`
 - Wait for load state:
-  - `iflow browser wait --load networkidle`
+  - `newclaw browser wait --load networkidle`
 - Wait for a JS predicate:
-  - `iflow browser wait --fn "window.ready===true"`
+  - `newclaw browser wait --fn "window.ready===true"`
 - Wait for a selector to become visible:
-  - `iflow browser wait "#main"`
+  - `newclaw browser wait "#main"`
 
 These can be combined:
 
 ```bash
-iflow browser wait "#main" \
+newclaw browser wait "#main" \
   --url "**/dash" \
   --load networkidle \
   --fn "window.ready===true" \
@@ -498,16 +498,16 @@ iflow browser wait "#main" \
 
 When an action fails (e.g. “not visible”, “strict mode violation”, “covered”):
 
-1. `iflow browser snapshot --interactive`
+1. `newclaw browser snapshot --interactive`
 2. Use `click <ref>` / `type <ref>` (prefer role refs in interactive mode)
-3. If it still fails: `iflow browser highlight <ref>` to see what Playwright is targeting
+3. If it still fails: `newclaw browser highlight <ref>` to see what Playwright is targeting
 4. If the page behaves oddly:
-   - `iflow browser errors --clear`
-   - `iflow browser requests --filter api --clear`
+   - `newclaw browser errors --clear`
+   - `newclaw browser requests --filter api --clear`
 5. For deep debugging: record a trace:
-   - `iflow browser trace start`
+   - `newclaw browser trace start`
    - reproduce the issue
-   - `iflow browser trace stop` (prints `TRACE:<path>`)
+   - `newclaw browser trace stop` (prints `TRACE:<path>`)
 
 ## JSON output
 
@@ -516,10 +516,10 @@ When an action fails (e.g. “not visible”, “strict mode violation”, “co
 Examples:
 
 ```bash
-iflow browser status --json
-iflow browser snapshot --interactive --json
-iflow browser requests --filter api --json
-iflow browser cookies --json
+newclaw browser status --json
+newclaw browser snapshot --interactive --json
+newclaw browser requests --filter api --json
+newclaw browser cookies --json
 ```
 
 Role snapshots in JSON include `refs` plus a small `stats` block (lines/chars/refs/interactive) so tools can reason about payload size and density.
@@ -542,8 +542,8 @@ These are useful for “make the site behave like X” workflows:
 
 ## Security & privacy
 
-- The iflow browser profile may contain logged-in sessions; treat it as sensitive.
-- `browser act kind=evaluate` / `iflow browser evaluate` and `wait --fn`
+- The newclaw browser profile may contain logged-in sessions; treat it as sensitive.
+- `browser act kind=evaluate` / `newclaw browser evaluate` and `wait --fn`
   execute arbitrary JavaScript in the page context. Prompt injection can steer
   this. Disable it with `browser.evaluateEnabled=false` if you do not need it.
 - For logins and anti-bot notes (X/Twitter, etc.), see [Browser login + X/Twitter posting](/tools/browser-login).

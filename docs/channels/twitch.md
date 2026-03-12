@@ -1,13 +1,13 @@
 ---
 summary: "Twitch chat bot configuration and setup"
 read_when:
-  - Setting up Twitch chat integration for iFlow
+  - Setting up Twitch chat integration for NewClaw
 title: "Twitch"
 ---
 
 # Twitch (plugin)
 
-Twitch chat support via IRC connection. iFlow connects as a Twitch user (bot account) to receive and send messages in channels.
+Twitch chat support via IRC connection. NewClaw connects as a Twitch user (bot account) to receive and send messages in channels.
 
 ## Plugin required
 
@@ -16,13 +16,13 @@ Twitch ships as a plugin and is not bundled with the core install.
 Install via CLI (npm registry):
 
 ```bash
-iflow plugins install @iflow/twitch
+newclaw plugins install @newclaw/twitch
 ```
 
 Local checkout (when running from a git repo):
 
 ```bash
-iflow plugins install ./extensions/twitch
+newclaw plugins install ./extensions/twitch
 ```
 
 Details: [Plugins](/plugin)
@@ -36,7 +36,7 @@ Details: [Plugins](/plugin)
    - Copy the **Client ID** and **Access Token**
 3. Find your Twitch user ID: https://www.streamweasels.com/tools/convert-twitch-username-to-user-id/
 4. Configure the token:
-   - Env: `IFLOW_TWITCH_ACCESS_TOKEN=...` (default account only)
+   - Env: `NEWCLAW_TWITCH_ACCESS_TOKEN=...` (default account only)
    - Or config: `channels.twitch.accessToken`
    - If both are set, config takes precedence (env fallback is default-account only).
 5. Start the gateway.
@@ -51,7 +51,7 @@ Minimal config:
     twitch: {
       enabled: true,
       username: "iflow", // Bot's Twitch account
-      accessToken: "oauth:abc123...", // OAuth Access Token (or use IFLOW_TWITCH_ACCESS_TOKEN env var)
+      accessToken: "oauth:abc123...", // OAuth Access Token (or use NEWCLAW_TWITCH_ACCESS_TOKEN env var)
       clientId: "xyz789...", // Client ID from Token Generator
       channel: "vevisk", // Which Twitch channel's chat to join (required)
       allowFrom: ["123456789"], // (recommended) Your Twitch user ID only - get it from https://www.streamweasels.com/tools/convert-twitch-username-to-user-id/
@@ -84,7 +84,7 @@ No manual app registration needed. Tokens expire after several hours.
 **Env var (default account only):**
 
 ```bash
-IFLOW_TWITCH_ACCESS_TOKEN=oauth:abc123...
+NEWCLAW_TWITCH_ACCESS_TOKEN=oauth:abc123...
 ```
 
 **Or config:**
@@ -251,8 +251,8 @@ By default, `requireMention` is `true`. To disable and respond to all messages:
 First, run diagnostic commands:
 
 ```bash
-iflow doctor
-iflow channels status --probe
+newclaw doctor
+newclaw channels status --probe
 ```
 
 ### Bot doesn't respond to messages

@@ -1,18 +1,18 @@
 ---
 title: "Showcase"
-description: "Real-world iFlow projects from the community"
-summary: "Community-built projects and integrations powered by iFlow"
+description: "Real-world NewClaw projects from the community"
+summary: "Community-built projects and integrations powered by NewClaw"
 ---
 
 # Showcase
 
-Real projects from the community. See what people are building with iFlow.
+Real projects from the community. See what people are building with NewClaw.
 
 <Info>
-**Want to be featured?** Share your project in [#showcase on Discord](https://discord.gg/iflow) or [tag @iflow on X](https://x.com/iflow).
+**Want to be featured?** Share your project in [#showcase on Discord](https://discord.gg/iflow) or [tag @newclaw on X](https://x.com/iflow).
 </Info>
 
-## 🎥 iFlow in Action
+## 🎥 NewClaw in Action
 
 Full setup walkthrough (28m) by VelvetShark.
 
@@ -27,7 +27,7 @@ Full setup walkthrough (28m) by VelvetShark.
 >
   <iframe
     src="https://www.youtube-nocookie.com/embed/SaWSPZoPX34"
-    title="iFlow: The self-hosted AI that Siri should have been (Full setup)"
+    title="NewClaw: The self-hosted AI that Siri should have been (Full setup)"
     style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%" }}
     frameBorder="0"
     loading="lazy"
@@ -49,7 +49,7 @@ Full setup walkthrough (28m) by VelvetShark.
 >
   <iframe
     src="https://www.youtube-nocookie.com/embed/mMSKQvlmFuQ"
-    title="iFlow showcase video"
+    title="NewClaw showcase video"
     style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%" }}
     frameBorder="0"
     loading="lazy"
@@ -71,7 +71,7 @@ Full setup walkthrough (28m) by VelvetShark.
 >
   <iframe
     src="https://www.youtube-nocookie.com/embed/5kkIJNUGFho"
-    title="iFlow community showcase"
+    title="NewClaw community showcase"
     style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%" }}
     frameBorder="0"
     loading="lazy"
@@ -89,9 +89,9 @@ Full setup walkthrough (28m) by VelvetShark.
 <Card title="PR Review → Telegram Feedback" icon="code-pull-request" href="https://x.com/i/status/2010878524543131691">
   **@bangnokia** • `review` `github` `telegram`
 
-OpenCode finishes the change → opens a PR → iFlow reviews the diff and replies in Telegram with “minor suggestions” plus a clear merge verdict (including critical fixes to apply first).
+OpenCode finishes the change → opens a PR → NewClaw reviews the diff and replies in Telegram with “minor suggestions” plus a clear merge verdict (including critical fixes to apply first).
 
-  <img src="/assets/showcase/pr-review-telegram.jpg" alt="iFlow PR review feedback delivered in Telegram" />
+  <img src="/assets/showcase/pr-review-telegram.jpg" alt="NewClaw PR review feedback delivered in Telegram" />
 </Card>
 
 <Card title="Wine Cellar Skill in Minutes" icon="wine-glass" href="https://x.com/i/status/2010916352454791216">
@@ -99,7 +99,7 @@ OpenCode finishes the change → opens a PR → iFlow reviews the diff and repli
 
 Asked “Robby” (@iflow) for a local wine cellar skill. It requests a sample CSV export + where to store it, then builds/tests the skill fast (962 bottles in the example).
 
-  <img src="/assets/showcase/wine-cellar-skill.jpg" alt="iFlow building a local wine cellar skill from CSV" />
+  <img src="/assets/showcase/wine-cellar-skill.jpg" alt="NewClaw building a local wine cellar skill from CSV" />
 </Card>
 
 <Card title="Tesco Shop Autopilot" icon="cart-shopping" href="https://x.com/i/status/2009724862470689131">
@@ -121,7 +121,7 @@ Hotkey a screen region → Gemini vision → instant Markdown in your clipboard.
 <Card title="Agents UI" icon="window-maximize" href="https://releaseflow.net/kitze/agents-ui">
   **@kitze** • `ui` `skills` `sync`
 
-Desktop app to manage skills/commands across Agents, Claude, Codex, and iFlow.
+Desktop app to manage skills/commands across Agents, Claude, Codex, and NewClaw.
 
   <img src="/assets/showcase/agents-ui.jpg" alt="Agents UI app" />
 </Card>
@@ -139,7 +139,7 @@ Wraps papla.media TTS and sends results as Telegram voice notes (no annoying aut
 
 Homebrew-installed helper to list/inspect/watch local OpenAI Codex sessions (CLI + VS Code).
 
-  <img src="/assets/showcase/codexmonitor.png" alt="CodexMonitor on iFlowHub" />
+  <img src="/assets/showcase/codexmonitor.png" alt="CodexMonitor on NewClawHub" />
 </Card>
 
 <Card title="Bambu 3D Printer Control" icon="print" href="https://iflowhub.com/tobiasbischoff/bambu-cli">
@@ -147,7 +147,7 @@ Homebrew-installed helper to list/inspect/watch local OpenAI Codex sessions (CLI
 
 Control and troubleshoot BambuLab printers: status, jobs, camera, AMS, calibration, and more.
 
-  <img src="/assets/showcase/bambu-cli.png" alt="Bambu CLI skill on iFlowHub" />
+  <img src="/assets/showcase/bambu-cli.png" alt="Bambu CLI skill on NewClawHub" />
 </Card>
 
 <Card title="Vienna Transport (Wiener Linien)" icon="train" href="https://iflowhub.com/hjanuschka/wienerlinien">
@@ -155,7 +155,7 @@ Control and troubleshoot BambuLab printers: status, jobs, camera, AMS, calibrati
 
 Real-time departures, disruptions, elevator status, and routing for Vienna's public transport.
 
-  <img src="/assets/showcase/wienerlinien.png" alt="Wiener Linien skill on iFlowHub" />
+  <img src="/assets/showcase/wienerlinien.png" alt="Wiener Linien skill on NewClawHub" />
 </Card>
 
 <Card title="ParentPay School Meals" icon="utensils" href="#">
@@ -167,7 +167,7 @@ Automated UK school meal booking via ParentPay. Uses mouse coordinates for relia
 <Card title="R2 Upload (Send Me My Files)" icon="cloud-arrow-up" href="https://iflowhub.com/skills/r2-upload">
   **@julianengel** • `files` `r2` `presigned-urls`
 
-Upload to Cloudflare R2/S3 and generate secure presigned download links. Perfect for remote iFlow instances.
+Upload to Cloudflare R2/S3 and generate secure presigned download links. Perfect for remote NewClaw instances.
 </Card>
 
 <Card title="iOS App via Telegram" icon="mobile" href="#">
@@ -194,7 +194,7 @@ Personal AI health assistant integrating Oura ring data with calendar, appointme
 <Card title="Linear CLI" icon="terminal" href="https://github.com/Finesssee/linear-cli">
   **@NessZerra** • `devtools` `linear` `cli` `issues`
 
-CLI for Linear that integrates with agentic workflows (Claude Code, iFlow). Manage issues, projects, and workflows from the terminal. First external PR merged!
+CLI for Linear that integrates with agentic workflows (Claude Code, NewClaw). Manage issues, projects, and workflows from the terminal. First external PR merged!
 </Card>
 
 <Card title="Beeper CLI" icon="message" href="https://github.com/blqke/beepcli">
@@ -212,23 +212,23 @@ Read, send, and archive messages via Beeper Desktop. Uses Beeper local MCP API s
 <Card title="Winix Air Purifier Control" icon="wind" href="https://x.com/antonplex/status/2010518442471006253">
   **@antonplex** • `automation` `hardware` `air-quality`
 
-Claude Code discovered and confirmed the purifier controls, then iFlow takes over to manage room air quality.
+Claude Code discovered and confirmed the purifier controls, then NewClaw takes over to manage room air quality.
 
-  <img src="/assets/showcase/winix-air-purifier.jpg" alt="Winix air purifier control via iFlow" />
+  <img src="/assets/showcase/winix-air-purifier.jpg" alt="Winix air purifier control via NewClaw" />
 </Card>
 
 <Card title="Pretty Sky Camera Shots" icon="camera" href="https://x.com/signalgaining/status/2010523120604746151">
   **@signalgaining** • `automation` `camera` `skill` `images`
 
-Triggered by a roof camera: ask iFlow to snap a sky photo whenever it looks pretty — it designed a skill and took the shot.
+Triggered by a roof camera: ask NewClaw to snap a sky photo whenever it looks pretty — it designed a skill and took the shot.
 
-  <img src="/assets/showcase/roof-camera-sky.jpg" alt="Roof camera sky snapshot captured by iFlow" />
+  <img src="/assets/showcase/roof-camera-sky.jpg" alt="Roof camera sky snapshot captured by NewClaw" />
 </Card>
 
 <Card title="Visual Morning Briefing Scene" icon="robot" href="https://x.com/buddyhadry/status/2010005331925954739">
   **@buddyhadry** • `automation` `briefing` `images` `telegram`
 
-A scheduled prompt generates a single "scene" image each morning (weather, tasks, date, favorite post/quote) via a iFlow persona.
+A scheduled prompt generates a single "scene" image each morning (weather, tasks, date, favorite post/quote) via a NewClaw persona.
 </Card>
 
 <Card title="Padel Court Booking" icon="calendar-check" href="https://github.com/joshp123/padel-cli">
@@ -260,13 +260,13 @@ Searches job listings, matches against CV keywords, and returns relevant opportu
 <Card title="Jira Skill Builder" icon="diagram-project" href="https://x.com/jdrhyne/status/2008336434827002232">
   **@jdrhyne** • `automation` `jira` `skill` `devtools`
 
-iFlow connected to Jira, then generated a new skill on the fly (before it existed on iFlowHub).
+NewClaw connected to Jira, then generated a new skill on the fly (before it existed on NewClawHub).
 </Card>
 
 <Card title="Todoist Skill via Telegram" icon="list-check" href="https://x.com/iamsubhrajyoti/status/2009949389884920153">
   **@iamsubhrajyoti** • `automation` `todoist` `skill` `telegram`
 
-Automated Todoist tasks and had iFlow generate the skill directly in Telegram chat.
+Automated Todoist tasks and had NewClaw generate the skill directly in Telegram chat.
 </Card>
 
 <Card title="TradingView Analysis" icon="chart-line">
@@ -290,7 +290,7 @@ Watches company Slack channel, responds helpfully, and forwards notifications to
 <Card title="xuezh Chinese Learning" icon="language" href="https://github.com/joshp123/xuezh">
   **@joshp123** • `learning` `voice` `skill`
   
-  Chinese learning engine with pronunciation feedback and study flows via iFlow.
+  Chinese learning engine with pronunciation feedback and study flows via NewClaw.
   
   <img src="/assets/showcase/xuezh-pronunciation.jpeg" alt="xuezh pronunciation feedback" />
 </Card>
@@ -322,13 +322,13 @@ Watches company Slack channel, responds helpfully, and forwards notifications to
 <Card title="Clawdia Phone Bridge" icon="phone" href="https://github.com/alejandroOPI/clawdia-bridge">
   **@alejandroOPI** • `voice` `vapi` `bridge`
   
-  Vapi voice assistant ↔ iFlow HTTP bridge. Near real-time phone calls with your agent.
+  Vapi voice assistant ↔ NewClaw HTTP bridge. Near real-time phone calls with your agent.
 </Card>
 
 <Card title="OpenRouter Transcription" icon="microphone" href="https://iflowhub.com/obviyus/openrouter-transcribe">
   **@obviyus** • `transcription` `multilingual` `skill`
 
-Multi-lingual audio transcription via OpenRouter (Gemini, etc). Available on iFlowHub.
+Multi-lingual audio transcription via OpenRouter (Gemini, etc). Available on NewClawHub.
 </Card>
 
 </CardGroup>
@@ -340,11 +340,11 @@ Multi-lingual audio transcription via OpenRouter (Gemini, etc). Available on iFl
 <Card title="Home Assistant Add-on" icon="home" href="https://github.com/ngutman/iflow-ha-addon">
   **@ngutman** • `homeassistant` `docker` `raspberry-pi`
   
-  iFlow gateway running on Home Assistant OS with SSH tunnel support and persistent state.
+  NewClaw gateway running on Home Assistant OS with SSH tunnel support and persistent state.
 </Card>
 
 <Card title="Home Assistant Skill" icon="toggle-on" href="https://iflowhub.com/skills/homeassistant">
-  **iFlowHub** • `homeassistant` `skill` `automation`
+  **NewClawHub** • `homeassistant` `skill` `automation`
   
   Control and automate Home Assistant devices via natural language.
 </Card>
@@ -352,11 +352,11 @@ Multi-lingual audio transcription via OpenRouter (Gemini, etc). Available on iFl
 <Card title="Nix Packaging" icon="snowflake" href="https://github.com/iflow/nix-iflow">
   **@iflow** • `nix` `packaging` `deployment`
   
-  Batteries-included nixified iFlow configuration for reproducible deployments.
+  Batteries-included nixified NewClaw configuration for reproducible deployments.
 </Card>
 
 <Card title="CalDAV Calendar" icon="calendar" href="https://iflowhub.com/skills/caldav-calendar">
-  **iFlowHub** • `calendar` `caldav` `skill`
+  **NewClawHub** • `calendar` `caldav` `skill`
   
   Calendar skill using khal/vdirsyncer. Self-hosted calendar integration.
 </Card>
@@ -370,7 +370,7 @@ Multi-lingual audio transcription via OpenRouter (Gemini, etc). Available on iFl
 <Card title="GoHome Automation" icon="house-signal" href="https://github.com/joshp123/gohome">
   **@joshp123** • `home` `nix` `grafana`
   
-  Nix-native home automation with iFlow as the interface, plus beautiful Grafana dashboards.
+  Nix-native home automation with NewClaw as the interface, plus beautiful Grafana dashboards.
   
   <img src="/assets/showcase/gohome-grafana.png" alt="GoHome Grafana dashboard" />
 </Card>
@@ -392,7 +392,7 @@ Multi-lingual audio transcription via OpenRouter (Gemini, etc). Available on iFl
 <Card title="StarSwap Marketplace" icon="star" href="https://star-swap.com/">
   **Community** • `marketplace` `astronomy` `webapp`
   
-  Full astronomy gear marketplace. Built with/around the iFlow ecosystem.
+  Full astronomy gear marketplace. Built with/around the NewClaw ecosystem.
 </Card>
 
 </CardGroup>

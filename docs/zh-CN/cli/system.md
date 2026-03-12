@@ -3,7 +3,7 @@ read_when:
   - 你想在不创建 cron 任务的情况下将系统事件加入队列
   - 你需要启用或禁用心跳
   - 你想检查系统存在状态条目
-summary: "`iflow system` 的 CLI 参考（系统事件、心跳、存在状态）"
+summary: "`newclaw system` 的 CLI 参考（系统事件、心跳、存在状态）"
 title: system
 x-i18n:
   generated_at: "2026-02-01T20:21:34Z"
@@ -14,17 +14,17 @@ x-i18n:
   workflow: 14
 ---
 
-# `iflow system`
+# `newclaw system`
 
 Gateway网关的系统级辅助工具：将系统事件加入队列、控制心跳以及查看存在状态。
 
 ## 常用命令
 
 ```bash
-iflow system event --text "Check for urgent follow-ups" --mode now
-iflow system heartbeat enable
-iflow system heartbeat last
-iflow system presence
+newclaw system event --text "Check for urgent follow-ups" --mode now
+newclaw system heartbeat enable
+newclaw system heartbeat last
+newclaw system presence
 ```
 
 ## `system event`

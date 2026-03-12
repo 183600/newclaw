@@ -2,7 +2,7 @@
 read_when:
   - 你想管理智能体钩子
   - 你想安装或更新钩子
-summary: "`iflow hooks` 的 CLI 参考（智能体钩子）"
+summary: "`newclaw hooks` 的 CLI 参考（智能体钩子）"
 title: hooks
 x-i18n:
   generated_at: "2026-02-01T19:59:18Z"
@@ -13,7 +13,7 @@ x-i18n:
   workflow: 14
 ---
 
-# `iflow hooks`
+# `newclaw hooks`
 
 管理智能体钩子（用于 `/new`、`/reset` 等命令以及 Gateway网关启动的事件驱动自动化）。
 
@@ -25,7 +25,7 @@ x-i18n:
 ## 列出所有钩子
 
 ```bash
-iflow hooks list
+newclaw hooks list
 ```
 
 列出从工作区、托管和内置目录中发现的所有钩子。
@@ -51,7 +51,7 @@ Ready:
 **示例（详细模式）：**
 
 ```bash
-iflow hooks list --verbose
+newclaw hooks list --verbose
 ```
 
 显示不符合条件的钩子缺失的需求。
@@ -59,7 +59,7 @@ iflow hooks list --verbose
 **示例（JSON）：**
 
 ```bash
-iflow hooks list --json
+newclaw hooks list --json
 ```
 
 返回结构化 JSON 以供程序化使用。
@@ -67,7 +67,7 @@ iflow hooks list --json
 ## 获取钩子信息
 
 ```bash
-iflow hooks info <name>
+newclaw hooks info <name>
 ```
 
 显示特定钩子的详细信息。
@@ -83,7 +83,7 @@ iflow hooks info <name>
 **示例：**
 
 ```bash
-iflow hooks info session-memory
+newclaw hooks info session-memory
 ```
 
 **输出：**
@@ -97,7 +97,7 @@ Details:
   Source: iflow-bundled
   Path: /path/to/iflow/hooks/bundled/session-memory/HOOK.md
   Handler: /path/to/iflow/hooks/bundled/session-memory/handler.ts
-  Homepage: https://docs.iflow.ai/hooks#session-memory
+  Homepage: https://docs.newclaw.ai/hooks#session-memory
   Events: command:new
 
 Requirements:
@@ -107,7 +107,7 @@ Requirements:
 ## 检查钩子资格
 
 ```bash
-iflow hooks check
+newclaw hooks check
 ```
 
 显示钩子资格状态摘要（就绪与未就绪的数量）。
@@ -129,12 +129,12 @@ Not ready: 0
 ## 启用钩子
 
 ```bash
-iflow hooks enable <name>
+newclaw hooks enable <name>
 ```
 
-通过将特定钩子添加到配置文件（`~/.iflow/config.json`）来启用它。
+通过将特定钩子添加到配置文件（`~/.newclaw/config.json`）来启用它。
 
-**注意：** 由插件管理的钩子在 `iflow hooks list` 中显示为 `plugin:<id>`，无法在此处启用/禁用。请改为启用/禁用对应的插件。
+**注意：** 由插件管理的钩子在 `newclaw hooks list` 中显示为 `plugin:<id>`，无法在此处启用/禁用。请改为启用/禁用对应的插件。
 
 **参数：**
 
@@ -143,7 +143,7 @@ iflow hooks enable <name>
 **示例：**
 
 ```bash
-iflow hooks enable session-memory
+newclaw hooks enable session-memory
 ```
 
 **输出：**
@@ -165,7 +165,7 @@ iflow hooks enable session-memory
 ## 禁用钩子
 
 ```bash
-iflow hooks disable <name>
+newclaw hooks disable <name>
 ```
 
 通过更新配置来禁用特定钩子。
@@ -177,7 +177,7 @@ iflow hooks disable <name>
 **示例：**
 
 ```bash
-iflow hooks disable command-logger
+newclaw hooks disable command-logger
 ```
 
 **输出：**
@@ -193,14 +193,14 @@ iflow hooks disable command-logger
 ## 安装钩子
 
 ```bash
-iflow hooks install <path-or-spec>
+newclaw hooks install <path-or-spec>
 ```
 
 从本地文件夹/归档包或 npm 安装钩子包。
 
 **执行操作：**
 
-- 将钩子包复制到 `~/.iflow/hooks/<id>`
+- 将钩子包复制到 `~/.newclaw/hooks/<id>`
 - 在 `hooks.internal.entries.*` 中启用已安装的钩子
 - 在 `hooks.internal.installs` 下记录安装信息
 
@@ -214,23 +214,23 @@ iflow hooks install <path-or-spec>
 
 ```bash
 # 本地目录
-iflow hooks install ./my-hook-pack
+newclaw hooks install ./my-hook-pack
 
 # 本地归档包
-iflow hooks install ./my-hook-pack.zip
+newclaw hooks install ./my-hook-pack.zip
 
 # NPM 包
-iflow hooks install @iflow/my-hook-pack
+newclaw hooks install @newclaw/my-hook-pack
 
 # 链接本地目录而非复制
-iflow hooks install -l ./my-hook-pack
+newclaw hooks install -l ./my-hook-pack
 ```
 
 ## 更新钩子
 
 ```bash
-iflow hooks update <id>
-iflow hooks update --all
+newclaw hooks update <id>
+newclaw hooks update --all
 ```
 
 更新已安装的钩子包（仅限 npm 安装）。
@@ -249,10 +249,10 @@ iflow hooks update --all
 **启用：**
 
 ```bash
-iflow hooks enable session-memory
+newclaw hooks enable session-memory
 ```
 
-**输出：** `~/.iflow/workspace/memory/YYYY-MM-DD-slug.md`
+**输出：** `~/.newclaw/workspace/memory/YYYY-MM-DD-slug.md`
 
 **参见：** [session-memory 文档](/hooks#session-memory)
 
@@ -263,22 +263,22 @@ iflow hooks enable session-memory
 **启用：**
 
 ```bash
-iflow hooks enable command-logger
+newclaw hooks enable command-logger
 ```
 
-**输出：** `~/.iflow/logs/commands.log`
+**输出：** `~/.newclaw/logs/commands.log`
 
 **查看日志：**
 
 ```bash
 # 最近的命令
-tail -n 20 ~/.iflow/logs/commands.log
+tail -n 20 ~/.newclaw/logs/commands.log
 
 # 格式化输出
-cat ~/.iflow/logs/commands.log | jq .
+cat ~/.newclaw/logs/commands.log | jq .
 
 # 按操作过滤
-grep '"action":"new"' ~/.iflow/logs/commands.log | jq .
+grep '"action":"new"' ~/.newclaw/logs/commands.log | jq .
 ```
 
 **参见：** [command-logger 文档](/hooks#command-logger)
@@ -290,7 +290,7 @@ grep '"action":"new"' ~/.iflow/logs/commands.log | jq .
 **启用：**
 
 ```bash
-iflow hooks enable soul-evil
+newclaw hooks enable soul-evil
 ```
 
 **参见：** [SOUL Evil 钩子](/hooks/soul-evil)
@@ -304,7 +304,7 @@ iflow hooks enable soul-evil
 **启用**：
 
 ```bash
-iflow hooks enable boot-md
+newclaw hooks enable boot-md
 ```
 
 **参见：** [boot-md 文档](/hooks#boot-md)

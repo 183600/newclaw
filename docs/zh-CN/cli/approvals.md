@@ -2,7 +2,7 @@
 read_when:
   - 你想通过 CLI 编辑执行审批
   - 你需要管理 Gateway网关或节点主机上的允许列表
-summary: "`iflow approvals` 的 CLI 参考（用于 Gateway网关或节点主机的执行审批）"
+summary: "`newclaw approvals` 的 CLI 参考（用于 Gateway网关或节点主机的执行审批）"
 title: approvals
 x-i18n:
   generated_at: "2026-02-01T19:58:39Z"
@@ -13,7 +13,7 @@ x-i18n:
   workflow: 14
 ---
 
-# `iflow approvals`
+# `newclaw approvals`
 
 管理**本地主机**、**Gateway网关主机**或**节点主机**的执行审批。
 默认情况下，命令针对磁盘上的本地审批文件。使用 `--gateway` 针对 Gateway网关，或使用 `--node` 针对特定节点。
@@ -26,32 +26,32 @@ x-i18n:
 ## 常用命令
 
 ```bash
-iflow approvals get
-iflow approvals get --node <id|name|ip>
-iflow approvals get --gateway
+newclaw approvals get
+newclaw approvals get --node <id|name|ip>
+newclaw approvals get --gateway
 ```
 
 ## 从文件替换审批
 
 ```bash
-iflow approvals set --file ./exec-approvals.json
-iflow approvals set --node <id|name|ip> --file ./exec-approvals.json
-iflow approvals set --gateway --file ./exec-approvals.json
+newclaw approvals set --file ./exec-approvals.json
+newclaw approvals set --node <id|name|ip> --file ./exec-approvals.json
+newclaw approvals set --gateway --file ./exec-approvals.json
 ```
 
 ## 允许列表辅助命令
 
 ```bash
-iflow approvals allowlist add "~/Projects/**/bin/rg"
-iflow approvals allowlist add --agent main --node <id|name|ip> "/usr/bin/uptime"
-iflow approvals allowlist add --agent "*" "/usr/bin/uname"
+newclaw approvals allowlist add "~/Projects/**/bin/rg"
+newclaw approvals allowlist add --agent main --node <id|name|ip> "/usr/bin/uptime"
+newclaw approvals allowlist add --agent "*" "/usr/bin/uname"
 
-iflow approvals allowlist remove "~/Projects/**/bin/rg"
+newclaw approvals allowlist remove "~/Projects/**/bin/rg"
 ```
 
 ## 注意事项
 
-- `--node` 使用与 `iflow nodes` 相同的解析器（id、名称、ip 或 id 前缀）。
+- `--node` 使用与 `newclaw nodes` 相同的解析器（id、名称、ip 或 id 前缀）。
 - `--agent` 默认为 `"*"`，即适用于所有智能体。
 - 节点主机必须公布 `system.execApprovals.get/set`（macOS 应用或无头节点主机）。
-- 审批文件按主机存储在 `~/.iflow/exec-approvals.json`。
+- 审批文件按主机存储在 `~/.newclaw/exec-approvals.json`。

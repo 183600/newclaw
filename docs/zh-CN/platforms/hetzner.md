@@ -1,10 +1,10 @@
 ---
 read_when:
-  - 你希望 iFlow 在云端 VPS（而非笔记本电脑）上全天候运行
+  - 你希望 NewClaw 在云端 VPS（而非笔记本电脑）上全天候运行
   - 你需要在自己的 VPS 上部署一个生产级、始终在线的 Gateway网关
   - 你希望完全掌控持久化、二进制文件和重启行为
-  - 你正在 Hetzner 或类似提供商上通过 Docker 运行 iFlow
-summary: 在廉价的 Hetzner VPS 上通过 Docker 全天候运行 iFlow Gateway网关，支持持久化状态和内置二进制文件
+  - 你正在 Hetzner 或类似提供商上通过 Docker 运行 NewClaw
+summary: 在廉价的 Hetzner VPS 上通过 Docker 全天候运行 NewClaw Gateway网关，支持持久化状态和内置二进制文件
 title: Hetzner
 x-i18n:
   generated_at: "2026-02-01T21:32:45Z"
@@ -15,21 +15,21 @@ x-i18n:
   workflow: 15
 ---
 
-# 在 Hetzner 上部署 iFlow（Docker 生产环境 VPS 指南）
+# 在 Hetzner 上部署 NewClaw（Docker 生产环境 VPS 指南）
 
 ## 目标
 
-使用 Docker 在 Hetzner VPS 上运行持久化的 iFlow Gateway网关，支持持久化状态、内置二进制文件和安全的重启行为。
+使用 Docker 在 Hetzner VPS 上运行持久化的 NewClaw Gateway网关，支持持久化状态、内置二进制文件和安全的重启行为。
 
-如果你想要"每月约 $5 实现 iFlow 全天候运行"，这是最简单可靠的方案。
+如果你想要"每月约 $5 实现 NewClaw 全天候运行"，这是最简单可靠的方案。
 Hetzner 定价会变动；选择最小的 Debian/Ubuntu VPS，如果遇到内存不足（OOM）再扩容。
 
 ## 我们要做什么（简单说明）？
 
 - 租一台小型 Linux 服务器（Hetzner VPS）
 - 安装 Docker（隔离的应用运行时）
-- 在 Docker 中启动 iFlow Gateway网关
-- 将 `~/.iflow` + `~/.iflow/workspace` 持久化到宿主机（重启/重建后数据不丢失）
+- 在 Docker 中启动 NewClaw Gateway网关
+- 将 `~/.newclaw` + `~/.newclaw/workspace` 持久化到宿主机（重启/重建后数据不丢失）
 - 通过 SSH 隧道从笔记本电脑访问控制界面
 
 Gateway网关可通过以下方式访问：
@@ -47,7 +47,7 @@ Gateway网关可通过以下方式访问：
 
 1. 创建 Hetzner VPS
 2. 安装 Docker
-3. 克隆 iFlow 仓库
+3. 克隆 NewClaw 仓库
 4. 创建持久化宿主机目录
 5. 配置 `.env` 和 `docker-compose.yml`
 6. 将所需二进制文件内置到镜像中
@@ -103,10 +103,10 @@ docker compose version
 
 ---
 
-## 3) 克隆 iFlow 仓库
+## 3) 克隆 NewClaw 仓库
 
 ```bash
-git clone https://github.com/iflow/iflow.git
+git clone https://github.com/newclaw/newclaw.git
 cd iflow
 ```
 
@@ -135,13 +135,13 @@ chown -R 1000:1000 /root/.iflow/workspace
 在仓库根目录创建 `.env` 文件。
 
 ```bash
-IFLOW_IMAGE=iflow:latest
-IFLOW_GATEWAY_TOKEN=change-me-now
-IFLOW_GATEWAY_BIND=lan
-IFLOW_GATEWAY_PORT=18789
+NEWCLAW_IMAGE=iflow:latest
+NEWCLAW_GATEWAY_TOKEN=change-me-now
+NEWCLAW_GATEWAY_BIND=lan
+NEWCLAW_GATEWAY_PORT=18789
 
-IFLOW_CONFIG_DIR=/root/.iflow
-IFLOW_WORKSPACE_DIR=/root/.iflow/workspace
+NEWCLAW_CONFIG_DIR=/root/.iflow
+NEWCLAW_WORKSPACE_DIR=/root/.iflow/workspace
 
 GOG_KEYRING_PASSWORD=change-me-now
 XDG_CONFIG_HOME=/home/node/.iflow
@@ -163,8 +163,8 @@ openssl rand -hex 32
 
 ```yaml
 services:
-  iflow-gateway:
-    image: ${IFLOW_IMAGE}
+  newclaw-gateway:
+    image: ${NEWCLAW_IMAGE}
     build: .
     restart: unless-stopped
     env_file:
@@ -173,19 +173,19 @@ services:
       - HOME=/home/node
       - NODE_ENV=production
       - TERM=xterm-256color
-      - IFLOW_GATEWAY_BIND=${IFLOW_GATEWAY_BIND}
-      - IFLOW_GATEWAY_PORT=${IFLOW_GATEWAY_PORT}
-      - IFLOW_GATEWAY_TOKEN=${IFLOW_GATEWAY_TOKEN}
+      - NEWCLAW_GATEWAY_BIND=${NEWCLAW_GATEWAY_BIND}
+      - NEWCLAW_GATEWAY_PORT=${NEWCLAW_GATEWAY_PORT}
+      - NEWCLAW_GATEWAY_TOKEN=${NEWCLAW_GATEWAY_TOKEN}
       - GOG_KEYRING_PASSWORD=${GOG_KEYRING_PASSWORD}
       - XDG_CONFIG_HOME=${XDG_CONFIG_HOME}
       - PATH=/home/linuxbrew/.linuxbrew/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
     volumes:
-      - ${IFLOW_CONFIG_DIR}:/home/node/.iflow
-      - ${IFLOW_WORKSPACE_DIR}:/home/node/.iflow/workspace
+      - ${NEWCLAW_CONFIG_DIR}:/home/node/.iflow
+      - ${NEWCLAW_WORKSPACE_DIR}:/home/node/.iflow/workspace
     ports:
       # 推荐：在 VPS 上仅绑定 local loopback；通过 SSH 隧道访问。
       # 如需公开暴露，移除 `127.0.0.1:` 前缀并相应配置防火墙。
-      - "127.0.0.1:${IFLOW_GATEWAY_PORT}:18789"
+      - "127.0.0.1:${NEWCLAW_GATEWAY_PORT}:18789"
 
       # 可选：仅在你需要将 iOS/Android 节点连接到此 VPS 且需要 Canvas 主机时使用。
       # 如果公开暴露此端口，请阅读 /gateway/security 并相应配置防火墙。
@@ -196,9 +196,9 @@ services:
         "dist/index.js",
         "gateway",
         "--bind",
-        "${IFLOW_GATEWAY_BIND}",
+        "${NEWCLAW_GATEWAY_BIND}",
         "--port",
-        "${IFLOW_GATEWAY_PORT}",
+        "${NEWCLAW_GATEWAY_PORT}",
       ]
 ```
 
@@ -271,15 +271,15 @@ CMD ["node","dist/index.js"]
 
 ```bash
 docker compose build
-docker compose up -d iflow-gateway
+docker compose up -d newclaw-gateway
 ```
 
 验证二进制文件：
 
 ```bash
-docker compose exec iflow-gateway which gog
-docker compose exec iflow-gateway which goplaces
-docker compose exec iflow-gateway which wacli
+docker compose exec newclaw-gateway which gog
+docker compose exec newclaw-gateway which goplaces
+docker compose exec newclaw-gateway which wacli
 ```
 
 预期输出：
@@ -295,7 +295,7 @@ docker compose exec iflow-gateway which wacli
 ## 9) 验证 Gateway网关
 
 ```bash
-docker compose logs -f iflow-gateway
+docker compose logs -f newclaw-gateway
 ```
 
 成功标志：
@@ -320,12 +320,12 @@ ssh -N -L 18789:127.0.0.1:18789 root@YOUR_VPS_IP
 
 ## 持久化位置说明（数据源）
 
-iFlow 在 Docker 中运行，但 Docker 不是数据源。
+NewClaw 在 Docker 中运行，但 Docker 不是数据源。
 所有长期状态必须能在重启、重建和重启后保留。
 
 | 组件            | 位置                           | 持久化机制      | 备注                        |
 | --------------- | ------------------------------ | --------------- | --------------------------- |
-| Gateway网关配置 | `/home/node/.iflow/`           | 宿主机卷挂载    | 包含 `iflow.json`、令牌     |
+| Gateway网关配置 | `/home/node/.iflow/`           | 宿主机卷挂载    | 包含 `newclaw.json`、令牌   |
 | 模型认证配置    | `/home/node/.iflow/`           | 宿主机卷挂载    | OAuth 令牌、API 密钥        |
 | Skills配置      | `/home/node/.iflow/skills/`    | 宿主机卷挂载    | Skills 级别状态             |
 | 智能体工作区    | `/home/node/.iflow/workspace/` | 宿主机卷挂载    | 代码和智能体产物            |

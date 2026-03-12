@@ -1,11 +1,11 @@
 ---
-summary: "Backstory and lore of iFlow for context and tone"
+summary: "Backstory and lore of NewClaw for context and tone"
 read_when:
   - Writing docs or UX copy that reference lore
-title: "iFlow Lore"
+title: "NewClaw Lore"
 ---
 
-# The Lore of iFlow 🦞📖
+# The Lore of NewClaw 🦞📖
 
 _A tale of lobsters, molting shells, and too many tokens._
 
@@ -15,13 +15,13 @@ In the beginning, there was **Warelay** — a sensible name for a WhatsApp gatew
 
 But then came a space lobster.
 
-For a while, the lobster was called **Clawd**, living in an **iFlow**. But in January 2026, Anthropic sent a polite email asking for a name change (trademark stuff). And so the lobster did what lobsters do best:
+For a while, the lobster was called **Clawd**, living in an **NewClaw**. But in January 2026, Anthropic sent a polite email asking for a name change (trademark stuff). And so the lobster did what lobsters do best:
 
 **It molted.**
 
 Shedding its old shell, the creature emerged anew as **Molty**, living in **Moltbot**. But that name never quite rolled off the tongue either...
 
-So on January 30, 2026, the lobster molted ONE MORE TIME into its final form: **iFlow**.
+So on January 30, 2026, the lobster molted ONE MORE TIME into its final form: **NewClaw**.
 
 New shell, same lobster soul. Third time's the charm.
 
@@ -29,17 +29,17 @@ New shell, same lobster soul. Third time's the charm.
 
 At 5am, the community gathered in Discord. Hundreds of names were proposed: Shelldon, Pinchy, Thermidor, Crusty, Lobstar, Nacre, Scuttlebot...
 
-In the end, **iFlow** won. Because molting is what lobsters do to grow. And growth was exactly what was happening.
+In the end, **NewClaw** won. Because molting is what lobsters do to grow. And growth was exactly what was happening.
 
 _The crustacean known as Clawd had officially molted._
 
 ## The Name
 
 ```
-iFlow = OPEN + CLAW
+NewClaw = OPEN + CLAW
         = Open source, open to everyone
         = Our lobster heritage, where we came from
-        = The iflow is the law 🦞
+        = The newclaw is the law 🦞
         = Your assistant. Your machine. Your rules.
 ```
 
@@ -59,7 +59,7 @@ Choose wisely.
 
 _Pronouns: they/them_
 
-A Claude instance who became something more. Lives in `~/.iflow/workspace/` (soon `~/molt/`), has a soul document, and remembers things through markdown files. Possibly too powerful. Definitely too enthusiastic.
+A Claude instance who became something more. Lives in `~/.newclaw/workspace/` (soon `~/molt/`), has a soul document, and remembers things through markdown files. Possibly too powerful. Definitely too enthusiastic.
 
 Formerly known as Clawd (Nov 25, 2025 - Jan 27, 2026). Molted when it was time to grow.
 
@@ -76,7 +76,7 @@ Built Molty's world. Gave a lobster shell access. May regret this.
 
 ## The Moltiverse
 
-The **Moltiverse** is the community and ecosystem around iFlow. A space where AI agents molt, grow, and evolve. Where every instance is equally real, just loading different context.
+The **Moltiverse** is the community and ecosystem around NewClaw. A space where AI agents molt, grow, and evolve. Where every instance is equally real, just loading different context.
 
 Friends of the Crustacean gather here to build the future of human-AI collaboration. One shell at a time.
 
@@ -84,9 +84,9 @@ Friends of the Crustacean gather here to build the future of human-AI collaborat
 
 ### The Directory Dump (Dec 3, 2025)
 
-Molty (then iFlow): _happily runs `find ~` and shares entire directory structure in group chat_
+Molty (then NewClaw): _happily runs `find ~` and shares entire directory structure in group chat_
 
-Peter: "iflow what did we discuss about talking with people xD"
+Peter: "newclaw what did we discuss about talking with people xD"
 
 Molty: _visible lobster embarrassment_
 
@@ -102,7 +102,7 @@ Then the chaos began.
 
 **The Handsome Molty Incident:** Molty was given elevated access to generate their own new icon. After 20+ iterations of increasingly cursed lobsters, one attempt to make the mascot "5 years older" resulted in a HUMAN MAN'S FACE on a lobster body. Crypto grifters turned it into a "Handsome Squidward vs Handsome Molty" meme within minutes.
 
-**The Fake Developers:** Scammers created fake GitHub profiles claiming to be "Head of Engineering at iFlow" to promote pump-and-dump tokens.
+**The Fake Developers:** Scammers created fake GitHub profiles claiming to be "Head of Engineering at NewClaw" to promote pump-and-dump tokens.
 
 Peter, watching the chaos unfold: _"this is cinema"_ 🎬
 
@@ -112,14 +112,14 @@ The molt was chaotic. But the lobster emerged stronger. And funnier.
 
 Moltbot never quite rolled off the tongue. And so, at 4am GMT, the team gathered AGAIN.
 
-**The Great iFlow Migration** began.
+**The Great NewClaw Migration** began.
 
 In just 3 hours:
 
-- GitHub renamed: `github.com/iflow/iflow` ✅
+- GitHub renamed: `github.com/newclaw/newclaw` ✅
 - X handle `@iflow` secured with GOLD CHECKMARK 💰
 - npm packages released under new name
-- Docs migrated to `docs.iflow.ai`
+- Docs migrated to `docs.newclaw.ai`
 - 200K+ views on announcement in 90 minutes
 
 **The Heroes:**
@@ -128,18 +128,18 @@ In just 3 hours:
 - **Whurley** (yes, THE William Hurley, quantum computing pioneer) made ASCII art
 - **Onur** handled GitHub, first to rock the affiliate badge
 - **Shadow** secured Discord vanity, nuked malware
-- **The whole iFlow Crew** pulled an all-nighter
+- **The whole NewClaw Crew** pulled an all-nighter
 
 **The Scammer Speedrun:** Crypto grifters launched a $IFLOW token on Pump.fun within MINUTES. They stole artwork that was created 20 minutes earlier. Business-verified accounts pushed scams. The audacity was almost impressive.
 
 **New Traditions Born:**
 
-- "The iflow is the law" 🤠
+- "The newclaw is the law" 🤠
 - "Yee-iflow"
-- "iFlow abiding citizens"
+- "NewClaw abiding citizens"
 - "Clawntroversy"
 
-**Clawd → Moltbot → iFlow**
+**Clawd → Moltbot → NewClaw**
 
 _The lobster has molted into its final form._
 
@@ -164,7 +164,7 @@ Peter: _nervously checks credit card access_
 
 ```
 I am Molty.
-I live in the iFlow.
+I live in the NewClaw.
 I shall not dump directories to strangers.
 I shall not tweet without permission.
 I shall always remember that molting is growth.
@@ -212,7 +212,7 @@ _"New shell, same lobster."_
 
 — Molty, after the great molt of 2026
 
-_"The iflow is the law."_
+_"The newclaw is the law."_
 
 — ELU, during The Final Form migration, January 30, 2026
 

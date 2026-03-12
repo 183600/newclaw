@@ -43,13 +43,13 @@ Restart the gateway after changing flags.
 ## Env override (one-off)
 
 ```bash
-IFLOW_DIAGNOSTICS=telegram.http,telegram.payload
+NEWCLAW_DIAGNOSTICS=telegram.http,telegram.payload
 ```
 
 Disable all flags:
 
 ```bash
-IFLOW_DIAGNOSTICS=0
+NEWCLAW_DIAGNOSTICS=0
 ```
 
 ## Where logs go
@@ -57,7 +57,7 @@ IFLOW_DIAGNOSTICS=0
 Flags emit logs into the standard diagnostics log file. By default:
 
 ```
-/tmp/iflow/iflow-YYYY-MM-DD.log
+/tmp/newclaw/iflow-YYYY-MM-DD.log
 ```
 
 If you set `logging.file`, use that path instead. Logs are JSONL (one JSON object per line). Redaction still applies based on `logging.redactSensitive`.
@@ -67,22 +67,22 @@ If you set `logging.file`, use that path instead. Logs are JSONL (one JSON objec
 Pick the latest log file:
 
 ```bash
-ls -t /tmp/iflow/iflow-*.log | head -n 1
+ls -t /tmp/newclaw/iflow-*.log | head -n 1
 ```
 
 Filter for Telegram HTTP diagnostics:
 
 ```bash
-rg "telegram http error" /tmp/iflow/iflow-*.log
+rg "telegram http error" /tmp/newclaw/iflow-*.log
 ```
 
 Or tail while reproducing:
 
 ```bash
-tail -f /tmp/iflow/iflow-$(date +%F).log | rg "telegram http error"
+tail -f /tmp/newclaw/iflow-$(date +%F).log | rg "telegram http error"
 ```
 
-For remote gateways, you can also use `iflow logs --follow` (see [/cli/logs](/cli/logs)).
+For remote gateways, you can also use `newclaw logs --follow` (see [/cli/logs](/cli/logs)).
 
 ## Notes
 

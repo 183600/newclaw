@@ -50,13 +50,13 @@ x-i18n:
 ## 环境变量覆盖（一次性）
 
 ```bash
-IFLOW_DIAGNOSTICS=telegram.http,telegram.payload
+NEWCLAW_DIAGNOSTICS=telegram.http,telegram.payload
 ```
 
 禁用所有标志：
 
 ```bash
-IFLOW_DIAGNOSTICS=0
+NEWCLAW_DIAGNOSTICS=0
 ```
 
 ## 日志输出位置
@@ -64,7 +64,7 @@ IFLOW_DIAGNOSTICS=0
 标志会将日志输出到标准诊断日志文件中。默认路径为：
 
 ```
-/tmp/iflow/iflow-YYYY-MM-DD.log
+/tmp/newclaw/iflow-YYYY-MM-DD.log
 ```
 
 如果你设置了 `logging.file`，则使用该路径。日志格式为 JSONL（每行一个 JSON 对象）。脱敏处理仍根据 `logging.redactSensitive` 设置生效。
@@ -74,22 +74,22 @@ IFLOW_DIAGNOSTICS=0
 选择最新的日志文件：
 
 ```bash
-ls -t /tmp/iflow/iflow-*.log | head -n 1
+ls -t /tmp/newclaw/iflow-*.log | head -n 1
 ```
 
 筛选 Telegram HTTP 诊断信息：
 
 ```bash
-rg "telegram http error" /tmp/iflow/iflow-*.log
+rg "telegram http error" /tmp/newclaw/iflow-*.log
 ```
 
 或在复现问题时实时追踪：
 
 ```bash
-tail -f /tmp/iflow/iflow-$(date +%F).log | rg "telegram http error"
+tail -f /tmp/newclaw/iflow-$(date +%F).log | rg "telegram http error"
 ```
 
-对于远程 Gateway网关，你也可以使用 `iflow logs --follow`（参见 [/cli/logs](/cli/logs)）。
+对于远程 Gateway网关，你也可以使用 `newclaw logs --follow`（参见 [/cli/logs](/cli/logs)）。
 
 ## 注意事项
 

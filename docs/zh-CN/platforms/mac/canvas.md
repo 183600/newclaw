@@ -22,7 +22,7 @@ macOS 应用使用 `WKWebView` 嵌入了一个智能体控制的 **Canvas 面板
 
 Canvas 状态存储在 Application Support 目录下：
 
-- `~/Library/Application Support/iFlow/canvas/<session>/...`
+- `~/Library/Application Support/NewClaw/canvas/<session>/...`
 
 Canvas 面板通过**自定义 URL scheme** 提供这些文件：
 
@@ -57,10 +57,10 @@ Canvas 通过 **Gateway网关 WebSocket** 暴露，因此智能体可以：
 CLI 示例：
 
 ```bash
-iflow nodes canvas present --node <id>
-iflow nodes canvas navigate --node <id> --url "/"
-iflow nodes canvas eval --node <id> --js "document.title"
-iflow nodes canvas snapshot --node <id>
+newclaw nodes canvas present --node <id>
+newclaw nodes canvas navigate --node <id> --url "/"
+newclaw nodes canvas eval --node <id> --js "document.title"
+newclaw nodes canvas snapshot --node <id>
 ```
 
 注意事项：
@@ -97,13 +97,13 @@ cat > /tmp/a2ui-v0.8.jsonl <<'EOFA2'
 {"beginRendering":{"surfaceId":"main","root":"root"}}
 EOFA2
 
-iflow nodes canvas a2ui push --jsonl /tmp/a2ui-v0.8.jsonl --node <id>
+newclaw nodes canvas a2ui push --jsonl /tmp/a2ui-v0.8.jsonl --node <id>
 ```
 
 快速冒烟测试：
 
 ```bash
-iflow nodes canvas a2ui push --node <id> --text "Hello from A2UI"
+newclaw nodes canvas a2ui push --node <id> --text "Hello from A2UI"
 ```
 
 ## 从 Canvas 触发智能体运行

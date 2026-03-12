@@ -8,7 +8,7 @@ title: "Skills Config"
 
 # Skills Config
 
-All skills-related configuration lives under `skills` in `~/.iflow/iflow.json`.
+All skills-related configuration lives under `skills` in `~/.newclaw/newclaw.json`.
 
 ```json5
 {

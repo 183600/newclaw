@@ -26,7 +26,7 @@ Quick steps:
 
 1. Run a Gateway (local or remote).
 2. Configure the Gateway target (`gateway.remote.url` + auth) or pass flags.
-3. Point the IDE to run `iflow acp` over stdio.
+3. Point the IDE to run `newclaw acp` over stdio.
 
 Example config:
 
@@ -97,7 +97,7 @@ To target a specific Gateway or agent:
 }
 ```
 
-In Zed, open the Agent panel and select “iFlow ACP” to start a thread.
+In Zed, open the Agent panel and select "NewClaw ACP" to start a thread.
 
 ## Execution Model
 

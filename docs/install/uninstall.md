@@ -1,7 +1,7 @@
 ---
-summary: "Uninstall iFlow completely (CLI, service, state, workspace)"
+summary: "Uninstall NewClaw completely (CLI, service, state, workspace)"
 read_when:
-  - You want to remove iFlow from a machine
+  - You want to remove NewClaw from a machine
   - The gateway service is still running after uninstall
 title: "Uninstall"
 ---
@@ -18,14 +18,14 @@ Two paths:
 Recommended: use the built-in uninstaller:
 
 ```bash
-iflow uninstall
+newclaw uninstall
 ```
 
 Non-interactive (automation / npx):
 
 ```bash
-iflow uninstall --all --yes --non-interactive
-npx -y iflow uninstall --all --yes --non-interactive
+newclaw uninstall --all --yes --non-interactive
+npx -y newclaw uninstall --all --yes --non-interactive
 ```
 
 Manual steps (same result):
@@ -33,27 +33,27 @@ Manual steps (same result):
 1. Stop the gateway service:
 
 ```bash
-iflow gateway stop
+newclaw gateway stop
 ```
 
 2. Uninstall the gateway service (launchd/systemd/schtasks):
 
 ```bash
-iflow gateway uninstall
+newclaw gateway uninstall
 ```
 
 3. Delete state + config:
 
 ```bash
-rm -rf "${IFLOW_STATE_DIR:-$HOME/.iflow}"
+rm -rf "${NEWCLAW_STATE_DIR:-$HOME/.iflow}"
 ```
 
-If you set `IFLOW_CONFIG_PATH` to a custom location outside the state dir, delete that file too.
+If you set `NEWCLAW_CONFIG_PATH` to a custom location outside the state dir, delete that file too.
 
 4. Delete your workspace (optional, removes agent files):
 
 ```bash
-rm -rf ~/.iflow/workspace
+rm -rf ~/.newclaw/workspace
 ```
 
 5. Remove the CLI install (pick the one you used):
@@ -67,12 +67,12 @@ bun remove -g iflow
 6. If you installed the macOS app:
 
 ```bash
-rm -rf /Applications/iFlow.app
+rm -rf /Applications/NewClaw.app
 ```
 
 Notes:
 
-- If you used profiles (`--profile` / `IFLOW_PROFILE`), repeat step 3 for each state dir (defaults are `~/.iflow-<profile>`).
+- If you used profiles (`--profile` / `NEWCLAW_PROFILE`), repeat step 3 for each state dir (defaults are `~/.newclaw-<profile>`).
 - In remote mode, the state dir lives on the **gateway host**, so run steps 1-4 there too.
 
 ## Manual service removal (CLI not installed)
@@ -92,21 +92,21 @@ If you used a profile, replace the label and plist name with `bot.molt.<profile>
 
 ### Linux (systemd user unit)
 
-Default unit name is `iflow-gateway.service` (or `iflow-gateway-<profile>.service`):
+Default unit name is `newclaw-gateway.service` (or `newclaw-gateway-<profile>.service`):
 
 ```bash
-systemctl --user disable --now iflow-gateway.service
-rm -f ~/.config/systemd/user/iflow-gateway.service
+systemctl --user disable --now newclaw-gateway.service
+rm -f ~/.config/systemd/user/newclaw-gateway.service
 systemctl --user daemon-reload
 ```
 
 ### Windows (Scheduled Task)
 
-Default task name is `iFlow Gateway` (or `iFlow Gateway (<profile>)`).
+Default task name is `NewClaw Gateway` (or `NewClaw Gateway (<profile>)`).
 The task script lives under your state dir.
 
 ```powershell
-schtasks /Delete /F /TN "iFlow Gateway"
+schtasks /Delete /F /TN "NewClaw Gateway"
 Remove-Item -Force "$env:USERPROFILE\.iflow\gateway.cmd"
 ```
 
@@ -116,12 +116,12 @@ If you used a profile, delete the matching task name and `~\.iflow-<profile>\gat
 
 ### Normal install (install.sh / npm / pnpm / bun)
 
-If you used `https://iflow.ai/install.sh` or `install.ps1`, the CLI was installed with `npm install -g iflow@latest`.
+If you used `https://newclaw.ai/install.sh` or `install.ps1`, the CLI was installed with `npm install -g iflow@latest`.
 Remove it with `npm rm -g iflow` (or `pnpm remove -g` / `bun remove -g` if you installed that way).
 
 ### Source checkout (git clone)
 
-If you run from a repo checkout (`git clone` + `iflow ...` / `bun run iflow ...`):
+If you run from a repo checkout (`git clone` + `newclaw ...` / `bun run newclaw ...`):
 
 1. Uninstall the gateway service **before** deleting the repo (use the easy path above or manual service removal).
 2. Delete the repo directory.

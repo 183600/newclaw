@@ -16,7 +16,7 @@ provider mixes reasoning into normal text.
 
 Use `/debug` in chat to set **runtime-only** config overrides (memory, not disk).
 `/debug` is disabled by default; enable with `commands.debug: true`.
-This is handy when you need to toggle obscure settings without editing `iflow.json`.
+This is handy when you need to toggle obscure settings without editing `newclaw.json`.
 
 Examples:
 
@@ -51,7 +51,7 @@ on each restart.
 Use the dev profile to isolate state and spin up a safe, disposable setup for
 debugging. There are **two** `--dev` flags:
 
-- **Global `--dev` (profile):** isolates state under `~/.iflow-dev` and
+- **Global `--dev` (profile):** isolates state under `~/.newclaw-dev` and
   defaults the gateway port to `19001` (derived ports shift with it).
 - **`gateway --dev`: tells the Gateway to auto-create a default config +
   workspace** when missing (and skip BOOTSTRAP.md).
@@ -60,18 +60,18 @@ Recommended flow (dev profile + dev bootstrap):
 
 ```bash
 pnpm gateway:dev
-IFLOW_PROFILE=dev iflow tui
+NEWCLAW_PROFILE=dev newclaw tui
 ```
 
-If you don’t have a global install yet, run the CLI via `pnpm iflow ...`.
+If you don’t have a global install yet, run the CLI via `pnpm newclaw ...`.
 
 What this does:
 
 1. **Profile isolation** (global `--dev`)
-   - `IFLOW_PROFILE=dev`
-   - `IFLOW_STATE_DIR=~/.iflow-dev`
-   - `IFLOW_CONFIG_PATH=~/.iflow-dev/iflow.json`
-   - `IFLOW_GATEWAY_PORT=19001` (browser/canvas shift accordingly)
+   - `NEWCLAW_PROFILE=dev`
+   - `NEWCLAW_STATE_DIR=~/.newclaw-dev`
+   - `NEWCLAW_CONFIG_PATH=~/.newclaw-dev/newclaw.json`
+   - `NEWCLAW_GATEWAY_PORT=19001` (browser/canvas shift accordingly)
 
 2. **Dev bootstrap** (`gateway --dev`)
    - Writes a minimal config if missing (`gateway.mode=local`, bind loopback).
@@ -80,7 +80,7 @@ What this does:
    - Seeds the workspace files if missing:
      `AGENTS.md`, `SOUL.md`, `TOOLS.md`, `IDENTITY.md`, `USER.md`, `HEARTBEAT.md`.
    - Default identity: **C3‑PO** (protocol droid).
-   - Skips channel providers in dev mode (`IFLOW_SKIP_CHANNELS=1`).
+   - Skips channel providers in dev mode (`NEWCLAW_SKIP_CHANNELS=1`).
 
 Reset flow (fresh start):
 
@@ -92,7 +92,7 @@ Note: `--dev` is a **global** profile flag and gets eaten by some runners.
 If you need to spell it out, use the env var form:
 
 ```bash
-IFLOW_PROFILE=dev iflow gateway --dev --reset
+NEWCLAW_PROFILE=dev newclaw gateway --dev --reset
 ```
 
 `--reset` wipes config, credentials, sessions, and the dev workspace (using
@@ -101,12 +101,12 @@ IFLOW_PROFILE=dev iflow gateway --dev --reset
 Tip: if a non‑dev gateway is already running (launchd/systemd), stop it first:
 
 ```bash
-iflow gateway stop
+newclaw gateway stop
 ```
 
-## Raw stream logging (iFlow)
+## Raw stream logging (NewClaw)
 
-iFlow can log the **raw assistant stream** before any filtering/formatting.
+NewClaw can log the **raw assistant stream** before any filtering/formatting.
 This is the best way to see whether reasoning is arriving as plain text deltas
 (or as separate thinking blocks).
 
@@ -119,19 +119,19 @@ pnpm gateway:watch --force --raw-stream
 Optional path override:
 
 ```bash
-pnpm gateway:watch --force --raw-stream --raw-stream-path ~/.iflow/logs/raw-stream.jsonl
+pnpm gateway:watch --force --raw-stream --raw-stream-path ~/.newclaw/logs/raw-stream.jsonl
 ```
 
 Equivalent env vars:
 
 ```bash
-IFLOW_RAW_STREAM=1
-IFLOW_RAW_STREAM_PATH=~/.iflow/logs/raw-stream.jsonl
+NEWCLAW_RAW_STREAM=1
+NEWCLAW_RAW_STREAM_PATH=~/.newclaw/logs/raw-stream.jsonl
 ```
 
 Default file:
 
-`~/.iflow/logs/raw-stream.jsonl`
+`~/.newclaw/logs/raw-stream.jsonl`
 
 ## Raw chunk logging (pi-mono)
 

@@ -1,11 +1,11 @@
 ---
 title: Fly.io
-description: Deploy iFlow on Fly.io
+description: Deploy NewClaw on Fly.io
 ---
 
 # Fly.io Deployment
 
-**Goal:** iFlow Gateway running on a [Fly.io](https://fly.io) machine with persistent storage, automatic HTTPS, and Discord/channel access.
+**Goal:** NewClaw Gateway running on a [Fly.io](https://fly.io) machine with persistent storage, automatic HTTPS, and Discord/channel access.
 
 ## What you need
 
@@ -25,7 +25,7 @@ description: Deploy iFlow on Fly.io
 
 ```bash
 # Clone the repo
-git clone https://github.com/iflow/iflow.git
+git clone https://github.com/newclaw/newclaw.git
 cd iflow
 
 # Create a new Fly app (pick your own name)
@@ -52,8 +52,8 @@ primary_region = "iad"
 
 [env]
   NODE_ENV = "production"
-  IFLOW_PREFER_PNPM = "1"
-  IFLOW_STATE_DIR = "/data"
+  NEWCLAW_PREFER_PNPM = "1"
+  NEWCLAW_STATE_DIR = "/data"
   NODE_OPTIONS = "--max-old-space-size=1536"
 
 [processes]
@@ -78,19 +78,19 @@ primary_region = "iad"
 
 **Key settings:**
 
-| Setting                     | Why                                                                      |
-| --------------------------- | ------------------------------------------------------------------------ |
-| `--bind lan`                | Binds to `0.0.0.0` so Fly's proxy can reach the gateway                  |
-| `--allow-unconfigured`      | Starts without a config file (you'll create one after)                   |
-| `internal_port = 3000`      | Must match `--port 3000` (or `IFLOW_GATEWAY_PORT`) for Fly health checks |
-| `memory = "2048mb"`         | 512MB is too small; 2GB recommended                                      |
-| `IFLOW_STATE_DIR = "/data"` | Persists state on the volume                                             |
+| Setting                       | Why                                                                        |
+| ----------------------------- | -------------------------------------------------------------------------- |
+| `--bind lan`                  | Binds to `0.0.0.0` so Fly's proxy can reach the gateway                    |
+| `--allow-unconfigured`        | Starts without a config file (you'll create one after)                     |
+| `internal_port = 3000`        | Must match `--port 3000` (or `NEWCLAW_GATEWAY_PORT`) for Fly health checks |
+| `memory = "2048mb"`           | 512MB is too small; 2GB recommended                                        |
+| `NEWCLAW_STATE_DIR = "/data"` | Persists state on the volume                                               |
 
 ## 3) Set secrets
 
 ```bash
 # Required: Gateway token (for non-loopback binding)
-fly secrets set IFLOW_GATEWAY_TOKEN=$(openssl rand -hex 32)
+fly secrets set NEWCLAW_GATEWAY_TOKEN=$(openssl rand -hex 32)
 
 # Model provider API keys
 fly secrets set ANTHROPIC_API_KEY=sk-ant-...
@@ -105,9 +105,9 @@ fly secrets set DISCORD_BOT_TOKEN=MTQ...
 
 **Notes:**
 
-- Non-loopback binds (`--bind lan`) require `IFLOW_GATEWAY_TOKEN` for security.
+- Non-loopback binds (`--bind lan`) require `NEWCLAW_GATEWAY_TOKEN` for security.
 - Treat these tokens like passwords.
-- **Prefer env vars over config file** for all API keys and tokens. This keeps secrets out of `iflow.json` where they could be accidentally exposed or logged.
+- **Prefer env vars over config file** for all API keys and tokens. This keeps secrets out of `newclaw.json` where they could be accidentally exposed or logged.
 
 ## 4) Deploy
 
@@ -143,7 +143,7 @@ Create the config directory and file:
 
 ```bash
 mkdir -p /data
-cat > /data/iflow.json << 'EOF'
+cat > /data/newclaw.json << 'EOF'
 {
   "agents": {
     "defaults": {
@@ -195,7 +195,7 @@ cat > /data/iflow.json << 'EOF'
 EOF
 ```
 
-**Note:** With `IFLOW_STATE_DIR=/data`, the config path is `/data/iflow.json`.
+**Note:** With `NEWCLAW_STATE_DIR=/data`, the config path is `/data/newclaw.json`.
 
 **Note:** The Discord token can come from either:
 
@@ -223,7 +223,7 @@ fly open
 
 Or visit `https://my-iflow.fly.dev/`
 
-Paste your gateway token (the one from `IFLOW_GATEWAY_TOKEN`) to authenticate.
+Paste your gateway token (the one from `NEWCLAW_GATEWAY_TOKEN`) to authenticate.
 
 ### Logs
 
@@ -250,7 +250,7 @@ The gateway is binding to `127.0.0.1` instead of `0.0.0.0`.
 
 Fly can't reach the gateway on the configured port.
 
-**Fix:** Ensure `internal_port` matches the gateway port (set `--port 3000` or `IFLOW_GATEWAY_PORT=3000`).
+**Fix:** Ensure `internal_port` matches the gateway port (set `--port 3000` or `NEWCLAW_GATEWAY_PORT=3000`).
 
 ### OOM / Memory Issues
 
@@ -288,12 +288,12 @@ The lock file is at `/data/gateway.*.lock` (not in a subdirectory).
 
 ### Config Not Being Read
 
-If using `--allow-unconfigured`, the gateway creates a minimal config. Your custom config at `/data/iflow.json` should be read on restart.
+If using `--allow-unconfigured`, the gateway creates a minimal config. Your custom config at `/data/newclaw.json` should be read on restart.
 
 Verify the config exists:
 
 ```bash
-fly ssh console --command "cat /data/iflow.json"
+fly ssh console --command "cat /data/newclaw.json"
 ```
 
 ### Writing Config via SSH
@@ -302,24 +302,24 @@ The `fly ssh console -C` command doesn't support shell redirection. To write a c
 
 ```bash
 # Use echo + tee (pipe from local to remote)
-echo '{"your":"config"}' | fly ssh console -C "tee /data/iflow.json"
+echo '{"your":"config"}' | fly ssh console -C "tee /data/newclaw.json"
 
 # Or use sftp
 fly sftp shell
-> put /local/path/config.json /data/iflow.json
+> put /local/path/config.json /data/newclaw.json
 ```
 
 **Note:** `fly sftp` may fail if the file already exists. Delete first:
 
 ```bash
-fly ssh console --command "rm /data/iflow.json"
+fly ssh console --command "rm /data/newclaw.json"
 ```
 
 ### State Not Persisting
 
 If you lose credentials or sessions after a restart, the state dir is writing to the container filesystem.
 
-**Fix:** Ensure `IFLOW_STATE_DIR=/data` is set in `fly.toml` and redeploy.
+**Fix:** Ensure `NEWCLAW_STATE_DIR=/data` is set in `fly.toml` and redeploy.
 
 ## Updates
 

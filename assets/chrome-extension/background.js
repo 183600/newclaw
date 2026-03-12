@@ -114,7 +114,7 @@ function onRelayClosed(reason) {
     setBadge(tabId, 'connecting')
     void chrome.action.setTitle({
       tabId,
-      title: 'iFlow Browser Relay: disconnected (click to re-attach)',
+      title: 'NewClaw Browser Relay: disconnected (click to re-attach)',
     })
   }
   tabs.clear()
@@ -225,8 +225,7 @@ async function attachTab(tabId, opts = {}) {
   tabBySession.set(sessionId, tabId)
   void chrome.action.setTitle({
     tabId,
-    title: 'iFlow Browser Relay: attached (click to detach)',
-  })
+          title: 'NewClaw Browser Relay: attached (click to detach)',  })
 
   if (!opts.skipAttachedEvent) {
     sendToRelay({
@@ -278,8 +277,7 @@ async function detachTab(tabId, reason) {
   setBadge(tabId, 'off')
   void chrome.action.setTitle({
     tabId,
-    title: 'iFlow Browser Relay (click to attach/detach)',
-  })
+          title: 'NewClaw Browser Relay (click to attach/detach)',  })
 }
 
 async function connectOrToggleForActiveTab() {
@@ -297,8 +295,7 @@ async function connectOrToggleForActiveTab() {
   setBadge(tabId, 'connecting')
   void chrome.action.setTitle({
     tabId,
-    title: 'iFlow Browser Relay: connecting to local relay…',
-  })
+          title: 'NewClaw Browser Relay: connecting to local relay…',  })
 
   try {
     await ensureRelayConnection()
@@ -308,7 +305,7 @@ async function connectOrToggleForActiveTab() {
     setBadge(tabId, 'error')
     void chrome.action.setTitle({
       tabId,
-      title: 'iFlow Browser Relay: relay not running (open options for setup)',
+      title: 'NewClaw Browser Relay: relay not running (open options for setup)',
     })
     void maybeOpenHelpOnce()
     // Extra breadcrumbs in chrome://extensions service worker logs.

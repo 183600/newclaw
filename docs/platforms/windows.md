@@ -1,14 +1,14 @@
 ---
 summary: "Windows (WSL2) support + companion app status"
 read_when:
-  - Installing iFlow on Windows
+  - Installing NewClaw on Windows
   - Looking for Windows companion app status
 title: "Windows (WSL2)"
 ---
 
 # Windows (WSL2)
 
-iFlow on Windows is recommended **via WSL2** (Ubuntu recommended). The
+NewClaw on Windows is recommended **via WSL2** (Ubuntu recommended). The
 CLI + Gateway run inside Linux, which keeps the runtime consistent and makes
 tooling far more compatible (Node/Bun/pnpm, Linux binaries, skills). Native
 Windows might be trickier. WSL2 gives you the full Linux experience — one command
@@ -32,19 +32,19 @@ Native Windows companion apps are planned.
 Inside WSL2:
 
 ```
-iflow onboard --install-daemon
+newclaw onboard --install-daemon
 ```
 
 Or:
 
 ```
-iflow gateway install
+newclaw gateway install
 ```
 
 Or:
 
 ```
-iflow configure
+newclaw configure
 ```
 
 Select **Gateway service** when prompted.
@@ -52,7 +52,7 @@ Select **Gateway service** when prompted.
 Repair/migrate:
 
 ```
-iflow doctor
+newclaw doctor
 ```
 
 ## Advanced: expose WSL services over LAN (portproxy)
@@ -95,7 +95,7 @@ Notes:
 
 - SSH from another machine targets the **Windows host IP** (example: `ssh user@windows-host -p 2222`).
 - Remote nodes must point at a **reachable** Gateway URL (not `127.0.0.1`); use
-  `iflow status --all` to confirm.
+  `newclaw status --all` to confirm.
 - Use `listenaddress=0.0.0.0` for LAN access; `127.0.0.1` keeps it local only.
 - If you want this automatic, register a Scheduled Task to run the refresh
   step at login.
@@ -138,17 +138,17 @@ Re-open Ubuntu, then verify:
 systemctl --user status
 ```
 
-### 3) Install iFlow (inside WSL)
+### 3) Install NewClaw (inside WSL)
 
 Follow the Linux Getting Started flow inside WSL:
 
 ```bash
-git clone https://github.com/iflow/iflow.git
+git clone https://github.com/newclaw/newclaw.git
 cd iflow
 pnpm install
 pnpm ui:build # auto-installs UI deps on first run
 pnpm build
-iflow onboard
+newclaw onboard
 ```
 
 Full guide: [Getting Started](/start/getting-started)

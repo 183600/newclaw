@@ -1,12 +1,12 @@
 ---
-summary: "CLI reference for `iflow memory` (status/index/search)"
+summary: "CLI reference for `newclaw memory` (status/index/search)"
 read_when:
   - You want to index or search semantic memory
   - You’re debugging memory availability or indexing
 title: "memory"
 ---
 
-# `iflow memory`
+# `newclaw memory`
 
 Manage semantic memory indexing and search.
 Provided by the active memory plugin (default: `memory-core`; set `plugins.slots.memory = "none"` to disable).
@@ -19,15 +19,15 @@ Related:
 ## Examples
 
 ```bash
-iflow memory status
-iflow memory status --deep
-iflow memory status --deep --index
-iflow memory status --deep --index --verbose
-iflow memory index
-iflow memory index --verbose
-iflow memory search "release checklist"
-iflow memory status --agent main
-iflow memory index --agent main --verbose
+newclaw memory status
+newclaw memory status --deep
+newclaw memory status --deep --index
+newclaw memory status --deep --index --verbose
+newclaw memory index
+newclaw memory index --verbose
+newclaw memory search "release checklist"
+newclaw memory status --agent main
+newclaw memory index --agent main --verbose
 ```
 
 ## Options

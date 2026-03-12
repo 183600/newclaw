@@ -1,17 +1,17 @@
 ---
-summary: "iFlow on Raspberry Pi (budget self-hosted setup)"
+summary: "NewClaw on Raspberry Pi (budget self-hosted setup)"
 read_when:
-  - Setting up iFlow on a Raspberry Pi
-  - Running iFlow on ARM devices
+  - Setting up NewClaw on a Raspberry Pi
+  - Running NewClaw on ARM devices
   - Building a cheap always-on personal AI
 title: "Raspberry Pi"
 ---
 
-# iFlow on Raspberry Pi
+# NewClaw on Raspberry Pi
 
 ## Goal
 
-Run a persistent, always-on iFlow Gateway on a Raspberry Pi for **~$35-80** one-time cost (no monthly fees).
+Run a persistent, always-on NewClaw Gateway on a Raspberry Pi for **~$35-80** one-time cost (no monthly fees).
 
 Perfect for:
 
@@ -107,18 +107,18 @@ echo 'vm.swappiness=10' | sudo tee -a /etc/sysctl.conf
 sudo sysctl -p
 ```
 
-## 6) Install iFlow
+## 6) Install NewClaw
 
 ### Option A: Standard Install (Recommended)
 
 ```bash
-curl -fsSL https://iflow.ai/install.sh | bash
+curl -fsSL https://newclaw.ai/install.sh | bash
 ```
 
 ### Option B: Hackable Install (For tinkering)
 
 ```bash
-git clone https://github.com/iflow/iflow.git
+git clone https://github.com/newclaw/newclaw.git
 cd iflow
 npm install
 npm run build
@@ -130,7 +130,7 @@ The hackable install gives you direct access to logs and code — useful for deb
 ## 7) Run Onboarding
 
 ```bash
-iflow onboard --install-daemon
+newclaw onboard --install-daemon
 ```
 
 Follow the wizard:
@@ -144,13 +144,13 @@ Follow the wizard:
 
 ```bash
 # Check status
-iflow status
+newclaw status
 
 # Check service
 sudo systemctl status iflow
 
 # View logs
-journalctl -u iflow -f
+journalctl -u newclaw -f
 ```
 
 ## 9) Access the Dashboard
@@ -173,7 +173,7 @@ curl -fsSL https://tailscale.com/install.sh | sh
 sudo tailscale up
 
 # Update config
-iflow config set gateway.bind tailnet
+newclaw config set gateway.bind tailnet
 sudo systemctl restart iflow
 ```
 
@@ -221,7 +221,7 @@ htop
 
 ### Binary Compatibility
 
-Most iFlow features work on ARM64, but some external binaries may need ARM builds:
+Most NewClaw features work on ARM64, but some external binaries may need ARM builds:
 
 | Tool               | ARM64 Status | Notes                               |
 | ------------------ | ------------ | ----------------------------------- |
@@ -304,10 +304,10 @@ free -h
 
 ```bash
 # Check logs
-journalctl -u iflow --no-pager -n 100
+journalctl -u newclaw --no-pager -n 100
 
 # Common fix: rebuild
-cd ~/iflow  # if using hackable install
+cd ~/newclaw  # if using hackable install
 npm run build
 sudo systemctl restart iflow
 ```

@@ -2,7 +2,7 @@
 read_when:
   - 运行无头节点主机
   - 为 system.run 配对非 macOS 节点
-summary: "`iflow node`（无头节点主机）的 CLI 参考"
+summary: "`newclaw node`（无头节点主机）的 CLI 参考"
 title: node
 x-i18n:
   generated_at: "2026-02-01T20:21:18Z"
@@ -13,7 +13,7 @@ x-i18n:
   workflow: 14
 ---
 
-# `iflow node`
+# `newclaw node`
 
 运行一个**无头节点主机**，连接到 Gateway网关 WebSocket 并在本机上暴露
 `system.run` / `system.which`。
@@ -49,7 +49,7 @@ x-i18n:
 ## 前台运行
 
 ```bash
-iflow node run --host <gateway-host> --port 18789
+newclaw node run --host <gateway-host> --port 18789
 ```
 
 选项：
@@ -66,7 +66,7 @@ iflow node run --host <gateway-host> --port 18789
 将无头节点主机安装为用户服务。
 
 ```bash
-iflow node install --host <gateway-host> --port 18789
+newclaw node install --host <gateway-host> --port 18789
 ```
 
 选项：
@@ -83,13 +83,13 @@ iflow node install --host <gateway-host> --port 18789
 管理服务：
 
 ```bash
-iflow node status
-iflow node stop
-iflow node restart
-iflow node uninstall
+newclaw node status
+newclaw node stop
+newclaw node restart
+newclaw node uninstall
 ```
 
-使用 `iflow node run` 进行前台节点主机运行（无服务）。
+使用 `newclaw node run` 进行前台节点主机运行（无服务）。
 
 服务命令支持 `--json` 以获取机器可读输出。
 
@@ -99,17 +99,17 @@ iflow node uninstall
 通过以下方式批准：
 
 ```bash
-iflow nodes pending
-iflow nodes approve <requestId>
+newclaw nodes pending
+newclaw nodes approve <requestId>
 ```
 
 节点主机将其节点 ID、令牌、显示名称和 Gateway网关连接信息存储在
-`~/.iflow/node.json` 中。
+`~/.newclaw/node.json` 中。
 
 ## 执行审批
 
 `system.run` 受本地执行审批控制：
 
-- `~/.iflow/exec-approvals.json`
+- `~/.newclaw/exec-approvals.json`
 - [执行审批](/tools/exec-approvals)
-- `iflow approvals --node <id|name|ip>`（从 Gateway网关编辑）
+- `newclaw approvals --node <id|name|ip>`（从 Gateway网关编辑）

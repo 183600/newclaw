@@ -1,14 +1,14 @@
 ---
-summary: "iFlow macOS companion app (menu bar + gateway broker)"
+summary: "NewClaw macOS companion app (menu bar + gateway broker)"
 read_when:
   - Implementing macOS app features
   - Changing gateway lifecycle or node bridging on macOS
 title: "macOS App"
 ---
 
-# iFlow macOS Companion (menu bar + gateway broker)
+# NewClaw macOS Companion (menu bar + gateway broker)
 
-The macOS app is the **menu‑bar companion** for iFlow. It owns permissions,
+The macOS app is the **menu‑bar companion** for NewClaw. It owns permissions,
 manages/attaches to the Gateway locally (launchd or manual), and exposes macOS
 capabilities to the agent as a node.
 
@@ -26,7 +26,7 @@ capabilities to the agent as a node.
 ## Local vs remote mode
 
 - **Local** (default): the app attaches to a running local Gateway if present;
-  otherwise it enables the launchd service via `iflow gateway install`.
+  otherwise it enables the launchd service via `newclaw gateway install`.
 - **Remote**: the app connects to a Gateway over SSH/Tailscale and never starts
   a local process.
   The app starts the local **node host service** so the remote Gateway can reach this Mac.
@@ -35,7 +35,7 @@ capabilities to the agent as a node.
 ## Launchd control
 
 The app manages a per‑user LaunchAgent labeled `bot.molt.gateway`
-(or `bot.molt.<profile>` when using `--profile`/`IFLOW_PROFILE`; legacy `com.iflow.*` still unloads).
+(or `bot.molt.<profile>` when using `--profile`/`NEWCLAW_PROFILE`; legacy `com.iflow.*` still unloads).
 
 ```bash
 launchctl kickstart -k gui/$UID/bot.molt.gateway
@@ -45,7 +45,7 @@ launchctl bootout gui/$UID/bot.molt.gateway
 Replace the label with `bot.molt.<profile>` when running a named profile.
 
 If the LaunchAgent isn’t installed, enable it from the app or run
-`iflow gateway install`.
+`newclaw gateway install`.
 
 ## Node capabilities (mac)
 
@@ -78,7 +78,7 @@ Gateway -> Node Service (WS)
 Security + ask + allowlist are stored locally on the Mac in:
 
 ```
-~/.iflow/exec-approvals.json
+~/.newclaw/exec-approvals.json
 ```
 
 Example:
@@ -134,7 +134,7 @@ Safety:
 
 ## Onboarding flow (typical)
 
-1. Install and launch **iFlow.app**.
+1. Install and launch **NewClaw.app**.
 2. Complete the permissions checklist (TCC prompts).
 3. Ensure **Local** mode is active and the Gateway is running.
 4. Install the CLI if you want terminal access.
@@ -142,7 +142,7 @@ Safety:
 ## Build & dev workflow (native)
 
 - `cd apps/macos && swift build`
-- `swift run iFlow` (or Xcode)
+- `swift run NewClaw` (or Xcode)
 - Package app: `scripts/package-mac-app.sh`
 
 ## Debug gateway connectivity (macOS CLI)
@@ -170,7 +170,7 @@ Discovery options:
 - `--timeout <ms>`: overall discovery window (default: `2000`)
 - `--json`: structured output for diffing
 
-Tip: compare against `iflow gateway discover --json` to see whether the
+Tip: compare against `newclaw gateway discover --json` to see whether the
 macOS app’s discovery pipeline (NWBrowser + tailnet DNS‑SD fallback) differs from
 the Node CLI’s `dns-sd` based discovery.
 

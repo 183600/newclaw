@@ -1,5 +1,5 @@
 ---
-summary: "Use OpenCode Zen (curated models) with iFlow"
+summary: "Use OpenCode Zen (curated models) with NewClaw"
 read_when:
   - You want OpenCode Zen for model access
   - You want a curated list of coding-friendly models
@@ -15,9 +15,9 @@ Zen is currently in beta.
 ## CLI setup
 
 ```bash
-iflow onboard --auth-choice opencode-zen
+newclaw onboard --auth-choice opencode-zen
 # or non-interactive
-iflow onboard --opencode-zen-api-key "$OPENCODE_API_KEY"
+newclaw onboard --opencode-zen-api-key "$OPENCODE_API_KEY"
 ```
 
 ## Config snippet

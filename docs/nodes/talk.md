@@ -47,7 +47,7 @@ Supported keys:
 - `seed`, `normalize`, `lang`, `output_format`, `latency_tier`
 - `once`
 
-## Config (`~/.iflow/iflow.json`)
+## Config (`~/.newclaw/newclaw.json`)
 
 ```json5
 {

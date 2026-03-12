@@ -1,19 +1,19 @@
 ---
-summary: "Run iFlow Gateway 24/7 on a GCP Compute Engine VM (Docker) with durable state"
+summary: "Run NewClaw Gateway 24/7 on a GCP Compute Engine VM (Docker) with durable state"
 read_when:
-  - You want iFlow running 24/7 on GCP
+  - You want NewClaw running 24/7 on GCP
   - You want a production-grade, always-on Gateway on your own VM
   - You want full control over persistence, binaries, and restart behavior
 title: "GCP"
 ---
 
-# iFlow on GCP Compute Engine (Docker, Production VPS Guide)
+# NewClaw on GCP Compute Engine (Docker, Production VPS Guide)
 
 ## Goal
 
-Run a persistent iFlow Gateway on a GCP Compute Engine VM using Docker, with durable state, baked-in binaries, and safe restart behavior.
+Run a persistent NewClaw Gateway on a GCP Compute Engine VM using Docker, with durable state, baked-in binaries, and safe restart behavior.
 
-If you want "iFlow 24/7 for ~$5-12/mo", this is a reliable setup on Google Cloud.
+If you want "NewClaw 24/7 for ~$5-12/mo", this is a reliable setup on Google Cloud.
 Pricing varies by machine type and region; pick the smallest VM that fits your workload and scale up if you hit OOMs.
 
 ## What are we doing (simple terms)?
@@ -21,8 +21,8 @@ Pricing varies by machine type and region; pick the smallest VM that fits your w
 - Create a GCP project and enable billing
 - Create a Compute Engine VM
 - Install Docker (isolated app runtime)
-- Start the iFlow Gateway in Docker
-- Persist `~/.iflow` + `~/.iflow/workspace` on the host (survives restarts/rebuilds)
+- Start the NewClaw Gateway in Docker
+- Persist `~/.newclaw` + `~/.newclaw/workspace` on the host (survives restarts/rebuilds)
 - Access the Control UI from your laptop via an SSH tunnel
 
 The Gateway can be accessed via:
@@ -42,7 +42,7 @@ For the generic Docker flow, see [Docker](/install/docker).
 2. Create Compute Engine VM (e2-small, Debian 12, 20GB)
 3. SSH into the VM
 4. Install Docker
-5. Clone iFlow repository
+5. Clone NewClaw repository
 6. Create persistent host directories
 7. Configure `.env` and `docker-compose.yml`
 8. Bake required binaries, build, and launch
@@ -89,7 +89,7 @@ All steps can be done via the web UI at https://console.cloud.google.com
 **CLI:**
 
 ```bash
-gcloud projects create my-iflow-project --name="iFlow Gateway"
+gcloud projects create my-iflow-project --name="NewClaw Gateway"
 gcloud config set project my-iflow-project
 ```
 
@@ -122,7 +122,7 @@ gcloud services enable compute.googleapis.com
 **CLI:**
 
 ```bash
-gcloud compute instances create iflow-gateway \
+gcloud compute instances create newclaw-gateway \
   --zone=us-central1-a \
   --machine-type=e2-small \
   --boot-disk-size=20GB \
@@ -133,7 +133,7 @@ gcloud compute instances create iflow-gateway \
 **Console:**
 
 1. Go to Compute Engine > VM instances > Create instance
-2. Name: `iflow-gateway`
+2. Name: `newclaw-gateway`
 3. Region: `us-central1`, Zone: `us-central1-a`
 4. Machine type: `e2-small`
 5. Boot disk: Debian 12, 20GB
@@ -146,7 +146,7 @@ gcloud compute instances create iflow-gateway \
 **CLI:**
 
 ```bash
-gcloud compute ssh iflow-gateway --zone=us-central1-a
+gcloud compute ssh newclaw-gateway --zone=us-central1-a
 ```
 
 **Console:**
@@ -175,7 +175,7 @@ exit
 Then SSH back in:
 
 ```bash
-gcloud compute ssh iflow-gateway --zone=us-central1-a
+gcloud compute ssh newclaw-gateway --zone=us-central1-a
 ```
 
 Verify:
@@ -187,10 +187,10 @@ docker compose version
 
 ---
 
-## 6) Clone the iFlow repository
+## 6) Clone the NewClaw repository
 
 ```bash
-git clone https://github.com/iflow/iflow.git
+git clone https://github.com/newclaw/newclaw.git
 cd iflow
 ```
 
@@ -204,8 +204,8 @@ Docker containers are ephemeral.
 All long-lived state must live on the host.
 
 ```bash
-mkdir -p ~/.iflow
-mkdir -p ~/.iflow/workspace
+mkdir -p ~/.newclaw
+mkdir -p ~/.newclaw/workspace
 ```
 
 ---
@@ -215,13 +215,13 @@ mkdir -p ~/.iflow/workspace
 Create `.env` in the repository root.
 
 ```bash
-IFLOW_IMAGE=iflow:latest
-IFLOW_GATEWAY_TOKEN=change-me-now
-IFLOW_GATEWAY_BIND=lan
-IFLOW_GATEWAY_PORT=18789
+NEWCLAW_IMAGE=iflow:latest
+NEWCLAW_GATEWAY_TOKEN=change-me-now
+NEWCLAW_GATEWAY_BIND=lan
+NEWCLAW_GATEWAY_PORT=18789
 
-IFLOW_CONFIG_DIR=/home/$USER/.iflow
-IFLOW_WORKSPACE_DIR=/home/$USER/.iflow/workspace
+NEWCLAW_CONFIG_DIR=/home/$USER/.iflow
+NEWCLAW_WORKSPACE_DIR=/home/$USER/.iflow/workspace
 
 GOG_KEYRING_PASSWORD=change-me-now
 XDG_CONFIG_HOME=/home/node/.iflow
@@ -243,8 +243,8 @@ Create or update `docker-compose.yml`.
 
 ```yaml
 services:
-  iflow-gateway:
-    image: ${IFLOW_IMAGE}
+  newclaw-gateway:
+    image: ${NEWCLAW_IMAGE}
     build: .
     restart: unless-stopped
     env_file:
@@ -253,19 +253,19 @@ services:
       - HOME=/home/node
       - NODE_ENV=production
       - TERM=xterm-256color
-      - IFLOW_GATEWAY_BIND=${IFLOW_GATEWAY_BIND}
-      - IFLOW_GATEWAY_PORT=${IFLOW_GATEWAY_PORT}
-      - IFLOW_GATEWAY_TOKEN=${IFLOW_GATEWAY_TOKEN}
+      - NEWCLAW_GATEWAY_BIND=${NEWCLAW_GATEWAY_BIND}
+      - NEWCLAW_GATEWAY_PORT=${NEWCLAW_GATEWAY_PORT}
+      - NEWCLAW_GATEWAY_TOKEN=${NEWCLAW_GATEWAY_TOKEN}
       - GOG_KEYRING_PASSWORD=${GOG_KEYRING_PASSWORD}
       - XDG_CONFIG_HOME=${XDG_CONFIG_HOME}
       - PATH=/home/linuxbrew/.linuxbrew/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
     volumes:
-      - ${IFLOW_CONFIG_DIR}:/home/node/.iflow
-      - ${IFLOW_WORKSPACE_DIR}:/home/node/.iflow/workspace
+      - ${NEWCLAW_CONFIG_DIR}:/home/node/.iflow
+      - ${NEWCLAW_WORKSPACE_DIR}:/home/node/.iflow/workspace
     ports:
       # Recommended: keep the Gateway loopback-only on the VM; access via SSH tunnel.
       # To expose it publicly, remove the `127.0.0.1:` prefix and firewall accordingly.
-      - "127.0.0.1:${IFLOW_GATEWAY_PORT}:18789"
+      - "127.0.0.1:${NEWCLAW_GATEWAY_PORT}:18789"
 
       # Optional: only if you run iOS/Android nodes against this VM and need Canvas host.
       # If you expose this publicly, read /gateway/security and firewall accordingly.
@@ -276,9 +276,9 @@ services:
         "dist/index.js",
         "gateway",
         "--bind",
-        "${IFLOW_GATEWAY_BIND}",
+        "${NEWCLAW_GATEWAY_BIND}",
         "--port",
-        "${IFLOW_GATEWAY_PORT}",
+        "${NEWCLAW_GATEWAY_PORT}",
       ]
 ```
 
@@ -351,15 +351,15 @@ CMD ["node","dist/index.js"]
 
 ```bash
 docker compose build
-docker compose up -d iflow-gateway
+docker compose up -d newclaw-gateway
 ```
 
 Verify binaries:
 
 ```bash
-docker compose exec iflow-gateway which gog
-docker compose exec iflow-gateway which goplaces
-docker compose exec iflow-gateway which wacli
+docker compose exec newclaw-gateway which gog
+docker compose exec newclaw-gateway which goplaces
+docker compose exec newclaw-gateway which wacli
 ```
 
 Expected output:
@@ -375,7 +375,7 @@ Expected output:
 ## 12) Verify Gateway
 
 ```bash
-docker compose logs -f iflow-gateway
+docker compose logs -f newclaw-gateway
 ```
 
 Success:
@@ -391,7 +391,7 @@ Success:
 Create an SSH tunnel to forward the Gateway port:
 
 ```bash
-gcloud compute ssh iflow-gateway --zone=us-central1-a -- -L 18789:127.0.0.1:18789
+gcloud compute ssh newclaw-gateway --zone=us-central1-a -- -L 18789:127.0.0.1:18789
 ```
 
 Open in your browser:
@@ -404,12 +404,12 @@ Paste your gateway token.
 
 ## What persists where (source of truth)
 
-iFlow runs in Docker, but Docker is not the source of truth.
+NewClaw runs in Docker, but Docker is not the source of truth.
 All long-lived state must survive restarts, rebuilds, and reboots.
 
 | Component           | Location                       | Persistence mechanism  | Notes                           |
 | ------------------- | ------------------------------ | ---------------------- | ------------------------------- |
-| Gateway config      | `/home/node/.iflow/`           | Host volume mount      | Includes `iflow.json`, tokens   |
+| Gateway config      | `/home/node/.iflow/`           | Host volume mount      | Includes `newclaw.json`, tokens |
 | Model auth profiles | `/home/node/.iflow/`           | Host volume mount      | OAuth tokens, API keys          |
 | Skill configs       | `/home/node/.iflow/skills/`    | Host volume mount      | Skill-level state               |
 | Agent workspace     | `/home/node/.iflow/workspace/` | Host volume mount      | Code and agent artifacts        |
@@ -424,10 +424,10 @@ All long-lived state must survive restarts, rebuilds, and reboots.
 
 ## Updates
 
-To update iFlow on the VM:
+To update NewClaw on the VM:
 
 ```bash
-cd ~/iflow
+cd ~/newclaw
 git pull
 docker compose build
 docker compose up -d
@@ -457,15 +457,15 @@ If using e2-micro and hitting OOM, upgrade to e2-small or e2-medium:
 
 ```bash
 # Stop the VM first
-gcloud compute instances stop iflow-gateway --zone=us-central1-a
+gcloud compute instances stop newclaw-gateway --zone=us-central1-a
 
 # Change machine type
-gcloud compute instances set-machine-type iflow-gateway \
+gcloud compute instances set-machine-type newclaw-gateway \
   --zone=us-central1-a \
   --machine-type=e2-small
 
 # Start the VM
-gcloud compute instances start iflow-gateway --zone=us-central1-a
+gcloud compute instances start newclaw-gateway --zone=us-central1-a
 ```
 
 ---
@@ -480,7 +480,7 @@ For automation or CI/CD pipelines, create a dedicated service account with minim
 
    ```bash
    gcloud iam service-accounts create iflow-deploy \
-     --display-name="iFlow Deployment"
+     --display-name="NewClaw Deployment"
    ```
 
 2. Grant Compute Instance Admin role (or narrower custom role):

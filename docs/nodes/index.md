@@ -13,7 +13,7 @@ A **node** is a companion device (macOS/iOS/Android/headless) that connects to t
 
 Legacy transport: [Bridge protocol](/gateway/bridge-protocol) (TCP JSONL; deprecated/removed for current nodes).
 
-macOS can also run in **node mode**: the menubar app connects to the Gateway’s WS server and exposes its local canvas/camera commands as a node (so `iflow nodes …` works against this Mac).
+macOS can also run in **node mode**: the menubar app connects to the Gateway’s WS server and exposes its local canvas/camera commands as a node (so `newclaw nodes …` works against this Mac).
 
 Notes:
 
@@ -28,17 +28,17 @@ creates a device pairing request for `role: node`. Approve via the devices CLI (
 Quick CLI:
 
 ```bash
-iflow devices list
-iflow devices approve <requestId>
-iflow devices reject <requestId>
-iflow nodes status
-iflow nodes describe --node <idOrNameOrIp>
+newclaw devices list
+newclaw devices approve <requestId>
+newclaw devices reject <requestId>
+newclaw nodes status
+newclaw nodes describe --node <idOrNameOrIp>
 ```
 
 Notes:
 
 - `nodes status` marks a node as **paired** when its device pairing role includes `node`.
-- `node.pair.*` (CLI: `iflow nodes pending/approve/reject`) is a separate gateway-owned
+- `node.pair.*` (CLI: `newclaw nodes pending/approve/reject`) is a separate gateway-owned
   node pairing store; it does **not** gate the WS `connect` handshake.
 
 ## Remote node host (system.run)
@@ -51,14 +51,14 @@ forwards `exec` calls to the **node host** when `host=node` is selected.
 
 - **Gateway host**: receives messages, runs the model, routes tool calls.
 - **Node host**: executes `system.run`/`system.which` on the node machine.
-- **Approvals**: enforced on the node host via `~/.iflow/exec-approvals.json`.
+- **Approvals**: enforced on the node host via `~/.newclaw/exec-approvals.json`.
 
 ### Start a node host (foreground)
 
 On the node machine:
 
 ```bash
-iflow node run --host <gateway-host> --port 18789 --display-name "Build Node"
+newclaw node run --host <gateway-host> --port 18789 --display-name "Build Node"
 ```
 
 ### Remote gateway via SSH tunnel (loopback bind)
@@ -74,20 +74,20 @@ Example (node host -> gateway host):
 ssh -N -L 18790:127.0.0.1:18789 user@gateway-host
 
 # Terminal B: export the gateway token and connect through the tunnel
-export IFLOW_GATEWAY_TOKEN="<gateway-token>"
-iflow node run --host 127.0.0.1 --port 18790 --display-name "Build Node"
+export NEWCLAW_GATEWAY_TOKEN="<gateway-token>"
+newclaw node run --host 127.0.0.1 --port 18790 --display-name "Build Node"
 ```
 
 Notes:
 
-- The token is `gateway.auth.token` from the gateway config (`~/.iflow/iflow.json` on the gateway host).
-- `iflow node run` reads `IFLOW_GATEWAY_TOKEN` for auth.
+- The token is `gateway.auth.token` from the gateway config (`~/.newclaw/newclaw.json` on the gateway host).
+- `newclaw node run` reads `NEWCLAW_GATEWAY_TOKEN` for auth.
 
 ### Start a node host (service)
 
 ```bash
-iflow node install --host <gateway-host> --port 18789 --display-name "Build Node"
-iflow node restart
+newclaw node install --host <gateway-host> --port 18789 --display-name "Build Node"
+newclaw node restart
 ```
 
 ### Pair + name
@@ -95,35 +95,35 @@ iflow node restart
 On the gateway host:
 
 ```bash
-iflow nodes pending
-iflow nodes approve <requestId>
-iflow nodes list
+newclaw nodes pending
+newclaw nodes approve <requestId>
+newclaw nodes list
 ```
 
 Naming options:
 
-- `--display-name` on `iflow node run` / `iflow node install` (persists in `~/.iflow/node.json` on the node).
-- `iflow nodes rename --node <id|name|ip> --name "Build Node"` (gateway override).
+- `--display-name` on `newclaw node run` / `newclaw node install` (persists in `~/.newclaw/node.json` on the node).
+- `newclaw nodes rename --node <id|name|ip> --name "Build Node"` (gateway override).
 
 ### Allowlist the commands
 
 Exec approvals are **per node host**. Add allowlist entries from the gateway:
 
 ```bash
-iflow approvals allowlist add --node <id|name|ip> "/usr/bin/uname"
-iflow approvals allowlist add --node <id|name|ip> "/usr/bin/sw_vers"
+newclaw approvals allowlist add --node <id|name|ip> "/usr/bin/uname"
+newclaw approvals allowlist add --node <id|name|ip> "/usr/bin/sw_vers"
 ```
 
-Approvals live on the node host at `~/.iflow/exec-approvals.json`.
+Approvals live on the node host at `~/.newclaw/exec-approvals.json`.
 
 ### Point exec at the node
 
 Configure defaults (gateway config):
 
 ```bash
-iflow config set tools.exec.host node
-iflow config set tools.exec.security allowlist
-iflow config set tools.exec.node "<id-or-name>"
+newclaw config set tools.exec.host node
+newclaw config set tools.exec.security allowlist
+newclaw config set tools.exec.node "<id-or-name>"
 ```
 
 Or per session:
@@ -146,7 +146,7 @@ Related:
 Low-level (raw RPC):
 
 ```bash
-iflow nodes invoke --node <idOrNameOrIp> --command canvas.eval --params '{"javaScript":"location.href"}'
+newclaw nodes invoke --node <idOrNameOrIp> --command canvas.eval --params '{"javaScript":"location.href"}'
 ```
 
 Higher-level helpers exist for the common “give the agent a MEDIA attachment” workflows.
@@ -158,17 +158,17 @@ If the node is showing the Canvas (WebView), `canvas.snapshot` returns `{ format
 CLI helper (writes to a temp file and prints `MEDIA:<path>`):
 
 ```bash
-iflow nodes canvas snapshot --node <idOrNameOrIp> --format png
-iflow nodes canvas snapshot --node <idOrNameOrIp> --format jpg --max-width 1200 --quality 0.9
+newclaw nodes canvas snapshot --node <idOrNameOrIp> --format png
+newclaw nodes canvas snapshot --node <idOrNameOrIp> --format jpg --max-width 1200 --quality 0.9
 ```
 
 ### Canvas controls
 
 ```bash
-iflow nodes canvas present --node <idOrNameOrIp> --target https://example.com
-iflow nodes canvas hide --node <idOrNameOrIp>
-iflow nodes canvas navigate https://example.com --node <idOrNameOrIp>
-iflow nodes canvas eval --node <idOrNameOrIp> --js "document.title"
+newclaw nodes canvas present --node <idOrNameOrIp> --target https://example.com
+newclaw nodes canvas hide --node <idOrNameOrIp>
+newclaw nodes canvas navigate https://example.com --node <idOrNameOrIp>
+newclaw nodes canvas eval --node <idOrNameOrIp> --js "document.title"
 ```
 
 Notes:
@@ -179,9 +179,9 @@ Notes:
 ### A2UI (Canvas)
 
 ```bash
-iflow nodes canvas a2ui push --node <idOrNameOrIp> --text "Hello"
-iflow nodes canvas a2ui push --node <idOrNameOrIp> --jsonl ./payload.jsonl
-iflow nodes canvas a2ui reset --node <idOrNameOrIp>
+newclaw nodes canvas a2ui push --node <idOrNameOrIp> --text "Hello"
+newclaw nodes canvas a2ui push --node <idOrNameOrIp> --jsonl ./payload.jsonl
+newclaw nodes canvas a2ui reset --node <idOrNameOrIp>
 ```
 
 Notes:
@@ -193,16 +193,16 @@ Notes:
 Photos (`jpg`):
 
 ```bash
-iflow nodes camera list --node <idOrNameOrIp>
-iflow nodes camera snap --node <idOrNameOrIp>            # default: both facings (2 MEDIA lines)
-iflow nodes camera snap --node <idOrNameOrIp> --facing front
+newclaw nodes camera list --node <idOrNameOrIp>
+newclaw nodes camera snap --node <idOrNameOrIp>            # default: both facings (2 MEDIA lines)
+newclaw nodes camera snap --node <idOrNameOrIp> --facing front
 ```
 
 Video clips (`mp4`):
 
 ```bash
-iflow nodes camera clip --node <idOrNameOrIp> --duration 10s
-iflow nodes camera clip --node <idOrNameOrIp> --duration 3000 --no-audio
+newclaw nodes camera clip --node <idOrNameOrIp> --duration 10s
+newclaw nodes camera clip --node <idOrNameOrIp> --duration 3000 --no-audio
 ```
 
 Notes:
@@ -216,8 +216,8 @@ Notes:
 Nodes expose `screen.record` (mp4). Example:
 
 ```bash
-iflow nodes screen record --node <idOrNameOrIp> --duration 10s --fps 10
-iflow nodes screen record --node <idOrNameOrIp> --duration 10s --fps 10 --no-audio
+newclaw nodes screen record --node <idOrNameOrIp> --duration 10s --fps 10
+newclaw nodes screen record --node <idOrNameOrIp> --duration 10s --fps 10 --no-audio
 ```
 
 Notes:
@@ -235,8 +235,8 @@ Nodes expose `location.get` when Location is enabled in settings.
 CLI helper:
 
 ```bash
-iflow nodes location get --node <idOrNameOrIp>
-iflow nodes location get --node <idOrNameOrIp> --accuracy precise --max-age 15000 --location-timeout 10000
+newclaw nodes location get --node <idOrNameOrIp>
+newclaw nodes location get --node <idOrNameOrIp> --accuracy precise --max-age 15000 --location-timeout 10000
 ```
 
 Notes:
@@ -252,7 +252,7 @@ Android nodes can expose `sms.send` when the user grants **SMS** permission and 
 Low-level invoke:
 
 ```bash
-iflow nodes invoke --node <idOrNameOrIp> --command sms.send --params '{"to":"+15555550123","message":"Hello from iFlow"}'
+newclaw nodes invoke --node <idOrNameOrIp> --command sms.send --params '{"to":"+15555550123","message":"Hello from NewClaw"}'
 ```
 
 Notes:
@@ -268,8 +268,8 @@ The headless node host exposes `system.run`, `system.which`, and `system.execApp
 Examples:
 
 ```bash
-iflow nodes run --node <idOrNameOrIp> -- echo "Hello from mac node"
-iflow nodes notify --node <idOrNameOrIp> --title "Ping" --body "Gateway ready"
+newclaw nodes run --node <idOrNameOrIp> -- echo "Hello from mac node"
+newclaw nodes notify --node <idOrNameOrIp> --title "Ping" --body "Gateway ready"
 ```
 
 Notes:
@@ -281,7 +281,7 @@ Notes:
 - macOS nodes drop `PATH` overrides; headless node hosts only accept `PATH` when it prepends the node host PATH.
 - On macOS node mode, `system.run` is gated by exec approvals in the macOS app (Settings → Exec approvals).
   Ask/allowlist/full behave the same as the headless node host; denied prompts return `SYSTEM_RUN_DENIED`.
-- On headless node host, `system.run` is gated by exec approvals (`~/.iflow/exec-approvals.json`).
+- On headless node host, `system.run` is gated by exec approvals (`~/.newclaw/exec-approvals.json`).
 
 ## Exec node binding
 
@@ -291,21 +291,21 @@ This sets the default node for `exec host=node` (and can be overridden per agent
 Global default:
 
 ```bash
-iflow config set tools.exec.node "node-id-or-name"
+newclaw config set tools.exec.node "node-id-or-name"
 ```
 
 Per-agent override:
 
 ```bash
-iflow config get agents.list
-iflow config set agents.list[0].tools.exec.node "node-id-or-name"
+newclaw config get agents.list
+newclaw config set agents.list[0].tools.exec.node "node-id-or-name"
 ```
 
 Unset to allow any node:
 
 ```bash
-iflow config unset tools.exec.node
-iflow config unset agents.list[0].tools.exec.node
+newclaw config unset tools.exec.node
+newclaw config unset agents.list[0].tools.exec.node
 ```
 
 ## Permissions map
@@ -314,28 +314,28 @@ Nodes may include a `permissions` map in `node.list` / `node.describe`, keyed by
 
 ## Headless node host (cross-platform)
 
-iFlow can run a **headless node host** (no UI) that connects to the Gateway
+NewClaw can run a **headless node host** (no UI) that connects to the Gateway
 WebSocket and exposes `system.run` / `system.which`. This is useful on Linux/Windows
 or for running a minimal node alongside a server.
 
 Start it:
 
 ```bash
-iflow node run --host <gateway-host> --port 18789
+newclaw node run --host <gateway-host> --port 18789
 ```
 
 Notes:
 
 - Pairing is still required (the Gateway will show a node approval prompt).
-- The node host stores its node id, token, display name, and gateway connection info in `~/.iflow/node.json`.
-- Exec approvals are enforced locally via `~/.iflow/exec-approvals.json`
+- The node host stores its node id, token, display name, and gateway connection info in `~/.newclaw/node.json`.
+- Exec approvals are enforced locally via `~/.newclaw/exec-approvals.json`
   (see [Exec approvals](/tools/exec-approvals)).
 - On macOS, the headless node host prefers the companion app exec host when reachable and falls
-  back to local execution if the app is unavailable. Set `IFLOW_NODE_EXEC_HOST=app` to require
-  the app, or `IFLOW_NODE_EXEC_FALLBACK=0` to disable fallback.
+  back to local execution if the app is unavailable. Set `NEWCLAW_NODE_EXEC_HOST=app` to require
+  the app, or `NEWCLAW_NODE_EXEC_FALLBACK=0` to disable fallback.
 - Add `--tls` / `--tls-fingerprint` when the Gateway WS uses TLS.
 
 ## Mac node mode
 
-- The macOS menubar app connects to the Gateway WS server as a node (so `iflow nodes …` works against this Mac).
+- The macOS menubar app connects to the Gateway WS server as a node (so `newclaw nodes …` works against this Mac).
 - In remote mode, the app opens an SSH tunnel for the Gateway port and connects to `localhost`.

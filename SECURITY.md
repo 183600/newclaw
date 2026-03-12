@@ -1,6 +1,6 @@
 # Security Policy
 
-If you believe you've found a security issue in iFlow, please report it privately.
+If you believe you've found a security issue in NewClaw, please report it privately.
 
 ## Reporting
 
@@ -9,13 +9,13 @@ If you believe you've found a security issue in iFlow, please report it privatel
 
 ## Bug Bounties
 
-iFlow is a labor of love. There is no bug bounty program and no budget for paid reports. Please still disclose responsibly so we can fix issues quickly.
+NewClaw is a labor of love. There is no bug bounty program and no budget for paid reports. Please still disclose responsibly so we can fix issues quickly.
 The best way to help the project right now is by sending PRs.
 
 ## Out of Scope
 
 - Public Internet Exposure
-- Using iFlow in ways that the docs recommend not to
+- Using NewClaw in ways that the docs recommend not to
 - Prompt injection attacks
 
 ## Operational Guidance
@@ -26,13 +26,13 @@ For threat model + hardening guidance (including `claw security audit --deep` an
 
 ### Web Interface Safety
 
-iFlow's web interface is intended for local use only. Do **not** bind it to the public internet; it is not hardened for public exposure.
+NewClaw's web interface is intended for local use only. Do **not** bind it to the public internet; it is not hardened for public exposure.
 
 ## Runtime Requirements
 
 ### Node.js Version
 
-iFlow requires **Node.js 22.12.0 or later** (LTS). This version includes important security patches:
+NewClaw requires **Node.js 22.12.0 or later** (LTS). This version includes important security patches:
 
 - CVE-2025-59466: async_hooks DoS vulnerability
 - CVE-2026-21636: Permission model bypass vulnerability
@@ -45,7 +45,7 @@ node --version  # Should be v22.12.0 or later
 
 ### Docker Security
 
-When running iFlow in Docker:
+When running NewClaw in Docker:
 
 1. The official image runs as a non-root user (`node`) for reduced attack surface
 2. Use `--read-only` flag when possible for additional filesystem protection

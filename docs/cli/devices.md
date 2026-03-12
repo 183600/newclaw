@@ -1,56 +1,56 @@
 ---
-summary: "CLI reference for `iflow devices` (device pairing + token rotation/revocation)"
+summary: "CLI reference for `newclaw devices` (device pairing + token rotation/revocation)"
 read_when:
   - You are approving device pairing requests
   - You need to rotate or revoke device tokens
 title: "devices"
 ---
 
-# `iflow devices`
+# `newclaw devices`
 
 Manage device pairing requests and device-scoped tokens.
 
 ## Commands
 
-### `iflow devices list`
+### `newclaw devices list`
 
 List pending pairing requests and paired devices.
 
 ```
-iflow devices list
-iflow devices list --json
+newclaw devices list
+newclaw devices list --json
 ```
 
-### `iflow devices approve <requestId>`
+### `newclaw devices approve <requestId>`
 
 Approve a pending device pairing request.
 
 ```
-iflow devices approve <requestId>
+newclaw devices approve <requestId>
 ```
 
-### `iflow devices reject <requestId>`
+### `newclaw devices reject <requestId>`
 
 Reject a pending device pairing request.
 
 ```
-iflow devices reject <requestId>
+newclaw devices reject <requestId>
 ```
 
-### `iflow devices rotate --device <id> --role <role> [--scope <scope...>]`
+### `newclaw devices rotate --device <id> --role <role> [--scope <scope...>]`
 
 Rotate a device token for a specific role (optionally updating scopes).
 
 ```
-iflow devices rotate --device <deviceId> --role operator --scope operator.read --scope operator.write
+newclaw devices rotate --device <deviceId> --role operator --scope operator.read --scope operator.write
 ```
 
-### `iflow devices revoke --device <id> --role <role>`
+### `newclaw devices revoke --device <id> --role <role>`
 
 Revoke a device token for a specific role.
 
 ```
-iflow devices revoke --device <deviceId> --role node
+newclaw devices revoke --device <deviceId> --role node
 ```
 
 ## Common options

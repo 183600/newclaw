@@ -2,7 +2,7 @@
 read_when:
   - 添加或修改 CLI 命令或选项
   - 为新的命令界面编写文档
-summary: iFlow `iflow` 命令、子命令和选项的 CLI 参考
+summary: NewClaw `iflow` 命令、子命令和选项的 CLI 参考
 title: CLI 参考
 x-i18n:
   generated_at: "2026-02-01T20:02:06Z"
@@ -61,10 +61,10 @@ x-i18n:
 
 ## 全局参数
 
-- `--dev`：将状态隔离到 `~/.iflow-dev` 并偏移默认端口。
-- `--profile <name>`：将状态隔离到 `~/.iflow-<name>`。
+- `--dev`：将状态隔离到 `~/.newclaw-dev` 并偏移默认端口。
+- `--profile <name>`：将状态隔离到 `~/.newclaw-<name>`。
 - `--no-color`：禁用 ANSI 颜色。
-- `--update`：`iflow update` 的简写（仅限源码安装）。
+- `--update`：`newclaw update` 的简写（仅限源码安装）。
 - `-V`、`--version`、`-v`：打印版本并退出。
 
 ## 输出样式
@@ -77,7 +77,7 @@ x-i18n:
 
 ## 配色方案
 
-iFlow 使用龙虾色配色方案作为 CLI 输出。
+NewClaw 使用龙虾色配色方案作为 CLI 输出。
 
 - `accent`（#FF5A2D）：标题、标签、主要高亮。
 - `accentBright`（#FF7A3D）：命令名称、强调。
@@ -93,7 +93,7 @@ iFlow 使用龙虾色配色方案作为 CLI 输出。
 ## 命令树
 
 ```
-iflow [--dev] [--profile <name>] <command>
+newclaw [--dev] [--profile <name>] <command>
   setup
   onboard
   configure
@@ -244,23 +244,23 @@ iflow [--dev] [--profile <name>] <command>
   tui
 ```
 
-注意：插件可以添加额外的顶层命令（例如 `iflow voicecall`）。
+注意：插件可以添加额外的顶层命令（例如 `newclaw voicecall`）。
 
 ## 安全
 
-- `iflow security audit` — 审计配置和本地状态中常见的安全隐患。
-- `iflow security audit --deep` — 尽力进行实时 Gateway网关探测。
-- `iflow security audit --fix` — 收紧安全默认设置并修改状态/配置文件权限。
+- `newclaw security audit` — 审计配置和本地状态中常见的安全隐患。
+- `newclaw security audit --deep` — 尽力进行实时 Gateway网关探测。
+- `newclaw security audit --fix` — 收紧安全默认设置并修改状态/配置文件权限。
 
 ## 插件
 
 管理扩展及其配置：
 
-- `iflow plugins list` — 发现插件（使用 `--json` 获取机器可读输出）。
-- `iflow plugins info <id>` — 显示插件详情。
-- `iflow plugins install <path|.tgz|npm-spec>` — 安装插件（或将插件路径添加到 `plugins.load.paths`）。
-- `iflow plugins enable <id>` / `disable <id>` — 切换 `plugins.entries.<id>.enabled`。
-- `iflow plugins doctor` — 报告插件加载错误。
+- `newclaw plugins list` — 发现插件（使用 `--json` 获取机器可读输出）。
+- `newclaw plugins info <id>` — 显示插件详情。
+- `newclaw plugins install <path|.tgz|npm-spec>` — 安装插件（或将插件路径添加到 `plugins.load.paths`）。
+- `newclaw plugins enable <id>` / `disable <id>` — 切换 `plugins.entries.<id>.enabled`。
+- `newclaw plugins doctor` — 报告插件加载错误。
 
 大多数插件变更需要重启 Gateway网关。参见 [/plugin](/plugin)。
 
@@ -268,9 +268,9 @@ iflow [--dev] [--profile <name>] <command>
 
 对 `MEMORY.md` + `memory/*.md` 进行向量搜索：
 
-- `iflow memory status` — 显示索引统计信息。
-- `iflow memory index` — 重新索引记忆文件。
-- `iflow memory search "<query>"` — 对记忆进行语义搜索。
+- `newclaw memory status` — 显示索引统计信息。
+- `newclaw memory index` — 重新索引记忆文件。
+- `newclaw memory search "<query>"` — 对记忆进行语义搜索。
 
 ## 聊天斜杠命令
 
@@ -290,7 +290,7 @@ iflow [--dev] [--profile <name>] <command>
 
 选项：
 
-- `--workspace <dir>`：智能体工作区路径（默认 `~/.iflow/workspace`）。
+- `--workspace <dir>`：智能体工作区路径（默认 `~/.newclaw/workspace`）。
 - `--wizard`：运行新手引导向导。
 - `--non-interactive`：无提示运行向导。
 - `--mode <local|remote>`：向导模式。
@@ -350,7 +350,7 @@ iflow [--dev] [--profile <name>] <command>
 
 ### `config`
 
-非交互式配置辅助工具（get/set/unset）。不带子命令运行 `iflow config` 将启动向导。
+非交互式配置辅助工具（get/set/unset）。不带子命令运行 `newclaw config` 将启动向导。
 
 子命令：
 
@@ -378,8 +378,8 @@ iflow [--dev] [--profile <name>] <command>
 子命令：
 
 - `channels list`：显示已配置的渠道和认证配置。
-- `channels status`：检查 Gateway网关可达性和渠道健康状态（`--probe` 运行额外检查；使用 `iflow health` 或 `iflow status --deep` 进行 Gateway网关健康探测）。
-- 提示：`channels status` 在检测到常见配置错误时会打印警告并提供修复建议（然后引导你使用 `iflow doctor`）。
+- `channels status`：检查 Gateway网关可达性和渠道健康状态（`--probe` 运行额外检查；使用 `newclaw health` 或 `newclaw status --deep` 进行 Gateway网关健康探测）。
+- 提示：`channels status` 在检测到常见配置错误时会打印警告并提供修复建议（然后引导你使用 `newclaw doctor`）。
 - `channels logs`：显示来自 Gateway网关日志文件的最近渠道日志。
 - `channels add`：不传参数时以向导模式设置；传入参数则切换为非交互模式。
 - `channels remove`：默认仅禁用；传入 `--delete` 可无提示删除配置条目。
@@ -419,11 +419,11 @@ iflow [--dev] [--profile <name>] <command>
 示例：
 
 ```bash
-iflow channels add --channel telegram --account alerts --name "Alerts Bot" --token $TELEGRAM_BOT_TOKEN
-iflow channels add --channel discord --account work --name "Work Bot" --token $DISCORD_BOT_TOKEN
-iflow channels remove --channel discord --account work --delete
-iflow channels status --probe
-iflow status --deep
+newclaw channels add --channel telegram --account alerts --name "Alerts Bot" --token $TELEGRAM_BOT_TOKEN
+newclaw channels add --channel discord --account work --name "Work Bot" --token $DISCORD_BOT_TOKEN
+newclaw channels remove --channel discord --account work --delete
+newclaw channels status --probe
+newclaw status --deep
 ```
 
 ### `skills`
@@ -492,8 +492,8 @@ Gmail Pub/Sub 钩子设置与运行。参见 [/automation/gmail-pubsub](/automat
 
 示例：
 
-- `iflow message send --target +15555550123 --message "Hi"`
-- `iflow message poll --channel discord --target channel:123 --poll-question "Snack?" --poll-option Pizza --poll-option Sushi`
+- `newclaw message send --target +15555550123 --message "Hi"`
+- `newclaw message poll --channel discord --target channel:123 --poll-question "Snack?" --poll-option Pizza --poll-option Sushi`
 
 ### `agent`
 
@@ -578,12 +578,12 @@ Gmail Pub/Sub 钩子设置与运行。参见 [/automation/gmail-pubsub](/automat
 
 ### 用量追踪
 
-当 OAuth/API 凭证可用时，iFlow 可以展示提供商的用量/配额信息。
+当 OAuth/API 凭证可用时，NewClaw 可以展示提供商的用量/配额信息。
 
 展示位置：
 
 - `/status`（可用时添加简短的提供商用量行）
-- `iflow status --usage`（打印完整的提供商用量明细）
+- `newclaw status --usage`（打印完整的提供商用量明细）
 - macOS 菜单栏（Context 下的用量部分）
 
 说明：
@@ -693,7 +693,7 @@ Gmail Pub/Sub 钩子设置与运行。参见 [/automation/gmail-pubsub](/automat
 
 - `gateway status` 默认使用服务解析的端口/配置探测 Gateway网关 RPC（可通过 `--url/--token/--password` 覆盖）。
 - `gateway status` 支持 `--no-probe`、`--deep` 和 `--json` 用于脚本编写。
-- `gateway status` 还会在检测到旧版或额外的 Gateway网关服务时展示（`--deep` 添加系统级扫描）。以配置文件命名的 iFlow 服务被视为正式服务，不会被标记为"额外"。
+- `gateway status` 还会在检测到旧版或额外的 Gateway网关服务时展示（`--deep` 添加系统级扫描）。以配置文件命名的 NewClaw 服务被视为正式服务，不会被标记为"额外"。
 - `gateway status` 会打印 CLI 使用的配置路径与服务可能使用的配置（服务环境变量），以及解析后的探测目标 URL。
 - `gateway install|uninstall|start|stop|restart` 支持 `--json` 用于脚本编写（默认输出保持人类可读）。
 - `gateway install` 默认使用 Node 运行时；**不建议**使用 bun（WhatsApp/Telegram 存在 bug）。
@@ -711,11 +711,11 @@ Gmail Pub/Sub 钩子设置与运行。参见 [/automation/gmail-pubsub](/automat
 示例：
 
 ```bash
-iflow logs --follow
-iflow logs --limit 200
-iflow logs --plain
-iflow logs --json
-iflow logs --no-color
+newclaw logs --follow
+newclaw logs --limit 200
+newclaw logs --plain
+newclaw logs --json
+newclaw logs --no-color
 ```
 
 ### `gateway <subcommand>`
@@ -748,13 +748,13 @@ Gateway网关 CLI 辅助工具（RPC 子命令使用 `--url`、`--token`、`--pa
 
 ```bash
 claude setup-token
-iflow models auth setup-token --provider anthropic
-iflow models status
+newclaw models auth setup-token --provider anthropic
+newclaw models status
 ```
 
 ### `models`（根命令）
 
-`iflow models` 是 `models status` 的别名。
+`newclaw models` 是 `models status` 的别名。
 
 根选项：
 
@@ -909,7 +909,7 @@ iflow models status
 
 ## 节点主机
 
-`node` 运行**无头节点主机**或将其作为后台服务管理。参见 [`iflow node`](/cli/node)。
+`node` 运行**无头节点主机**或将其作为后台服务管理。参见 [`newclaw node`](/cli/node)。
 
 子命令：
 
@@ -964,7 +964,7 @@ iflow models status
 
 ## 浏览器
 
-浏览器控制 CLI（专用 Chrome/Brave/Edge/Chromium）。参见 [`iflow browser`](/cli/browser) 和[浏览器工具](/tools/browser)。
+浏览器控制 CLI（专用 Chrome/Brave/Edge/Chromium）。参见 [`newclaw browser`](/cli/browser) 和[浏览器工具](/tools/browser)。
 
 通用选项：
 

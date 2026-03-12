@@ -8,44 +8,44 @@ title: "Doctor"
 
 # Doctor
 
-`iflow doctor` is the repair + migration tool for iFlow. It fixes stale
+`newclaw doctor` is the repair + migration tool for NewClaw. It fixes stale
 config/state, checks health, and provides actionable repair steps.
 
 ## Quick start
 
 ```bash
-iflow doctor
+newclaw doctor
 ```
 
 ### Headless / automation
 
 ```bash
-iflow doctor --yes
+newclaw doctor --yes
 ```
 
 Accept defaults without prompting (including restart/service/sandbox repair steps when applicable).
 
 ```bash
-iflow doctor --repair
+newclaw doctor --repair
 ```
 
 Apply recommended repairs without prompting (repairs + restarts where safe).
 
 ```bash
-iflow doctor --repair --force
+newclaw doctor --repair --force
 ```
 
 Apply aggressive repairs too (overwrites custom supervisor configs).
 
 ```bash
-iflow doctor --non-interactive
+newclaw doctor --non-interactive
 ```
 
 Run without prompts and only apply safe migrations (config normalization + on-disk state moves). Skips restart/service/sandbox actions that require human confirmation.
 Legacy state migrations run automatically when detected.
 
 ```bash
-iflow doctor --deep
+newclaw doctor --deep
 ```
 
 Scan system services for extra gateway installs (launchd/systemd/schtasks).
@@ -53,7 +53,7 @@ Scan system services for extra gateway installs (launchd/systemd/schtasks).
 If you want to review changes before writing, open the config file first:
 
 ```bash
-cat ~/.iflow/iflow.json
+cat ~/.newclaw/newclaw.json
 ```
 
 ## What it does (summary)
@@ -68,7 +68,7 @@ cat ~/.iflow/iflow.json
 - State integrity and permissions checks (sessions, transcripts, state dir).
 - Config file permission checks (chmod 600) when running locally.
 - Model auth health: checks OAuth expiry, can refresh expiring tokens, and reports auth-profile cooldown/disabled states.
-- Extra workspace dir detection (`~/iflow`).
+- Extra workspace dir detection (`~/newclaw`).
 - Sandbox image repair when sandboxing is enabled.
 - Legacy service migration and extra gateway detection.
 - Gateway runtime checks (service installed but not running; cached launchd label).
@@ -98,13 +98,13 @@ schema.
 ### 2) Legacy config key migrations
 
 When the config contains deprecated keys, other commands refuse to run and ask
-you to run `iflow doctor`.
+you to run `newclaw doctor`.
 
 Doctor will:
 
 - Explain which legacy keys were found.
 - Show the migration it applied.
-- Rewrite `~/.iflow/iflow.json` with the updated schema.
+- Rewrite `~/.newclaw/newclaw.json` with the updated schema.
 
 The Gateway also auto-runs doctor migrations on startup when it detects a
 legacy config format, so stale configs are repaired without manual intervention.
@@ -138,18 +138,18 @@ remove the override and restore per-model API routing + costs.
 Doctor can migrate older on-disk layouts into the current structure:
 
 - Sessions store + transcripts:
-  - from `~/.iflow/sessions/` to `~/.iflow/agents/<agentId>/sessions/`
+  - from `~/.newclaw/sessions/` to `~/.newclaw/agents/<agentId>/sessions/`
 - Agent dir:
-  - from `~/.iflow/agent/` to `~/.iflow/agents/<agentId>/agent/`
+  - from `~/.newclaw/agent/` to `~/.newclaw/agents/<agentId>/agent/`
 - WhatsApp auth state (Baileys):
-  - from legacy `~/.iflow/credentials/*.json` (except `oauth.json`)
-  - to `~/.iflow/credentials/whatsapp/<accountId>/...` (default account id: `default`)
+  - from legacy `~/.newclaw/credentials/*.json` (except `oauth.json`)
+  - to `~/.newclaw/credentials/whatsapp/<accountId>/...` (default account id: `default`)
 
 These migrations are best-effort and idempotent; doctor will emit warnings when
 it leaves any legacy folders behind as backups. The Gateway/CLI also auto-migrates
 the legacy sessions + agent dir on startup so history/auth/models land in the
 per-agent path without a manual doctor run. WhatsApp auth is intentionally only
-migrated via `iflow doctor`.
+migrated via `newclaw doctor`.
 
 ### 4) State integrity checks (session persistence, routing, and safety)
 
@@ -168,12 +168,12 @@ Doctor checks:
   transcript files.
 - **Main session “1-line JSONL”**: flags when the main transcript has only one
   line (history is not accumulating).
-- **Multiple state dirs**: warns when multiple `~/.iflow` folders exist across
-  home directories or when `IFLOW_STATE_DIR` points elsewhere (history can
+- **Multiple state dirs**: warns when multiple `~/.newclaw` folders exist across
+  home directories or when `NEWCLAW_STATE_DIR` points elsewhere (history can
   split between installs).
 - **Remote mode reminder**: if `gateway.mode=remote`, doctor reminds you to run
   it on the remote host (the state lives there).
-- **Config file permissions**: warns if `~/.iflow/iflow.json` is
+- **Config file permissions**: warns if `~/.newclaw/newclaw.json` is
   group/world readable and offers to tighten to `600`.
 
 ### 5) Model auth health (OAuth expiry)
@@ -202,9 +202,9 @@ switch to legacy names if the current image is missing.
 ### 8) Gateway service migrations and cleanup hints
 
 Doctor detects legacy gateway services (launchd/systemd/schtasks) and
-offers to remove them and install the iFlow service using the current gateway
+offers to remove them and install the NewClaw service using the current gateway
 port. It can also scan for extra gateway-like services and print cleanup hints.
-Profile-named iFlow gateway services are considered first-class and are not
+Profile-named NewClaw gateway services are considered first-class and are not
 flagged as "extra."
 
 ### 9) Security warnings
@@ -225,7 +225,7 @@ workspace.
 ### 12) Gateway auth checks (local token)
 
 Doctor warns when `gateway.auth` is missing on a local gateway and offers to
-generate a token. Use `iflow doctor --generate-gateway-token` to force token
+generate a token. Use `newclaw doctor --generate-gateway-token` to force token
 creation in automation.
 
 ### 13) Gateway health check + restart
@@ -247,11 +247,11 @@ rewrite the service file/task to the current defaults.
 
 Notes:
 
-- `iflow doctor` prompts before rewriting supervisor config.
-- `iflow doctor --yes` accepts the default repair prompts.
-- `iflow doctor --repair` applies recommended fixes without prompts.
-- `iflow doctor --repair --force` overwrites custom supervisor configs.
-- You can always force a full rewrite via `iflow gateway install --force`.
+- `newclaw doctor` prompts before rewriting supervisor config.
+- `newclaw doctor --yes` accepts the default repair prompts.
+- `newclaw doctor --repair` applies recommended fixes without prompts.
+- `newclaw doctor --repair --force` overwrites custom supervisor configs.
+- You can always force a full rewrite via `newclaw gateway install --force`.
 
 ### 16) Gateway runtime + port diagnostics
 

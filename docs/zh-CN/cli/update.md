@@ -2,7 +2,7 @@
 read_when:
   - 你想安全地更新源码检出
   - 你需要了解 `--update` 简写行为
-summary: "`iflow update`（安全的源码更新 + Gateway网关自动重启）的 CLI 参考"
+summary: "`newclaw update`（安全的源码更新 + Gateway网关自动重启）的 CLI 参考"
 title: update
 x-i18n:
   generated_at: "2026-02-01T20:21:45Z"
@@ -13,24 +13,24 @@ x-i18n:
   workflow: 14
 ---
 
-# `iflow update`
+# `newclaw update`
 
-安全更新 iFlow 并在 stable/beta/dev 渠道之间切换。
+安全更新 NewClaw 并在 stable/beta/dev 渠道之间切换。
 
 如果你通过 **npm/pnpm** 安装（全局安装，无 git 元数据），更新将通过[更新](/install/updating)中的包管理器流程进行。
 
 ## 用法
 
 ```bash
-iflow update
-iflow update status
-iflow update wizard
-iflow update --channel beta
-iflow update --channel dev
-iflow update --tag beta
-iflow update --no-restart
-iflow update --json
-iflow --update
+newclaw update
+newclaw update status
+newclaw update wizard
+newclaw update --channel beta
+newclaw update --channel dev
+newclaw update --tag beta
+newclaw update --no-restart
+newclaw update --json
+newclaw --update
 ```
 
 ## 选项
@@ -48,9 +48,9 @@ iflow --update
 显示当前活跃的更新渠道 + git 标签/分支/SHA（适用于源码检出），以及更新可用性。
 
 ```bash
-iflow update status
-iflow update status --json
-iflow update status --timeout 10
+newclaw update status
+newclaw update status --json
+newclaw update status --timeout 10
 ```
 
 选项：
@@ -64,9 +64,9 @@ iflow update status --timeout 10
 
 ## 工作原理
 
-当你显式切换渠道（`--channel ...`）时，iFlow 也会保持安装方式一致：
+当你显式切换渠道（`--channel ...`）时，NewClaw 也会保持安装方式一致：
 
-- `dev` → 确保存在 git 检出（默认：`~/iflow`，可通过 `IFLOW_GIT_DIR` 覆盖），更新它，并从该检出安装全局 CLI。
+- `dev` → 确保存在 git 检出（默认：`~/newclaw`，可通过 `NEWCLAW_GIT_DIR` 覆盖），更新它，并从该检出安装全局 CLI。
 - `stable`/`beta` → 使用匹配的 dist-tag 从 npm 安装。
 
 ## Git 检出流程
@@ -86,16 +86,16 @@ iflow update status --timeout 10
 5. Rebase 到所选提交（仅 dev）。
 6. 安装依赖（优先使用 pnpm；回退到 npm）。
 7. 构建项目 + 构建控制台 UI。
-8. 运行 `iflow doctor` 作为最终的"安全更新"检查。
+8. 运行 `newclaw doctor` 作为最终的"安全更新"检查。
 9. 将插件同步到活跃渠道（dev 使用内置扩展；stable/beta 使用 npm）并更新通过 npm 安装的插件。
 
 ## `--update` 简写
 
-`iflow --update` 会重写为 `iflow update`（便于在 shell 和启动脚本中使用）。
+`newclaw --update` 会重写为 `newclaw update`（便于在 shell 和启动脚本中使用）。
 
 ## 另请参阅
 
-- `iflow doctor`（在 git 检出上会提供先运行更新的选项）
+- `newclaw doctor`（在 git 检出上会提供先运行更新的选项）
 - [开发渠道](/install/development-channels)
 - [更新](/install/updating)
 - [CLI 参考](/cli)

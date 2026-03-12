@@ -15,7 +15,7 @@ Quick provider overview + examples: [/concepts/model-providers](/concepts/model-
 
 ## How model selection works
 
-iFlow selects models in this order:
+NewClaw selects models in this order:
 
 1. **Primary** model (`agents.defaults.model.primary` or `agents.defaults.model`).
 2. **Fallbacks** in `agents.defaults.model.fallbacks` (in order).
@@ -24,7 +24,7 @@ iFlow selects models in this order:
 
 Related:
 
-- `agents.defaults.models` is the allowlist/catalog of models iFlow can use (plus aliases).
+- `agents.defaults.models` is the allowlist/catalog of models NewClaw can use (plus aliases).
 - `agents.defaults.imageModel` is used **only when** the primary model can’t accept images.
 - Per-agent defaults can override `agents.defaults.model` via `agents.list[].model` plus bindings (see [/concepts/multi-agent](/concepts/multi-agent)).
 
@@ -38,7 +38,7 @@ Related:
 If you don’t want to hand-edit config, run the onboarding wizard:
 
 ```bash
-iflow onboard
+newclaw onboard
 ```
 
 It can set up model + auth for common providers, including **OpenAI Code (Codex)
@@ -62,7 +62,7 @@ Provider configuration examples (including OpenCode Zen) live in
 
 If `agents.defaults.models` is set, it becomes the **allowlist** for `/model` and for
 session overrides. When a user selects a model that isn’t in that allowlist,
-iFlow returns:
+NewClaw returns:
 
 ```
 Model "provider/model" is not allowed. Use /model to list available models.
@@ -108,34 +108,34 @@ Notes:
 - `/model status` is the detailed view (auth candidates and, when configured, provider endpoint `baseUrl` + `api` mode).
 - Model refs are parsed by splitting on the **first** `/`. Use `provider/model` when typing `/model <ref>`.
 - If the model ID itself contains `/` (OpenRouter-style), you must include the provider prefix (example: `/model openrouter/moonshotai/kimi-k2`).
-- If you omit the provider, iFlow treats the input as an alias or a model for the **default provider** (only works when there is no `/` in the model ID).
+- If you omit the provider, NewClaw treats the input as an alias or a model for the **default provider** (only works when there is no `/` in the model ID).
 
 Full command behavior/config: [Slash commands](/tools/slash-commands).
 
 ## CLI commands
 
 ```bash
-iflow models list
-iflow models status
-iflow models set <provider/model>
-iflow models set-image <provider/model>
+newclaw models list
+newclaw models status
+newclaw models set <provider/model>
+newclaw models set-image <provider/model>
 
-iflow models aliases list
-iflow models aliases add <alias> <provider/model>
-iflow models aliases remove <alias>
+newclaw models aliases list
+newclaw models aliases add <alias> <provider/model>
+newclaw models aliases remove <alias>
 
-iflow models fallbacks list
-iflow models fallbacks add <provider/model>
-iflow models fallbacks remove <provider/model>
-iflow models fallbacks clear
+newclaw models fallbacks list
+newclaw models fallbacks add <provider/model>
+newclaw models fallbacks remove <provider/model>
+newclaw models fallbacks clear
 
-iflow models image-fallbacks list
-iflow models image-fallbacks add <provider/model>
-iflow models image-fallbacks remove <provider/model>
-iflow models image-fallbacks clear
+newclaw models image-fallbacks list
+newclaw models image-fallbacks add <provider/model>
+newclaw models image-fallbacks remove <provider/model>
+newclaw models image-fallbacks clear
 ```
 
-`iflow models` (no subcommand) is a shortcut for `models status`.
+`newclaw models` (no subcommand) is a shortcut for `models status`.
 
 ### `models list`
 
@@ -163,12 +163,12 @@ Preferred Anthropic auth is the Claude Code CLI setup-token (run anywhere; paste
 
 ```bash
 claude setup-token
-iflow models status
+newclaw models status
 ```
 
 ## Scanning (OpenRouter free models)
 
-`iflow models scan` inspects OpenRouter’s **free model catalog** and can
+`newclaw models scan` inspects OpenRouter’s **free model catalog** and can
 optionally probe models for tool and image support.
 
 Key flags:
@@ -204,5 +204,5 @@ mode, pass `--yes` to accept defaults.
 ## Models registry (`models.json`)
 
 Custom providers in `models.providers` are written into `models.json` under the
-agent directory (default `~/.iflow/agents/<agentId>/models.json`). This file
+agent directory (default `~/.newclaw/agents/<agentId>/models.json`). This file
 is merged by default unless `models.mode` is set to `replace`.

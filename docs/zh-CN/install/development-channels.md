@@ -17,7 +17,7 @@ x-i18n:
 
 最后更新：2026-01-21
 
-iFlow 提供三个更新渠道：
+NewClaw 提供三个更新渠道：
 
 - **stable**：npm dist-tag `latest`。
 - **beta**：npm dist-tag `beta`（测试中的构建）。
@@ -30,9 +30,9 @@ iFlow 提供三个更新渠道：
 Git checkout 方式：
 
 ```bash
-iflow update --channel stable
-iflow update --channel beta
-iflow update --channel dev
+newclaw update --channel stable
+newclaw update --channel beta
+newclaw update --channel dev
 ```
 
 - `stable`/`beta` 会签出最新匹配的标签（通常是同一个标签）。
@@ -41,23 +41,23 @@ iflow update --channel dev
 npm/pnpm 全局安装方式：
 
 ```bash
-iflow update --channel stable
-iflow update --channel beta
-iflow update --channel dev
+newclaw update --channel stable
+newclaw update --channel beta
+newclaw update --channel dev
 ```
 
 这会通过对应的 npm dist-tag（`latest`、`beta`、`dev`）进行更新。
 
-当你**显式**使用 `--channel` 切换渠道时，iFlow 也会同步调整安装方式：
+当你**显式**使用 `--channel` 切换渠道时，NewClaw 也会同步调整安装方式：
 
-- `dev` 确保存在 git checkout（默认 `~/iflow`，可通过 `IFLOW_GIT_DIR` 覆盖），更新它，并从该 checkout 安装全局 CLI。
+- `dev` 确保存在 git checkout（默认 `~/newclaw`，可通过 `NEWCLAW_GIT_DIR` 覆盖），更新它，并从该 checkout 安装全局 CLI。
 - `stable`/`beta` 使用匹配的 dist-tag 从 npm 安装。
 
 提示：如果你想同时使用 stable 和 dev，可以保留两个克隆，并将 Gateway网关指向 stable 的那个。
 
 ## 插件与渠道
 
-使用 `iflow update` 切换渠道时，iFlow 也会同步插件来源：
+使用 `newclaw update` 切换渠道时，NewClaw 也会同步插件来源：
 
 - `dev` 优先使用 git checkout 中内置的插件。
 - `stable` 和 `beta` 恢复通过 npm 安装的插件包。

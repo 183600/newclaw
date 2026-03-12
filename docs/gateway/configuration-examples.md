@@ -1,9 +1,9 @@
 ---
-summary: "Schema-accurate configuration examples for common iFlow setups"
+summary: "Schema-accurate configuration examples for common NewClaw setups"
 read_when:
-  - Learning how to configure iFlow
+  - Learning how to configure NewClaw
   - Looking for configuration examples
-  - Setting up iFlow for the first time
+  - Setting up NewClaw for the first time
 title: "Configuration Examples"
 ---
 
@@ -17,12 +17,12 @@ Examples below are aligned with the current config schema. For the exhaustive re
 
 ```json5
 {
-  agent: { workspace: "~/.iflow/workspace" },
+  agent: { workspace: "~/.newclaw/workspace" },
   channels: { whatsapp: { allowFrom: ["+15555550123"] } },
 }
 ```
 
-Save to `~/.iflow/iflow.json` and you can DM the bot from that number.
+Save to `~/.newclaw/newclaw.json` and you can DM the bot from that number.
 
 ### Recommended starter
 
@@ -34,7 +34,7 @@ Save to `~/.iflow/iflow.json` and you can DM the bot from that number.
     emoji: "🦞",
   },
   agent: {
-    workspace: "~/.iflow/workspace",
+    workspace: "~/.newclaw/workspace",
     model: { primary: "anthropic/claude-sonnet-4-5" },
   },
   channels: {
@@ -89,7 +89,7 @@ Save to `~/.iflow/iflow.json` and you can DM the bot from that number.
   // Logging
   logging: {
     level: "info",
-    file: "/tmp/iflow/iflow.log",
+    file: "/tmp/newclaw/iflow.log",
     consoleLevel: "info",
     consoleStyle: "pretty",
     redactSensitive: "tools",
@@ -159,7 +159,7 @@ Save to `~/.iflow/iflow.json` and you can DM the bot from that number.
       discord: { mode: "idle", idleMinutes: 10080 },
     },
     resetTriggers: ["/new", "/reset"],
-    store: "~/.iflow/agents/default/sessions/sessions.json",
+    store: "~/.newclaw/agents/default/sessions/sessions.json",
     typingIntervalSeconds: 5,
     sendPolicy: {
       default: "allow",
@@ -222,7 +222,7 @@ Save to `~/.iflow/iflow.json` and you can DM the bot from that number.
   // Agent runtime
   agents: {
     defaults: {
-      workspace: "~/.iflow/workspace",
+      workspace: "~/.newclaw/workspace",
       userTimezone: "America/Chicago",
       model: {
         primary: "anthropic/claude-sonnet-4-5",
@@ -275,9 +275,9 @@ Save to `~/.iflow/iflow.json` and you can DM the bot from that number.
       sandbox: {
         mode: "non-main",
         perSession: true,
-        workspaceRoot: "~/.iflow/sandboxes",
+        workspaceRoot: "~/.newclaw/sandboxes",
         docker: {
-          image: "iflow-sandbox:bookworm-slim",
+          image: "newclaw-sandbox:bookworm-slim",
           workdir: "/workspace",
           readOnlyRoot: true,
           tmpfs: ["/tmp", "/var/tmp", "/run"],
@@ -342,7 +342,7 @@ Save to `~/.iflow/iflow.json` and you can DM the bot from that number.
   // Cron jobs
   cron: {
     enabled: true,
-    store: "~/.iflow/cron/cron.json",
+    store: "~/.newclaw/cron/cron.json",
     maxConcurrentRuns: 2,
   },
 
@@ -352,7 +352,7 @@ Save to `~/.iflow/iflow.json` and you can DM the bot from that number.
     path: "/hooks",
     token: "shared-secret",
     presets: ["gmail"],
-    transformsDir: "~/.iflow/hooks",
+    transformsDir: "~/.newclaw/hooks",
     mappings: [
       {
         id: "gmail-hook",
@@ -372,7 +372,7 @@ Save to `~/.iflow/iflow.json` and you can DM the bot from that number.
       },
     ],
     gmail: {
-      account: "iflow@gmail.com",
+      account: "newclaw@gmail.com",
       label: "INBOX",
       topic: "projects/<project-id>/topics/gog-gmail-watch",
       subscription: "gog-gmail-watch-push",
@@ -429,7 +429,7 @@ Save to `~/.iflow/iflow.json` and you can DM the bot from that number.
 
 ```json5
 {
-  agent: { workspace: "~/.iflow/workspace" },
+  agent: { workspace: "~/.newclaw/workspace" },
   channels: {
     whatsapp: { allowFrom: ["+15555550123"] },
     telegram: {
@@ -467,7 +467,7 @@ Save to `~/.iflow/iflow.json` and you can DM the bot from that number.
     },
   },
   agent: {
-    workspace: "~/.iflow/workspace",
+    workspace: "~/.newclaw/workspace",
     model: {
       primary: "anthropic/claude-sonnet-4-5",
       fallbacks: ["anthropic/claude-opus-4-5"],
@@ -506,7 +506,7 @@ Save to `~/.iflow/iflow.json` and you can DM the bot from that number.
     },
   },
   agent: {
-    workspace: "~/.iflow/workspace",
+    workspace: "~/.newclaw/workspace",
     model: {
       primary: "anthropic/claude-opus-4-5",
       fallbacks: ["minimax/MiniMax-M2.1"],
@@ -545,7 +545,7 @@ Save to `~/.iflow/iflow.json` and you can DM the bot from that number.
 ```json5
 {
   agent: {
-    workspace: "~/.iflow/workspace",
+    workspace: "~/.newclaw/workspace",
     model: { primary: "lmstudio/minimax-m2.1-gs32" },
   },
   models: {

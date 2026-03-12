@@ -3,7 +3,7 @@ read_when:
   - 你需要通过安全加固进行自动化服务器部署
   - 你需要带 VPN 访问的防火墙隔离设置
   - 你要部署到远程 Debian/Ubuntu 服务器
-summary: 使用 Ansible、Tailscale VPN 和防火墙隔离进行自动化、安全加固的 iFlow 安装
+summary: 使用 Ansible、Tailscale VPN 和防火墙隔离进行自动化、安全加固的 NewClaw 安装
 title: Ansible
 x-i18n:
   generated_at: "2026-02-01T21:05:32Z"
@@ -16,7 +16,7 @@ x-i18n:
 
 # Ansible 安装
 
-将 iFlow 部署到生产服务器的推荐方式是使用 **[iflow-ansible](https://github.com/iflow/iflow-ansible)** — 一个采用安全优先架构的自动化安装工具。
+将 NewClaw 部署到生产服务器的推荐方式是使用 **[iflow-ansible](https://github.com/newclaw/newclaw-ansible)** — 一个采用安全优先架构的自动化安装工具。
 
 ## 快速开始
 
@@ -26,7 +26,7 @@ x-i18n:
 curl -fsSL https://raw.githubusercontent.com/iflow/iflow-ansible/main/install.sh | bash
 ```
 
-> **📦 完整指南：[github.com/iflow/iflow-ansible](https://github.com/iflow/iflow-ansible)**
+> **📦 完整指南：[github.com/newclaw/newclaw-ansible](https://github.com/newclaw/newclaw-ansible)**
 >
 > iflow-ansible 仓库是 Ansible 部署的权威来源。本页面仅为简要概览。
 
@@ -54,14 +54,14 @@ Ansible playbook 会安装并配置以下组件：
 2. **UFW 防火墙**（仅开放 SSH + Tailscale 端口）
 3. **Docker CE + Compose V2**（用于智能体沙箱）
 4. **Node.js 22.x + pnpm**（运行时依赖）
-5. **iFlow**（基于主机安装，非容器化）
+5. **NewClaw**（基于主机安装，非容器化）
 6. **Systemd 服务**（带安全加固的自动启动）
 
 注意：Gateway网关 **直接运行在主机上**（不在 Docker 中），但智能体沙箱使用 Docker 进行隔离。详见 [沙箱](/gateway/sandboxing)。
 
 ## 安装后设置
 
-安装完成后，切换到 iflow 用户：
+安装完成后，切换到 newclaw 用户：
 
 ```bash
 sudo -i -u iflow
@@ -69,7 +69,7 @@ sudo -i -u iflow
 
 安装后脚本将引导你完成：
 
-1. **新手引导向导**：配置 iFlow 设置
+1. **新手引导向导**：配置 NewClaw 设置
 2. **提供商登录**：连接 WhatsApp/Telegram/Discord/Signal
 3. **Gateway网关测试**：验证安装
 4. **Tailscale 设置**：连接到你的 VPN mesh 网络
@@ -81,14 +81,14 @@ sudo -i -u iflow
 sudo systemctl status iflow
 
 # 查看实时日志
-sudo journalctl -u iflow -f
+sudo journalctl -u newclaw -f
 
 # 重启 Gateway网关
 sudo systemctl restart iflow
 
-# 提供商登录（以 iflow 用户运行）
+# 提供商登录（以 newclaw 用户运行）
 sudo -i -u iflow
-iflow channels login
+newclaw channels login
 ```
 
 ## 安全架构
@@ -125,7 +125,7 @@ Docker 用于**智能体沙箱**（隔离的工具执行），而非运行 Gatew
 sudo apt update && sudo apt install -y ansible git
 
 # 2. 克隆仓库
-git clone https://github.com/iflow/iflow-ansible.git
+git clone https://github.com/newclaw/newclaw-ansible.git
 cd iflow-ansible
 
 # 3. 安装 Ansible 集合
@@ -138,9 +138,9 @@ ansible-galaxy collection install -r requirements.yml
 # ansible-playbook playbook.yml --ask-become-pass
 ```
 
-## 更新 iFlow
+## 更新 NewClaw
 
-Ansible 安装程序将 iFlow 设置为手动更新。标准更新流程详见 [更新](/install/updating)。
+Ansible 安装程序将 NewClaw 设置为手动更新。标准更新流程详见 [更新](/install/updating)。
 
 重新运行 Ansible playbook（例如配置变更时）：
 
@@ -165,14 +165,14 @@ cd iflow-ansible
 
 ```bash
 # 检查日志
-sudo journalctl -u iflow -n 100
+sudo journalctl -u newclaw -n 100
 
 # 验证权限
 sudo ls -la /opt/iflow
 
 # 测试手动启动
 sudo -i -u iflow
-cd ~/iflow
+cd ~/newclaw
 pnpm start
 ```
 
@@ -183,11 +183,11 @@ pnpm start
 sudo systemctl status docker
 
 # 检查沙箱镜像
-sudo docker images | grep iflow-sandbox
+sudo docker images | grep newclaw-sandbox
 
 # 如果缺少沙箱镜像则构建
 cd /opt/iflow/iflow
-sudo -u iflow ./scripts/sandbox-setup.sh
+sudo -u newclaw ./scripts/sandbox-setup.sh
 ```
 
 ### 提供商登录失败
@@ -196,20 +196,20 @@ sudo -u iflow ./scripts/sandbox-setup.sh
 
 ```bash
 sudo -i -u iflow
-iflow channels login
+newclaw channels login
 ```
 
 ## 高级配置
 
 有关详细的安全架构和故障排除：
 
-- [安全架构](https://github.com/iflow/iflow-ansible/blob/main/docs/security.md)
-- [技术细节](https://github.com/iflow/iflow-ansible/blob/main/docs/architecture.md)
-- [故障排除指南](https://github.com/iflow/iflow-ansible/blob/main/docs/troubleshooting.md)
+- [安全架构](https://github.com/newclaw/newclaw-ansible/blob/main/docs/security.md)
+- [技术细节](https://github.com/newclaw/newclaw-ansible/blob/main/docs/architecture.md)
+- [故障排除指南](https://github.com/newclaw/newclaw-ansible/blob/main/docs/troubleshooting.md)
 
 ## 相关内容
 
-- [iflow-ansible](https://github.com/iflow/iflow-ansible) — 完整部署指南
+- [iflow-ansible](https://github.com/newclaw/newclaw-ansible) — 完整部署指南
 - [Docker](/install/docker) — 容器化 Gateway网关设置
 - [沙箱](/gateway/sandboxing) — 智能体沙箱配置
 - [多智能体沙箱与工具](/multi-agent-sandbox-tools) — 按智能体隔离

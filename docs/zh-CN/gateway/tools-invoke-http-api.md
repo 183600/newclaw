@@ -15,7 +15,7 @@ x-i18n:
 
 # 工具调用（HTTP）
 
-iFlow 的 Gateway网关暴露了一个简单的 HTTP 端点，用于直接调用单个工具。该端点始终启用，但受 Gateway网关认证和工具策略控制。
+NewClaw 的 Gateway网关暴露了一个简单的 HTTP 端点，用于直接调用单个工具。该端点始终启用，但受 Gateway网关认证和工具策略控制。
 
 - `POST /tools/invoke`
 - 与 Gateway网关相同的端口（WS + HTTP 多路复用）：`http://<gateway-host>:<port>/tools/invoke`
@@ -30,8 +30,8 @@ iFlow 的 Gateway网关暴露了一个简单的 HTTP 端点，用于直接调用
 
 说明：
 
-- 当 `gateway.auth.mode="token"` 时，使用 `gateway.auth.token`（或 `IFLOW_GATEWAY_TOKEN`）。
-- 当 `gateway.auth.mode="password"` 时，使用 `gateway.auth.password`（或 `IFLOW_GATEWAY_PASSWORD`）。
+- 当 `gateway.auth.mode="token"` 时，使用 `gateway.auth.token`（或 `NEWCLAW_GATEWAY_TOKEN`）。
+- 当 `gateway.auth.mode="password"` 时，使用 `gateway.auth.password`（或 `NEWCLAW_GATEWAY_PASSWORD`）。
 
 ## 请求体
 
@@ -67,8 +67,8 @@ iFlow 的 Gateway网关暴露了一个简单的 HTTP 端点，用于直接调用
 
 为帮助群组策略解析上下文，你可以选择性地设置：
 
-- `x-iflow-message-channel: <channel>`（示例：`slack`、`telegram`）
-- `x-iflow-account-id: <accountId>`（当存在多个账户时）
+- `x-newclaw-message-channel: <channel>`（示例：`slack`、`telegram`）
+- `x-newclaw-account-id: <accountId>`（当存在多个账户时）
 
 ## 响应
 

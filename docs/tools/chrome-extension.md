@@ -1,5 +1,5 @@
 ---
-summary: "Chrome extension: let iFlow drive your existing Chrome tab"
+summary: "Chrome extension: let NewClaw drive your existing Chrome tab"
 read_when:
   - You want the agent to drive an existing Chrome tab (toolbar button)
   - You need remote Gateway + local browser automation via Tailscale
@@ -9,7 +9,7 @@ title: "Chrome Extension"
 
 # Chrome extension (browser relay)
 
-The iFlow Chrome extension lets the agent control your **existing Chrome tabs** (your normal Chrome window) instead of launching a separate iflow-managed Chrome profile.
+The NewClaw Chrome extension lets the agent control your **existing Chrome tabs** (your normal Chrome window) instead of launching a separate iflow-managed Chrome profile.
 
 Attach/detach happens via a **single Chrome toolbar button**.
 
@@ -21,20 +21,20 @@ There are three parts:
 - **Local relay server** (loopback CDP): bridges between the control server and the extension (`http://127.0.0.1:18792` by default)
 - **Chrome MV3 extension**: attaches to the active tab using `chrome.debugger` and pipes CDP messages to the relay
 
-iFlow then controls the attached tab through the normal `browser` tool surface (selecting the right profile).
+NewClaw then controls the attached tab through the normal `browser` tool surface (selecting the right profile).
 
 ## Install / load (unpacked)
 
 1. Install the extension to a stable local path:
 
 ```bash
-iflow browser extension install
+newclaw browser extension install
 ```
 
 2. Print the installed extension directory path:
 
 ```bash
-iflow browser extension path
+newclaw browser extension path
 ```
 
 3. Chrome → `chrome://extensions`
@@ -46,26 +46,26 @@ iflow browser extension path
 
 ## Updates (no build step)
 
-The extension ships inside the iFlow release (npm package) as static files. There is no separate “build” step.
+The extension ships inside the NewClaw release (npm package) as static files. There is no separate “build” step.
 
-After upgrading iFlow:
+After upgrading NewClaw:
 
-- Re-run `iflow browser extension install` to refresh the installed files under your iFlow state directory.
+- Re-run `newclaw browser extension install` to refresh the installed files under your NewClaw state directory.
 - Chrome → `chrome://extensions` → click “Reload” on the extension.
 
 ## Use it (no extra config)
 
-iFlow ships with a built-in browser profile named `chrome` that targets the extension relay on the default port.
+NewClaw ships with a built-in browser profile named `chrome` that targets the extension relay on the default port.
 
 Use it:
 
-- CLI: `iflow browser --browser-profile chrome tabs`
+- CLI: `newclaw browser --browser-profile chrome tabs`
 - Agent tool: `browser` with `profile="chrome"`
 
 If you want a different name or a different relay port, create your own profile:
 
 ```bash
-iflow browser create-profile \
+newclaw browser create-profile \
   --name my-chrome \
   --driver extension \
   --cdp-url http://127.0.0.1:18792 \
@@ -74,7 +74,7 @@ iflow browser create-profile \
 
 ## Attach / detach (toolbar button)
 
-- Open the tab you want iFlow to control.
+- Open the tab you want NewClaw to control.
 - Click the extension icon.
   - Badge shows `ON` when attached.
 - Click again to detach.
@@ -87,7 +87,7 @@ iflow browser create-profile \
 
 ## Badge + common errors
 
-- `ON`: attached; iFlow can drive that tab.
+- `ON`: attached; NewClaw can drive that tab.
 - `…`: connecting to the local relay.
 - `!`: relay not reachable (most common: browser relay server isn’t running on this machine).
 
@@ -138,7 +138,7 @@ Options:
 
 Then ensure the tool isn’t denied by tool policy, and (if needed) call `browser` with `target="host"`.
 
-Debugging: `iflow sandbox explain`
+Debugging: `newclaw sandbox explain`
 
 ## Remote access tips
 
@@ -147,9 +147,9 @@ Debugging: `iflow sandbox explain`
 
 ## How “extension path” works
 
-`iflow browser extension path` prints the **installed** on-disk directory containing the extension files.
+`newclaw browser extension path` prints the **installed** on-disk directory containing the extension files.
 
-The CLI intentionally does **not** print a `node_modules` path. Always run `iflow browser extension install` first to copy the extension to a stable location under your iFlow state directory.
+The CLI intentionally does **not** print a `node_modules` path. Always run `newclaw browser extension install` first to copy the extension to a stable location under your NewClaw state directory.
 
 If you move or delete that install directory, Chrome will mark the extension as broken until you reload it from a valid path.
 

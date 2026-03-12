@@ -2,7 +2,7 @@
 read_when:
   - 实现 macOS 应用功能
   - 更改 macOS 上的 Gateway网关生命周期或节点桥接
-summary: iFlow macOS 伴侣应用（菜单栏 + Gateway网关代理）
+summary: NewClaw macOS 伴侣应用（菜单栏 + Gateway网关代理）
 title: macOS 应用
 x-i18n:
   generated_at: "2026-02-01T21:33:53Z"
@@ -13,9 +13,9 @@ x-i18n:
   workflow: 15
 ---
 
-# iFlow macOS 伴侣应用（菜单栏 + Gateway网关代理）
+# NewClaw macOS 伴侣应用（菜单栏 + Gateway网关代理）
 
-macOS 应用是 iFlow 的**菜单栏伴侣**。它拥有权限，在本地管理/连接 Gateway网关（launchd 或手动），并将 macOS 能力作为节点暴露给智能体。
+macOS 应用是 NewClaw 的**菜单栏伴侣**。它拥有权限，在本地管理/连接 Gateway网关（launchd 或手动），并将 macOS 能力作为节点暴露给智能体。
 
 ## 功能说明
 
@@ -29,14 +29,14 @@ macOS 应用是 iFlow 的**菜单栏伴侣**。它拥有权限，在本地管理
 
 ## 本地模式与远程模式
 
-- **本地**（默认）：如果存在正在运行的本地 Gateway网关，应用会连接到它；否则通过 `iflow gateway install` 启用 launchd 服务。
+- **本地**（默认）：如果存在正在运行的本地 Gateway网关，应用会连接到它；否则通过 `newclaw gateway install` 启用 launchd 服务。
 - **远程**：应用通过 SSH/Tailscale 连接到 Gateway网关，不会启动本地进程。
   应用会启动本地**节点宿主服务**，以便远程 Gateway网关可以访问这台 Mac。
   应用不会将 Gateway网关作为子进程启动。
 
 ## Launchd 控制
 
-应用管理一个标签为 `bot.molt.gateway` 的用户级 LaunchAgent（使用 `--profile`/`IFLOW_PROFILE` 时为 `bot.molt.<profile>`；旧版 `com.iflow.*` 仍会被卸载）。
+应用管理一个标签为 `bot.molt.gateway` 的用户级 LaunchAgent（使用 `--profile`/`NEWCLAW_PROFILE` 时为 `bot.molt.<profile>`；旧版 `com.iflow.*` 仍会被卸载）。
 
 ```bash
 launchctl kickstart -k gui/$UID/bot.molt.gateway
@@ -45,7 +45,7 @@ launchctl bootout gui/$UID/bot.molt.gateway
 
 运行命名配置文件时，请将标签替换为 `bot.molt.<profile>`。
 
-如果 LaunchAgent 未安装，可从应用中启用或运行 `iflow gateway install`。
+如果 LaunchAgent 未安装，可从应用中启用或运行 `newclaw gateway install`。
 
 ## 节点能力（Mac）
 
@@ -78,7 +78,7 @@ Gateway网关 -> Node Service (WS)
 安全策略 + 询问方式 + 允许列表存储在 Mac 本地：
 
 ```
-~/.iflow/exec-approvals.json
+~/.newclaw/exec-approvals.json
 ```
 
 示例：
@@ -134,7 +134,7 @@ open 'iflow://agent?message=Hello%20from%20deep%20link'
 
 ## 新手引导流程（典型）
 
-1. 安装并启动 **iFlow.app**。
+1. 安装并启动 **NewClaw.app**。
 2. 完成权限清单（TCC 提示）。
 3. 确保**本地**模式已激活且 Gateway网关正在运行。
 4. 如需终端访问，安装 CLI。
@@ -142,7 +142,7 @@ open 'iflow://agent?message=Hello%20from%20deep%20link'
 ## 构建与开发工作流（原生）
 
 - `cd apps/macos && swift build`
-- `swift run iFlow`（或 Xcode）
+- `swift run NewClaw`（或 Xcode）
 - 打包应用：`scripts/package-mac-app.sh`
 
 ## 调试 Gateway网关连接（macOS CLI）
@@ -169,7 +169,7 @@ swift run iflow-mac discover --timeout 3000 --json
 - `--timeout <ms>`：总发现窗口时间（默认：`2000`）
 - `--json`：结构化输出，便于对比
 
-提示：与 `iflow gateway discover --json` 对比，查看 macOS 应用的发现管道（NWBrowser + tailnet DNS-SD 回退）是否与 Node CLI 基于 `dns-sd` 的发现有差异。
+提示：与 `newclaw gateway discover --json` 对比，查看 macOS 应用的发现管道（NWBrowser + tailnet DNS-SD 回退）是否与 Node CLI 基于 `dns-sd` 的发现有差异。
 
 ## 远程连接机制（SSH 隧道）
 

@@ -1,7 +1,7 @@
 ---
-summary: "Use OpenAI via API keys or Codex subscription in iFlow"
+summary: "Use OpenAI via API keys or Codex subscription in NewClaw"
 read_when:
-  - You want to use OpenAI models in iFlow
+  - You want to use OpenAI models in NewClaw
   - You want Codex subscription auth instead of API keys
 title: "OpenAI"
 ---
@@ -19,9 +19,9 @@ Get your API key from the OpenAI dashboard.
 ### CLI setup
 
 ```bash
-iflow onboard --auth-choice openai-api-key
+newclaw onboard --auth-choice openai-api-key
 # or non-interactive
-iflow onboard --openai-api-key "$OPENAI_API_KEY"
+newclaw onboard --openai-api-key "$OPENAI_API_KEY"
 ```
 
 ### Config snippet
@@ -42,10 +42,10 @@ Codex cloud requires ChatGPT sign-in, while the Codex CLI supports ChatGPT or AP
 
 ```bash
 # Run Codex OAuth in the wizard
-iflow onboard --auth-choice openai-codex
+newclaw onboard --auth-choice openai-codex
 
 # Or run OAuth directly
-iflow models auth login --provider openai-codex
+newclaw models auth login --provider openai-codex
 ```
 
 ### Config snippet

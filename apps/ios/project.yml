@@ -1,6 +1,6 @@
-name: iFlow
+name: NewClaw
 options:
-  bundleIdPrefix: ai.iflow
+  bundleIdPrefix: ai.newclaw
   deploymentTarget:
     iOS: "18.0"
   xcodeVersion: "16.0"
@@ -16,17 +16,17 @@ packages:
     path: ../../Swabble
 
 schemes:
-  iFlow:
+  NewClaw:
     shared: true
     build:
       targets:
-        iFlow: all
+        NewClaw: all
     test:
       targets:
         - iFlowTests
 
 targets:
-  iFlow:
+  NewClaw:
     type: application
     platform: iOS
     sources:
@@ -71,15 +71,15 @@ targets:
         CODE_SIGN_IDENTITY: "Apple Development"
         CODE_SIGN_STYLE: Manual
         DEVELOPMENT_TEAM: Y5PE65HELJ
-        PRODUCT_BUNDLE_IDENTIFIER: ai.iflow.ios
-        PROVISIONING_PROFILE_SPECIFIER: "ai.iflow.ios Development"
+        PRODUCT_BUNDLE_IDENTIFIER: ai.newclaw.ios
+        PROVISIONING_PROFILE_SPECIFIER: "ai.newclaw.ios Development"
         SWIFT_VERSION: "6.0"
         SWIFT_STRICT_CONCURRENCY: complete
         ENABLE_APPINTENTS_METADATA: NO
     info:
       path: Sources/Info.plist
       properties:
-        CFBundleDisplayName: iFlow
+        CFBundleDisplayName: NewClaw
         CFBundleIconName: AppIcon
         CFBundleShortVersionString: "2026.2.2"
         CFBundleVersion: "20260202"

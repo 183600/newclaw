@@ -60,7 +60,7 @@ x-i18n:
   - 设置 `channels.discord.commands.nativeSkills`、`channels.telegram.commands.nativeSkills` 或 `channels.slack.commands.nativeSkills` 可按提供商覆盖（布尔值或 `"auto"`）。
 - `commands.bash`（默认 `false`）启用 `! <cmd>` 来运行主机 shell 命令（`/bash <cmd>` 为别名；需要 `tools.elevated` 允许列表）。
 - `commands.bashForegroundMs`（默认 `2000`）控制 bash 在切换到后台模式之前等待的时长（`0` 表示立即后台执行）。
-- `commands.config`（默认 `false`）启用 `/config`（读写 `iflow.json`）。
+- `commands.config`（默认 `false`）启用 `/config`（读写 `newclaw.json`）。
 - `commands.debug`（默认 `false`）启用 `/debug`（仅运行时覆盖）。
 - `commands.useAccessGroups`（默认 `true`）对命令强制执行允许列表/策略。
 
@@ -110,9 +110,9 @@ x-i18n:
 
 - 命令在命令名和参数之间可以使用可选的 `:`（例如 `/think: high`、`/send: on`、`/help:`）。
 - `/new <model>` 接受模型别名、`provider/model` 或提供商名称（模糊匹配）；如果没有匹配，文本将被视为消息正文。
-- 要查看完整的提供商用量明细，请使用 `iflow status --usage`。
+- 要查看完整的提供商用量明细，请使用 `newclaw status --usage`。
 - `/allowlist add|remove` 需要 `commands.config=true` 并遵循渠道的 `configWrites` 设置。
-- `/usage` 控制每次响应的用量页脚；`/usage cost` 从 iFlow 会话日志中打印本地费用摘要。
+- `/usage` 控制每次响应的用量页脚；`/usage cost` 从 NewClaw 会话日志中打印本地费用摘要。
 - `/restart` 默认禁用；设置 `commands.restart: true` 以启用。
 - `/verbose` 用于调试和增强可见性；正常使用时请保持**关闭**。
 - `/reasoning`（和 `/verbose`）在群组场景中存在风险：它们可能暴露你不希望公开的内部推理或工具输出。建议保持关闭，尤其是在群聊中。
@@ -172,12 +172,12 @@ x-i18n:
 
 注意事项：
 
-- 覆盖会立即应用于新的配置读取，但**不会**写入 `iflow.json`。
+- 覆盖会立即应用于新的配置读取，但**不会**写入 `newclaw.json`。
 - 使用 `/debug reset` 清除所有覆盖并恢复到磁盘上的配置。
 
 ## 配置更新
 
-`/config` 写入你的磁盘配置（`iflow.json`）。仅所有者可用。默认禁用；通过 `commands.config: true` 启用。
+`/config` 写入你的磁盘配置（`newclaw.json`）。仅所有者可用。默认禁用；通过 `commands.config: true` 启用。
 
 示例：
 

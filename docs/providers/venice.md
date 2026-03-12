@@ -1,7 +1,7 @@
 ---
-summary: "Use Venice AI privacy-focused models in iFlow"
+summary: "Use Venice AI privacy-focused models in NewClaw"
 read_when:
-  - You want privacy-focused inference in iFlow
+  - You want privacy-focused inference in NewClaw
   - You want Venice AI setup guidance
 title: "Venice AI"
 ---
@@ -12,7 +12,7 @@ title: "Venice AI"
 
 Venice AI provides privacy-focused AI inference with support for uncensored models and access to major proprietary models through their anonymized proxy. All inference is private by default—no training on your data, no logging.
 
-## Why Venice in iFlow
+## Why Venice in NewClaw
 
 - **Private inference** for open-source models (no logging).
 - **Uncensored models** when you need them.
@@ -47,7 +47,7 @@ Venice offers two privacy levels — understanding this is key to choosing your 
 2. Go to **Settings → API Keys → Create new key**
 3. Copy your API key (format: `vapi_xxxxxxxxxxxx`)
 
-### 2. Configure iFlow
+### 2. Configure NewClaw
 
 **Option A: Environment Variable**
 
@@ -58,7 +58,7 @@ export VENICE_API_KEY="vapi_xxxxxxxxxxxx"
 **Option B: Interactive Setup (Recommended)**
 
 ```bash
-iflow onboard --auth-choice venice-api-key
+newclaw onboard --auth-choice venice-api-key
 ```
 
 This will:
@@ -71,7 +71,7 @@ This will:
 **Option C: Non-interactive**
 
 ```bash
-iflow onboard --non-interactive \
+newclaw onboard --non-interactive \
   --auth-choice venice-api-key \
   --venice-api-key "vapi_xxxxxxxxxxxx"
 ```
@@ -79,12 +79,12 @@ iflow onboard --non-interactive \
 ### 3. Verify Setup
 
 ```bash
-iflow chat --model venice/llama-3.3-70b "Hello, are you working?"
+newclaw chat --model venice/llama-3.3-70b "Hello, are you working?"
 ```
 
 ## Model Selection
 
-After setup, iFlow shows all available Venice models. Pick based on your needs:
+After setup, NewClaw shows all available Venice models. Pick based on your needs:
 
 - **Default (our pick)**: `venice/llama-3.3-70b` for private, balanced performance.
 - **Best overall quality**: `venice/claude-opus-45` for hard jobs (Opus remains the strongest).
@@ -94,19 +94,19 @@ After setup, iFlow shows all available Venice models. Pick based on your needs:
 Change your default model anytime:
 
 ```bash
-iflow models set venice/claude-opus-45
-iflow models set venice/llama-3.3-70b
+newclaw models set venice/claude-opus-45
+newclaw models set venice/llama-3.3-70b
 ```
 
 List all available models:
 
 ```bash
-iflow models list | grep venice
+newclaw models list | grep venice
 ```
 
-## Configure via `iflow configure`
+## Configure via `newclaw configure`
 
-1. Run `iflow configure`
+1. Run `newclaw configure`
 2. Select **Model/auth**
 3. Choose **Venice AI**
 
@@ -162,7 +162,7 @@ iflow models list | grep venice
 
 ## Model Discovery
 
-iFlow automatically discovers models from the Venice API when `VENICE_API_KEY` is set. If the API is unreachable, it falls back to a static catalog.
+NewClaw automatically discovers models from the Venice API when `VENICE_API_KEY` is set. If the API is unreachable, it falls back to a static catalog.
 
 The `/models` endpoint is public (no auth needed for listing), but inference requires a valid API key.
 
@@ -195,19 +195,19 @@ Venice uses a credit-based system. Check [venice.ai/pricing](https://venice.ai/p
 
 ```bash
 # Use default private model
-iflow chat --model venice/llama-3.3-70b
+newclaw chat --model venice/llama-3.3-70b
 
 # Use Claude via Venice (anonymized)
-iflow chat --model venice/claude-opus-45
+newclaw chat --model venice/claude-opus-45
 
 # Use uncensored model
-iflow chat --model venice/venice-uncensored
+newclaw chat --model venice/venice-uncensored
 
 # Use vision model with image
-iflow chat --model venice/qwen3-vl-235b-a22b
+newclaw chat --model venice/qwen3-vl-235b-a22b
 
 # Use coding model
-iflow chat --model venice/qwen3-coder-480b-a35b-instruct
+newclaw chat --model venice/qwen3-coder-480b-a35b-instruct
 ```
 
 ## Troubleshooting
@@ -216,14 +216,14 @@ iflow chat --model venice/qwen3-coder-480b-a35b-instruct
 
 ```bash
 echo $VENICE_API_KEY
-iflow models list | grep venice
+newclaw models list | grep venice
 ```
 
 Ensure the key starts with `vapi_`.
 
 ### Model not available
 
-The Venice model catalog updates dynamically. Run `iflow models list` to see currently available models. Some models may be temporarily offline.
+The Venice model catalog updates dynamically. Run `newclaw models list` to see currently available models. Some models may be temporarily offline.
 
 ### Connection issues
 

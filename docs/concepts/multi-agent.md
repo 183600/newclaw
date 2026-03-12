@@ -15,12 +15,12 @@ An **agent** is a fully scoped brain with its own:
 
 - **Workspace** (files, AGENTS.md/SOUL.md/USER.md, local notes, persona rules).
 - **State directory** (`agentDir`) for auth profiles, model registry, and per-agent config.
-- **Session store** (chat history + routing state) under `~/.iflow/agents/<agentId>/sessions`.
+- **Session store** (chat history + routing state) under `~/.newclaw/agents/<agentId>/sessions`.
 
 Auth profiles are **per-agent**. Each agent reads from its own:
 
 ```
-~/.iflow/agents/<agentId>/agent/auth-profiles.json
+~/.newclaw/agents/<agentId>/agent/auth-profiles.json
 ```
 
 Main agent credentials are **not** shared automatically. Never reuse `agentDir`
@@ -28,7 +28,7 @@ across agents (it causes auth/session collisions). If you want to share creds,
 copy `auth-profiles.json` into the other agent's `agentDir`.
 
 Skills are per-agent via each workspace’s `skills/` folder, with shared skills
-available from `~/.iflow/skills`. See [Skills: per-agent vs shared](/tools/skills#per-agent-vs-shared-skills).
+available from `~/.newclaw/skills`. See [Skills: per-agent vs shared](/tools/skills#per-agent-vs-shared-skills).
 
 The Gateway can host **one agent** (default) or **many agents** side-by-side.
 
@@ -39,27 +39,27 @@ reach other host locations unless sandboxing is enabled. See
 
 ## Paths (quick map)
 
-- Config: `~/.iflow/iflow.json` (or `IFLOW_CONFIG_PATH`)
-- State dir: `~/.iflow` (or `IFLOW_STATE_DIR`)
-- Workspace: `~/.iflow/workspace` (or `~/.iflow/workspace-<agentId>`)
-- Agent dir: `~/.iflow/agents/<agentId>/agent` (or `agents.list[].agentDir`)
-- Sessions: `~/.iflow/agents/<agentId>/sessions`
+- Config: `~/.newclaw/newclaw.json` (or `NEWCLAW_CONFIG_PATH`)
+- State dir: `~/.newclaw` (or `NEWCLAW_STATE_DIR`)
+- Workspace: `~/.newclaw/workspace` (or `~/.newclaw/workspace-<agentId>`)
+- Agent dir: `~/.newclaw/agents/<agentId>/agent` (or `agents.list[].agentDir`)
+- Sessions: `~/.newclaw/agents/<agentId>/sessions`
 
 ### Single-agent mode (default)
 
-If you do nothing, iFlow runs a single agent:
+If you do nothing, NewClaw runs a single agent:
 
 - `agentId` defaults to **`main`**.
 - Sessions are keyed as `agent:main:<mainKey>`.
-- Workspace defaults to `~/.iflow/workspace` (or `~/.iflow/workspace-<profile>` when `IFLOW_PROFILE` is set).
-- State defaults to `~/.iflow/agents/main/agent`.
+- Workspace defaults to `~/.newclaw/workspace` (or `~/.newclaw/workspace-<profile>` when `NEWCLAW_PROFILE` is set).
+- State defaults to `~/.newclaw/agents/main/agent`.
 
 ## Agent helper
 
 Use the agent wizard to add a new isolated agent:
 
 ```bash
-iflow agents add work
+newclaw agents add work
 ```
 
 Then add `bindings` (or let the wizard do it) to route inbound messages.
@@ -67,7 +67,7 @@ Then add `bindings` (or let the wizard do it) to route inbound messages.
 Verify with:
 
 ```bash
-iflow agents list --bindings
+newclaw agents list --bindings
 ```
 
 ## Multiple agents = multiple people, multiple personalities
@@ -92,8 +92,8 @@ Example:
 {
   agents: {
     list: [
-      { id: "alex", workspace: "~/.iflow/workspace-alex" },
-      { id: "mia", workspace: "~/.iflow/workspace-mia" },
+      { id: "alex", workspace: "~/.newclaw/workspace-alex" },
+      { id: "mia", workspace: "~/.newclaw/workspace-mia" },
     ],
   },
   bindings: [
@@ -140,7 +140,7 @@ multiple phone numbers without mixing sessions.
 
 ## Example: two WhatsApps → two agents
 
-`~/.iflow/iflow.json` (JSON5):
+`~/.newclaw/newclaw.json` (JSON5):
 
 ```js
 {
@@ -150,14 +150,14 @@ multiple phone numbers without mixing sessions.
         id: "home",
         default: true,
         name: "Home",
-        workspace: "~/.iflow/workspace-home",
-        agentDir: "~/.iflow/agents/home/agent",
+        workspace: "~/.newclaw/workspace-home",
+        agentDir: "~/.newclaw/agents/home/agent",
       },
       {
         id: "work",
         name: "Work",
-        workspace: "~/.iflow/workspace-work",
-        agentDir: "~/.iflow/agents/work/agent",
+        workspace: "~/.newclaw/workspace-work",
+        agentDir: "~/.newclaw/agents/work/agent",
       },
     ],
   },
@@ -190,12 +190,12 @@ multiple phone numbers without mixing sessions.
     whatsapp: {
       accounts: {
         personal: {
-          // Optional override. Default: ~/.iflow/credentials/whatsapp/personal
-          // authDir: "~/.iflow/credentials/whatsapp/personal",
+          // Optional override. Default: ~/.newclaw/credentials/whatsapp/personal
+          // authDir: "~/.newclaw/credentials/whatsapp/personal",
         },
         biz: {
-          // Optional override. Default: ~/.iflow/credentials/whatsapp/biz
-          // authDir: "~/.iflow/credentials/whatsapp/biz",
+          // Optional override. Default: ~/.newclaw/credentials/whatsapp/biz
+          // authDir: "~/.newclaw/credentials/whatsapp/biz",
         },
       },
     },
@@ -214,13 +214,13 @@ Split by channel: route WhatsApp to a fast everyday agent and Telegram to an Opu
       {
         id: "chat",
         name: "Everyday",
-        workspace: "~/.iflow/workspace-chat",
+        workspace: "~/.newclaw/workspace-chat",
         model: "anthropic/claude-sonnet-4-5",
       },
       {
         id: "opus",
         name: "Deep Work",
-        workspace: "~/.iflow/workspace-opus",
+        workspace: "~/.newclaw/workspace-opus",
         model: "anthropic/claude-opus-4-5",
       },
     ],
@@ -248,13 +248,13 @@ Keep WhatsApp on the fast agent, but route one DM to Opus:
       {
         id: "chat",
         name: "Everyday",
-        workspace: "~/.iflow/workspace-chat",
+        workspace: "~/.newclaw/workspace-chat",
         model: "anthropic/claude-sonnet-4-5",
       },
       {
         id: "opus",
         name: "Deep Work",
-        workspace: "~/.iflow/workspace-opus",
+        workspace: "~/.newclaw/workspace-opus",
         model: "anthropic/claude-opus-4-5",
       },
     ],
@@ -280,7 +280,7 @@ and a tighter tool policy:
       {
         id: "family",
         name: "Family",
-        workspace: "~/.iflow/workspace-family",
+        workspace: "~/.newclaw/workspace-family",
         identity: { name: "Family Bot" },
         groupChat: {
           mentionPatterns: ["@family", "@familybot", "@Family Bot"],
@@ -333,7 +333,7 @@ Starting with v2026.1.6, each agent can have its own sandbox and tool restrictio
     list: [
       {
         id: "personal",
-        workspace: "~/.iflow/workspace-personal",
+        workspace: "~/.newclaw/workspace-personal",
         sandbox: {
           mode: "off",  // No sandbox for personal agent
         },
@@ -341,7 +341,7 @@ Starting with v2026.1.6, each agent can have its own sandbox and tool restrictio
       },
       {
         id: "family",
-        workspace: "~/.iflow/workspace-family",
+        workspace: "~/.newclaw/workspace-family",
         sandbox: {
           mode: "all",     // Always sandboxed
           scope: "agent",  // One container per agent

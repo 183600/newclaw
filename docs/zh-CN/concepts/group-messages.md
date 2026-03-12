@@ -30,7 +30,7 @@ x-i18n:
 
 ## 配置示例（WhatsApp）
 
-在 `~/.iflow/iflow.json` 中添加 `groupChat` 块，以便在 WhatsApp 去除文本正文中可见的 `@` 时，显示名称提及仍然有效：
+在 `~/.newclaw/newclaw.json` 中添加 `groupChat` 块，以便在 WhatsApp 去除文本正文中可见的 `@` 时，显示名称提及仍然有效：
 
 ```json5
 {
@@ -71,8 +71,8 @@ x-i18n:
 
 ## 使用方法
 
-1. 将你的 WhatsApp 账号（运行 iFlow 的账号）添加到群组。
-2. 发送 `@iflow …`（或包含号码）。除非设置了 `groupPolicy: "open"`，否则只有白名单中的发送者才能触发。
+1. 将你的 WhatsApp 账号（运行 NewClaw 的账号）添加到群组。
+2. 发送 `@newclaw …`（或包含号码）。除非设置了 `groupPolicy: "open"`，否则只有白名单中的发送者才能触发。
 3. 智能体提示词将包含最近的群组上下文以及末尾的 `[from: …]` 标记，以便它能回复正确的人。
 4. 会话级指令（`/verbose on`、`/think high`、`/new` 或 `/reset`、`/compact`）仅适用于该群组的会话；请将它们作为独立消息发送以确保生效。你的个人私聊会话保持独立。
 
@@ -87,5 +87,5 @@ x-i18n:
 
 - 群组有意跳过心跳以避免嘈杂的广播。
 - 回声抑制使用组合的批次字符串；如果你在没有提及的情况下发送两次相同文本，只有第一次会收到响应。
-- 会话存储条目将以 `agent:<agentId>:whatsapp:group:<jid>` 的形式出现在会话存储中（默认为 `~/.iflow/agents/<agentId>/sessions/sessions.json`）；缺少条目仅表示该群组尚未触发过运行。
+- 会话存储条目将以 `agent:<agentId>:whatsapp:group:<jid>` 的形式出现在会话存储中（默认为 `~/.newclaw/agents/<agentId>/sessions/sessions.json`）；缺少条目仅表示该群组尚未触发过运行。
 - 群组中的输入指示器遵循 `agents.defaults.typingMode`（默认：未被提及时为 `message`）。

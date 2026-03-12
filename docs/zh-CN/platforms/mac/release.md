@@ -1,8 +1,8 @@
 ---
 read_when:
-  - 制作或验证 iFlow macOS 发布版本
+  - 制作或验证 NewClaw macOS 发布版本
   - 更新 Sparkle appcast 或订阅源资源
-summary: iFlow macOS 发布清单（Sparkle 订阅源、打包、签名）
+summary: NewClaw macOS 发布清单（Sparkle 订阅源、打包、签名）
 title: macOS 发布
 x-i18n:
   generated_at: "2026-02-01T21:33:17Z"
@@ -13,7 +13,7 @@ x-i18n:
   workflow: 15
 ---
 
-# iFlow macOS 发布（Sparkle）
+# NewClaw macOS 发布（Sparkle）
 
 本应用现已支持 Sparkle 自动更新。发布构建必须经过 Developer ID 签名、压缩，并发布包含签名的 appcast 条目。
 
@@ -48,10 +48,10 @@ SIGN_IDENTITY="Developer ID Application: <Developer Name> (<TEAMID>)" \
 scripts/package-mac-app.sh
 
 # 打包用于分发的 zip（包含资源分支以支持 Sparkle 增量更新）
-ditto -c -k --sequesterRsrc --keepParent dist/iFlow.app dist/iFlow-2026.1.27-beta.1.zip
+ditto -c -k --sequesterRsrc --keepParent dist/NewClaw.app dist/NewClaw-2026.1.27-beta.1.zip
 
 # 可选：同时构建适合用户使用的样式化 DMG（拖拽到 /Applications）
-scripts/create-dmg.sh dist/iFlow.app dist/iFlow-2026.1.27-beta.1.dmg
+scripts/create-dmg.sh dist/NewClaw.app dist/NewClaw-2026.1.27-beta.1.dmg
 
 # 推荐：构建 + 公证/装订 zip + DMG
 # 首先，创建一次钥匙串配置文件：
@@ -66,7 +66,7 @@ SIGN_IDENTITY="Developer ID Application: <Developer Name> (<TEAMID>)" \
 scripts/package-mac-dist.sh
 
 # 可选：随发布一起提供 dSYM
-ditto -c -k --keepParent apps/macos/.build/release/iFlow.app.dSYM dist/iFlow-2026.1.27-beta.1.dSYM.zip
+ditto -c -k --keepParent apps/macos/.build/release/NewClaw.app.dSYM dist/NewClaw-2026.1.27-beta.1.dSYM.zip
 ```
 
 ## Appcast 条目
@@ -74,15 +74,15 @@ ditto -c -k --keepParent apps/macos/.build/release/iFlow.app.dSYM dist/iFlow-202
 使用发布说明生成器，以便 Sparkle 渲染格式化的 HTML 说明：
 
 ```bash
-SPARKLE_PRIVATE_KEY_FILE=/path/to/ed25519-private-key scripts/make_appcast.sh dist/iFlow-2026.1.27-beta.1.zip https://raw.githubusercontent.com/iflow/iflow/main/appcast.xml
+SPARKLE_PRIVATE_KEY_FILE=/path/to/ed25519-private-key scripts/make_appcast.sh dist/NewClaw-2026.1.27-beta.1.zip https://raw.githubusercontent.com/iflow/iflow/main/appcast.xml
 ```
 
-从 `CHANGELOG.md`（通过 [`scripts/changelog-to-html.sh`](https://github.com/iflow/iflow/blob/main/scripts/changelog-to-html.sh)）生成 HTML 发布说明，并将其嵌入 appcast 条目。
+从 `CHANGELOG.md`（通过 [`scripts/changelog-to-html.sh`](https://github.com/newclaw/newclaw/blob/main/scripts/changelog-to-html.sh)）生成 HTML 发布说明，并将其嵌入 appcast 条目。
 发布时，将更新后的 `appcast.xml` 与发布资源（zip + dSYM）一起提交。
 
 ## 发布与验证
 
-- 将 `iFlow-2026.1.27-beta.1.zip`（和 `iFlow-2026.1.27-beta.1.dSYM.zip`）上传到标签 `v2026.1.27-beta.1` 对应的 GitHub 发布。
+- 将 `NewClaw-2026.1.27-beta.1.zip`（和 `NewClaw-2026.1.27-beta.1.dSYM.zip`）上传到标签 `v2026.1.27-beta.1` 对应的 GitHub 发布。
 - 确保原始 appcast URL 与内置的订阅源匹配：`https://raw.githubusercontent.com/iflow/iflow/main/appcast.xml`。
 - 完整性检查：
   - `curl -I https://raw.githubusercontent.com/iflow/iflow/main/appcast.xml` 返回 200。

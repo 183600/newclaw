@@ -1,4 +1,4 @@
-title: "iFlow Docs"
+title: "NewClaw Docs"
 description: "A TypeScript/Node gateway + macOS/iOS/Android companions for WhatsApp (web) and Telegram (bot)."
 markdown: kramdown
 highlighter: rouge
@@ -22,8 +22,8 @@ defaults:
 nav:
   - title: "Home"
     url: "/"
-  - title: "iFlow Assistant"
-    url: "/start/iflow/"
+  - title: "NewClaw Assistant"
+    url: "/start/newclaw/"
   - title: "Gateway"
     url: "/gateway/"
   - title: "Remote"

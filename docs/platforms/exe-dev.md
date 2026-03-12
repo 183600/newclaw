@@ -1,5 +1,5 @@
 ---
-summary: "Run iFlow Gateway on exe.dev (VM + HTTPS proxy) for remote access"
+summary: "Run NewClaw Gateway on exe.dev (VM + HTTPS proxy) for remote access"
 read_when:
   - You want a cheap always-on Linux host for the Gateway
   - You want remote Control UI access without running your own VPS
@@ -8,7 +8,7 @@ title: "exe.dev"
 
 # exe.dev
 
-Goal: iFlow Gateway running on an exe.dev VM, reachable from your laptop via: `https://<vm-name>.exe.xyz`
+Goal: NewClaw Gateway running on an exe.dev VM, reachable from your laptop via: `https://<vm-name>.exe.xyz`
 
 This page assumes exe.dev's default **exeuntu** image. If you picked a different distro, map packages accordingly.
 
@@ -27,11 +27,11 @@ This page assumes exe.dev's default **exeuntu** image. If you picked a different
 
 ## Automated Install with Shelley
 
-Shelley, [exe.dev](https://exe.dev)'s agent, can install iFlow instantly with our
+Shelley, [exe.dev](https://exe.dev)'s agent, can install NewClaw instantly with our
 prompt. The prompt used is as below:
 
 ```
-Set up iFlow (https://docs.iflow.ai/install) on this VM. Use the non-interactive and accept-risk flags for iflow onboarding. Add the supplied auth or token as needed. Configure nginx to forward from the default port 18789 to the root location on the default enabled site config, making sure to enable Websocket support. Pairing is done by "iflow devices list" and "iflow device approve <request id>". Make sure the dashboard shows that iFlow's health is OK. exe.dev handles forwarding from port 8000 to port 80/443 and HTTPS for us, so the final "reachable" should be <vm-name>.exe.xyz, without port specification.
+Set up NewClaw (https://docs.newclaw.ai/install) on this VM. Use the non-interactive and accept-risk flags for newclaw onboarding. Add the supplied auth or token as needed. Configure nginx to forward from the default port 18789 to the root location on the default enabled site config, making sure to enable Websocket support. Pairing is done by "newclaw devices list" and "newclaw device approve <request id>". Make sure the dashboard shows that NewClaw's health is OK. exe.dev handles forwarding from port 8000 to port 80/443 and HTTPS for us, so the final "reachable" should be <vm-name>.exe.xyz, without port specification.
 ```
 
 ## Manual installation
@@ -50,7 +50,7 @@ Then connect:
 ssh <vm-name>.exe.xyz
 ```
 
-Tip: keep this VM **stateful**. iFlow stores state under `~/.iflow/` and `~/.iflow/workspace/`.
+Tip: keep this VM **stateful**. NewClaw stores state under `~/.newclaw/` and `~/.newclaw/workspace/`.
 
 ## 2) Install prerequisites (on the VM)
 
@@ -59,15 +59,15 @@ sudo apt-get update
 sudo apt-get install -y git curl jq ca-certificates openssl
 ```
 
-## 3) Install iFlow
+## 3) Install NewClaw
 
-Run the iFlow install script:
+Run the NewClaw install script:
 
 ```bash
-curl -fsSL https://iflow.ai/install.sh | bash
+curl -fsSL https://newclaw.ai/install.sh | bash
 ```
 
-## 4) Setup nginx to proxy iFlow to port 8000
+## 4) Setup nginx to proxy NewClaw to port 8000
 
 Edit `/etc/nginx/sites-enabled/default` with
 
@@ -101,10 +101,10 @@ server {
 }
 ```
 
-## 5) Access iFlow and grant privileges
+## 5) Access NewClaw and grant privileges
 
 Access `https://<vm-name>.exe.xyz/?token=YOUR-TOKEN-FROM-TERMINAL` (see the Control UI output from onboarding). Approve
-devices with `iflow devices list` and `iflow devices approve <requestId>`. When in doubt,
+devices with `newclaw devices list` and `newclaw devices approve <requestId>`. When in doubt,
 use Shelley from your browser!
 
 ## Remote Access
@@ -117,9 +117,9 @@ with email auth.
 
 ```bash
 npm i -g iflow@latest
-iflow doctor
-iflow gateway restart
-iflow health
+newclaw doctor
+newclaw gateway restart
+newclaw health
 ```
 
 Guide: [Updating](/install/updating)

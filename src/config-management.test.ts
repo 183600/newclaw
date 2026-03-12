@@ -12,7 +12,7 @@ describe("Configuration Management", () => {
 
   beforeEach(() => {
     tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "claw-config-test-"));
-    configDir = path.join(tempDir, ".iflow");
+    configDir = path.join(tempDir, ".newclaw");
     configPath = path.join(configDir, "config.json5");
     fs.mkdirSync(configDir, { recursive: true });
   });
@@ -98,20 +98,20 @@ describe("Configuration Management", () => {
   });
 
   describe("resolveConfigDir", () => {
-    it("resolves to .iflow directory by default", () => {
+    it("resolves to .newclaw directory by default", () => {
       const env = {};
 
       const resolved = resolveConfigDir(env, () => tempDir);
-      expect(resolved).toContain(".iflow");
+      expect(resolved).toContain(".newclaw");
     });
 
-    it("prefers .iflow when legacy dir is missing", () => {
+    it("prefers .newclaw when legacy dir is missing", () => {
       const env = {};
-      const newClawDir = path.join(tempDir, ".iflow");
-      fs.mkdirSync(newClawDir, { recursive: true });
+      const newclawDir = path.join(tempDir, ".newclaw");
+      fs.mkdirSync(newclawDir, { recursive: true });
 
       const resolved = resolveConfigDir(env, () => tempDir);
-      expect(resolved).toBe(newClawDir);
+      expect(resolved).toBe(newclawDir);
     });
 
     it("handles environment variable override", () => {

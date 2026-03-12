@@ -3,7 +3,7 @@ import crypto from "node:crypto";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import type { iFlowConfig, ConfigFileSnapshot, LegacyConfigIssue } from "./types.js";
+import type { NewClawConfig, ConfigFileSnapshot, LegacyConfigIssue } from "./types.js";
 import {
   loadShellEnvFallback,
   resolveShellEnvFallbackTimeoutMs,
@@ -83,11 +83,11 @@ export function resolveConfigSnapshotHash(snapshot: {
   return hashConfigRaw(snapshot.raw);
 }
 
-function coerceConfig(value: unknown): iFlowConfig {
+function coerceConfig(value: unknown): NewClawConfig {
   if (!value || typeof value !== "object" || Array.isArray(value)) {
     return {};
   }
-  return value as iFlowConfig;
+  return value as NewClawConfig;
 }
 
 async function rotateConfigBackups(configPath: string, ioFs: typeof fs.promises): Promise<void> {
@@ -133,7 +133,7 @@ function warnOnConfigMiskeys(raw: unknown, logger: Pick<typeof console, "warn">)
   }
 }
 
-function stampConfigVersion(cfg: iFlowConfig): iFlowConfig {
+function stampConfigVersion(cfg: NewClawConfig): NewClawConfig {
   const now = new Date().toISOString();
   return {
     ...cfg,
@@ -145,7 +145,7 @@ function stampConfigVersion(cfg: iFlowConfig): iFlowConfig {
   };
 }
 
-function warnIfConfigFromFuture(cfg: iFlowConfig, logger: Pick<typeof console, "warn">): void {
+function warnIfConfigFromFuture(cfg: NewClawConfig, logger: Pick<typeof console, "warn">): void {
   const touched = cfg.meta?.lastTouchedVersion;
   if (!touched) {
     return;
@@ -161,7 +161,7 @@ function warnIfConfigFromFuture(cfg: iFlowConfig, logger: Pick<typeof console, "
   }
 }
 
-function applyConfigEnv(cfg: iFlowConfig, env: NodeJS.ProcessEnv): void {
+function applyConfigEnv(cfg: NewClawConfig, env: NodeJS.ProcessEnv): void {
   const entries = collectConfigEnvVars(cfg);
   for (const [key, value] of Object.entries(entries)) {
     if (env[key]?.trim()) {
@@ -209,7 +209,7 @@ export function createConfigIO(overrides: ConfigIoDeps = {}) {
   const configPath =
     candidatePaths.find((candidate) => deps.fs.existsSync(candidate)) ?? requestedConfigPath;
 
-  function loadConfig(): iFlowConfig {
+  function loadConfig(): NewClawConfig {
     try {
       if (!deps.fs.existsSync(configPath)) {
         if (shouldEnableShellEnvFallback(deps.env) && !shouldDeferShellEnvFallback(deps.env)) {
@@ -234,7 +234,7 @@ export function createConfigIO(overrides: ConfigIoDeps = {}) {
 
       // Apply config.env to process.env BEFORE substitution so ${VAR} can reference config-defined vars
       if (resolved && typeof resolved === "object" && "env" in resolved) {
-        applyConfigEnv(resolved as iFlowConfig, deps.env);
+        applyConfigEnv(resolved as NewClawConfig, deps.env);
       }
 
       // Substitute ${VAR} env var references
@@ -245,7 +245,7 @@ export function createConfigIO(overrides: ConfigIoDeps = {}) {
       if (typeof resolvedConfig !== "object" || resolvedConfig === null) {
         return {};
       }
-      const preValidationDuplicates = findDuplicateAgentDirs(resolvedConfig as iFlowConfig, {
+      const preValidationDuplicates = findDuplicateAgentDirs(resolvedConfig as NewClawConfig, {
         env: deps.env,
         homedir: deps.homedir,
       });
@@ -395,7 +395,7 @@ export function createConfigIO(overrides: ConfigIoDeps = {}) {
 
       // Apply config.env to process.env BEFORE substitution so ${VAR} can reference config-defined vars
       if (resolved && typeof resolved === "object" && "env" in resolved) {
-        applyConfigEnv(resolved as iFlowConfig, deps.env);
+        applyConfigEnv(resolved as NewClawConfig, deps.env);
       }
 
       // Substitute ${VAR} env var references
@@ -477,7 +477,7 @@ export function createConfigIO(overrides: ConfigIoDeps = {}) {
     }
   }
 
-  async function writeConfigFile(cfg: iFlowConfig) {
+  async function writeConfigFile(cfg: NewClawConfig) {
     clearConfigCache();
     const validated = validateConfigObjectWithPlugins(cfg);
     if (!validated.ok) {
@@ -551,7 +551,7 @@ const DEFAULT_CONFIG_CACHE_MS = 200;
 let configCache: {
   configPath: string;
   expiresAt: number;
-  config: iFlowConfig;
+  config: NewClawConfig;
 } | null = null;
 
 function resolveConfigCacheMs(env: NodeJS.ProcessEnv): number {
@@ -580,7 +580,7 @@ function clearConfigCache(): void {
   configCache = null;
 }
 
-export function loadConfig(): iFlowConfig {
+export function loadConfig(): NewClawConfig {
   const io = createConfigIO();
   const configPath = io.configPath;
   const now = Date.now();
@@ -608,7 +608,7 @@ export async function readConfigFileSnapshot(): Promise<ConfigFileSnapshot> {
   return await createConfigIO().readConfigFileSnapshot();
 }
 
-export async function writeConfigFile(cfg: iFlowConfig): Promise<void> {
+export async function writeConfigFile(cfg: NewClawConfig): Promise<void> {
   clearConfigCache();
   await createConfigIO().writeConfigFile(cfg);
 }
