@@ -107,7 +107,7 @@ const logRunner = (message) => {
 };
 
 const runNode = () => {
-  const nodeProcess = spawn(process.execPath, ["claw.mjs", ...args], {
+  const nodeProcess = spawn(process.execPath, ["newclaw.mjs", ...args], {
     cwd,
     env,
     stdio: "inherit",

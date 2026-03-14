@@ -254,7 +254,7 @@ async function collectFilesystemFindings(params: {
 }
 
 function collectGatewayConfigFindings(
-  cfg: iFlowConfig,
+  cfg: NewClawConfig,
   env: NodeJS.ProcessEnv,
 ): SecurityAuditFinding[] {
   const findings: SecurityAuditFinding[] = [];
@@ -408,7 +408,7 @@ function collectBrowserControlFindings(cfg: NewClawConfig): SecurityAuditFinding
   return findings;
 }
 
-function collectLoggingFindings(cfg: iFlowConfig): SecurityAuditFinding[] {
+function collectLoggingFindings(cfg: NewClawConfig): SecurityAuditFinding[] {
   const redact = cfg.logging?.redactSensitive;
   if (redact !== "off") {
     return [];
@@ -424,7 +424,7 @@ function collectLoggingFindings(cfg: iFlowConfig): SecurityAuditFinding[] {
   ];
 }
 
-function collectElevatedFindings(cfg: iFlowConfig): SecurityAuditFinding[] {
+function collectElevatedFindings(cfg: NewClawConfig): SecurityAuditFinding[] {
   const findings: SecurityAuditFinding[] = [];
   const enabled = cfg.tools?.elevated?.enabled;
   const allowFrom = cfg.tools?.elevated?.allowFrom ?? {};
@@ -460,7 +460,7 @@ function collectElevatedFindings(cfg: iFlowConfig): SecurityAuditFinding[] {
 }
 
 async function collectChannelSecurityFindings(params: {
-  cfg: iFlowConfig;
+  cfg: NewClawConfig;
   plugins: ReturnType<typeof listChannelPlugins>;
 }): Promise<SecurityAuditFinding[]> {
   const findings: SecurityAuditFinding[] = [];
@@ -851,7 +851,7 @@ async function collectChannelSecurityFindings(params: {
 }
 
 async function maybeProbeGateway(params: {
-  cfg: iFlowConfig;
+  cfg: NewClawConfig;
   timeoutMs: number;
   probe: typeof probeGateway;
 }): Promise<SecurityAuditReport["deep"]> {

@@ -12,3 +12,5 @@ export * from "./runtime-overrides.js";
 export * from "./types.js";
 export { validateConfigObject, validateConfigObjectWithPlugins } from "./validation.js";
 export { ClawSchema } from "./zod-schema.js";
+
+export type { NewClawConfig as iFlowConfig } from "./types.js";

@@ -75,7 +75,7 @@ async function main() {
   const cfg = loadConfig();
   const portRaw =
     argValue(args, "--port") ??
-    process.env.IFLOW_GATEWAY_PORT || process.env.IFLOW_GATEWAY_PORT ??
+    (process.env.IFLOW_GATEWAY_PORT || process.env.IFLOW_GATEWAY_PORT) ??
     process.env.CLAWDBOT_GATEWAY_PORT ??
     (typeof cfg.gateway?.port === "number" ? String(cfg.gateway.port) : "") ??
     "18789";
