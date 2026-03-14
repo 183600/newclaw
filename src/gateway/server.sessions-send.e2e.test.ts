@@ -19,10 +19,10 @@ let prevGatewayPort: string | undefined;
 let prevGatewayToken: string | undefined;
 
 beforeAll(async () => {
-  prevGatewayPort = process.env.IFLOW_GATEWAY_PORT || process.env.IFLOW_GATEWAY_PORT;
+  prevGatewayPort = process.env.IFLOW_GATEWAY_PORT;
   prevGatewayToken = process.env.IFLOW_GATEWAY_TOKEN;
   gatewayPort = await getFreePort();
-  process.env.IFLOW_GATEWAY_PORT || process.env.IFLOW_GATEWAY_PORT = String(gatewayPort);
+  process.env.IFLOW_GATEWAY_PORT = String(gatewayPort);
   process.env.IFLOW_GATEWAY_TOKEN = "test-token";
   server = await startGatewayServer(gatewayPort);
 });
@@ -30,9 +30,9 @@ beforeAll(async () => {
 afterAll(async () => {
   await server.close();
   if (prevGatewayPort === undefined) {
-    delete process.env.IFLOW_GATEWAY_PORT || process.env.IFLOW_GATEWAY_PORT;
+    delete process.env.IFLOW_GATEWAY_PORT;
   } else {
-    process.env.IFLOW_GATEWAY_PORT || process.env.IFLOW_GATEWAY_PORT = prevGatewayPort;
+    process.env.IFLOW_GATEWAY_PORT = prevGatewayPort;
   }
   if (prevGatewayToken === undefined) {
     delete process.env.IFLOW_GATEWAY_TOKEN;

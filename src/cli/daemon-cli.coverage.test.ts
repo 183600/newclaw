@@ -83,14 +83,14 @@ describe("daemon-cli coverage", () => {
   const originalEnv = {
     CLAW_STATE_DIR: process.env.IFLOW_STATE_DIR,
     CLAW_CONFIG_PATH: process.env.IFLOW_CONFIG_PATH,
-    CLAW_GATEWAY_PORT: process.env.IFLOW_GATEWAY_PORT || process.env.IFLOW_GATEWAY_PORT,
+    CLAW_GATEWAY_PORT: process.env.IFLOW_GATEWAY_PORT,
     CLAW_PROFILE: process.env.IFLOW_PROFILE,
   };
 
   beforeEach(() => {
     process.env.IFLOW_STATE_DIR = "/tmp/claw-cli-state";
     process.env.IFLOW_CONFIG_PATH = "/tmp/claw-cli-state/iflow.json";
-    delete process.env.IFLOW_GATEWAY_PORT || process.env.IFLOW_GATEWAY_PORT;
+    delete process.env.IFLOW_GATEWAY_PORT;
     delete process.env.IFLOW_PROFILE;
     serviceReadCommand.mockResolvedValue(null);
   });
@@ -109,9 +109,9 @@ describe("daemon-cli coverage", () => {
     }
 
     if (originalEnv.CLAW_GATEWAY_PORT !== undefined) {
-      process.env.IFLOW_GATEWAY_PORT || process.env.IFLOW_GATEWAY_PORT = originalEnv.CLAW_GATEWAY_PORT;
+      process.env.IFLOW_GATEWAY_PORT = originalEnv.CLAW_GATEWAY_PORT;
     } else {
-      delete process.env.IFLOW_GATEWAY_PORT || process.env.IFLOW_GATEWAY_PORT;
+      delete process.env.IFLOW_GATEWAY_PORT;
     }
 
     if (originalEnv.CLAW_PROFILE !== undefined) {

@@ -44,7 +44,7 @@ jobs:
           sudo chmod 600 /swapfile
           sudo mkswap /swapfile
           sudo swapon /swapfile
-          
+
           # 3. 显示当前交换分区状态确认生效
           swapon -s
       - name: Checkout with PAT

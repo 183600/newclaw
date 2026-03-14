@@ -149,8 +149,7 @@ export async function startGatewayServer(
   opts: GatewayServerOptions = {},
 ): Promise<GatewayServer> {
   // Ensure all default port derivations (browser/canvas) see the actual runtime port.
-  process.env.IFLOW_GATEWAY_PORT =
-    process.env.IFLOW_GATEWAY_PORT || process.env.IFLOW_GATEWAY_PORT || String(port);
+  process.env.IFLOW_GATEWAY_PORT = process.env.IFLOW_GATEWAY_PORT || String(port);
   process.env.IFLOW_GATEWAY_PORT = process.env.IFLOW_GATEWAY_PORT || String(port);
   logAcceptedEnvOption({
     key: "IFLOW_RAW_STREAM",
