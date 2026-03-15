@@ -193,6 +193,7 @@ export async function ensureGoInstalled(
     runtime.error("  Fedora/RHEL:   sudo dnf install golang");
     runtime.error("  Arch Linux:    sudo pacman -S go");
     runtime.error("  Alpine:        sudo apk add go");
+    runtime.error("  Then restart the installation process.");
     runtime.exit(1);
   }
   const install = await prompt(
