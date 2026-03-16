@@ -11,7 +11,7 @@ import type { iFlowConfig } from "./types.js";
  * - Config is managed externally (read-only from Nix perspective)
  */
 export function resolveIsNixMode(env: NodeJS.ProcessEnv = process.env): boolean {
-  return env.IFLOW_NIX_MODE === "1" || env.IFLOW_NIX_MODE === "1";
+  return env.IFLOW_NIX_MODE === "1";
 }
 
 export const isNixMode = resolveIsNixMode();

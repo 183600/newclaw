@@ -17,8 +17,8 @@ import {
 } from "./paths.js";
 
 describe("resolveIsNixMode", () => {
-  it("returns true when CLAW_NIX_MODE is '1'", () => {
-    const env = { CLAW_NIX_MODE: "1" };
+  it("returns true when IFLOW_NIX_MODE is '1'", () => {
+    const env = { IFLOW_NIX_MODE: "1" };
     expect(resolveIsNixMode(env)).toBe(true);
   });
 
@@ -71,14 +71,14 @@ describe("resolveUserPath", () => {
 });
 
 describe("resolveNewStateDir", () => {
-  it("returns ~/.iflow", () => {
-    const expected = path.join(os.homedir(), ".iflow");
+  it("returns ~/.newclaw", () => {
+    const expected = path.join(os.homedir(), ".newclaw");
     expect(resolveNewStateDir()).toBe(expected);
   });
 
   it("uses custom homedir function", () => {
     const customHome = "/custom/home";
-    const expected = path.join(customHome, ".iflow");
+    const expected = path.join(customHome, ".newclaw");
     expect(resolveNewStateDir(() => customHome)).toBe(expected);
   });
 });
@@ -104,13 +104,13 @@ describe("resolveStateDir", () => {
     expect(resolveStateDir(env)).toBe(path.join(tmpDir, "legacy-state"));
   });
 
-  it("prefers existing .iflow directory", () => {
-    const iflowDir = path.join(tmpDir, ".iflow");
-    fs.mkdirSync(iflowDir, { recursive: true });
+  it("prefers existing .newclaw directory", () => {
+    const newclawDir = path.join(tmpDir, ".newclaw");
+    fs.mkdirSync(newclawDir, { recursive: true });
 
     const env = {};
     const homedir = () => tmpDir;
-    expect(resolveStateDir(env, homedir)).toBe(iflowDir);
+    expect(resolveStateDir(env, homedir)).toBe(newclawDir);
   });
 
   it("falls back to legacy directory if it exists", () => {
@@ -125,7 +125,7 @@ describe("resolveStateDir", () => {
   it("returns new directory when none exist", () => {
     const env = {};
     const homedir = () => tmpDir;
-    const expected = path.join(tmpDir, ".iflow");
+    const expected = path.join(tmpDir, ".newclaw");
     expect(resolveStateDir(env, homedir)).toBe(expected);
   });
 });
@@ -143,7 +143,7 @@ describe("resolveCanonicalConfigPath", () => {
 
   it("returns default path in state directory", () => {
     const stateDir = "/test/state";
-    const expected = path.join(stateDir, "iflow.json");
+    const expected = path.join(stateDir, "newclaw.json");
     expect(resolveCanonicalConfigPath({}, stateDir)).toBe(expected);
   });
 });
@@ -160,17 +160,17 @@ describe("resolveDefaultConfigCandidates", () => {
   });
 
   it("returns explicit config path when provided", () => {
-    const env = { CLAW_CONFIG_PATH: "/explicit/config.json" };
+    const env = { IFLOW_CONFIG_PATH: "/explicit/config.json" };
     const candidates = resolveDefaultConfigCandidates(env, () => tmpDir);
     expect(candidates).toEqual(["/explicit/config.json"]);
   });
 
-  it("returns state directory candidates when CLAW_STATE_DIR is set", () => {
+  it("returns state directory candidates when IFLOW_STATE_DIR is set", () => {
     const stateDir = path.join(tmpDir, "custom-state");
-    const env = { CLAW_STATE_DIR: stateDir };
+    const env = { IFLOW_STATE_DIR: stateDir };
     const candidates = resolveDefaultConfigCandidates(env, () => tmpDir);
 
-    expect(candidates).toContain(path.join(stateDir, "iflow.json"));
+    expect(candidates).toContain(path.join(stateDir, "newclaw.json"));
     expect(candidates).toContain(path.join(stateDir, "clawdbot.json"));
     expect(candidates).toContain(path.join(stateDir, "moltbot.json"));
     expect(candidates).toContain(path.join(stateDir, "moldbot.json"));
@@ -180,10 +180,10 @@ describe("resolveDefaultConfigCandidates", () => {
     const env = {};
     const candidates = resolveDefaultConfigCandidates(env, () => tmpDir);
 
-    expect(candidates).toContain(path.join(tmpDir, ".iflow", "iflow.json"));
-    expect(candidates).toContain(path.join(tmpDir, ".iflowdbot", "iflow.json"));
-    expect(candidates).toContain(path.join(tmpDir, ".moltbot", "iflow.json"));
-    expect(candidates).toContain(path.join(tmpDir, ".moldbot", "iflow.json"));
+    expect(candidates).toContain(path.join(tmpDir, ".newclaw", "newclaw.json"));
+    expect(candidates).toContain(path.join(tmpDir, ".iflowdbot", "newclaw.json"));
+    expect(candidates).toContain(path.join(tmpDir, ".moltbot", "newclaw.json"));
+    expect(candidates).toContain(path.join(tmpDir, ".moldbot", "newclaw.json"));
   });
 });
 
@@ -192,7 +192,7 @@ describe("resolveGatewayLockDir", () => {
     const originalGetuid = process.getuid;
     process.getuid = vi.fn(() => 1234) as unknown;
 
-    const expected = path.join(os.tmpdir(), "iflow-1234");
+    const expected = path.join(os.tmpdir(), "newclaw-1234");
     expect(resolveGatewayLockDir()).toBe(expected);
 
     process.getuid = originalGetuid;
@@ -202,7 +202,7 @@ describe("resolveGatewayLockDir", () => {
     const originalGetuid = process.getuid;
     delete (process as { getuid?: unknown }).getuid;
 
-    const expected = path.join(os.tmpdir(), "iflow");
+    const expected = path.join(os.tmpdir(), "newclaw");
     expect(resolveGatewayLockDir()).toBe(expected);
 
     process.getuid = originalGetuid;
@@ -211,15 +211,15 @@ describe("resolveGatewayLockDir", () => {
   it("uses custom tmpdir function", () => {
     const customTmp = "/custom/tmp";
     const uid = typeof process.getuid === "function" ? process.getuid() : undefined;
-    const suffix = uid != null ? `iflow-${uid}` : "iflow";
+    const suffix = uid != null ? `newclaw-${uid}` : "newclaw";
     const expected = path.join(customTmp, suffix);
     expect(resolveGatewayLockDir(() => customTmp)).toBe(expected);
   });
 });
 
 describe("resolveOAuthDir", () => {
-  it("uses CLAW_OAUTH_DIR override", () => {
-    const env = { CLAW_OAUTH_DIR: "/custom/oauth" };
+  it("uses IFLOW_OAUTH_DIR override", () => {
+    const env = { IFLOW_OAUTH_DIR: "/custom/oauth" };
     expect(resolveOAuthDir(env)).toBe("/custom/oauth");
   });
 
@@ -239,8 +239,8 @@ describe("resolveOAuthPath", () => {
 });
 
 describe("resolveGatewayPort", () => {
-  it("uses CLAW_GATEWAY_PORT env var", () => {
-    const env = { CLAW_GATEWAY_PORT: "9000" };
+  it("uses IFLOW_GATEWAY_PORT env var", () => {
+    const env = { IFLOW_GATEWAY_PORT: "9000" };
     expect(resolveGatewayPort(undefined, env)).toBe(9000);
   });
 
