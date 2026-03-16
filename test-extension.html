@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NewClaw Browser Extension Test</title>
+    <style>
+      body {
+        font-family: system-ui, sans-serif;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        line-height: 1.6;
+      }
+      .status {
+        padding: 15px;
+        border-radius: 8px;
+        margin: 20px 0;
+      }
+      .status.success {
+        background-color: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+      }
+      .status.info {
+        background-color: #d1ecf1;
+        color: #0c5460;
+        border: 1px solid #bee5eb;
+      }
+      .status.warning {
+        background-color: #fff3cd;
+        color: #856404;
+        border: 1px solid #ffeaa7;
+      }
+      .test-button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        margin: 10px 0;
+      }
+      .test-button:hover {
+        background-color: #0056b3;
+      }
+      .test-section {
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 20px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>NewClaw Browser Extension Test Page</h1>
+
+    <div class="status info">
+      <h3>Extension Status</h3>
+      <p>This page tests the NewClaw Browser Relay extension functionality.</p>
+      <p>Make sure the extension is installed and active in your browser.</p>
+    </div>
+
+    <div class="test-section">
+      <h3>Extension Manifest Validation</h3>
+      <div id="manifest-status" class="status warning">
+        Checking extension manifest configuration...
+      </div>
+      <button class="test-button" onclick="testManifest()">Test Manifest</button>
+    </div>
+
+    <div class="test-section">
+      <h3>WebSocket Connection Test</h3>
+      <div id="ws-status" class="status warning">WebSocket connection status: Not tested</div>
+      <button class="test-button" onclick="testWebSocket()">Test WebSocket</button>
+    </div>
+
+    <div class="test-section">
+      <h3>Extension Permissions</h3>
+      <div id="permissions-status" class="status warning">Checking required permissions...</div>
+      <button class="test-button" onclick="testPermissions()">Test Permissions</button>
+    </div>
+
+    <div class="test-section">
+      <h3>Debugger API Test</h3>
+      <div id="debugger-status" class="status warning">Debugger API functionality: Not tested</div>
+      <button class="test-button" onclick="testDebuggerAPI()">Test Debugger API</button>
+    </div>
+
+    <script>
+      function testManifest() {
+        const manifest = {
+          manifest_version: 3,
+          name: "NewClaw Browser Relay",
+          version: "0.1.0",
+          description: "Attach NewClaw to your existing Chrome tab via a local CDP relay server.",
+          permissions: ["debugger", "tabs", "activeTab", "storage"],
+          host_permissions: ["http://127.0.0.1/*", "http://localhost/*"],
+          background: { service_worker: "background.js", type: "module" },
+        };
+
+        const statusEl = document.getElementById("manifest-status");
+        statusEl.innerHTML = `
+                <strong>Manifest Configuration:</strong><br>
+                • Manifest Version: ${manifest.manifest_version}<br>
+                • Name: ${manifest.name}<br>
+                • Version: ${manifest.version}<br>
+                • Permissions: ${manifest.permissions.join(", ")}<br>
+                • Host Permissions: ${manifest.host_permissions.join(", ")}<br>
+                • Background Script: ${manifest.background.service_worker}
+            `;
+        statusEl.className = "status success";
+      }
+
+      function testWebSocket() {
+        const statusEl = document.getElementById("ws-status");
+        statusEl.innerHTML = "Testing WebSocket connection to localhost:18792...";
+
+        try {
+          const ws = new WebSocket("ws://localhost:18792/extension");
+
+          ws.onopen = function () {
+            statusEl.innerHTML = "✅ WebSocket connection successful!";
+            statusEl.className = "status success";
+            ws.close();
+          };
+
+          ws.onerror = function () {
+            statusEl.innerHTML =
+              "❌ WebSocket connection failed. Make sure the relay server is running.";
+            statusEl.className = "status warning";
+          };
+
+          setTimeout(() => {
+            if (ws.readyState === WebSocket.CONNECTING) {
+              statusEl.innerHTML =
+                "⚠️ WebSocket connection timeout. Relay server may not be running.";
+              statusEl.className = "status warning";
+              ws.close();
+            }
+          }, 2000);
+        } catch (error) {
+          statusEl.innerHTML = `❌ WebSocket error: ${error.message}`;
+          statusEl.className = "status warning";
+        }
+      }
+
+      function testPermissions() {
+        const statusEl = document.getElementById("permissions-status");
+        const requiredPermissions = ["debugger", "tabs", "activeTab", "storage"];
+
+        const hostPermissions = ["http://127.0.0.1/*", "http://localhost/*"];
+
+        statusEl.innerHTML = `
+                <strong>Required Permissions:</strong><br>
+                • ${requiredPermissions.join("<br>• ")}<br><br>
+                <strong>Host Permissions:</strong><br>
+                • ${hostPermissions.join("<br>• ")}
+            `;
+        statusEl.className = "status info";
+      }
+
+      function testDebuggerAPI() {
+        const statusEl = document.getElementById("debugger-status");
+
+        // Check if debugger API is available
+        if (typeof chrome !== "undefined" && chrome.debugger) {
+          statusEl.innerHTML = "✅ Debugger API is available in extension context";
+          statusEl.className = "status success";
+        } else {
+          statusEl.innerHTML =
+            "⚠️ Debugger API not available in this context (extension may not be loaded)";
+          statusEl.className = "status warning";
+        }
+      }
+
+      // Run initial tests
+      window.onload = function () {
+        testManifest();
+        testPermissions();
+      };
+    </script>
+  </body>
+</html>
