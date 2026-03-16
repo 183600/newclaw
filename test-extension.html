@@ -120,22 +120,23 @@
           const ws = new WebSocket("ws://localhost:18792/extension");
 
           ws.onopen = function () {
-            statusEl.innerHTML = "✅ WebSocket connection successful!";
+            statusEl.innerHTML =
+              "✅ WebSocket connection successful!<br><small>Relay server is running correctly.</small>";
             statusEl.className = "status success";
             ws.close();
           };
 
           ws.onerror = function () {
             statusEl.innerHTML =
-              "❌ WebSocket connection failed. Make sure the relay server is running.";
-            statusEl.className = "status warning";
+              "⚠️ WebSocket connection failed.<br><small>This is normal if the NewClaw gateway is not running. Start it with: <code>newclaw gateway run</code></small>";
+            statusEl.className = "status info";
           };
 
           setTimeout(() => {
             if (ws.readyState === WebSocket.CONNECTING) {
               statusEl.innerHTML =
-                "⚠️ WebSocket connection timeout. Relay server may not be running.";
-              statusEl.className = "status warning";
+                "⚠️ WebSocket connection timeout.<br><small>This is normal if the NewClaw gateway is not running. Start it with: <code>newclaw gateway run</code></small>";
+              statusEl.className = "status info";
               ws.close();
             }
           }, 2000);
@@ -169,8 +170,8 @@
           statusEl.className = "status success";
         } else {
           statusEl.innerHTML =
-            "⚠️ Debugger API not available in this context (extension may not be loaded)";
-          statusEl.className = "status warning";
+            "⚠️ Debugger API not available in this context<br><small>This is normal when testing from a regular web page. The Debugger API is only available in the extension's background script context.</small>";
+          statusEl.className = "status info";
         }
       }
 
