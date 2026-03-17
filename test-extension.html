@@ -3,183 +3,139 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>NewClaw Browser Extension Test</title>
+    <title>Browser Extension Test</title>
     <style>
       body {
         font-family: system-ui, sans-serif;
-        max-width: 800px;
-        margin: 0 auto;
-        padding: 20px;
-        line-height: 1.6;
-      }
-      .status {
-        padding: 15px;
-        border-radius: 8px;
-        margin: 20px 0;
-      }
-      .status.success {
-        background-color: #d4edda;
-        color: #155724;
-        border: 1px solid #c3e6cb;
-      }
-      .status.info {
-        background-color: #d1ecf1;
-        color: #0c5460;
-        border: 1px solid #bee5eb;
-      }
-      .status.warning {
-        background-color: #fff3cd;
-        color: #856404;
-        border: 1px solid #ffeaa7;
-      }
-      .test-button {
-        background-color: #007bff;
-        color: white;
-        border: none;
-        padding: 10px 20px;
-        border-radius: 5px;
-        cursor: pointer;
-        margin: 10px 0;
-      }
-      .test-button:hover {
-        background-color: #0056b3;
+        margin: 40px;
+        background: #f5f5f5;
       }
       .test-section {
-        border: 1px solid #dee2e6;
-        border-radius: 8px;
+        background: white;
         padding: 20px;
         margin: 20px 0;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      .status {
+        padding: 10px;
+        border-radius: 4px;
+        margin: 10px 0;
+      }
+      .success {
+        background: #d4edda;
+        color: #155724;
+      }
+      .error {
+        background: #f8d7da;
+        color: #721c24;
+      }
+      .info {
+        background: #d1ecf1;
+        color: #0c5460;
       }
     </style>
   </head>
   <body>
-    <h1>NewClaw Browser Extension Test Page</h1>
+    <h1>NewClaw Browser Extension Test</h1>
 
-    <div class="status info">
-      <h3>Extension Status</h3>
-      <p>This page tests the NewClaw Browser Relay extension functionality.</p>
-      <p>Make sure the extension is installed and active in your browser.</p>
+    <div class="test-section">
+      <h2>Browser API Test</h2>
+      <div id="browser-api-status" class="status info">Testing browser APIs...</div>
+      <button onclick="testBrowserAPIs()">Run Browser API Test</button>
     </div>
 
     <div class="test-section">
-      <h3>Extension Manifest Validation</h3>
-      <div id="manifest-status" class="status warning">
-        Checking extension manifest configuration...
-      </div>
-      <button class="test-button" onclick="testManifest()">Test Manifest</button>
+      <h2>WebSocket Test</h2>
+      <div id="websocket-status" class="status info">Testing WebSocket connectivity...</div>
+      <button onclick="testWebSocket()">Run WebSocket Test</button>
     </div>
 
     <div class="test-section">
-      <h3>WebSocket Connection Test</h3>
-      <div id="ws-status" class="status warning">WebSocket connection status: Not tested</div>
-      <button class="test-button" onclick="testWebSocket()">Test WebSocket</button>
-    </div>
-
-    <div class="test-section">
-      <h3>Extension Permissions</h3>
-      <div id="permissions-status" class="status warning">Checking required permissions...</div>
-      <button class="test-button" onclick="testPermissions()">Test Permissions</button>
-    </div>
-
-    <div class="test-section">
-      <h3>Debugger API Test</h3>
-      <div id="debugger-status" class="status warning">Debugger API functionality: Not tested</div>
-      <button class="test-button" onclick="testDebuggerAPI()">Test Debugger API</button>
+      <h2>Local Storage Test</h2>
+      <div id="storage-status" class="status info">Testing localStorage...</div>
+      <button onclick="testStorage()">Run Storage Test</button>
     </div>
 
     <script>
-      function testManifest() {
-        const manifest = {
-          manifest_version: 3,
-          name: "NewClaw Browser Relay",
-          version: "0.1.0",
-          description: "Attach NewClaw to your existing Chrome tab via a local CDP relay server.",
-          permissions: ["debugger", "tabs", "activeTab", "storage"],
-          host_permissions: ["http://127.0.0.1/*", "http://localhost/*"],
-          background: { service_worker: "background.js", type: "module" },
-        };
-
-        const statusEl = document.getElementById("manifest-status");
-        statusEl.innerHTML = `
-                <strong>Manifest Configuration:</strong><br>
-                • Manifest Version: ${manifest.manifest_version}<br>
-                • Name: ${manifest.name}<br>
-                • Version: ${manifest.version}<br>
-                • Permissions: ${manifest.permissions.join(", ")}<br>
-                • Host Permissions: ${manifest.host_permissions.join(", ")}<br>
-                • Background Script: ${manifest.background.service_worker}
-            `;
-        statusEl.className = "status success";
-      }
-
-      function testWebSocket() {
-        const statusEl = document.getElementById("ws-status");
-        statusEl.innerHTML = "Testing WebSocket connection to localhost:18792...";
-
+      function testBrowserAPIs() {
+        const status = document.getElementById("browser-api-status");
         try {
-          const ws = new WebSocket("ws://localhost:18792/extension");
-
-          ws.onopen = function () {
-            statusEl.innerHTML =
-              "✅ WebSocket connection successful!<br><small>Relay server is running correctly.</small>";
-            statusEl.className = "status success";
-            ws.close();
-          };
-
-          ws.onerror = function () {
-            statusEl.innerHTML =
-              "⚠️ WebSocket connection failed.<br><small>This is normal if the NewClaw gateway is not running. Start it with: <code>newclaw gateway run</code></small>";
-            statusEl.className = "status info";
-          };
-
-          setTimeout(() => {
-            if (ws.readyState === WebSocket.CONNECTING) {
-              statusEl.innerHTML =
-                "⚠️ WebSocket connection timeout.<br><small>This is normal if the NewClaw gateway is not running. Start it with: <code>newclaw gateway run</code></small>";
-              statusEl.className = "status info";
-              ws.close();
-            }
-          }, 2000);
-        } catch (error) {
-          statusEl.innerHTML = `❌ WebSocket error: ${error.message}`;
-          statusEl.className = "status warning";
+          // Test basic browser APIs
+          if (
+            typeof navigator !== "undefined" &&
+            typeof window !== "undefined" &&
+            typeof document !== "undefined"
+          ) {
+            status.className = "status success";
+            status.textContent = "✅ Browser APIs available: navigator, window, document";
+          } else {
+            throw new Error("Browser APIs missing");
+          }
+        } catch (e) {
+          status.className = "status error";
+          status.textContent = "❌ Browser API test failed: " + e.message;
         }
       }
 
-      function testPermissions() {
-        const statusEl = document.getElementById("permissions-status");
-        const requiredPermissions = ["debugger", "tabs", "activeTab", "storage"];
-
-        const hostPermissions = ["http://127.0.0.1/*", "http://localhost/*"];
-
-        statusEl.innerHTML = `
-                <strong>Required Permissions:</strong><br>
-                • ${requiredPermissions.join("<br>• ")}<br><br>
-                <strong>Host Permissions:</strong><br>
-                • ${hostPermissions.join("<br>• ")}
-            `;
-        statusEl.className = "status info";
+      function testWebSocket() {
+        const status = document.getElementById("websocket-status");
+        try {
+          if (typeof WebSocket !== "undefined") {
+            // Test WebSocket constructor
+            const ws = new WebSocket("ws://localhost:18792");
+            ws.onerror = () => {
+              status.className = "status error";
+              status.textContent = "❌ WebSocket connection failed (expected - no relay server)";
+            };
+            ws.onopen = () => {
+              status.className = "status success";
+              status.textContent = "✅ WebSocket connected to relay server";
+              ws.close();
+            };
+            setTimeout(() => {
+              if (ws.readyState === WebSocket.CONNECTING) {
+                status.className = "status info";
+                status.textContent =
+                  "⚠️ WebSocket connecting (timeout) - relay server may be offline";
+                ws.close();
+              }
+            }, 2000);
+          } else {
+            throw new Error("WebSocket not supported");
+          }
+        } catch (e) {
+          status.className = "status error";
+          status.textContent = "❌ WebSocket test failed: " + e.message;
+        }
       }
 
-      function testDebuggerAPI() {
-        const statusEl = document.getElementById("debugger-status");
+      function testStorage() {
+        const status = document.getElementById("storage-status");
+        try {
+          if (typeof localStorage !== "undefined") {
+            localStorage.setItem("newclaw-test", "test-value");
+            const value = localStorage.getItem("newclaw-test");
+            localStorage.removeItem("newclaw-test");
 
-        // Check if debugger API is available
-        if (typeof chrome !== "undefined" && chrome.debugger) {
-          statusEl.innerHTML = "✅ Debugger API is available in extension context";
-          statusEl.className = "status success";
-        } else {
-          statusEl.innerHTML =
-            "⚠️ Debugger API not available in this context<br><small>This is normal when testing from a regular web page. The Debugger API is only available in the extension's background script context.</small>";
-          statusEl.className = "status info";
+            if (value === "test-value") {
+              status.className = "status success";
+              status.textContent = "✅ localStorage working correctly";
+            } else {
+              throw new Error("Storage read/write failed");
+            }
+          } else {
+            throw new Error("localStorage not supported");
+          }
+        } catch (e) {
+          status.className = "status error";
+          status.textContent = "❌ Storage test failed: " + e.message;
         }
       }
 
       // Run initial tests
-      window.onload = function () {
-        testManifest();
-        testPermissions();
-      };
+      testBrowserAPIs();
+      testStorage();
     </script>
   </body>
 </html>
