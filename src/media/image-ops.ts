@@ -21,6 +21,13 @@ function prefersSips(): boolean {
   );
 }
 
+function prefersImageMagick(): boolean {
+  return (
+    process.env.IFLOW_IMAGE_BACKEND === "imagemagick" ||
+    (process.env.IFLOW_IMAGE_BACKEND !== "sharp" && process.platform === "linux")
+  );
+}
+
 async function loadSharp(): Promise<(buffer: Buffer) => ReturnType<Sharp>> {
   const mod = (await import("sharp")) as unknown as { default?: Sharp };
   const sharp = mod.default ?? (mod as unknown as Sharp);
@@ -162,6 +169,30 @@ async function sipsMetadataFromBuffer(buffer: Buffer): Promise<ImageMetadata | n
   });
 }
 
+async function imagemagickMetadataFromBuffer(buffer: Buffer): Promise<ImageMetadata | null> {
+  return await withTempDir(async (dir) => {
+    const input = path.join(dir, "in.img");
+    await fs.writeFile(input, buffer);
+    const { stdout } = await runExec("identify", ["-format", "%w %h", input], {
+      timeoutMs: 10_000,
+      maxBuffer: 512 * 1024,
+    });
+    const dimensions = stdout.trim().split(/\s+/);
+    if (dimensions.length !== 2) {
+      return null;
+    }
+    const width = Number.parseInt(dimensions[0], 10);
+    const height = Number.parseInt(dimensions[1], 10);
+    if (!Number.isFinite(width) || !Number.isFinite(height)) {
+      return null;
+    }
+    if (width <= 0 || height <= 0) {
+      return null;
+    }
+    return { width, height };
+  });
+}
+
 async function sipsResizeToJpeg(params: {
   buffer: Buffer;
   maxSide: number;
@@ -192,6 +223,31 @@ async function sipsResizeToJpeg(params: {
   });
 }
 
+async function imagemagickResizeToJpeg(params: {
+  buffer: Buffer;
+  maxSide: number;
+  quality: number;
+}): Promise<Buffer> {
+  return await withTempDir(async (dir) => {
+    const input = path.join(dir, "in.img");
+    const output = path.join(dir, "out.jpg");
+    await fs.writeFile(input, params.buffer);
+    await runExec(
+      "convert",
+      [
+        input,
+        "-resize",
+        `${Math.max(1, Math.round(params.maxSide))}x${Math.max(1, Math.round(params.maxSide))}`,
+        "-quality",
+        String(Math.max(1, Math.min(100, Math.round(params.quality)))),
+        output,
+      ],
+      { timeoutMs: 20_000, maxBuffer: 1024 * 1024 },
+    );
+    return await fs.readFile(output);
+  });
+}
+
 async function sipsConvertToJpeg(buffer: Buffer): Promise<Buffer> {
   return await withTempDir(async (dir) => {
     const input = path.join(dir, "in.heic");
@@ -205,9 +261,25 @@ async function sipsConvertToJpeg(buffer: Buffer): Promise<Buffer> {
   });
 }
 
+async function imagemagickConvertToJpeg(buffer: Buffer): Promise<Buffer> {
+  return await withTempDir(async (dir) => {
+    const input = path.join(dir, "in.heic");
+    const output = path.join(dir, "out.jpg");
+    await fs.writeFile(input, buffer);
+    await runExec("convert", [input, output], {
+      timeoutMs: 20_000,
+      maxBuffer: 1024 * 1024,
+    });
+    return await fs.readFile(output);
+  });
+}
+
 export async function getImageMetadata(buffer: Buffer): Promise<ImageMetadata | null> {
   if (prefersSips()) {
     return await sipsMetadataFromBuffer(buffer).catch(() => null);
+  }
+  if (prefersImageMagick()) {
+    return await imagemagickMetadataFromBuffer(buffer).catch(() => null);
   }
 
   try {
@@ -332,6 +404,31 @@ export async function resizeToJpeg(params: {
     });
   }
 
+  if (prefersImageMagick()) {
+    // ImageMagick doesn't auto-rotate based on EXIF, so we need to handle that
+    const normalized = await normalizeExifOrientation(params.buffer);
+
+    // Check if we should avoid enlarging
+    if (params.withoutEnlargement !== false) {
+      const meta = await getImageMetadata(normalized);
+      if (meta) {
+        const maxDim = Math.max(meta.width, meta.height);
+        if (maxDim > 0 && maxDim <= params.maxSide) {
+          return await imagemagickResizeToJpeg({
+            buffer: normalized,
+            maxSide: maxDim,
+            quality: params.quality,
+          });
+        }
+      }
+    }
+    return await imagemagickResizeToJpeg({
+      buffer: normalized,
+      maxSide: params.maxSide,
+      quality: params.quality,
+    });
+  }
+
   const sharp = await loadSharp();
   // Use .rotate() BEFORE .resize() to auto-rotate based on EXIF orientation
   return await sharp(params.buffer)
@@ -349,6 +446,9 @@ export async function resizeToJpeg(params: {
 export async function convertHeicToJpeg(buffer: Buffer): Promise<Buffer> {
   if (prefersSips()) {
     return await sipsConvertToJpeg(buffer);
+  }
+  if (prefersImageMagick()) {
+    return await imagemagickConvertToJpeg(buffer);
   }
   const sharp = await loadSharp();
   return await sharp(buffer).jpeg({ quality: 90, mozjpeg: true }).toBuffer();
