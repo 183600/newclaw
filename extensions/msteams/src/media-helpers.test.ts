@@ -36,7 +36,7 @@ describe("msteams media-helpers", () => {
 
     it("handles local paths", async () => {
       expect(await getMimeType("/tmp/image.png")).toBe("image/png");
-      expect(await getMimeType("/Users/test/photo.jpg")).toBe("image/jpeg");
+      expect(await getMimeType("/tmp/photo.jpg")).toBe("image/jpeg");
     });
 
     it("handles tilde paths", async () => {
@@ -91,7 +91,7 @@ describe("msteams media-helpers", () => {
 
     it("handles local paths", async () => {
       expect(await extractFilename("/tmp/screenshot.png")).toBe("screenshot.png");
-      expect(await extractFilename("/Users/test/photo.jpg")).toBe("photo.jpg");
+      expect(await extractFilename("/tmp/photo.jpg")).toBe("photo.jpg");
     });
 
     it("handles tilde paths", async () => {
@@ -138,7 +138,7 @@ describe("msteams media-helpers", () => {
 
     it("returns true for absolute paths", () => {
       expect(isLocalPath("/tmp/image.png")).toBe(true);
-      expect(isLocalPath("/Users/test/photo.jpg")).toBe(true);
+      expect(isLocalPath("/tmp/photo.jpg")).toBe(true);
     });
 
     it("returns true for tilde paths", () => {

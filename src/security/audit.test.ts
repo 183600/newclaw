@@ -817,8 +817,8 @@ describe("security audit", () => {
       config: cfg,
       includeFilesystem: false,
       includeChannelSecurity: false,
-      stateDir: "/Users/test/Dropbox/.iflow",
-      configPath: "/Users/test/Dropbox/.iflow/iflow.json",
+      stateDir: "/tmp/.iflow",
+      configPath: "/tmp/.iflow/iflow.json",
     });
 
     expect(res.findings).toEqual(
